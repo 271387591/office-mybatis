@@ -1,0 +1,39 @@
+<table border="1" cellpadding="1" cellspacing="1" style="width:1000px" xtype="table">
+	<tbody>
+		<tr>
+			<th colspan="4">标题</th>
+		</tr>
+		<tr>
+			<th style="width: 200px;">字段一</th>
+			<td>&nbsp;<input class="x-form-text x-form-field" issingle="0" name="sss" txtisnotnull="0" txtlabel="ss" type="text" xtype="userselector" /></td>
+			<th style="width: 200px;"><strong>字段二</strong></th>
+			<td><input class="x-form-text x-form-field" issingle="0" name="fds" txtisnotnull="0" txtlabel="sdf" type="text" xtype="posselector" />&nbsp;</td>
+		</tr>
+		<tr>
+			<th><strong>字段三</strong></th>
+			<td>&nbsp;</td>
+			<th><strong>字段四</strong></th>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<th colspan="4">
+			<table column="4" description="sdf" name="d" style="border-collapse:collapse; border:1px solid blue; width:800px" txtlabel="d" xtype="detailGrid" xwidth="800px">
+				<tbody>
+					<tr style="border: 1px solid blue;">
+						<th style="border: 1px solid blue;">sd</th>
+						<th style="border: 1px solid blue;">a</th>
+						<th style="border: 1px solid blue;">ad</th>
+						<th style="border: 1px solid blue;">ff</th>
+					</tr>
+					<tr style="border: 1px solid blue;">
+						<td style="border: 1px solid blue;"><input class="x-form-text x-form-field" issingle="0" name="s" txtisnotnull="0" txtlabel="d" type="text" xtype="userselector" /></td>
+						<td style="border: 1px solid blue;"><input class="x-form-text x-form-field" issingle="0" name="f" txtisnotnull="0" txtlabel="f" type="text" xtype="depselector" /></td>
+						<td style="border: 1px solid blue;"><input class="x-form-text x-form-field" issingle="0" name="aa" txtisnotnull="0" txtlabel="df" type="text" xtype="posselector" /></td>
+						<td style="border: 1px solid blue;"><input class="x-form-text x-form-field" issingle="0" name="ff" txtisnotnull="0" txtlabel="ff" type="text" xtype="userselector" /></td>
+					</tr>
+				</tbody>
+			</table>
+			</th>
+		</tr>
+	</tbody>
+</table>

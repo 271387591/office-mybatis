@@ -1,0 +1,59 @@
+﻿/*
+ Copyright (c) 2003-2013, CKSource - Frederico Knabben. All rights reserved.
+ For licensing, see LICENSE.md or http://ckeditor.com/license
+ */
+CKEDITOR.dialog.add("hiddenfield", function (d) {
+    return{title: d.lang.forms.hidden.title, hiddenField: null, minWidth: 350, minHeight: 110, onShow: function () {
+        delete this.hiddenField;
+        var a = this.getParentEditor(), b = a.getSelection(), c = b.getSelectedElement();
+        c && (c.data("cke-real-element-type") && "hiddenfield" == c.data("cke-real-element-type")) && (this.hiddenField = c, c = a.restoreRealElement(this.hiddenField), this.setupContent(c), b.selectElement(this.hiddenField))
+    }, onOk: function () {
+        var a = this.getValueOf("info", "_cke_saved_name");
+        this.getValueOf("info", "value");
+        var b = this.getParentEditor(), a = CKEDITOR.env.ie && !(8 <= CKEDITOR.document.$.documentMode) ? b.document.createElement('<input name="' + CKEDITOR.tools.htmlEncode(a) + '">') : b.document.createElement("input");
+        a.setAttribute("type", "hidden");
+        this.commitContent(a);
+        a = b.createFakeElement(a, "cke_hidden", "hiddenfield");
+        this.hiddenField ? (a.replace(this.hiddenField), b.getSelection().selectElement(a)) : b.insertElement(a);
+        return!0
+    }, contents: [
+        {id: "info", label: d.lang.forms.hidden.title, title: d.lang.forms.hidden.title,
+            elements: [
+                {
+                    type : 'hbox',
+                    widths : [ '50%', '50%' ],
+                    children :
+                        [
+                            {id: "_cke_saved_name", type: "text", label: d.lang.forms.hidden.name, "default": "", accessKey: "N",validate : CKEDITOR.dialog.validate.notEmpty('隐藏域名称不能为空'), setup: function (a) {
+                                this.setValue(a.data("cke-saved-name") || a.getAttribute("name") || "")
+                            }, commit: function (a) {
+                                this.getValue() ? a.setAttribute("name", this.getValue()) : a.removeAttribute("name")
+                            }},
+                            {
+                                id : 'txtlabel',
+                                type : 'text',
+                                validate : CKEDITOR.dialog.validate.notEmpty('标签名称不能为空'),
+                                label : d.lang.dforms.dcommon.txtlabel,
+                                'default' : '',
+                                accessKey : 'V',
+                                setup : function( element )
+                                {
+                                    this.setValue(element.getAttribute( 'txtlabel' ) ||
+                                        '' );
+                                },
+                                commit : function( element )
+                                {
+                                    element.setAttribute( 'txtlabel', this.getValue() );
+                                }
+                            }
+                        ]
+                },
+                {id: "value", type: "text", label: d.lang.forms.hidden.value, "default": "", accessKey: "V", setup: function (a) {
+                    this.setValue(a.getAttribute("value") || "")
+                }, commit: function (a) {
+                    this.getValue() ? a.setAttribute("value", this.getValue()) :
+                        a.removeAttribute("value")
+                }}
+            ]}
+    ]}
+});

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ozstrategy.dao.flows.ProcessDefDao">
+    <!--<cache type="org.mybatis.caches.ehcache.EhcacheCache"/>-->
+    <resultMap id="processDefResult" type="com.ozstrategy.model.flows.ProcessDef" autoMapping="true">
+        <id column="id" property="id" javaType="long"/>
+        <association property="parent" column="parentId" select="getProcessDefById"/>
+        <collection property="children" column="id" select="getChild"/>
+        <collection property="elements" column="id" select="com.ozstrategy.dao.flows.ProcessElementDao.getProcessElementByDefId"/>
+    </resultMap>
+    
+    <select id="listProcessDefs" resultMap="processDefResult" parameterType="Map">
+        select f.* from ProcessDef f where f.enabled=1 and f.parentId is null
+        <if test="keyword!=null">and f.name like CONCAT(CONCAT('%', #{keyword}), '%')</if>
+        <if test="globalTypeId!=null">and f.globalTypeId=#{globalTypeId}</if>
+        order by f.createDate desc
+    </select>
+    <select id="listProcessDefsCount" resultType="java.lang.Integer" parameterType="Map">
+        select count(*) from ProcessDef f where f.enabled=1 and f.parentId is null
+        <if test="keyword!=null">and f.name like CONCAT(CONCAT('%', #{keyword}), '%')</if>
+        <if test="globalTypeId!=null">and f.globalTypeId=#{globalTypeId}</if>
+    </select>
+    <select id="getProcessDefById" resultMap="processDefResult" parameterType="long" flushCache="true">
+        select f.* from ProcessDef f where f.enabled=1 and f.id=#{id} 
+    </select>
+    <select id="getChild" resultMap="processDefResult" parameterType="long">
+        select f.* from ProcessDef f where f.enabled=1 and f.parentId=#{id} 
+    </select>
+    <select id="getProcessDefByActId" resultMap="processDefResult" parameterType="string">
+        select f.* from ProcessDef f where f.actId=#{actId} and f.enabled=1 
+    </select>
+    <select id="getProcessDefByModelId" resultMap="processDefResult" parameterType="string">
+        select f.* from ProcessDef f where f.modelId=#{modelId} and f.enabled=1 
+    </select>
+    <select id="getProcessDefByDepId" resultMap="processDefResult" parameterType="string">
+        select f.* from ProcessDef f where f.depId=#{depId} and f.enabled=1 
+    </select>
+    <select id="getProcessDefByName" resultMap="processDefResult" parameterType="string">
+        select * from ProcessDef f where f.name=#{name} and f.enabled=1 
+    </select>
+    <select id="getNoCascadeProcessDefById" resultType="com.ozstrategy.model.flows.ProcessDef" parameterType="long">
+        select f.* from FlowForm f where f.id=#{id} and f.enabled=1
+    </select>
+    
+    <delete id="removeChild" parameterType="long">
+        delete from ProcessDef where parentId=#{parentId}
+    </delete>
+    <update id="updateProcessDef" parameterType="com.ozstrategy.model.flows.ProcessDef" flushCache="true">
+        update ProcessDef f set 
+        f.name=#{name} and 
+        f.globalTypeId=#{globalType.id} and 
+        f.version=#{version} and 
+        f.actDefId=#{actDefId} and 
+        f.actResId=#{actResId} and 
+        f.graphResId=#{graphResId} and 
+        f.modelId=#{modelId} and 
+        f.depId=#{depId} and 
+        f.description=#{description} and 
+        f.enabled=#{enabled} and 
+        f.parentId=#{parent.id} and 
+        f.lastUpdateDate=#{lastUpdateDate} and 
+        where f.id=#{id}
+    </update>
+    <update id="deleteProcessDef" parameterType="com.ozstrategy.model.flows.ProcessDef" flushCache="true">
+        update ProcessDef u set u.enabled=#{enabled} where u.id=#{id}
+    </update>
+    <insert id="saveProcessDef" parameterType="com.ozstrategy.model.flows.ProcessDef" flushCache="true">
+        <selectKey keyColumn="id" keyProperty="id" resultType="java.lang.Long">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into ProcessDef(id,name,globalTypeId,description,version,actDefId,actResId,graphResId,modelId,depId,enabled,parentId,createDate,lastUpdateDate) 
+        values (#{id},#{name},#{globalType.id},#{description},#{version},#{actDefId},#{actResId},#{graphResId},#{modelId},#{depId},#{enabled},#{parent.id},#{createDate},#{lastUpdateDate})
+    </insert>
+</mapper>

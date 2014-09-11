@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ozstrategy.dao.flows.ProcessFormFiledInstanceDao">
+    <!--<cache type="org.mybatis.caches.ehcache.EhcacheCache"/>-->
+    <resultMap id="processFormFiledInstanceResult" type="com.ozstrategy.model.flows.ProcessFormFiledInstance" autoMapping="true">
+        <id column="id" property="id" javaType="long"/>
+        <association property="processElement" column="processElementId" select="com.ozstrategy.dao.flows.ProcessElementDao.getProcessElementById"/>
+        <association property="processDef" column="processDefId" select="com.ozstrategy.dao.flows.ProcessDefDao.getNoCascadeProcessDefById"/>
+    </resultMap>
+    
+    <select id="listProcessFormFiledInstances" resultMap="processFormFiledInstanceResult" parameterType="Map">
+        select f.* from ProcessFormFiledInstance f where 1=1
+    </select>
+    <select id="listProcessFormFiledInstancesCount" resultType="java.lang.Integer" parameterType="Map">
+        select count(*) from ProcessFormFiledInstance f where 1=1
+    </select>
+    
+    <select id="getProcessFormFiledInstanceById" resultMap="processFormFiledInstanceResult" parameterType="long">
+        select f.* from ProcessFormFiledInstance f where f.id=#{id} 
+    </select>
+    <select id="getProcessFormFiledInstancesByEid" resultMap="processFormFiledInstanceResult" parameterType="long">
+        select f.* from ProcessFormFiledInstance f where f.processElementId=#{id} 
+    </select>
+    
+    
+    <delete id="deleteProcessFormFiledInstance" parameterType="long">
+        delete from ProcessFormFiledInstance where id=#{id}
+    </delete>
+    <delete id="deleteProcessFormFiledInstanceByElementId" parameterType="long">
+        delete from ProcessFormFiledInstance where processElementId=#{processElementId}
+    </delete>
+    <delete id="deleteProcessFormFiledInstanceByDefId" parameterType="long">
+        delete from ProcessFormFiledInstance where processDefId=#{processElementId}
+    </delete>
+    
+    
+    <update id="updateProcessFormFiledInstance" parameterType="com.ozstrategy.model.flows.ProcessFormFiledInstance" flushCache="true">
+        update ProcessFormFiledInstance f set 
+        f.formFieldId=#{formField.id} and 
+        f.chmod=#{chmod} and 
+        f.processElementId=#{processElement.id} 
+        f.processDefId=#{processDef.id} 
+        where f.id=#{id}
+    </update>
+    <insert id="saveProcessFormFiledInstance" parameterType="com.ozstrategy.model.flows.ProcessFormFiledInstance" flushCache="true">
+        <selectKey keyColumn="id" keyProperty="id" resultType="java.lang.Long">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into ProcessFormFiledInstance(id,formFieldId,chmod,processElementId,processDefId) 
+        values (#{id},#{formField.id},#{chmod},#{processElement.id},#{processDef.id})
+    </insert>
+</mapper>

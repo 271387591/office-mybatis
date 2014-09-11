@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 3.0//EN"
+    "http://tuckey.org/res/dtds/urlrewrite3.0.dtd">
+
+<urlrewrite default-match-type="wildcard">
+    <rule>
+        <from>/j_security_check</from>
+        <to>/j_security_check</to>
+    </rule>
+    <rule>
+        <from>/logout</from>
+        <to>/logout.jsp</to>
+    </rule>
+    <rule>
+        <from>/images/**</from>
+        <to>/images/$1</to>
+    </rule>
+    <rule>
+        <from>/oz_wallpapers/**</from>
+        <to>/scripts/desktop/oz_wallpapers/$1</to>
+    </rule>
+    <rule>
+        <from>/wallpapers/**</from>
+        <to>/scripts/desktop/wallpapers/$1</to>
+    </rule>
+    <rule>
+        <from>/scripts/**</from>
+        <to>/scripts/$1</to>
+    </rule>
+    <rule>
+        <from>/styles/**</from>
+        <to>/styles/$1</to>
+    </rule>
+    <rule>
+        <from>/mxgraph/**</from>
+        <to>/mxgraph/$1</to>
+    </rule>
+    <rule>
+        <from>/**/mxgraph/**</from>
+        <to>/mxgraph/$2</to>
+    </rule>
+    
+    
+    <rule>
+        <from>/demo/**</from>
+        <to>/demo/$1</to>
+    </rule>
+    <rule>
+        <from>/jscripts/**</from>
+        <to>/jscripts/$1</to>
+    </rule>
+    
+    <rule>
+        <from>/service/**</from>
+        <to>/service/$1</to>
+    </rule>
+    
+    
+    
+    
+    
+    <rule>
+        <from>/</from>
+        <to type="redirect" last="true">login</to>
+    </rule>
+    <rule>
+        <from>/login*</from>
+        <to>/login.jsp</to>
+    </rule>
+    <rule>
+        <from>/**</from>
+        <to type="forward">/service/$1</to>
+    </rule>
+    
+    
+    
+    <outbound-rule encodefirst="true" match-type="regex">
+        <name>Strip URL Session ID's</name>
+        <from>^(.*?)(?:\;jsessionid=[^\?#]*)?(\?[^#]*)?(#.*)?$</from>
+        <to>$1$2$3</to>
+    </outbound-rule>
+</urlrewrite>

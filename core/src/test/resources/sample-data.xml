@@ -1,0 +1,395 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+    <table name="Feature">
+        <column>id</column>
+        <column>createDate</column>
+        <column>lastUpdateDate</column>
+        <column>criteria</column>
+        <column>description</column>
+        <column>displayName</column>
+        <column>enabled</column>
+        <column>name</column>
+        <row>
+            <value>1</value>
+            <value><![CDATA[2013-01-27 11:27:03.0]]></value>
+            <value><![CDATA[2014-07-25 13:51:42.0]]></value>
+            <value>user</value>
+            <value>添加角色</value>
+            <value>添加角色</value>
+            <value>Y</value>
+            <value>addRole</value>
+        </row>
+        <row>
+            <value>2</value>
+            <value><![CDATA[2013-01-27 11:27:03.0]]></value>
+            <value><![CDATA[2014-07-25 13:51:49.0]]></value>
+            <value>user</value>
+            <value>编辑角色</value>
+            <value>编辑角色</value>
+            <value>Y</value>
+            <value>updateRole</value>
+        </row>
+        <row>
+            <value>3</value>
+            <value><![CDATA[2013-01-27 11:27:03.0]]></value>
+            <value><![CDATA[2014-07-25 13:52:04.0]]></value>
+            <value>user</value>
+            <value>删除角色</value>
+            <value>删除角色</value>
+            <value>Y</value>
+            <value>deleteRole</value>
+        </row>
+        <row>
+            <value>4</value>
+            <value><![CDATA[2014-07-25 13:46:30.0]]></value>
+            <value><![CDATA[2014-07-25 13:46:30.0]]></value>
+            <value>user</value>
+            <value>添加用户</value>
+            <value>添加用户</value>
+            <value>Y</value>
+            <value>addUser</value>
+        </row>
+        <row>
+            <value>5</value>
+            <value><![CDATA[2014-07-25 13:47:55.0]]></value>
+            <value><![CDATA[2014-07-25 13:47:55.0]]></value>
+            <value>user</value>
+            <value>修改用户</value>
+            <value>修改用户</value>
+            <value>Y</value>
+            <value>updateUser</value>
+        </row>
+        <row>
+            <value>6</value>
+            <value><![CDATA[2014-07-25 13:48:38.0]]></value>
+            <value><![CDATA[2014-07-25 13:48:38.0]]></value>
+            <value>user</value>
+            <value>修改用户密码</value>
+            <value>修改用户密码</value>
+            <value>Y</value>
+            <value>updateUserPassword</value>
+        </row>
+        <row>
+            <value>7</value>
+            <value><![CDATA[2014-07-25 13:49:06.0]]></value>
+            <value><![CDATA[2014-07-25 13:49:06.0]]></value>
+            <value>user</value>
+            <value>锁定用户</value>
+            <value>锁定用户</value>
+            <value>Y</value>
+            <value>lockUser</value>
+        </row>
+        <row>
+            <value>8</value>
+            <value><![CDATA[2014-07-25 13:49:31.0]]></value>
+            <value><![CDATA[2014-07-25 13:49:31.0]]></value>
+            <value>user</value>
+            <value>解锁用户</value>
+            <value>解锁用户</value>
+            <value>Y</value>
+            <value>unLockUser</value>
+        </row>
+        <row>
+            <value>9</value>
+            <value><![CDATA[2014-07-25 13:49:59.0]]></value>
+            <value><![CDATA[2014-07-25 13:49:59.0]]></value>
+            <value>user</value>
+            <value>禁用用户</value>
+            <value>禁用用户</value>
+            <value>Y</value>
+            <value>disableUser</value>
+        </row>
+        <row>
+            <value>10</value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value>user</value>
+            <value>解禁用户</value>
+            <value>解禁用户</value>
+            <value>Y</value>
+            <value>enableUser</value>
+        </row>
+    </table>
+    <table name="SystemView">
+        <column>id</column>
+        <column>createDate</column>
+        <column>lastUpdateDate</column>
+        <column>context</column>
+        <column>enabled</column>
+        <column>name</column>
+        <column>url</column>
+        <row>
+            <value>1</value>
+            <value><![CDATA[2013-01-27 11:27:03.0]]></value>
+            <value><![CDATA[2013-06-27 11:27:25.0]]></value>
+            <value>manager</value>
+            <value>Y</value>
+            <value>管理员环境</value>
+            <value>desktop</value>
+        </row>
+        <row>
+            <value>2</value>
+            <value><![CDATA[2013-01-27 11:27:03.0]]></value>
+            <value><![CDATA[2013-06-27 11:27:25.0]]></value>
+            <value>user</value>
+            <value>Y</value>
+            <value>用户环境</value>
+            <value>userview</value>
+        </row>
+    </table>
+    <table name="Role">
+        <column>id</column>
+        <column>createDate</column>
+        <column>lastUpdateDate</column>
+        <column>description</column>
+        <column>displayName</column>
+        <column>name</column>
+        <column>systemViewId</column>
+        <row>
+            <value>-2</value>
+            <value><![CDATA[2013-01-22 16:03:26.0]]></value>
+            <value><![CDATA[2013-01-22 16:03:28.0]]></value>
+            <value>分公司用户，录入分公司的销售数据</value>
+            <value>分公司用户</value>
+            <value>ROLE_USER</value>
+            <value>2</value>
+        </row>
+        <row>
+            <value>-1</value>
+            <value><![CDATA[2013-01-22 16:03:26.0]]></value>
+            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
+            <value>超级管理员，具有管理的全部权限</value>
+            <value>超级管理员</value>
+            <value>ROLE_ADMIN</value>
+            <value>1</value>
+        </row>
+    </table>
+    <table name="RoleFeature">
+        <column>id</column>
+        <column>createDate</column>
+        <column>lastUpdateDate</column>
+        <column>featureId</column>
+        <column>roleId</column>
+        <row>
+            <value>1</value>
+            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
+            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
+            <value>1</value>
+            <value>-1</value>
+        </row>
+        <row>
+            <value>2</value>
+            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
+            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
+            <value>2</value>
+            <value>-1</value>
+        </row>
+        <row>
+            <value>3</value>
+            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
+            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
+            <value>3</value>
+            <value>-1</value>
+        </row>
+        <row>
+            <value>4</value>
+            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
+            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
+            <value>4</value>
+            <value>-1</value>
+        </row>
+        <row>
+            <value>5</value>
+            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
+            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
+            <value>5</value>
+            <value>-1</value>
+        </row>
+        <row>
+            <value>6</value>
+            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
+            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
+            <value>6</value>
+            <value>-1</value>
+        </row>
+        <row>
+            <value>7</value>
+            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
+            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
+            <value>7</value>
+            <value>-1</value>
+        </row>
+        <row>
+            <value>8</value>
+            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
+            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
+            <value>8</value>
+            <value>-1</value>
+        </row>
+        <row>
+            <value>9</value>
+            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
+            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
+            <value>9</value>
+            <value>-1</value>
+        </row>
+        <row>
+            <value>10</value>
+            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
+            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
+            <value>10</value>
+            <value>-1</value>
+        </row>
+    </table>
+    
+    <table name="User">
+        <column>id</column>
+        <column>createDate</column>
+        <column>lastUpdateDate</column>
+        <column>accountExpired</column>
+        <column>accountLocked</column>
+        <column>address</column>
+        <column>city</column>
+        <column>country</column>
+        <column>postalCode</column>
+        <column>province</column>
+        <column>credentialsExpired</column>
+        <column>email</column>
+        <column>enabled</column>
+        <column>firstName</column>
+        <column>gender</column>
+        <column>lastName</column>
+        <column>mobile</column>
+        <column>password</column>
+        <column>passwordHint</column>
+        <column>phoneNumber</column>
+        <column>username</column>
+        <column>version</column>
+        <column>website</column>
+        <column>defaultRoleId</column>
+        <row>
+            <value>1</value>
+            <value><![CDATA[2013-01-27 11:27:03.0]]></value>
+            <value><![CDATA[2013-01-27 11:27:25.0]]></value>
+            <value>N</value>
+            <value>N</value>
+            <value>Denver</value>
+            <value>Denver</value>
+            <value>US</value>
+            <value>80210</value>
+            <value>CO</value>
+            <value>N</value>
+            <value>admin@ozstrategy.com</value>
+            <value>Y</value>
+            <value>李</value>
+            <value>M</value>
+            <value>浩admin</value>
+            <value>18583910581</value>
+            <value>536c0b339345616c1b33caf454454d8b8a190d6c</value>
+            <value/>
+            <value>110</value>
+            <value>admin</value>
+            <value>1</value>
+            <value>http://www.cnblogs.com/hk-jiujiu</value>
+            <value>-1</value>
+        </row>
+        <row>
+            <value>2</value>
+            <value><![CDATA[2013-01-27 11:27:03.0]]></value>
+            <value><![CDATA[2013-01-27 11:27:25.0]]></value>
+            <value>N</value>
+            <value>N</value>
+            <value>Denver</value>
+            <value>Denver</value>
+            <value>US</value>
+            <value>80210</value>
+            <value>CO</value>
+            <value>N</value>
+            <value>user@ozstrategy.com</value>
+            <value>Y</value>
+            <value>李</value>
+            <value>M</value>
+            <value>浩user</value>
+            <value>18583910582</value>
+            <value>536c0b339345616c1b33caf454454d8b8a190d6c</value>
+            <value/>
+            <value>110</value>
+            <value>user</value>
+            <value>1</value>
+            <value>http://www.cnblogs.com/hk-jiujiu</value>
+            <value>-2</value>
+        </row>
+        <row>
+            <value>3</value>
+            <value><![CDATA[2013-01-27 11:27:03.0]]></value>
+            <value><![CDATA[2013-01-27 11:27:25.0]]></value>
+            <value>N</value>
+            <value>N</value>
+            <value>Denver</value>
+            <value>Denver</value>
+            <value>US</value>
+            <value>80210</value>
+            <value>CO</value>
+            <value>N</value>
+            <value>hr@ozstrategy.com</value>
+            <value>Y</value>
+            <value>李</value>
+            <value>M</value>
+            <value>浩hr</value>
+            <value>18583910583</value>
+            <value>536c0b339345616c1b33caf454454d8b8a190d6c</value>
+            <value/>
+            <value>110</value>
+            <value>hr</value>
+            <value>1</value>
+            <value>http://www.cnblogs.com/hk-jiujiu</value>
+            <value>-2</value>
+        </row>
+        <row>
+            <value>4</value>
+            <value><![CDATA[2013-01-27 11:27:03.0]]></value>
+            <value><![CDATA[2013-01-27 11:27:25.0]]></value>
+            <value>N</value>
+            <value>N</value>
+            <value>Denver</value>
+            <value>Denver</value>
+            <value>US</value>
+            <value>80210</value>
+            <value>CO</value>
+            <value>N</value>
+            <value>dep@ozstrategy.com</value>
+            <value>Y</value>
+            <value>李</value>
+            <value>M</value>
+            <value>浩dep</value>
+            <value>18583910584</value>
+            <value>536c0b339345616c1b33caf454454d8b8a190d6c</value>
+            <value/>
+            <value>110</value>
+            <value>dep</value>
+            <value>1</value>
+            <value>http://www.cnblogs.com/hk-jiujiu</value>
+            <value>-2</value>
+        </row>
+    </table>
+    <table name="UserRole">
+        <column>userId</column>
+        <column>roleId</column>
+        <row>
+            <value>1</value>
+            <value>-1</value>
+        </row>
+        <row>
+            <value>2</value>
+            <value>-2</value>
+        </row>
+        <row>
+            <value>3</value>
+            <value>-2</value>
+        </row>
+        <row>
+            <value>4</value>
+            <value>-2</value>
+        </row>
+    </table>
+</dataset>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ozstrategy.dao.userrole.SystemViewDao">
+    
+    
+    <resultMap id="SystemViewResult" type="com.ozstrategy.model.userrole.SystemView" autoMapping="true">
+        <id column="id" property="id" javaType="long"/>
+    </resultMap>
+    <select id="listSystemViews" resultMap="SystemViewResult"  parameterType="string">
+        select * from SystemView r where r.enabled='1'
+        <if test="keyword!=null">and u.name like CONCAT(CONCAT('%', #{keyword}), '%')</if>
+        order by r.createDate desc
+    </select>
+    <select id="listSystemViewsCount" resultType="java.lang.Integer" parameterType="string">
+        select count(*) from SystemView u
+        where u.enabled=1
+        <if test="keyword!=null">and u.name like CONCAT(CONCAT('%', #{keyword}), '%')</if>
+    </select>
+
+    <select id="getSystemViewById" resultType="com.ozstrategy.model.userrole.SystemView" parameterType="java.lang.Long">
+        select * from SystemView r where r.enabled=1 and r.id=#{id}
+    </select>
+
+</mapper>

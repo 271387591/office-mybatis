@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ozstrategy.dao.forms.FlowFormDao">
+    <!--<cache type="org.mybatis.caches.ehcache.EhcacheCache"/>-->
+    <resultMap id="flowFormResult" type="com.ozstrategy.model.forms.FlowForm" autoMapping="true">
+        <id column="id" property="id" javaType="long"/>
+        <association property="parent" column="parentId" select="getFlowFormById"/>
+        <collection property="children" column="id" select="getChild" ofType="com.ozstrategy.model.forms.FlowForm"/>
+        <collection property="fields" column="id" select="com.ozstrategy.dao.forms.FormFieldDao.getFormFieldByFormId"/>
+        <!--<collection property="children" resultMap="flowFormResult"/>-->
+        <!--<collection property="children" resultMap="flowFormResult"/>-->
+        <!--<collection property="fields" resultMap="com.ozstrategy.dao.forms.FormFieldDao.formFieldResult"/>-->
+    </resultMap>
+    
+    
+    <select id="listFlowForms" resultMap="flowFormResult" parameterType="string">
+        select f.* from FlowForm f where f.enabled=1 and f.parentId is null
+        <if test="keyword!=null">and (f.name like CONCAT(CONCAT('%', #{keyword}), '%') or f.displayName like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
+        order by f.createDate desc
+    </select>
+    <select id="listFlowFormsCount" resultType="java.lang.Integer" parameterType="string">
+        select count(*) from FlowForm f where f.enabled=1 and f.parentId is null
+        <if test="keyword!=null">and (f.name like CONCAT(CONCAT('%', #{keyword}), '%') or f.displayName like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
+    </select>
+    <select id="getFlowFormByNameAndParentId" resultMap="flowFormResult" parameterType="Map">
+        select f.* from FlowForm f where f.enabled=1 and f.name=#{name} and f.parentId=#{parentId} 
+    </select>
+    <select id="getChild" resultMap="flowFormResult" parameterType="long">
+        select f.* from FlowForm f where f.enabled=1 and f.parentId=#{id} 
+    </select>
+    <select id="getFlowFormById" resultMap="flowFormResult" parameterType="long" flushCache="true">
+        select f.* from FlowForm f where f.id=#{id} and f.enabled=1 
+    </select>
+    <select id="getNoCascadeFlowFormById" resultType="com.ozstrategy.model.forms.FlowForm" parameterType="long">
+        select f.* from FlowForm f where f.id=#{id} and f.enabled=1 
+    </select>
+    <select id="getFlowFormByName" resultMap="flowFormResult" parameterType="string">
+        select * from FlowForm f where f.name=#{name} and f.enabled=1 
+    </select>
+    
+    
+    
+    <delete id="removeChild" parameterType="long">
+        delete from FlowForm where parentId=#{parentId}
+    </delete>
+    <update id="updateFlowForm" parameterType="com.ozstrategy.model.forms.FlowForm" flushCache="true">
+        update FlowForm f set 
+        f.name=#{name} and 
+        f.displayName=#{displayName} and 
+        f.description=#{description} and 
+        f.content=#{content} and 
+        f.enabled=#{enabled} and 
+        f.parentId=#{parent.id} and 
+        f.lastUpdateDate=#{lastUpdateDate} and 
+        where f.id=#{id}
+    </update>
+    <update id="deleteFlowForm" parameterType="com.ozstrategy.model.forms.FlowForm" flushCache="true">
+        update FlowForm u set u.enabled=#{enabled} where u.id=#{id}
+    </update>
+    <insert id="saveFlowForm" parameterType="com.ozstrategy.model.forms.FlowForm" flushCache="true">
+        <selectKey keyColumn="id" keyProperty="id" resultType="java.lang.Long">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into FlowForm(id,name,displayName,description,content,enabled,parentId,createDate,lastUpdateDate) 
+        values (#{id},#{name},#{displayName},#{description},#{content},#{enabled},#{parent.id},#{createDate},#{lastUpdateDate})
+    </insert>
+</mapper>

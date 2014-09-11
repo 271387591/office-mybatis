@@ -1,0 +1,16 @@
+/office/office.iml
+/office/target/
+/office/core/target/
+/office/web/target/
+/office/core/log/
+/office/web/log/
+*.iml
+.log
+*.log
+portfolio*.bin
+pom.properties
+/office/.idea/
+/.idea/
+*.log.zip
+*/.gitignore
+

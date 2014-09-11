@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>importDialog</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script type="text/javascript">
+        function setFileName()
+        {
+            var file = document.getElementById('openForm').upfile.files[0];
+            var reader = new FileReader();
+            reader.onload = function(e)
+            {
+                var xml = e.target.result;
+                try
+                {
+                    var document = window.parent.mxUtils.parseXml(xml);
+                    //var model = new window.parent.mxGraphModel();
+                    var codec = new window.parent.mxCodec(document);
+                    codec.decode(document.documentElement,window.parent.editor.graph.model);
+
+                    var importBackground = window.parent.document.getElementById('importBackground');
+                    importBackground.parentNode.removeChild(importBackground);
+                    var importDialog = window.parent.document.getElementById('importDiv');
+                    importDialog.parentNode.removeChild(importDialog);
+
+                }
+                catch(e)
+                {
+                    window.parent.mxUtils.alert('invalid Or Missing File: ' + e.message);
+                }
+
+            };
+            reader.onerror = function(e)
+            {
+                console.log(e);
+            };
+            reader.readAsText(file);
+
+            return false;
+        };
+        function fileChanged()
+        {
+            var form = document.getElementById('openForm');
+            var openButton = document.getElementById('openButton');
+            if(form.upfile.value.length > 0)
+            {
+                openButton.removeAttribute('disabled');
+            }
+            else
+            {
+                openButton.setAttribute('disabled','disabled');
+            }
+        };
+        function hideImportDialog()
+        {
+            var importBackground = window.parent.document.getElementById('importBackground');
+            importBackground.parentNode.removeChild(importBackground);
+            var importDialog = window.parent.document.getElementById('importDiv');
+            importDialog.parentNode.removeChild(importDialog);
+        };
+    </script>
+</head>
+<body>
+    <form method="POST" enctype="multipart/form-data" action="" name="openForm"
+        id="openForm" onsubmit="return setFileName();" accept-charset="UTF-8">
+        <table>
+            <tr>
+                <td style="height:40px;vertical-align:top;" colspan="2">
+                    <input type="file" name="upfile" onchange="fileChanged();">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" height="80px" id="openSupported" style="font-family:arial;color:grey;font-size:9pt;vertical-align:top;text-align:left;">
+                    <span>Supported format is .XML files saved from this software</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                </td>
+                <td style="vertical-align:middle;text-align:right;white-space:nowrap;">
+                    <input type="submit" id="openButton" value="Open" disabled="disabled">
+                    <input type="button" id="cancelButton" value="Cancel" onclick="hideImportDialog();">
+                </td>
+            </tr>
+        </table>
+    </form>
+</body>
+</html>

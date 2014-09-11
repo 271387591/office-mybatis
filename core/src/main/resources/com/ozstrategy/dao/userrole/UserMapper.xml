@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ozstrategy.dao.userrole.UserDao">
+    <!--<cache type="org.mybatis.caches.ehcache.EhcacheCache"/>-->
+    <resultMap id="userResult" type="com.ozstrategy.model.userrole.User" autoMapping="true">
+        <id property="id" column="id"/>
+        <result column="defaultRoleId" javaType="java.lang.Long"/>
+        <association property="address" resultMap="addressResult" javaType="com.ozstrategy.model.userrole.Address"/>
+        <association property="defaultRole" select="com.ozstrategy.dao.userrole.RoleDao.getRoleById" column="defaultRoleId" javaType="com.ozstrategy.model.userrole.Role"/>
+        <collection property="roles" column="id" select="com.ozstrategy.dao.userrole.RoleDao.getRoleByUserId" fetchType="lazy"/>
+    </resultMap>
+    <resultMap id="addressResult" type="com.ozstrategy.model.userrole.Address">
+        <result column="address" javaType="java.lang.String" property="address"/>
+        <result column="city" javaType="java.lang.String" property="city"/>
+        <result column="country" javaType="java.lang.String" property="country"/>
+        <result column="postalCode" javaType="java.lang.String" property="postalCode"/>
+        <result column="province" javaType="java.lang.String" property="province"/>
+    </resultMap>
+    
+    
+    <select id="listUsers" resultMap="userResult" parameterType="string">
+        select u.* from User u where u.enabled=1
+        <if test="keyword!=null">and (u.username like CONCAT(CONCAT('%', #{keyword}), '%') or u.firstName like CONCAT(CONCAT('%', #{keyword}), '%') or u.lastName like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
+        order by u.createDate desc
+    </select>
+    <select id="listUsersCount" resultType="java.lang.Integer" parameterType="string">
+        select count(*) from User u where u.enabled=1
+        <if test="keyword!=null">and (u.username like CONCAT(CONCAT('%', #{keyword}), '%') or u.firstName like CONCAT(CONCAT('%', #{keyword}), '%') or u.lastName like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
+    </select>
+    
+    <select id="getUserById" parameterType="long" resultMap="userResult">
+        select u.* from User u where u.id=#{id} 
+    </select>
+    <select id="getUserByUsername" parameterType="string" resultMap="userResult">
+        select u.* from User u where u.username=#{username} 
+    </select>
+    <select id="getUserByEmail" parameterType="string" resultMap="userResult">
+        select u.* from User u where u.email=#{email} 
+    </select>
+    <select id="getUserByMobile" parameterType="string" resultMap="userResult">
+        select u.* from User u where u.mobile=#{mobile} 
+    </select>
+    <select id="getUserByRoleId" parameterType="long" resultMap="userResult">
+        select u.* from User u join UserRole ur on u.id=ur.userId where ur.roleId=#{roleId}
+    </select>
+    
+    <update id="enabledUser" parameterType="Long" flushCache="true">
+        update User u set u.enabled='0' where u.id=#{id}
+    </update>
+    <update id="updateUserPassword" parameterType="com.ozstrategy.model.userrole.User" flushCache="true">
+        update User u set u.password=#{password} where u.id=#{id}
+    </update>
+    <update id="updateUser" parameterType="com.ozstrategy.model.userrole.User" flushCache="true">
+        update User u set 
+        u.accountExpired=#{accountExpired} and  
+        u.accountLocked=#{accountLocked} and  
+        u.credentialsExpired=#{credentialsExpired} and  
+        u.enabled=#{enabled} and  
+        u.address=#{address.address} and  
+        u.city=#{address.city} and  
+        u.country=#{address.country} and  
+        u.postalCode=#{address.postalCode} and  
+        u.province=#{address.province} and  
+        u.email=#{email} and  
+        u.firstName=#{firstName} and  
+        u.lastName=#{lastName} and  
+        u.password=#{password} and  
+        u.passwordHint=#{passwordHint} and  
+        u.phoneNumber=#{phoneNumber} and  
+        u.username=#{username} and  
+        u.version=#{version} and  
+        u.website=#{website} and  
+        u.gender=#{gender} and  
+        u.mobile=#{mobile} and  
+        u.createDate=#{createDate} and  
+        u.lastUpdateDate=#{lastUpdateDate} and  
+        u.defaultRoleId=#{defaultRole.id} and  
+        where u.id=#{id}
+    </update>
+    
+    <insert id="saveUser" parameterType="com.ozstrategy.model.userrole.User" flushCache="true">
+        <selectKey keyColumn="id" keyProperty="id" resultType="java.lang.Long">
+            select LAST_INSERT_ID() 
+        </selectKey>
+        insert User (<include refid="userColumns"/>) values(
+        #{id},
+        #{accountExpired},
+        #{accountLocked},
+        #{credentialsExpired},
+        #{enabled},
+        #{address.address},
+        #{address.city},
+        #{address.country},
+        #{address.postalCode},
+        #{address.province},
+        #{email},
+        #{firstName},
+        #{lastName},
+        #{password},
+        #{passwordHint},
+        #{phoneNumber},
+        #{username},
+        #{version},
+        #{website},
+        #{gender},
+        #{mobile},
+        #{createDate},
+        #{lastUpdateDate},
+        #{defaultRole.id}
+        )
+    </insert>
+    <sql id="userColumns">
+             id,
+             accountExpired,
+             accountLocked,
+             credentialsExpired,
+             enabled,
+             address,
+             city,
+             country,
+             postalCode,
+             province,
+             email,
+             firstName,
+             lastName,
+             password,
+             passwordHint,
+             phoneNumber,
+             username,
+             version,
+             website,
+             gender,
+             mobile,
+             createDate,
+             lastUpdateDate,
+             defaultRoleId
+    </sql>
+    
+
+</mapper>

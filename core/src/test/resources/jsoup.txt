@@ -1,0 +1,63 @@
+<table border="1" cellpadding="1" cellspacing="1" style="width:800px" xtype="table">
+	<tbody>
+		<tr>
+			<th colspan="4">标题</th>
+		</tr>
+		<tr>
+			<th style="width: 200px;">字段一</th>
+			<td><input name="at" txtlabel="at" type="string" xtype="textfield" /></td>
+			<th style="width: 200px;"><strong>字段二</strong></th>
+			<td><textarea name="bt" txtlabel="bt" xtype="textareafield"></textarea></td>
+		</tr>
+		<tr>
+			<th><strong>字段三</strong></th>
+			<td><select name="ct" txtlabel="c" xtype="combo"><option value="1">1</option><option value="2">2</option></select></td>
+			<th><strong>字段四</strong></th>
+			<td><input name="at9" txtlabel="at9" type="string" xtype="textfield" /></td>
+		</tr>
+		<tr>
+			<td colspan="4">
+			<table column="5" isgrid="true" index="1" name="dee" txtlabel="ddd" style="border-collapse:collapse; border:1px solid blue; width:500px" xtype="detailGrid">
+				<tbody>
+					<tr style="border: 1px solid blue;">
+						<th style="border: 1px solid blue;">1</th>
+						<th style="border: 1px solid blue;">2</th>
+						<th style="border: 1px solid blue;">3</th>
+						<th style="border: 1px solid blue;">4</th>
+						<th style="border: 1px solid blue;">5</th>
+					</tr>
+					<tr style="border: 1px solid blue;">
+						<td style="border: 1px solid blue;"><input name="a" txtlabel="a" type="string" xtype="textfield" /></td>
+						<td style="border: 1px solid blue;"><textarea name="b" txtlabel="b" xtype="textareafield"></textarea></td>
+						<td style="border: 1px solid blue;"><select name="c" txtlabel="c" xtype="combo"><option value="1">1</option><option value="2">2</option></select></td>
+						<td style="border: 1px solid blue;"><boxgroup multiple="true" name="d" txtlabel="d" xtype="boxgroup"><span><input name="d" txtlabel="1" type="checkbox" value="1" /><span>1</span></span><span><input name="d" txtlabel="2" type="checkbox" value="2" /><span>2</span></span></boxgroup></td>
+						<td style="border: 1px solid blue;"><boxgroup name="e" txtlabel="e" xtype="boxgroup"><span><input name="e" txtlabel="1" type="radio" value="1" /><span>1</span></span><span><input name="e" txtlabel="2" type="radio" value="2" /><span>2</span></span></boxgroup></td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="4">
+			<table column="5" isgrid="true" index="2" name="dee1" txtlabel="ddd1" style="border-collapse:collapse; border:1px solid blue; width:500px" xtype="detailGrid">
+				<tbody>
+					<tr style="border: 1px solid blue;">
+						<th style="border: 1px solid blue;">1</th>
+						<th style="border: 1px solid blue;">2</th>
+						<th style="border: 1px solid blue;">3</th>
+						<th style="border: 1px solid blue;">4</th>
+						<th style="border: 1px solid blue;">5</th>
+					</tr>
+					<tr style="border: 1px solid blue;">
+						<td style="border: 1px solid blue;"><input name="a1" txtlabel="a" type="string" xtype="textfield" /></td>
+						<td style="border: 1px solid blue;"><textarea name="b1" txtlabel="b" xtype="textareafield"></textarea></td>
+						<td style="border: 1px solid blue;"><select name="c1" txtlabel="c" xtype="combo"><option value="1">1</option><option value="2">2</option></select></td>
+						<td style="border: 1px solid blue;"><boxgroup multiple="true" name="d1" txtlabel="d" xtype="boxgroup"><span><input name="d" txtlabel="1" type="checkbox" value="1" /><span>1</span></span><span><input name="d" txtlabel="2" type="checkbox" value="2" /><span>2</span></span></boxgroup></td>
+						<td style="border: 1px solid blue;"><boxgroup name="e1" txtlabel="e" xtype="boxgroup"><span><input name="e" txtlabel="1" type="radio" value="1" /><span>1</span></span><span><input name="e" txtlabel="2" type="radio" value="2" /><span>2</span></span></boxgroup></td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+	</tbody>
+</table>

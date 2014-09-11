@@ -1,0 +1,469 @@
+html{
+  -webkit-text-size-adjust:none;
+}
+.x-field.x-window-text.x-form-item.x-field-default.x-anchor-form-item{
+  width: 100%;
+}
+.user-edit {
+  background-image: url(icons/user_edit.gif) !important;
+    width: 16px;
+    height: 16px;
+}
+.icon-user {
+  background-image: url(icons/user.png) !important;
+    width: 16px;
+    height: 16px;
+}
+.icon-magnifier{
+    background-image:url(icons/magnifier.png)!important;
+    width: 16px;
+    height: 16px;
+}
+.user-add {
+    background-image: url(icons/user_add.gif) !important;
+    width: 16px;
+    height: 16px;
+}
+
+.user-edit {
+    background-image: url(icons/user_edit.gif) !important;
+    width: 16px;
+    height: 16px;
+}
+
+.user-delete {
+    background-image: url(icons/user_delete.gif) !important;
+    width: 16px;
+    height: 16px;
+}
+.search {
+    background-image: url(icons/search.png) !important;
+    width: 16px;
+    height: 16px;
+}
+.clear {
+    background-image: url(icons/reset.png) !important;
+    width: 16px;
+    height: 16px;
+}
+.refresh,.btn-refresh{
+    background-image: url(icons/refresh.png) !important;
+    width: 16px;
+    height: 16px;
+}
+.add {
+    background-image: url(icons/add.gif) !important;
+    width: 16px;
+    height: 16px;
+}
+.delete {
+    background-image: url(icons/delete.png) !important;
+    width: 16px;
+    height: 16px;
+}
+.setting {
+    background: url(icons/setting.gif) no-repeat !important;
+    width: 16px;
+    height: 16px;
+}
+.update {
+    background: url(icons/update.gif) no-repeat !important;
+    width: 16px;
+    height: 16px;
+}
+.cut {
+    background: url(icons/cut.gif) no-repeat !important;
+    width: 16px;
+    height: 16px;
+}
+.copy {
+    background: url(icons/copy.gif) no-repeat !important;
+    width: 16px;
+    height: 16px;
+}
+.paste {
+    background: url(icons/paste.gif) no-repeat !important;
+    width: 16px;
+    height: 16px;
+}
+
+
+
+.btn-shared {
+    background-image: url(icons/shared.gif) !important;
+    width: 16px;
+    height: 16px;
+}
+.btn-preview {
+    background: url(icons/preview.png) no-repeat !important;
+    width: 16px;
+    height: 16px;
+}
+.btn-deploy {
+    background: url(icons/tackle-apply.png) !important;
+    width: 16px;
+    height: 16px;
+}
+.history-version {
+    background-image: url(icons/history_version.png) !important;
+    width: 16px;
+    height: 16px;
+}
+
+.error-row .x-grid-cell-inner {
+    color: red;
+}
+
+.locked-row .x-grid-cell-inner {
+    color: gray;
+}
+
+.disabled-row .x-grid-cell-inner {
+    color: darkgray;
+}
+.logout {
+    background-image: url(icons/logout.png) !important;
+    width: 16px;
+    height: 16px;
+}
+.manageUser-shortcut img {
+  width: 48px;
+  height: 48px;
+  background-image: url(icons/im48x48.png);
+  filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src = '../styles/default/desktop/images/im48x48.png', sizingMethod = 'scale');
+}
+.icon-tsm {
+    background-image: url(icons/FlexCenter_BW3D_16.gif) !important;
+    width: 16px;
+    height: 16px;
+}
+.ux-start-button-icon {
+    background-image: url(icons/oz16x16.png) !important;
+    background-image: url(icons/cmc-logo16x16.png) !important;
+    width: 16px;
+    height: 16px;
+}
+.loading{
+    position: absolute;
+    top:50%;
+    left:50%;
+    width:70px;height:70px;
+    background-image: url(icons/loading70X702.gif) !important; * jawr:base64-skip 
+}
+
+.ozMiddleIcon {
+    margin-left: 10px;
+    margin-top: 10px;
+    width: 48px;
+    height: 46px;
+    background-image: url(icons/oz48X48.png) !important;
+    background-image: url(icons/cmc48x48.png) !important;
+}
+.arrow_left{
+    background-image:url(icons/arrow_left.png)!important;
+    height: 16px;
+    width: 16px;
+}
+.arrow_right{
+    background-image:url(icons/arrow_right.png)!important;
+    height: 16px;
+    width: 16px;
+}
+.arrow_left_double{
+    background-image:url(icons/arrow_left_double.png)!important;
+    height: 16px;
+    width: 16px;
+}
+.arrow_right_double{
+    background-image:url(icons/arrow_right_double.png)!important;
+    height: 16px;
+    width: 16px;
+}
+.office_auto {
+    background-image: url(icons/office_auto.png) !important;
+    width: 16px;
+    height: 16px;
+}
+.workflow-manager-16 {
+    background-image: url(icons/workflowManager-16.png);
+    width: 16px;
+    height: 16px;
+}
+.index-page {
+    background-image: url(icons/user_home.png) !important;
+    width: 16px;
+    height: 16px;
+}
+.company-home {
+    background-image: url(icons/home.png) !important;
+    width: 16px;
+    height: 16px;
+}
+.edit_profile {
+    background-image: url(icons/edit_profile.png) !important;
+    width: 16px;
+    height: 16px;
+}
+.icon-note {
+    background-image: url(icons/note.png) !important;
+    width: 16px;
+    height: 16px;
+}
+.icon-online {
+    background-image: url(icons/eye.png) !important;
+    width: 16px;
+    height: 16px;
+}
+.icon-phone {
+    background-image: url(icons/phone.png) !important;
+    width: 16px;
+    height: 16px;
+}
+.workflow-manager-16 {
+    background-image: url(icons/workflowManager-16.png);
+    width: 16px;
+    height: 16px;
+}
+.workflow-manager {
+    width: 48px;
+    height: 48px;
+    background-image: url(icons/workflowManager.png);
+}
+.icon-globalType {
+    background-image: url(icons/type-16.png) !important;
+    width: 16px;
+    height: 16px;
+}
+.globalType-shortcut img {
+    width: 48px;
+    height: 48px;
+    background-image: url(icons/type-48.png);
+    /*filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../styles/default/desktop/images/type-48.png', sizingMethod='scale');*/
+}
+.zoom {
+    background-image: url(../../../mxgraph/images/zoom.gif) !important;
+    width: 16px;
+    height: 16px;
+}
+
+.zoomIn {
+    background-image: url(../../../mxgraph/images/zoomin.gif) !important;
+    width: 16px;
+    height: 16px;
+}
+
+.zoomOut {
+    background-image: url(../../../mxgraph/images/zoomout.gif) !important;
+    width: 16px;
+    height: 16px;
+}
+
+.zoomActual {
+    background-image: url(../../../mxgraph/images/zoomactual.gif) !important;
+    width: 16px;
+    height: 16px;
+}
+
+.fit {
+    background-image: url(../../../mxgraph/images/fit.gif) !important;
+    width: 16px;
+    height: 16px;
+}
+
+
+.export {
+    background-image: url(../../../mxgraph/images/export.png) !important;
+    width: 16px;
+    height: 16px;
+}
+
+.import {
+    background-image: url(../../../mxgraph/images/import.png) !important;
+    width: 16px;
+    height: 16px;
+}
+
+.mxGraphRemove {
+    background-image: url(../../../mxgraph/images/delete2.png) !important;
+    width: 16px;
+    height: 16px;
+}
+
+.undo {
+    background-image: url(../../../mxgraph/images/undo.gif) !important;
+    width: 16px;
+    height: 16px;
+}
+
+.redo {
+    background-image: url(../../../mxgraph/images/redo.gif) !important;
+    width: 16px;
+    height: 16px;
+}
+
+.mxGraphRefresh {
+    background-image: url(../../../mxgraph/images/refresh.gif) !important;
+    width: 16px;
+    height: 16px;
+}
+.btn-flow-design {
+    background-image: url(icons/flow_design.png) !important;
+    width: 16px;
+    height: 16px;
+}
+.btn-readdocument {
+    background: url(icons/read_document.png) no-repeat !important;
+    width: 16px;
+    height: 16px;
+}
+.down-diary-icon {
+    background-image: url(icons/down-diary.png) !important;
+    width: 16px;
+    height: 16px;
+}
+.icon-message {
+    background-image: url(icons/message.png) !important;
+    width: 16px;
+    height: 16px;
+}
+.diary-icon {
+    background-image: url(icons/diary.png) !important;
+    width: 16px;
+    height: 16px;
+}
+.icon-document {
+    background-image: url(icons/document-16.png) !important;
+    width: 16px;
+    height: 16px;
+}
+.plan-icon {
+    background-image: url(icons/plan.png) !important;
+    width: 16px;
+    height: 16px;
+}
+.icon-fileAttach {
+    background-image: url(icons/attach_document16.png) !important;
+    width: 16px;
+    height: 16px;
+}
+.email-icon {
+    background-image: url(icons/email.png) !important;
+    width: 16px;
+    height: 16px;
+}
+.contact-icon {
+    background-image: url(icons/contacts.png) !important;
+    width: 16px;
+    height: 16px;
+}
+.menu-news {
+    background-image: url('icons/news_menu.png') !important;
+    width: 16px;
+    height: 16px;
+}
+.icon-announcement {
+    background-image: url(icons/announcement-16.png) !important;
+    width: 16px;
+    height: 16px;
+}
+.icon-report {
+    background-image: url(icons/reports.png) !important;
+    width: 16px;
+    height: 16px;
+}
+.icon-regulation {
+    background-image: url(icons/regulation.png) !important;
+    width: 16px;
+    height: 16px;
+}
+.icon-company {
+    background-image: url(icons/company_menu.png) !important;
+    width: 16px;
+    height: 16px;
+}
+.btn-newFlow {
+    background-image: url(icons/newFlow.gif) !important;
+    width: 16px;
+    height: 16px;
+}
+.icon-flowWait {
+    background-image: url(icons/flowWait.png) !important;
+    height: 16px;
+    width: 16px;
+}
+.btn-flow-ok {
+    background-image: url('icons/ok.png') !important;
+    width: 16px;
+    height: 16px;
+}
+.upload-file {
+    background-image: url(icons/upload_file.png) !important;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+.btn-flow-chart {
+    background-image: url(icons/flow_chart.png) !important;
+    width: 16px;
+    height: 16px;
+}
+.task_assigned {
+    background-image: url(icons/stock_task_assigned.png) !important;
+    width: 16px;
+    height: 16px;
+}
+.btn-flowView {
+    background-image: url(icons/view.png) !important;
+    width: 16px;
+    height: 16px;
+}
+.btn-print {
+    background-image: url(icons/printer.png) !important;
+    width: 16px;
+    height: 16px;
+}
+.btn-claw-back {
+    background: url(icons/back.gif) no-repeat !important;
+    width: 16px;
+    height: 16px;
+}
+.delivered-assignee {
+    background-image: url(icons/reload.png) !important;
+    width: 16px;
+    height: 16px;
+}
+.btn-turn-back {
+    background-image: url(icons/network_back.png) !important;
+    width: 16px;
+    height: 16px;
+}
+
+.btn-turn-back-assignee {
+    background-image: url(icons/mypc_back.png) !important;
+    width: 16px;
+    height: 16px;
+}
+.btn-active{
+    background: url(icons/active.png) no-repeat !important;
+    width: 16px;
+    height: 16px;
+}
+.btn-suspended{
+    background: url(icons/suspended.png) no-repeat !important;
+    width: 16px;
+    height: 16px;
+}
+.btn-expand {
+    background: url('icons/expand.png') !important;
+    width: 16px;
+    height: 16px;
+}
+
+.btn-collapse {
+    background: url('icons/collapse.png') !important;
+    width: 16px;
+    height: 16px;
+}
+
+
+

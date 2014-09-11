@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <beans xmlns="http://www.springframework.org/schema/beans"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:context="http://www.springframework.org/schema/context"
+         xmlns:p="http://www.springframework.org/schema/p"
+         xmlns:util="http://www.springframework.org/schema/util"
+         xmlns:mvc="http://www.springframework.org/schema/mvc"
+         xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+   	http://www.springframework.org/schema/util
+    http://www.springframework.org/schema/util/spring-util-3.0.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd
+    http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd"
+         default-lazy-init="false">
+
+    <bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        <property name="exceptionMappings">
+            <props>
+                <prop key="org.springframework.dao.DataAccessException">
+                    dataAccessFailure
+                </prop>
+            </props>
+        </property>
+    </bean>
+    <context:component-scan base-package="com.ozstrategy.webapp"/>
+  <!-- Activates annotation-based model configuration -->
+    <context:annotation-config/>
+    <!-- Config any beans which aren’t managed by spring -->
+    <!-- Configures the @Controller programming model -->
+    <mvc:annotation-driven/>
+
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basenames">
+            <list>
+                <value>classpath:ApplicationResources</value>
+            </list>
+        </property>
+        <property name="cacheSeconds" value="3600"/>
+        <property name="useCodeAsDefaultMessage" value="true"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+    </bean>
+
+    <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" p:order="0">
+    </bean>
+
+    <bean id="localeResolver"
+          class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+        <property name="defaultLocale" value="zh_CN" />
+        <property name="cookieName" value="locale"></property>
+        <property name="cookieMaxAge" value="3600"></property>
+    </bean>
+    <!-- URL to url/flow mapping rules -->
+
+    <!-- Maps request paths to @Controller classes; e.g. a path of /hotels looks for a controller named HotelsController -->
+    <bean class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping">
+        <property name="order" value="2"/>
+        <property name="defaultHandler">
+            <!--If no @Controller match, map path to a view to render; e.g. the "/intro" path would map to the view named "intro"-->
+            <bean class="com.ozstrategy.webapp.controller.ConstrainedUrlFilenameViewController">
+                <property name="urlPathHelper" ref="constrainedUrlPathHelper"/>
+                <property name="stripExtension" value="false"/>
+            </bean>
+        </property>
+    </bean>
+
+    <!-- Enables annotated POJO @Controllers -->
+    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
+
+    <!-- Enables plain Controllers -->
+    <bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"/>
+
+    <bean id="reportResolver" class="org.springframework.web.servlet.view.ResourceBundleViewResolver">
+        <property name="basename" value="views"/>
+    </bean>
+
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="requestContextAttribute" value="rc"/>
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+        <property name="prefix" value="/WEB-INF/pages/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+    <util:map id="reportImages">
+    </util:map>
+
+    <bean id="viewNameTranslator" class="org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator">
+        <property name="stripExtension" value="false"/>
+        <property name="urlPathHelper" ref="constrainedUrlPathHelper"/>
+    </bean>
+
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="20480000"/>
+    </bean>
+
+    <bean id="constrainedUrlPathHelper" class="com.ozstrategy.webapp.view.ConstrainedUrlPathHelper">
+        <property name="refuseUrlEndsWith">
+            <set>
+                <value>Res</value>
+            </set>
+        </property>
+        <property name="pathExtensionConstraint">
+            <map>
+                <entry key="/jscripts">
+                    <set>
+                        <value>js</value>
+                    </set>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+    <!-- Add additional controller beans here -->
+</beans>

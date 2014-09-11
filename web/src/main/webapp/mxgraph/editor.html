@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ddd</title>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8"/>
+    <script type="text/javascript">
+        mxBasePath = "../mxgraph/src";
+    </script>
+    <script type="text/javascript" src="../mxgraph/src/js/mxClient.js"></script>
+    <script type="text/javascript">
+    // Program starts here. Creates a sample graph in the
+    // DOM node with the specified ID. This function is invoked
+    // from the onLoad event handler of the document (see below).
+    function main()
+    {
+        // Defines an icon for creating new connections in the connection handler.
+        // This will automatically disable the highlighting of the source vertex.
+        
+
+        // Checks if browser is supported
+        if (!mxClient.isBrowserSupported())
+        {
+            // Displays an error message if the browser is
+            // not supported.
+            mxUtils.error('Browser is not supported!', 200, false);
+        }
+        else
+        {
+            mxConnectionHandler.prototype.connectImage = new mxImage('images/connector.gif', 16, 16);
+            mxRectangleShape.prototype.crisp = true;
+
+            // Enables guides
+            mxGraphHandler.prototype.guidesEnabled = true;
+            mxGuide.prototype.isEnabledForEvent = function(evt)
+            {
+                return !mxEvent.isAltDown(evt);
+            };
+            // Creates the div for the toolbar
+            var tbContainer = document.createElement('div');
+            tbContainer.style.position = 'absolute';
+            tbContainer.style.overflow = 'auto';
+            tbContainer.style.padding = '2px';
+            tbContainer.style.left = '0px';
+            tbContainer.style.top = '26px';
+            tbContainer.style.width = '120px';
+            tbContainer.style.bottom = '0px';
+            tbContainer.style.border = '1px solid blue';
+
+            document.body.appendChild(tbContainer);
+            
+
+            // Creates new toolbar without event processing
+            var toolbar = new mxGraph(tbContainer);
+//            toolbar.enabled = false
+
+            // Creates the div for the graph
+            var container = document.createElement('div');
+            container.style.position = 'absolute';
+            container.style.overflow = 'auto';
+            container.style.left = '140px';
+            container.style.top = '26px';
+            container.style.right = '0px';
+            container.style.bottom = '0px';
+            container.style.background = 'url("images/grid.gif")';
+            container.style.border = '1px solid blue';
+            document.body.appendChild(container);
+            
+            
+            var outlineContainer = document.createElement('div');
+            outlineContainer.style.position = 'absolute';
+            outlineContainer.style.overflow = 'auto';
+            outlineContainer.style.top = '52px';
+            outlineContainer.style.right = '5px';
+            outlineContainer.style.width = '200px';
+            outlineContainer.style.height = '100px';
+            outlineContainer.style.background = 'transparent';
+            outlineContainer.style.border = '1px solid blue';
+            document.body.appendChild(outlineContainer);
+            var button = mxUtils.button('View XML', function()
+            {
+                var encoder = new mxCodec();
+                var node = encoder.encode(graph.getModel());
+                var xml=mxUtils.getPrettyXml(node);
+//                mxUtils.popup(mxUtils.getPrettyXml(node), true);
+            });
+
+            document.body.insertBefore(button, container.nextSibling);
+            
+
+            var outline = document.getElementById('outlineContainer');
+
+            // Workaround for Internet Explorer ignoring certain styles
+            if (mxClient.IS_QUIRKS)
+            {
+                document.body.style.overflow = 'auto';
+                new mxDivResizer(tbContainer);
+                new mxDivResizer(container);
+                new mxDivResizer(outline);
+            }
+
+            // Creates the model and the graph inside the container
+            // using the fastest rendering available on the browser
+            var model = new mxGraphModel();
+            var graph = new mxGraph(container, model);
+
+            // Enables new connections in the graph
+            graph.setConnectable(true);
+            graph.setMultigraph(false);
+
+            // Stops editing on enter or escape keypress
+            var keyHandler = new mxKeyHandler(graph);
+            var rubberband = new mxRubberband(graph);
+
+
+            var setStyle=function(style){
+                style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
+                style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
+                style[mxConstants.STYLE_STROKECOLOR] = 'gray';
+                style[mxConstants.STYLE_ROUNDED] = true;
+//            style[mxConstants.STYLE_FILLCOLOR] = '#EEEEEE';
+                style[mxConstants.STYLE_GRADIENTCOLOR] = 'white';
+//            style[mxConstants.STYLE_FONTCOLOR] = '#774400';
+                style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
+                style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
+                style[mxConstants.STYLE_FONTSIZE] = '12';
+                style[mxConstants.STYLE_FONTSTYLE] = 1;
+                style[mxConstants.STYLE_SHADOW] = true;
+                style[mxConstants.STYLE_SPACING] = 8;
+            }
+            
+            var style = graph.getStylesheet().getDefaultVertexStyle();
+            setStyle(style);
+            var style=toolbar.getStylesheet().getDefaultVertexStyle();
+            setStyle(style);
+            style = graph.getStylesheet().getDefaultEdgeStyle();
+            style[mxConstants.STYLE_ROUNDED] = true;
+            style[mxConstants.STYLE_EDGE] = mxEdgeStyle.TopToBottom;
+            new mxRubberband(graph);
+            
+            
+
+            var addVertex = function(w, h,x,y,value)
+            {
+                var prototype = new mxCell(value, new mxGeometry(x, y, w, h),style);
+                prototype.setVertex(true);
+                toolbar.addCell(prototype);
+                var funct = function(graph, evt, cell)
+                {
+                    graph.stopEditing(false);
+
+                    var pt = graph.getPointForEvent(evt);
+                    var vertex = graph.getModel().cloneCell(prototype);
+                    vertex.geometry.x = pt.x;
+                    vertex.geometry.y = pt.y;
+
+                    graph.addCell(vertex);
+                    graph.setSelectionCell(vertex);
+                    graph.scrollCellToVisible(vertex);
+                }
+                
+
+                var div = document.createElement('div');
+                div.style.position = 'absolute';
+                div.style.overflow = 'hidden';
+                div.style.left = x+'px';
+                div.style.top = y+'px';
+//                div.style.border = '1px solid blue';
+                div.style.width=prototype.geometry.width+'px';
+                div.style.height=prototype.geometry.height+'px';
+                tbContainer.appendChild(div);
+
+                if (mxClient.IS_IE)
+                {
+                    mxEvent.addListener(div, 'dragstart', function(evt)
+                    {
+                        evt.returnValue = false;
+                    });
+                }
+                
+                var sprite=function(width, height){
+                    var elt = document.createElement('div');
+                    elt.style.border = '1px dashed black';
+                    elt.style.width = width + 'px';
+                    elt.style.height = height + 'px';
+
+                    return elt;
+                };
+                var ds = mxUtils.makeDraggable(div, graph, funct,sprite(prototype.geometry.width,prototype.geometry.height),null, null, graph.autoscroll, true);
+                ds.isGuidesEnabled = function()
+                {
+                    return graph.graphHandler.guidesEnabled;
+                };
+
+                // Restores original drag icon while outside of graph
+                ds.createDragElement = mxDragSource.prototype.createDragElement;
+            };
+            
+            mxGraph.prototype.cellsResizable=false;
+
+            addVertex(100, 40,5,20,'1');
+            addVertex(100, 40,5,80,'2');
+            addVertex(100, 40,5,140,'3');
+            addVertex(100, 40,5,200,'4');
+            addVertex(100, 40,5,260,'5');
+            addVertex(100, 40,5,320,'6');
+            addVertex(100, 40,5,380,'7');
+            mxOutline.prototype.graphRenderHint = mxConstants.RENDERING_HINT_EXACT;
+            var outln = new mxOutline(graph, outlineContainer);
+            var scale = graph.view.scale;
+            var bounds = graph.getGraphBounds();
+            graph.view.setTranslate(-bounds.x / scale, -bounds.y / scale);
+            // To show the images in the outline, uncomment the following code
+            outln.outline.labelsVisible = true;
+            outln.outline.setHtmlLabels(true);
+            
+        }
+    }
+    
+
+    function addToolbarItem(graph, toolbar, prototype, image,tbContainer,x,y,value)
+    {
+        // Function that is executed when the image is dropped on
+        // the graph. The cell argument points to the cell under
+        // the mousepointer if there is one.
+        var funct = function(graph, evt, cell)
+        {
+            graph.stopEditing(false);
+
+            var pt = graph.getPointForEvent(evt);
+            var vertex = graph.getModel().cloneCell(prototype);
+            vertex.geometry.x = pt.x;
+            vertex.geometry.y = pt.y;
+            console.log(cell);
+
+            graph.addCell(vertex);
+            graph.setSelectionCell(vertex);
+        }
+
+        var div = document.createElement('div');
+        div.style.position = 'absolute';
+        div.style.overflow = 'hidden';
+        div.style.left = x+'px';
+        div.style.top = y+'px';
+        div.style.border = '1px solid blue';
+        div.style.width=100;
+        div.style.height=40;
+        div.innerHTML=value;
+        tbContainer.appendChild(div);
+        mxUtils.makeDraggable(div, graph, funct);
+    }
+    function Permission(locked, createEdges, editEdges, editVertices, cloneCells)
+    {
+        this.locked = (locked != null) ? locked : false;
+        this.createEdges = (createEdges != null) ? createEdges : true;
+        this.editEdges = (editEdges != null) ? editEdges : true;;
+        this.editVertices = (editVertices != null) ? editVertices : true;;
+        this.cloneCells = (cloneCells != null) ? cloneCells : true;;
+    };
+
+    Permission.prototype.apply = function(graph)
+    {
+        graph.setConnectable(this.createEdges);
+        graph.setCellsLocked(this.locked);
+    };
+    </script>
+</head>
+<body onload="main()">
+<!--<div id="graph" style="right:208px;left:108px;top:90px;bottom:20px;overflow:auto;border:gray dotted 1px;position:absolute"></div>-->
+
+</body>
+</html>

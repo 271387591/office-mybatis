@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+              http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+    <http pattern="/images/**" security="none"/>
+    <http pattern="/styles/**" security="none"/>
+    <http pattern="/scripts/**" security="none"/>
+
+    <http use-expressions="true"  >
+        <expression-handler ref="expressionHandler"/>
+        <intercept-url pattern="/service/*" access="hasAnyRole('ROLE_ADMIN,ROLE_USER')"/>
+        <!--<intercept-url pattern="/app/passwordHint*" access="hasFeature('sss')"/>-->
+        <!--<intercept-url pattern="/app/signup*" access="ROLE_ANONYMOUS,ROLE_ADMIN,ROLE_USER"/>-->
+        <!--<intercept-url pattern="/app/**" access="ROLE_ADMIN,ROLE_USER"/>-->
+        <form-login login-page="/login" 
+                    authentication-failure-url="/login?error=true" 
+                    login-processing-url="/j_security_check" 
+                    always-use-default-target="false"
+                    authentication-success-handler-ref="authSuccessLogger"/>
+                    <!--authentication-failure-handler-ref="authFailLogger"/>-->
+        <remember-me user-service-ref="userManager" key="e37f4b31-0c45-11dd-bd0b-0800200c9a66"/>
+    </http>
+    <beans:bean id="authSuccessLogger" class="com.ozstrategy.webapp.security.WebAuthenticationSuccessLoggerHandler">
+        <!--<beans:property name="userManager" ref="userManager"></beans:property>-->
+    </beans:bean>
+    <beans:bean id="authFailLogger" class="com.ozstrategy.webapp.security.WebAuthenticationFailLoggerHandler">
+    </beans:bean>
+
+    <authentication-manager>
+        <authentication-provider user-service-ref="userManager">
+            <password-encoder ref="passwordEncoder"/>
+        </authentication-provider>
+    </authentication-manager>
+
+    <!-- Override the default password-encoder (SHA) by uncommenting the following and changing the class -->
+    <!-- <bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder"/> -->
+
+    <!--<global-method-security>-->
+        <!--<protect-pointcut expression="execution(* *..service.UserManager.getUsers(..))" access="ROLE_ADMIN"/>-->
+        <!--<protect-pointcut expression="execution(* *..service.UserManager.removeUser(..))" access="ROLE_ADMIN"/>-->
+    <!--</global-method-security>-->
+    <beans:bean id="expressionHandler" class="com.ozstrategy.webapp.security.DefaultWebSecurityExpressionHandler">
+        <beans:property name="root">
+            <beans:bean class="com.ozstrategy.webapp.security.WebSecurityExpressionRoot"/>
+        </beans:property>
+    </beans:bean>
+</beans:beans>

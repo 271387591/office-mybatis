@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ozstrategy.dao.userrole.RoleFeatureDao">
+    <insert id="saveRoleFeature" flushCache="true" parameterType="com.ozstrategy.model.userrole.RoleFeature">
+        <selectKey keyColumn="id" keyProperty="id" resultType="java.lang.Long">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into RoleFeature(id,featureId,roleId) values (#{id},#{feature.id},#{role.id})
+    </insert>
+    <delete id="deleteRoleFeature" flushCache="true" parameterType="Map">
+        delete from RoleFeature where featureId=#{featureId} and roleId=#{roleId}
+    </delete>
+    <delete id="removeRoleFeatureByRoleId" flushCache="true" parameterType="long">
+        delete from RoleFeature where roleId=#{roleId}
+    </delete>
+    <delete id="removeRoleFeatureByFeatureId" flushCache="true" parameterType="long">
+        delete from RoleFeature where featureId=#{featureId}
+    </delete>
+</mapper>

@@ -1,0 +1,13 @@
+<mxEditor>
+    <ui>
+        <add as="graph" element="graph"></add>
+        <add as="toolbar" element="sideBar" x="10" y="20" width="100"></add>
+    </ui>
+    <include name="mxgraph/config/templates.xml"></include>
+    <include name="mxgraph/config/popupMenu.xml"></include>
+    <!--swimlaneNesting指定泳道是否可以嵌套。-->
+    <mxGraph as="graph" swimlaneNesting="0">
+    </mxGraph>
+    <mxDefaultToolbar as="toolbar">
+    </mxDefaultToolbar>
+</mxEditor>

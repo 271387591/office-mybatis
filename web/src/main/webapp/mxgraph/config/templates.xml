@@ -1,0 +1,329 @@
+<mxEditor>
+    <mxGraph as="graph">
+        <mxStylesheet as="stylesheet">
+            <add as="defaultVertex" extend="defaultVertex">
+                <add as="fillColor" value="#adc5ff"/>
+                <add as="gradientColor" value="#7d85df"/>
+                <add as="strokeColor" value="#5d65df"/>
+                <add as="fontSize" value="12"/>
+                <add as="fontColor" value="#1d258f"/>
+                <add as="fontFamily" value="Verdana"/>
+            </add>
+            <add as="defaultEdge" extend="defaultEdge">
+                <add as="labelBackgroundColor" value="white"/>
+                <add as="rounded" value="1"/>
+                <add as="edgeStyle" value="elbowEdgeStyle"/>
+                <add as="strokeColor" value="#5d65df"/>
+                <add as="fontSize" value="11"/>
+                <add as="fontColor" value="#1d258f"/>
+                <add as="fontFamily" value="Verdana"/>
+            </add>
+            <add as="label_swimlane">
+                <add as="shape" value="swimlane"/>
+                <!--<add as="perimeter" value="rectanglePerimeter"/>-->
+                <add as="fontStyle" value="1"/>
+                <add as="align" value="left"/>
+                <add as="verticalAlign" value="middle"/>
+                <add as="spacing" value="2"/>
+                <add as="fillColor" value="#adc5ff"/>
+                <add as="gradientColor" value="#7d85df"/>
+                <add as="strokeColor" value="#5d65df"/>
+                <!--<add as="spacingLeft" value="16"/>-->
+                <add as="imageWidth" value="16"/>
+                <add as="imageHeight" value="16"/>
+                <add as="imageAlign" value="left"/>
+                <add as="imageVerticalAlign" value="top"/>
+                <add as="startSize" value="80"/>
+                <!--<add as="rounded" value="1"/>-->
+                <!--<add as="shadow" value="1"/>-->
+                <!--<add as="glass" value="1"/>-->
+            </add>
+            <add as="label">
+                <add as="shape" value="label"/>
+                <add as="perimeter" value="rectanglePerimeter"/>
+                <add as="fontStyle" value="1"/>
+                <add as="align" value="left"/>
+                <add as="verticalAlign" value="middle"/>
+                <add as="spacing" value="2"/>
+                <add as="spacingLeft" value="16"/>
+                <add as="imageWidth" value="16"/>
+                <add as="imageHeight" value="16"/>
+                <add as="imageAlign" value="left"/>
+                <add as="imageVerticalAlign" value="top"/>
+                <add as="rounded" value="1"/>
+                <!--<add as="shadow" value="1"/>-->
+                <!--<add as="glass" value="1"/>-->
+            </add>
+            
+            <add as="icon" extend="label">
+                <add as="align" value="center"/>
+                <add as="imageAlign" value="center"/>
+                <add as="verticalLabelPosition" value="bottom"/>
+                <add as="verticalAlign" value="top"/>
+                <add as="spacingTop" value="4"/>
+                <add as="labelBackgroundColor" value="#FFFFFF"/>
+                <add as="spacing" value="0"/>
+                <add as="spacingLeft" value="0"/>
+                <add as="spacingTop" value="6"/>
+                <add as="fontStyle" value="0"/>
+                <add as="imageWidth" value="48"/>
+                <add as="imageHeight" value="48"/>
+            </add>
+            <add as="entity">
+                <add as="edgeStyle" value="entityRelationEdgeStyle"/>
+            </add>
+            <add as="vertical">
+                <add as="elbow" value="vertical"/>
+            </add>
+            <add as="straight">
+                <add as="shape" value="connector"/>
+                <add as="endArrow" value="classic"/>
+                <add as="edgeStyle" value="none"/>
+            </add>
+            <add as="arrow">
+                <add as="shape" value="arrow"/>
+            </add>
+            <add as="swimlane">
+                <add as="shape" value="swimlane"/>
+                <add as="fontSize" value="12"/>
+                <add as="fontStyle" value="1"/>
+                <add as="startSize" value="23"/>
+            </add>
+            <add as="group">
+                <add as="verticalAlign" value="top"/>
+                <add as="dashed" value="1"/>
+                <add as="opacity" value="50"/>
+            </add>
+            <add as="ellipse">
+                <add as="shape" value="ellipse"/>
+                <add as="perimeter" value="ellipsePerimeter"/>
+            </add>
+            <add as="rhombus">
+                <add as="shape" value="rhombus"/>
+                <add as="perimeter" value="rhombusPerimeter"/>
+            </add>
+            <add as="triangle">
+                <add as="shape" value="triangle"/>
+                <add as="perimeter" value="trianglePerimeter"/>
+            </add>
+            <add as="line">
+                <add as="shape" value="line"/>
+                <add as="strokeWidth" value="4"/>
+                <add as="labelBackgroundColor" value="white"/>
+                <add as="verticalAlign" value="top"/>
+                <add as="spacingTop" value="8"/>
+            </add>
+            <add as="image">
+                <add as="shape" value="image"/>
+                <add as="labelBackgroundColor" value="white"/>
+                <add as="verticalLabelPosition" value="bottom"/>
+                <add as="verticalAlign" value="top"/>
+            </add>
+            <add as="roundImage" extend="image">
+                <add as="perimeter" value="ellipsePerimeter"/>
+            </add>
+            <add as="rhombusImage" extend="image">
+                <add as="perimeter" value="rhombusPerimeter"/>
+            </add>
+        </mxStylesheet>
+    </mxGraph>
+    <Array as="templates">
+        <add as="StartNoneEvent">
+            <StartNoneEvent label="Start" type="startEvent">
+                <mxCell vertex="true" style="roundImage;image=mxgraph/images/startevent/none.node.png">
+                    <mxGeometry as="geometry" x="0" y="0" width="40" height="40"/>
+                </mxCell>
+            </StartNoneEvent>
+        </add>
+        <add as="StartTimerEvent">
+            <StartTimerEvent label="Start timer event" type="startEvent">
+                <mxCell vertex="true" style="roundImage;image=mxgraph/images/startevent/timer.node.png">
+                    <mxGeometry as="geometry" x="0" y="0" width="40" height="40"/>
+                </mxCell>
+            </StartTimerEvent>
+        </add>
+        <add as="StartMessageEvent">
+            <StartMessageEvent label="Start message event" type="startEvent">
+                <mxCell vertex="true" style="roundImage;image=mxgraph/images/startevent/message.node.png">
+                    <mxGeometry as="geometry" x="0" y="0" width="40" height="40"/>
+                </mxCell>
+            </StartMessageEvent>
+        </add>
+        <add as="StartErrorEvent">
+            <StartErrorEvent label="Start error event" type="startEvent">
+                <mxCell vertex="true" style="roundImage;image=mxgraph/images/startevent/error.node.png">
+                    <mxGeometry as="geometry" x="0" y="0" width="40" height="40"/>
+                </mxCell>
+            </StartErrorEvent>
+        </add>
+        <add as="UserTask">
+            <UserTask label="User task" type="task">
+                <mxCell vertex="true" style="label;image=mxgraph/images/activity/list/type.user.png">
+                    <mxGeometry as="geometry" x="0" y="0" width="140" height="80"/>
+                </mxCell>
+            </UserTask>
+        </add>
+        <add as="ServiceTask">
+            <ServiceTask label="Service task" type="task">
+                <mxCell vertex="true" style="label;image=mxgraph/images/activity/list/type.service.png">
+                    <mxGeometry as="geometry" x="0" y="0" width="140" height="80"/>
+                </mxCell>
+            </ServiceTask>
+        </add>
+        <add as="ScriptTask">
+            <ScriptTask label="Script task" type="task">
+                <mxCell vertex="true" style="label;image=mxgraph/images/activity/list/type.script.png">
+                    <mxGeometry as="geometry" x="0" y="0" width="140" height="80"/>
+                </mxCell>
+            </ScriptTask>
+        </add>
+        <add as="BusinessRule">
+            <BusinessRule label="Business rule task" type="task">
+                <mxCell vertex="true" style="label;image=mxgraph/images/activity/list/type.business.rule.png">
+                    <mxGeometry as="geometry" x="0" y="0" width="140" height="80"/>
+                </mxCell>
+            </BusinessRule>
+        </add>
+        <add as="ReceiveTask">
+            <ReceiveTask label="Receive task" type="task">
+                <mxCell vertex="true" style="label;image=mxgraph/images/activity/list/type.receive.png">
+                    <mxGeometry as="geometry" x="0" y="0" width="140" height="80"/>
+                </mxCell>
+            </ReceiveTask>
+        </add>
+        <add as="ManualTask">
+            <ManualTask label="Manual task" type="task">
+                <mxCell vertex="true" style="label;image=mxgraph/images/activity/list/type.manual.png">
+                    <mxGeometry as="geometry" x="0" y="0" width="140" height="80"/>
+                </mxCell>
+            </ManualTask>
+        </add>
+        <add as="MailTask">
+            <MailTask label="Mail task" type="task">
+                <mxCell vertex="true" style="label;image=mxgraph/images/activity/list/type.send.png">
+                    <mxGeometry as="geometry" x="0" y="0" width="140" height="80"/>
+                </mxCell>
+            </MailTask>
+        </add>
+        <add as="SubProcess">
+            <SubProcess label="Sub process" type="subProcess">
+                <mxCell vertex="true" style="swimlane;">
+                    <mxGeometry as="geometry" x="0" y="0" width="240" height="200"/>
+                </mxCell>
+            </SubProcess>
+        </add>
+        <add as="EventSubProcess">
+            <EventSubProcess label="Event sub process" type="subProcess">
+                <mxCell vertex="true" style="swimlane;dashed=1;">
+                    <mxGeometry as="geometry" x="0" y="0" width="240" height="200"/>
+                </mxCell>
+            </EventSubProcess>
+        </add>
+        <add as="CallActivity">
+            <CallActivity label="Call activity" type="subProcess">
+                <mxCell vertex="true" style="defaultVertex;">
+                    <mxGeometry as="geometry" x="0" y="0" width="140" height="80"/>
+                </mxCell>
+            </CallActivity>
+        </add>
+        <add as="ExclusiveGateway">
+            <ExclusiveGateway label="Exclusive gateway" type="gateway">
+                <mxCell vertex="true" style="roundImage;image=mxgraph/images/gateway/fork.png">
+                    <mxGeometry as="geometry" x="0" y="0" width="40" height="40"/>
+                </mxCell>
+            </ExclusiveGateway>
+        </add>
+        <add as="ParallelGateway">
+            <ParallelGateway label="Parallel gateway" type="gateway">
+                <mxCell vertex="true" style="roundImage;image=mxgraph/images/gateway/fork.png">
+                    <mxGeometry as="geometry" x="0" y="0" width="40" height="40"/>
+                </mxCell>
+            </ParallelGateway>
+        </add>
+        <add as="InclusiveGateway">
+            <InclusiveGateway label="Inclusive gateway" type="gateway">
+                <mxCell vertex="true" style="roundImage;image=mxgraph/images/gateway/inclusive.node.png">
+                    <mxGeometry as="geometry" x="0" y="0" width="40" height="40"/>
+                </mxCell>
+            </InclusiveGateway>
+        </add>
+        <add as="EventGateway">
+            <EventGateway label="Event gateway" type="gateway">
+                <mxCell vertex="true" style="roundImage;image=mxgraph/images/gateway/inclusive.node.png">
+                    <mxGeometry as="geometry" x="0" y="0" width="40" height="40"/>
+                </mxCell>
+            </EventGateway>
+        </add>
+        <add as="BoundaryErrorEvent">
+            <BoundaryErrorEvent label="Boundary error event" type="boundaryEvent">
+                <mxCell vertex="true" style="roundImage;image=mxgraph/images/startevent/error.png">
+                    <mxGeometry as="geometry" x="0" y="0" width="35" height="35"/>
+                </mxCell>
+            </BoundaryErrorEvent>
+        </add>
+        <add as="BoundaryTimerEvent">
+            <BoundaryTimerEvent label="Boundary timer event" type="boundaryEvent">
+                <mxCell vertex="true" style="roundImage;image=mxgraph/images/startevent/timer.png">
+                    <mxGeometry as="geometry" x="0" y="0" width="35" height="35"/>
+                </mxCell>
+            </BoundaryTimerEvent>
+        </add>
+        <add as="BoundarySignalEvent">
+            <BoundarySignalEvent label="Boundary signal event" type="boundaryEvent">
+                <mxCell vertex="true" style="roundImage;image=mxgraph/images/startevent/signal.png">
+                    <mxGeometry as="geometry" x="0" y="0" width="35" height="35"/>
+                </mxCell>
+            </BoundarySignalEvent>
+        </add>
+        <add as="CatchTimerEvent">
+            <CatchTimerEvent label="Intermediate timer catching event" type="catchingEvent">
+                <mxCell vertex="true" style="roundImage;image=mxgraph/images/catching/timer.png">
+                    <mxGeometry as="geometry" x="0" y="0" width="40" height="40"/>
+                </mxCell>
+            </CatchTimerEvent>
+        </add>
+        <add as="CatchSignalEvent">
+            <CatchSignalEvent label="Intermediate signal catching event" type="catchingEvent">
+                <mxCell vertex="true" style="roundImage;image=mxgraph/images/catching/signal.png">
+                    <mxGeometry as="geometry" x="0" y="0" width="40" height="40"/>
+                </mxCell>
+            </CatchSignalEvent>
+        </add>
+        <add as="CatchMessageEvent">
+            <CatchMessageEvent label="Intermediate message catching event" type="catchingEvent">
+                <mxCell vertex="true" style="roundImage;image=mxgraph/images/catching/message.png">
+                    <mxGeometry as="geometry" x="0" y="0" width="40" height="40"/>
+                </mxCell>
+            </CatchMessageEvent>
+        </add>
+        <add as="ThrowNoneEvent">
+            <ThrowNoneEvent label="Intermediate none throwing event" type="throwingEvent">
+                <mxCell vertex="true" style="roundImage;image=mxgraph/images/throwing/none.png">
+                    <mxGeometry as="geometry" x="0" y="0" width="40" height="40"/>
+                </mxCell>
+            </ThrowNoneEvent>
+        </add>
+        <add as="ThrowSignalEvent">
+            <ThrowSignalEvent label="Intermediate signal throwing event" type="throwingEvent">
+                <mxCell vertex="true" style="roundImage;image=mxgraph/images/throwing/signal.png">
+                    <mxGeometry as="geometry" x="0" y="0" width="40" height="40"/>
+                </mxCell>
+            </ThrowSignalEvent>
+        </add>
+        
+        <add as="EndNoneEvent">
+            <EndNoneEvent label="End event" type="endEvent">
+                <mxCell vertex="true" style="roundImage;image=mxgraph/images/endevent/event_end.png">
+                    <mxGeometry as="geometry" x="0" y="0" width="40" height="40"/>
+                </mxCell>
+            </EndNoneEvent>
+        </add>
+        <add as="EndErrorEvent">
+            <EndErrorEvent label="End error event" type="endEvent">
+                <mxCell vertex="true" style="roundImage;image=mxgraph/images/startevent/none.node.png">
+                    <mxGeometry as="geometry" x="0" y="0" width="40" height="40"/>
+                </mxCell>
+            </EndErrorEvent>
+        </add>
+    </Array>
+</mxEditor>

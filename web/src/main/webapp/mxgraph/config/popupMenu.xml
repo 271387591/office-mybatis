@@ -1,0 +1,55 @@
+<mxEditor>
+    <mxDefaultPopupMenu as="popupHandler">
+        <add as="cut/剪切" action="cut" icon="images/cut.gif"/>
+        <add as="copy/复制" action="copy" icon="images/copy.gif"/>
+        <add as="paste/粘贴" action="paste" icon="images/paste.gif"/>
+        <separator/>
+        <add as="delete/删除" action="delete" icon="images/delete.gif" if="cell"/>
+        <separator/>
+        <add as="selectAll/选择所有" action="selectAll"/>
+        <add as="selectNone/取消选择" action="selectNone"/>
+        <separator/>
+        <add as="shape/形状" if="cell">
+            <add as="group/分组" action="group" icon="images/group.gif" if="ncells"/>
+            <add as="ungroup/取消分组" action="ungroup" icon="images/ungroup.gif" if="cell"/>
+            <separator/>
+            <add as="collapse/收缩" action="collapse" icon="images/collapse.gif" if="collapsable"/>
+            <add as="expand/扩张" action="expand" icon="images/expand.gif" if="expandable"/>
+            <separator/>
+            <add as="toFront/最前显示" action="toFront" icon="images/tofront.gif" if="cell"/>
+            <add as="toBack/最后显示" action="toBack" icon="images/toback.gif" if="cell"/>
+            <separator/>
+            <add as="editStyle/编辑样式" action="editStyle" if="cell"/>
+        </add>
+        <separator/>
+        <add as="zoom/缩放">
+            <add as="zoomIn/放大" action="zoomIn" if="cell"/>
+            <add as="zoomOut/缩小" action="zoomOut" if="cell"/>
+            <add as="actualSize/实际大小" action="actualSize" if="cell"/>
+            <add as="fit/全屏显示" action="fit" if="cell"/>
+        </add>
+        <separator/>
+        <add as="properties" action="showProperties" icon="images/properties.gif"/>
+    </mxDefaultPopupMenu>
+    <Array as="actions">
+        <add as="editStyle"><![CDATA[
+			function (editor)
+			{
+				var cell = editor.graph.getSelectionCell();
+
+				if (cell != null)
+				{
+					var model = editor.graph.getModel();
+					//mxUtils.prompt(message,defaultValue)在提示框显示信息。defaultValue表示信息默认的值。它是由mxGraph内部机制实现的。
+					var style = mxUtils.prompt('enterStyle', model.getStyle(cell) || '');
+
+					if (style != null)
+					{
+                        //设置指定的cells的样式,如果获得的cell为null,那么默认就是被选中的cells.
+						model.setStyle(cell, style);
+					}
+				}
+			}
+		]]></add>
+    </Array>
+</mxEditor>
