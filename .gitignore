@@ -1,9 +1,11 @@
 /office/office.iml
 /office/target/
-/office/core/target/
-/office/web/target/
+/office-mybatis/core/target/
+/office-mybatis/web/target/
 /office/core/log/
 /office/web/log/
+/core/target/
+/web/target/
 *.iml
 .log
 *.log
