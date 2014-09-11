@@ -45,18 +45,19 @@ Ext.define('FlexCenter.FlowManagerView', {
                             {
                                 xtype:'processListView',
                                 title:'流程设计'
-                            },{
-                                xtype:'aModelView',
-                                title:workFlowRes.flowDefineManagerTitle
-                            },{
-                                xtype:'processInstanceView',
-                                title:'运行中流程实例'
-
-                            },{
-                                xtype:'processHistoryView',
-                                title:'已结束流程'
-
                             }
+//                            ,{
+//                                xtype:'aModelView',
+//                                title:workFlowRes.flowDefineManagerTitle
+//                            },{
+//                                xtype:'processInstanceView',
+//                                title:'运行中流程实例'
+//
+//                            },{
+//                                xtype:'processHistoryView',
+//                                title:'已结束流程'
+//
+//                            }
                         ]
                     }
                 ]

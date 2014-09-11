@@ -20,6 +20,7 @@ public class ProcessDefCommand extends BaseObjectCommand {
     private String depId;
     private String description;
     private Long parentId;
+    private String category;
     private Set<ProcessDefCommand> children=new HashSet<ProcessDefCommand>();
     public ProcessDefCommand(ProcessDef processDef) {
         super(processDef);
@@ -32,6 +33,7 @@ public class ProcessDefCommand extends BaseObjectCommand {
         this.modelId= processDef.getModelId();
         this.depId= processDef.getDepId();
         this.description= processDef.getDescription();
+        this.category=processDef.getCategory();
         this.parentId= processDef.getParent()!=null? processDef.getParent().getId():null;
         Set<ProcessDef> processDefs= processDef.getChildren();
         if(processDefs!=null && processDefs.size()>0){
@@ -126,5 +128,13 @@ public class ProcessDefCommand extends BaseObjectCommand {
 
     public void setChildren(Set<ProcessDefCommand> children) {
         this.children = children;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

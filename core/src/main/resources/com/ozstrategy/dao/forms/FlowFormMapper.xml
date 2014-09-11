@@ -15,12 +15,12 @@
     
     <select id="listFlowForms" resultMap="flowFormResult" parameterType="string">
         select f.* from FlowForm f where f.enabled=1 and f.parentId is null
-        <if test="keyword!=null">and (f.name like CONCAT(CONCAT('%', #{keyword}), '%') or f.displayName like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
+        <if test="keyword!=null and keyword!=''">and (f.name like CONCAT(CONCAT('%', #{keyword}), '%') or f.displayName like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
         order by f.createDate desc
     </select>
     <select id="listFlowFormsCount" resultType="java.lang.Integer" parameterType="string">
         select count(*) from FlowForm f where f.enabled=1 and f.parentId is null
-        <if test="keyword!=null">and (f.name like CONCAT(CONCAT('%', #{keyword}), '%') or f.displayName like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
+        <if test="keyword!=null and keyword!=''">and (f.name like CONCAT(CONCAT('%', #{keyword}), '%') or f.displayName like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
     </select>
     <select id="getFlowFormByNameAndParentId" resultMap="flowFormResult" parameterType="Map">
         select f.* from FlowForm f where f.enabled=1 and f.name=#{name} and f.parentId=#{parentId} 
@@ -45,13 +45,13 @@
     </delete>
     <update id="updateFlowForm" parameterType="com.ozstrategy.model.forms.FlowForm" flushCache="true">
         update FlowForm f set 
-        f.name=#{name} and 
-        f.displayName=#{displayName} and 
-        f.description=#{description} and 
-        f.content=#{content} and 
-        f.enabled=#{enabled} and 
-        f.parentId=#{parent.id} and 
-        f.lastUpdateDate=#{lastUpdateDate} and 
+        f.name=#{name} , 
+        f.displayName=#{displayName} , 
+        f.description=#{description} , 
+        f.content=#{content} , 
+        f.enabled=#{enabled} , 
+        f.parentId=#{parent.id} , 
+        f.lastUpdateDate=#{lastUpdateDate} 
         where f.id=#{id}
     </update>
     <update id="deleteFlowForm" parameterType="com.ozstrategy.model.forms.FlowForm" flushCache="true">

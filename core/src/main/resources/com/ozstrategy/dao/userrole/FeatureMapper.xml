@@ -6,13 +6,13 @@
     </resultMap>
     <select id="listFeatures" resultMap="featureResult" parameterType="string">
         select * from Feature u where u.enabled=1
-        <if test="keyword!=null">and (u.name like CONCAT(CONCAT('%', #{keyword}), '%') or u.displayName like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
+        <if test="keyword!=null and keyword!=''">and (u.name like CONCAT(CONCAT('%', #{keyword}), '%') or u.displayName like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
         order by u.createDate desc
     </select>
     <select id="listFeaturesCount" resultType="java.lang.Integer" parameterType="string">
         select count(*) from Feature u
         where u.enabled=1
-        <if test="keyword!=null">and (u.name like CONCAT(CONCAT('%', #{keyword}), '%') or u.displayName like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
+        <if test="keyword!=null and keyword!=''">and (u.name like CONCAT(CONCAT('%', #{keyword}), '%') or u.displayName like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
     </select>
     <select id="getFeatureByName" resultMap="featureResult" parameterType="java.lang.String">
         select * from Feature r where r.enabled=1 and r.name=#{name} and r.enabled=1 

@@ -3,56 +3,68 @@
 <mapper namespace="com.ozstrategy.dao.system.GlobalTypeDao">
     <!--<cache type="org.mybatis.caches.ehcache.EhcacheCache"/>-->
     <resultMap id="globalTypeResult" type="com.ozstrategy.model.system.GlobalType" autoMapping="true">
-        <id column="id" property="id" javaType="long"/>
+        <id column="typeId" property="typeId" javaType="long"/>
         <association property="parent" column="parentId" select="getNoCascadeGlobalTypeById"/>
-        <collection property="children" column="id" select="getChild"/>
+        <collection property="children" column="typeId" select="getChild"/>
         <!--<collection property="fields" column="id" select="com.ozstrategy.dao.forms.FormFieldDao.getFormFieldByFormId"/>-->
         <!--<collection property="children" resultMap="flowFormResult"/>-->
         <!--<collection property="children" resultMap="flowFormResult"/>-->
         <!--<collection property="fields" resultMap="com.ozstrategy.dao.forms.FormFieldDao.formFieldResult"/>-->
     </resultMap>
     
-    <select id="listGlobalTypes" resultMap="globalTypeResult" parameterType="string">
+    <select id="listGlobalTypes" resultMap="globalTypeResult" parameterType="Map">
         select f.* from GlobalType f where f.enabled=1
-        <if test="keyword!=null">and (f.typeName like CONCAT(CONCAT('%', #{keyword}), '%') or f.typeKey like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
+        <if test="keyword!=null and keyword!=''">and (f.typeName like CONCAT(CONCAT('%', #{keyword}), '%') or f.typeKey like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
+        <if test="catKey!=null and catKey!=''">and f.catKey =#{catKey}</if>
+        <if test="parentTypeId!=null and parentTypeId!=''">and f.parentId =#{parentTypeId}</if>
         order by f.createDate desc
     </select>
-    <select id="listGlobalTypesCount" resultType="java.lang.Integer" parameterType="string">
-        select count(*) from GlobalType f where f.enabled=1 
-        <if test="keyword!=null">and (f.typeName like CONCAT(CONCAT('%', #{keyword}), '%') or f.typeKey like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
+    <select id="getGlobalTypeWithoutParent" resultMap="globalTypeResult" parameterType="Map">
+        select f.* from GlobalType f where f.enabled=1 and f.parentId is null
+        <if test="catKey!=null and catKey!=''">and f.catKey=#{catKey}</if>
     </select>
+    
+    <select id="listGlobalTypesCount" resultType="java.lang.Integer" parameterType="Map">
+        select count(*) from GlobalType f where f.enabled=1 
+        <if test="keyword!=null and keyword!=''">and (f.typeName like CONCAT(CONCAT('%', #{keyword}), '%') or f.typeKey like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
+        <if test="catKey!=null and catKey!=''">and f.catKey =#{catKey}</if>
+        <if test="parentTypeId!=null and parentTypeId!=''">and f.parentId =#{parentTypeId}</if>
+    </select>
+    
     
     <select id="getChild" resultMap="globalTypeResult" parameterType="long">
         select f.* from GlobalType f where f.enabled=1 and f.parentId=#{id} 
     </select>
     <select id="getGlobalTypeById" resultMap="globalTypeResult" parameterType="long" flushCache="true">
-        select f.* from GlobalType f where f.id=#{id} and f.enabled=1 
+        select f.* from GlobalType f where f.typeId=#{typeId} and f.enabled=1 
     </select>
-    <select id="getNoCascadeGlobalTypeById" resultMap="com.ozstrategy.model.system.GlobalType" parameterType="long">
-        select f.* from GlobalType f where f.id=#{id} and f.enabled=1 
+    <select id="getNoCascadeGlobalTypeById" resultType="com.ozstrategy.model.system.GlobalType" parameterType="long">
+        select f.* from GlobalType f where f.typeId=#{id} and f.enabled=1 
     </select>
     <delete id="removeChild" parameterType="long">
         delete from GlobalType where parentId=#{parentId}
     </delete>
     <update id="update" parameterType="com.ozstrategy.model.system.GlobalType" flushCache="true">
-        update FlowForm f set 
-        f.name=#{name} and 
-        f.displayName=#{displayName} and 
-        f.description=#{description} and 
-        f.content=#{content} and 
-        f.enabled=#{enabled} and 
-        f.parentId=#{parent.id} and 
-        f.lastUpdateDate=#{lastUpdateDate} and 
-        where f.id=#{id}
+        update GlobalType f set 
+        f.typeName=#{typeName} , 
+        f.typeKey=#{typeKey} , 
+        f.path=#{path} , 
+        f.depth=#{depth} , 
+        f.catKey=#{catKey} , 
+        f.priority=#{priority} , 
+        f.enabled=#{enabled} , 
+        f.parentId=#{parent.typeId} , 
+        f.lastUpdateDate=#{lastUpdateDate} 
+        where f.typeId=#{typeId}
     </update>
-    <update id="deleteFlowForm" parameterType="com.ozstrategy.model.forms.FlowForm" flushCache="true">
-        update FlowForm u set u.enabled=#{enabled} where u.id=#{id}
-    </update>
-    <insert id="saveFlowForm" parameterType="com.ozstrategy.model.forms.FlowForm" flushCache="true">
-        <selectKey keyColumn="id" keyProperty="id" resultType="java.lang.Long">
+    <delete id="delete" parameterType="long" flushCache="true">
+        delete from GlobalType where typeId=#{typeId}
+    </delete>
+    <insert id="save" parameterType="com.ozstrategy.model.system.GlobalType" flushCache="true">
+        <selectKey keyColumn="typeId" keyProperty="typeId" resultType="java.lang.Long">
             select LAST_INSERT_ID()
         </selectKey>
-        insert into FlowForm(id,name,displayName,description,content,enabled,parentId,createDate,lastUpdateDate) 
-        values (#{id},#{name},#{displayName},#{description},#{content},#{enabled},#{parent.id},#{createDate},#{lastUpdateDate})
+        insert into GlobalType(typeId,typeName,typeKey,path,depth,catKey,priority,enabled,parentId,createDate,lastUpdateDate) 
+        values (#{typeId},#{typeName},#{typeKey},#{path},#{depth},#{catKey},#{priority},#{enabled},#{parent.typeId},#{createDate},#{lastUpdateDate})
     </insert>
 </mapper>

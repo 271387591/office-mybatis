@@ -120,27 +120,27 @@ public class GlobalType extends BaseObject {
     this.enabled = enabled;
   }
 
-  public int hashCode() {
-    return new HashCodeBuilder(-82280557, -700257973)
-        .append(this.typeId)
-        .append(this.typeName)
-        .append(this.path)
-        .append(this.depth)
-        .append(this.catKey)
-        .append(this.priority)
-        .toHashCode();
-  }
-
-  public String toString() {
-    return new ToStringBuilder(this)
-        .append("typeId", this.typeId)
-        .append("typeName", this.typeName)
-        .append("path", this.path)
-        .append("depth", this.depth)
-        .append("catKey", this.catKey)
-        .append("priority", this.priority)
-        .toString();
-  }
+//  public int hashCode() {
+//    return new HashCodeBuilder(-82280557, -700257973)
+//        .append(this.typeId)
+//        .append(this.typeName)
+//        .append(this.path)
+//        .append(this.depth)
+//        .append(this.catKey)
+//        .append(this.priority)
+//        .toHashCode();
+//  }
+//
+//  public String toString() {
+//    return new ToStringBuilder(this)
+//        .append("typeId", this.typeId)
+//        .append("typeName", this.typeName)
+//        .append("path", this.path)
+//        .append("depth", this.depth)
+//        .append("catKey", this.catKey)
+//        .append("priority", this.priority)
+//        .toString();
+//  }
 
   public Set<GlobalType> getChildren() {
     return children;
@@ -157,4 +157,5 @@ public class GlobalType extends BaseObject {
   public void setTypeKey(String typeKey) {
     this.typeKey = typeKey;
   }
+    
 }

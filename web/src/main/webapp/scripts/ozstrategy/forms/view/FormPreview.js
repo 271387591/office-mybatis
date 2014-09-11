@@ -17,7 +17,7 @@ Ext.define('FlexCenter.forms.view.FormPreview',{
     ],
     extend:'Ext.panel.Panel',
     alias: 'widget.formPreview',
-//    itemId:'formPreview',
+    itemId:'formPreview',
     border:false,
     editorStyle: 'margin: 5px 2px 0px 0px;color:#03386C;border-collapse:collapse;',
     thStyle:'text-align:center;background-color: #D0E0F4;',

@@ -4,7 +4,7 @@
 Ext.define('FlexCenter.forms.view.FlowFormForm',{
     requires:[
         'FlexCenter.forms.view.CKEditor',
-        'FlexCenter.forms.view.FormPreview'
+        'FlexCenter.forms.view.FormPreviewWindow'
     ],
     extend:'Ext.Window',
     alias: 'widget.flowFormForm',
@@ -35,31 +35,9 @@ Ext.define('FlexCenter.forms.view.FlowFormForm',{
                         Ext.MessageBox.alert(ret.title,ret.msg);
                         return;
                     }
-                    var win = Ext.widget('window',{
-                        width:1010,
-                        autoHeight:true,
-                        minHeight:500,
-                        modal:true,
-                        itemId:'previewWindow',
-                        shim:false,
-                        title:'表单预览',
-                        autoScroll:true,
-                        buttons:[{
-                            xtype: 'button',
-                            text: globalRes.buttons.close,
-                            handler: function(){
-                                win.close();
-                            }
-                        }],
-                        items:[
-                            {
-                                xtype:'formPreview',
-                                itemId:'formPreview',
-                                formHtml:value
-                            }
-                        ]
+                    Ext.widget('formPreviewWindow',{
+                        formHtml:value
                     }).show();
-
                 }
             },
             {

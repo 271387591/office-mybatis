@@ -5,12 +5,15 @@ Ext.define('FlexCenter.forms.view.FlowFormView',{
     requires:[
         'FlexCenter.forms.store.FlowForm',
         'FlexCenter.forms.view.FlowFormForm',
-        'FlexCenter.forms.view.FlowFormDetail'
+        'FlexCenter.forms.view.FlowFormDetail',
+        'FlexCenter.forms.view.FormPreviewWindow'
     ],
     extend: 'Ext.panel.Panel',
     alias: 'widget.flowFormView',
     itemId:'flowFormView',
     layout:'border',
+    selector:false,
+    selectorSingle:false,
     autoScroll:true,
     getStore: function(){
         var store=Ext.StoreManager.lookup("flowFormViewStore");
@@ -25,7 +28,9 @@ Ext.define('FlexCenter.forms.view.FlowFormView',{
     initComponent:function(){
         var me=this;
         var store = me.getStore();
-        var sm = Ext.create('Ext.selection.CheckboxModel');
+        var sm = Ext.create('Ext.selection.CheckboxModel',{
+            mode:me.selectorSingle?'SINGLE':'MULTI'
+        });
         me.items=[
             {
                 xtype:'grid',
@@ -41,6 +46,7 @@ Ext.define('FlexCenter.forms.view.FlowFormView',{
                         text:'新建表单',
                         iconCls:'user-add',
                         scope:this,
+                        hidden: me.selector,
                         handler:me.onAddClick
                     },
 //                    {
@@ -51,7 +57,7 @@ Ext.define('FlexCenter.forms.view.FlowFormView',{
 //                        scope: this,
 //                        handler: me.onDeleteClick
 //                    },
-                    '->',
+                    me.selector?{}:'->',
                     {
                         xtype: 'textfield',
                         name: 'name',
@@ -121,11 +127,30 @@ Ext.define('FlexCenter.forms.view.FlowFormView',{
                         flex:1,
                         dataIndex: 'description'
                     },
+                    me.selector?{
+                        xtype:'actioncolumn',
+                        header:'操作',
+                        flex:1,
+                        items:[
+                            {
+                                iconCls:'btn-preview',
+                                tooltip:'预览',
+                                handler:function(grid, rowIndex, colIndex){
+                                    var rec = grid.getStore().getAt(rowIndex),selects=[];
+                                    var formHtml=rec.get('content');
+                                    Ext.widget('formPreviewWindow',{
+                                        formHtml:formHtml
+                                    }).show();
+                                } 
+                            }
+                        ]
+                    }:
                     {
                         xtype:'actioncolumn',
                         header:'管理',
                         flex:1,
 //                        width:'200',
+                        hidden: me.selector,
                         items:[
                             {
                                 iconCls:'delete',

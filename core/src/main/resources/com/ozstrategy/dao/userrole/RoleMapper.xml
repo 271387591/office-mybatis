@@ -8,13 +8,13 @@
     </resultMap>
     <select id="listRoles" resultMap="roleResult"  parameterType="string">
         select * from Role r where r.enabled=1
-        <if test="keyword!=null">and (r.name like CONCAT(CONCAT('%', #{keyword}), '%') or r.displayName like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
+        <if test="keyword!=null and keyword!=''">and (r.name like CONCAT(CONCAT('%', #{keyword}), '%') or r.displayName like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
         order by r.createDate desc
     </select>
     <select id="listRolesCount" resultType="java.lang.Integer" parameterType="Map">
         select count(*) from Role r
         where u.enabled=1
-        <if test="keyword!=null">and (r.name like CONCAT(CONCAT('%', #{keyword}), '%') or r.displayName like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
+        <if test="keyword!=null and keyword!=''">and (r.name like CONCAT(CONCAT('%', #{keyword}), '%') or r.displayName like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
     </select>
     <select id="getRoleByName" resultMap="roleResult" parameterType="java.lang.String">
         select * from Role r where r.enabled=1 and r.name=#{name}
@@ -35,10 +35,10 @@
     </insert>
     <update id="updateRole" parameterType="com.ozstrategy.model.userrole.Role" flushCache="true">
         update Role r set 
-        r.name=#{name} and 
-        r.description=#{description} and 
-        r.displayName=#{displayName} and 
-        r.enabled=#{enabled} and 
+        r.name=#{name} , 
+        r.description=#{description} , 
+        r.displayName=#{displayName} , 
+        r.enabled=#{enabled} , 
         r.systemViewId=#{systemView.id} 
         where r.id=#{id}
     </update>

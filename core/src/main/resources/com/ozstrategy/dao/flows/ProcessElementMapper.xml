@@ -11,11 +11,11 @@
     
     <select id="listProcessElements" resultMap="processElementResult" parameterType="Map">
         select f.* from ProcessElement f where 1=1
-        <if test="keyword!=null">and (f.taskKey like CONCAT(CONCAT('%', #{keyword}), '%') or f.label like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
+        <if test="keyword!=null and keyword!=''">and (f.taskKey like CONCAT(CONCAT('%', #{keyword}), '%') or f.label like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
     </select>
     <select id="listProcessElementsCount" resultType="java.lang.Integer" parameterType="Map">
         select count(*) from ProcessElement f where 1=1
-        <if test="keyword!=null">and (f.taskKey like CONCAT(CONCAT('%', #{keyword}), '%') or f.label like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
+        <if test="keyword!=null and keyword!=''">and (f.taskKey like CONCAT(CONCAT('%', #{keyword}), '%') or f.label like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
     </select>
     
     <select id="getProcessElementById" resultMap="processElementResult" parameterType="long" flushCache="true">
@@ -42,10 +42,10 @@
     
     <update id="updateProcessElement" parameterType="com.ozstrategy.model.flows.ProcessElement" flushCache="true">
         update ProcessElement f set 
-        f.type=#{type} and 
-        f.label=#{label} and 
-        f.taskKey=#{taskKey} and 
-        f.processDefId=#{processDef.id} and 
+        f.type=#{type} , 
+        f.label=#{label} , 
+        f.taskKey=#{taskKey} , 
+        f.processDefId=#{processDef.id}  
         where f.id=#{id}
     </update>
     <insert id="saveProcessElement" parameterType="com.ozstrategy.model.flows.ProcessElement" flushCache="true">

@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,9 +26,12 @@ public class ProcessDef extends BaseObject {
     private Long id;
     @Column
     private String name;
-    @ManyToOne
-    @JoinColumn(name = "globalTypeId")
+    @Transient
     private GlobalType globalType;
+    @Column
+    private Long globalTypeId;
+    @Transient
+    private String category;
     @Column
     private Integer version;
     @Column
@@ -162,5 +166,21 @@ public class ProcessDef extends BaseObject {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Long getGlobalTypeId() {
+        return globalTypeId;
+    }
+
+    public void setGlobalTypeId(Long globalTypeId) {
+        this.globalTypeId = globalTypeId;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

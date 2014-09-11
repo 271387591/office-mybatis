@@ -1,9 +1,13 @@
 package com.ozstrategy.service;
 
+import com.ozstrategy.dao.flows.ProcessDefDao;
 import com.ozstrategy.dao.forms.FlowFormDao;
 import com.ozstrategy.dao.forms.FormFieldDao;
+import com.ozstrategy.dao.system.GlobalTypeDao;
+import com.ozstrategy.model.flows.ProcessDef;
 import com.ozstrategy.model.forms.FlowForm;
 import com.ozstrategy.model.forms.FormField;
+import com.ozstrategy.model.system.GlobalType;
 import com.ozstrategy.model.userrole.Address;
 import com.ozstrategy.model.userrole.Role;
 import com.ozstrategy.model.userrole.User;
@@ -33,6 +37,12 @@ public class UserManagerTest extends BaseManagerTestCase {
     FlowFormDao flowFormDao;
     @Autowired
     FormFieldDao formFieldDao;
+    @Autowired
+    GlobalTypeDao globalTypeDao;
+    @Autowired
+    ProcessDefDao processDefDao;
+    
+    
     
 
     @Test
@@ -75,15 +85,24 @@ public class UserManagerTest extends BaseManagerTestCase {
     }
     @Test
     public void testqueryUsers() throws Exception {
-//        List<FlowForm> flowForms = flowFormDao.listFlowForms(new HashMap<String, Object>(), RowBounds.DEFAULT);
+        Map<String,Object> map=new HashMap<String, Object>();
+        map.put("catKey","Workflow");
+        map.put("typeId","");
+        List<ProcessDef> processDefs=processDefDao.listProcessDefs(map,RowBounds.DEFAULT);
+        List<GlobalType> list = globalTypeDao.listGlobalTypes(map, RowBounds.DEFAULT);
+        GlobalType globalType = globalTypeDao.getGlobalTypeById(1L);
+        globalType.setDepth(2);
+        globalType.setLastUpdateDate(new Date());
+        globalTypeDao.update(globalType);
+        List<FlowForm> flowForms = flowFormDao.listFlowForms(new HashMap<String, Object>(), RowBounds.DEFAULT);
 //        
 //        if(flowForms!=null && flowForms.size()>0){
 //            for(FlowForm flowForm : flowForms){
 //                System.out.println(flowForm.getName());
 //            }
 //        }
-        FlowForm flowForm=flowFormDao.getFlowFormById(23L);
-        System.out.println(flowForm.getFields().size());
+//        FlowForm flowForm=flowFormDao.getFlowFormById(23L);
+//        System.out.println(flowForm.getFields().size());
         int i=0;
     }
     @Test

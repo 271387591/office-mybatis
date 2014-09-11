@@ -8,13 +8,13 @@
     </resultMap>
     <select id="listSystemViews" resultMap="SystemViewResult"  parameterType="string">
         select * from SystemView r where r.enabled='1'
-        <if test="keyword!=null">and u.name like CONCAT(CONCAT('%', #{keyword}), '%')</if>
+        <if test="keyword!=null and keyword!=''">and u.name like CONCAT(CONCAT('%', #{keyword}), '%')</if>
         order by r.createDate desc
     </select>
     <select id="listSystemViewsCount" resultType="java.lang.Integer" parameterType="string">
         select count(*) from SystemView u
         where u.enabled=1
-        <if test="keyword!=null">and u.name like CONCAT(CONCAT('%', #{keyword}), '%')</if>
+        <if test="keyword!=null and keyword!=''">and u.name like CONCAT(CONCAT('%', #{keyword}), '%')</if>
     </select>
 
     <select id="getSystemViewById" resultType="com.ozstrategy.model.userrole.SystemView" parameterType="java.lang.Long">

@@ -20,12 +20,12 @@
     
     <select id="listUsers" resultMap="userResult" parameterType="string">
         select u.* from User u where u.enabled=1
-        <if test="keyword!=null">and (u.username like CONCAT(CONCAT('%', #{keyword}), '%') or u.firstName like CONCAT(CONCAT('%', #{keyword}), '%') or u.lastName like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
+        <if test="keyword!=null and keyword!=''">and (u.username like CONCAT(CONCAT('%', #{keyword}), '%') or u.firstName like CONCAT(CONCAT('%', #{keyword}), '%') or u.lastName like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
         order by u.createDate desc
     </select>
     <select id="listUsersCount" resultType="java.lang.Integer" parameterType="string">
         select count(*) from User u where u.enabled=1
-        <if test="keyword!=null">and (u.username like CONCAT(CONCAT('%', #{keyword}), '%') or u.firstName like CONCAT(CONCAT('%', #{keyword}), '%') or u.lastName like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
+        <if test="keyword!=null and keyword!=''">and (u.username like CONCAT(CONCAT('%', #{keyword}), '%') or u.firstName like CONCAT(CONCAT('%', #{keyword}), '%') or u.lastName like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
     </select>
     
     <select id="getUserById" parameterType="long" resultMap="userResult">
@@ -52,29 +52,29 @@
     </update>
     <update id="updateUser" parameterType="com.ozstrategy.model.userrole.User" flushCache="true">
         update User u set 
-        u.accountExpired=#{accountExpired} and  
-        u.accountLocked=#{accountLocked} and  
-        u.credentialsExpired=#{credentialsExpired} and  
-        u.enabled=#{enabled} and  
-        u.address=#{address.address} and  
-        u.city=#{address.city} and  
-        u.country=#{address.country} and  
-        u.postalCode=#{address.postalCode} and  
-        u.province=#{address.province} and  
-        u.email=#{email} and  
-        u.firstName=#{firstName} and  
-        u.lastName=#{lastName} and  
-        u.password=#{password} and  
-        u.passwordHint=#{passwordHint} and  
-        u.phoneNumber=#{phoneNumber} and  
-        u.username=#{username} and  
-        u.version=#{version} and  
-        u.website=#{website} and  
-        u.gender=#{gender} and  
-        u.mobile=#{mobile} and  
-        u.createDate=#{createDate} and  
-        u.lastUpdateDate=#{lastUpdateDate} and  
-        u.defaultRoleId=#{defaultRole.id} and  
+        u.accountExpired=#{accountExpired} ,  
+        u.accountLocked=#{accountLocked} ,  
+        u.credentialsExpired=#{credentialsExpired} ,  
+        u.enabled=#{enabled} ,  
+        u.address=#{address.address} ,  
+        u.city=#{address.city} ,  
+        u.country=#{address.country} ,  
+        u.postalCode=#{address.postalCode} ,  
+        u.province=#{address.province} ,  
+        u.email=#{email} ,  
+        u.firstName=#{firstName} ,  
+        u.lastName=#{lastName} ,  
+        u.password=#{password} ,  
+        u.passwordHint=#{passwordHint} ,  
+        u.phoneNumber=#{phoneNumber} ,  
+        u.username=#{username} ,  
+        u.version=#{version} ,  
+        u.website=#{website} ,  
+        u.gender=#{gender} ,  
+        u.mobile=#{mobile} ,  
+        u.createDate=#{createDate} ,  
+        u.lastUpdateDate=#{lastUpdateDate} ,  
+        u.defaultRoleId=#{defaultRole.id}  
         where u.id=#{id}
     </update>
     

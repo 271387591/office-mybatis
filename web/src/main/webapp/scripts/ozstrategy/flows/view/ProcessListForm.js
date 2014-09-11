@@ -22,6 +22,7 @@ Ext.define('FlexCenter.flows.view.ProcessListForm',{
         me.items = [
             {
                 xtype:'modeler',
+                processRecord:me.processRecord,
                 border:false
             }
         ];

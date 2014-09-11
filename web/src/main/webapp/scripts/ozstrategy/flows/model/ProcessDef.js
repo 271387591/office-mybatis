@@ -13,6 +13,7 @@ Ext.define('FlexCenter.flows.model.ProcessDef',{
         'graphResId',
         'modelId',
         'depId',
+        'category',
         {name:'createDate',convert:function(v){
             return Ext.util.Format.date(new Date(v), 'Y-m-d H:i:s');
         }},

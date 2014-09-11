@@ -4,21 +4,22 @@
     <!--<cache type="org.mybatis.caches.ehcache.EhcacheCache"/>-->
     <resultMap id="processDefResult" type="com.ozstrategy.model.flows.ProcessDef" autoMapping="true">
         <id column="id" property="id" javaType="long"/>
+        <result column="typeName" property="category" javaType="string"/>
         <association property="parent" column="parentId" select="getProcessDefById"/>
         <collection property="children" column="id" select="getChild"/>
         <collection property="elements" column="id" select="com.ozstrategy.dao.flows.ProcessElementDao.getProcessElementByDefId"/>
     </resultMap>
     
     <select id="listProcessDefs" resultMap="processDefResult" parameterType="Map">
-        select f.* from ProcessDef f where f.enabled=1 and f.parentId is null
-        <if test="keyword!=null">and f.name like CONCAT(CONCAT('%', #{keyword}), '%')</if>
-        <if test="globalTypeId!=null">and f.globalTypeId=#{globalTypeId}</if>
-        order by f.createDate desc
+        select g.typeName,p.* from GlobalType g join ProcessDef p on g.typeId=p.globalTypeId where g.catKey='Workflow' and p.enabled=1 and p.parentId is null
+        <if test="keyword!=null and keyword!=''">and p.name like CONCAT(CONCAT('%', #{keyword}), '%')</if>
+        <if test="typeId!=null and typeId!=''">and p.globalTypeId=#{typeId}</if>
+        order by p.createDate desc
     </select>
     <select id="listProcessDefsCount" resultType="java.lang.Integer" parameterType="Map">
-        select count(*) from ProcessDef f where f.enabled=1 and f.parentId is null
-        <if test="keyword!=null">and f.name like CONCAT(CONCAT('%', #{keyword}), '%')</if>
-        <if test="globalTypeId!=null">and f.globalTypeId=#{globalTypeId}</if>
+        select count(*) from GlobalType g join ProcessDef p on g.typeId=p.globalTypeId where g.catKey='Workflow' and p.enabled=1 and p.parentId is null
+        <if test="keyword!=null and keyword!=''">and p.name like CONCAT(CONCAT('%', #{keyword}), '%')</if>
+        <if test="typeId!=null and typeId!=''">and p.globalTypeId=#{typeId}</if>
     </select>
     <select id="getProcessDefById" resultMap="processDefResult" parameterType="long" flushCache="true">
         select f.* from ProcessDef f where f.enabled=1 and f.id=#{id} 
@@ -47,18 +48,18 @@
     </delete>
     <update id="updateProcessDef" parameterType="com.ozstrategy.model.flows.ProcessDef" flushCache="true">
         update ProcessDef f set 
-        f.name=#{name} and 
-        f.globalTypeId=#{globalType.id} and 
-        f.version=#{version} and 
-        f.actDefId=#{actDefId} and 
-        f.actResId=#{actResId} and 
-        f.graphResId=#{graphResId} and 
-        f.modelId=#{modelId} and 
-        f.depId=#{depId} and 
-        f.description=#{description} and 
-        f.enabled=#{enabled} and 
-        f.parentId=#{parent.id} and 
-        f.lastUpdateDate=#{lastUpdateDate} and 
+        f.name=#{name} , 
+        f.globalTypeId=#{globalType.id} , 
+        f.version=#{version} , 
+        f.actDefId=#{actDefId} , 
+        f.actResId=#{actResId} , 
+        f.graphResId=#{graphResId} , 
+        f.modelId=#{modelId} , 
+        f.depId=#{depId} , 
+        f.description=#{description} , 
+        f.enabled=#{enabled} , 
+        f.parentId=#{parent.id} , 
+        f.lastUpdateDate=#{lastUpdateDate} 
         where f.id=#{id}
     </update>
     <update id="deleteProcessDef" parameterType="com.ozstrategy.model.flows.ProcessDef" flushCache="true">

@@ -33,13 +33,13 @@
     
     <update id="updateFormField" parameterType="com.ozstrategy.model.forms.FormField" flushCache="true">
         update FormField f set 
-        f.name=#{name} and 
-        f.xtype=#{xtype} and 
-        f.html=#{html} and 
-        f.flowFormId=#{flowForm.id} and 
-        f.dataType=#{dataType} and 
-        f.lastUpdateDate=#{lastUpdateDate} and 
-        f.label=#{label} and 
+        f.name=#{name} , 
+        f.xtype=#{xtype} , 
+        f.html=#{html} , 
+        f.flowFormId=#{flowForm.id} , 
+        f.dataType=#{dataType} , 
+        f.lastUpdateDate=#{lastUpdateDate} , 
+        f.label=#{label}  
         where f.id=#{id}
     </update>
     <delete id="deleteByFormId" parameterType="long" flushCache="true">

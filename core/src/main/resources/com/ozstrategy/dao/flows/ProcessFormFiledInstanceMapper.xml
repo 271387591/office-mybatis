@@ -36,9 +36,9 @@
     
     <update id="updateProcessFormFiledInstance" parameterType="com.ozstrategy.model.flows.ProcessFormFiledInstance" flushCache="true">
         update ProcessFormFiledInstance f set 
-        f.formFieldId=#{formField.id} and 
-        f.chmod=#{chmod} and 
-        f.processElementId=#{processElement.id} 
+        f.formFieldId=#{formField.id} , 
+        f.chmod=#{chmod} , 
+        f.processElementId=#{processElement.id}, 
         f.processDefId=#{processDef.id} 
         where f.id=#{id}
     </update>

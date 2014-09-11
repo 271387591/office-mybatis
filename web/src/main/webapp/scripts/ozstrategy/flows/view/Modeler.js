@@ -630,7 +630,11 @@ Ext.define('FlexCenter.flows.view.Modeler', {
             act.setResourceId('canvas');
             act.setStencil('BPMNDiagram');
             act.setBounds(0,0,window.screen.width,window.screen.height);
-            act.setProperties(form.getForm().getValues());
+            if(me.processRecord){
+                form.getForm().setValues(me.processRecord);
+            }
+            var value=form.getForm().getValues();
+            act.setProperties(value);
             me.process=act;
         };
         var form=Ext.widget('form',{
@@ -658,7 +662,7 @@ Ext.define('FlexCenter.flows.view.Modeler', {
             },{
                 fieldLabel: '引用表单',
                 name:'formName',
-                
+                readOnly:true,
                 listeners:{
                     blur:function( f, The, eOpts ){
                         activity(form);

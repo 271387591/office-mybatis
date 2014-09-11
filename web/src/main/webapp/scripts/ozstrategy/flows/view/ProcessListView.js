@@ -4,7 +4,9 @@
 Ext.define('FlexCenter.flows.view.ProcessListView', {
     requires: [
         'FlexCenter.flows.view.ProcessListForm',
-        'FlexCenter.flows.store.ProcessDef'
+        'FlexCenter.flows.store.ProcessDef',
+        'FlexCenter.system.view.GlobalTypeTree',
+        'FlexCenter.forms.view.FlowFormSelector'
     ],
     extend: 'Ext.panel.Panel',
     alias: 'widget.processListView',
@@ -12,7 +14,7 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
     title: '流程列表',
     iconCls: 'workflow-manager-16',
     autoScroll: true,
-    layout:'fit',
+    layout:'border',
     getStore:function(){
         var store=Ext.StoreManager.lookup("processListViewStore");
         if(!store){
@@ -27,11 +29,24 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
         var me = this;
         me.items=[
             {
+                title: '流程分类',
+                xtype: 'globalTypeTree',
+                region: 'west',
+                autoScroll:true,
+                frame: false,
+                collapsible: true,
+                layout: 'fit',
+                width: 200,
+                margins: '1 2 1 1',
+                catKey: 'Workflow',
+                gridViewItemId:'processListView'
+            },
+            {
                 xtype:'grid',
                 region:'center',
 //                selModel:sm,
+                itemId:'processListViewGrid',
                 store:me.getStore(),
-                border:false,
                 autoScroll: true,
                 tbar:[
                     {
@@ -89,6 +104,9 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
                     }
                 ],
                 columns:[
+//                    {
+//                        xtype:'rownumber'
+//                    },
                     {
                         header: '流程名称',
                         flex:1,
@@ -104,6 +122,12 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
                         flex:1,
                         dataIndex: 'createDate'
                     },
+                    {
+                        header: '流程分类',
+                        flex:1,
+                        dataIndex: 'category'
+                    },
+                    
                     {
                         header: '是否部署',
                         flex:1,
@@ -174,10 +198,89 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
     },
     onAddClick:function(){
         var me = this;
-        var win = Ext.widget('processListForm',{
-            animateTarget:me.getEl()
+        var form=Ext.widget('form',{
+            layout: 'anchor',
+            border:false,
+//            frame: true,
+            defaults: {
+                anchor: '100%',
+                labelWidth:60
+            },
+            bodyPadding:5,
+            defaultType: 'textfield',
+            buttons: [
+                {
+                    text: '下一步',
+                    formBind: true,
+                    scope: me,
+                    handler: function () {
+                        var value=form.getForm().getValues();
+                        var moder = Ext.widget('processListForm',{
+                            processRecord:value,
+                            animateTarget:me.getEl()
+                        });
+                        moder.show();
+                        win.close();
+                    }
+                },
+                {
+                    text: '取消',
+                    handler: function () {
+                        win.close();
+                    }
+                }
+            ],
+            items: [
+                {
+                    xtype:'hidden',
+                    name:'id'
+                },
+                {
+                    xtype:'hidden',
+                    name:'formIds'
+                },
+                {
+                    fieldLabel: '流程名称<font color="red">*</font>',
+                    allowBlank: false,
+                    blankText:globalRes.tooltip.notEmpty,
+                    name: 'name'
+                },{
+                    fieldLabel: '引用表单<font color="red">*</font>',
+                    name:'formName',
+                    allowBlank:false,
+                    readOnly:true,
+                    blankText:globalRes.tooltip.notEmpty,
+                    listeners:{
+                        focus:function(){
+                            Ext.widget('flowFormSelector',{
+                                selectorSingle:true,
+                                resultBack:function(ids,names){
+                                    form.down('textfield[name=formName]').setValue(names);
+                                    form.down('hidden[name=formIds]').setValue(ids);
+                                }
+                            }).show();
+                        }
+                    }
+                },{
+                    xtype:'textareafield',
+                    grow: true,
+                    fieldLabel:'描述',
+                    name:'documentation'
+                }]
+        });
+        var win=Ext.widget('window',{
+            layout:'fit',
+            modal: true,
+            title:'流程信息',
+            width:400,
+            items:[
+                form
+            ]
+            
         });
         win.show();
+        
+        
 //        this.mon(win, 'addForm', function (win, data) {
 //            me.saveOrUpdate(data,true,win);
 //

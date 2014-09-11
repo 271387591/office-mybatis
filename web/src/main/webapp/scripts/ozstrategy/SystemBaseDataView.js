@@ -43,7 +43,7 @@ Ext.define('FlexCenter.SystemBaseDataView', {
         width: 850,
         height: 500,
         shim: false,
-        modal: true,
+//        modal: true,
         resizable: false,
         border: false,
         maximizable: false,
