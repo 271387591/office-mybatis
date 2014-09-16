@@ -6,18 +6,19 @@
         <id column="id" property="id" javaType="long"/>
         <result column="typeName" property="category" javaType="string"/>
         <association property="parent" column="parentId" select="getProcessDefById"/>
+        <association property="flowForm" column="flowFormId" select="com.ozstrategy.dao.forms.FlowFormDao.getNoCascadeFlowFormById"/>
         <collection property="children" column="id" select="getChild"/>
         <collection property="elements" column="id" select="com.ozstrategy.dao.flows.ProcessElementDao.getProcessElementByDefId"/>
     </resultMap>
     
     <select id="listProcessDefs" resultMap="processDefResult" parameterType="Map">
-        select g.typeName,p.* from GlobalType g join ProcessDef p on g.typeId=p.globalTypeId where g.catKey='Workflow' and p.enabled=1 and p.parentId is null
+        select g.typeName,p.* from ProcessDef p left join GlobalType g on g.typeId=p.globalTypeId where p.enabled=1 and p.parentId is null
         <if test="keyword!=null and keyword!=''">and p.name like CONCAT(CONCAT('%', #{keyword}), '%')</if>
         <if test="typeId!=null and typeId!=''">and p.globalTypeId=#{typeId}</if>
         order by p.createDate desc
     </select>
     <select id="listProcessDefsCount" resultType="java.lang.Integer" parameterType="Map">
-        select count(*) from GlobalType g join ProcessDef p on g.typeId=p.globalTypeId where g.catKey='Workflow' and p.enabled=1 and p.parentId is null
+        select count(*) from ProcessDef p left join GlobalType g on g.typeId=p.globalTypeId where p.enabled=1 and p.parentId is null
         <if test="keyword!=null and keyword!=''">and p.name like CONCAT(CONCAT('%', #{keyword}), '%')</if>
         <if test="typeId!=null and typeId!=''">and p.globalTypeId=#{typeId}</if>
     </select>
@@ -36,12 +37,17 @@
     <select id="getProcessDefByDepId" resultMap="processDefResult" parameterType="string">
         select f.* from ProcessDef f where f.depId=#{depId} and f.enabled=1 
     </select>
-    <select id="getProcessDefByName" resultMap="processDefResult" parameterType="string">
-        select * from ProcessDef f where f.name=#{name} and f.enabled=1 
-    </select>
     <select id="getNoCascadeProcessDefById" resultType="com.ozstrategy.model.flows.ProcessDef" parameterType="long">
-        select f.* from FlowForm f where f.id=#{id} and f.enabled=1
+        select f.* from ProcessDef f where f.id=#{id} and f.enabled=1
     </select>
+    <select id="getProcessDefByName" resultMap="processDefResult" parameterType="Map">
+        select f.* from ProcessDef f where f.name=#{name} and f.enabled=1 and f.globalTypeId=#{typeId}
+    </select>
+    <select id="checkNameExist" resultType="long" parameterType="Map">
+        select f.id from ProcessDef f where f.name=#{name} and f.enabled=1 and f.globalTypeId=#{typeId}
+    </select>
+    
+    
     
     <delete id="removeChild" parameterType="long">
         delete from ProcessDef where parentId=#{parentId}
@@ -56,20 +62,21 @@
         f.graphResId=#{graphResId} , 
         f.modelId=#{modelId} , 
         f.depId=#{depId} , 
-        f.description=#{description} , 
+        f.documentation=#{documentation} , 
         f.enabled=#{enabled} , 
         f.parentId=#{parent.id} , 
+        f.flowFormId=#{flowForm.id} , 
         f.lastUpdateDate=#{lastUpdateDate} 
         where f.id=#{id}
     </update>
-    <update id="deleteProcessDef" parameterType="com.ozstrategy.model.flows.ProcessDef" flushCache="true">
+    <update id="deleteProcessDef" parameterType="long" flushCache="true">
         update ProcessDef u set u.enabled=#{enabled} where u.id=#{id}
     </update>
-    <insert id="saveProcessDef" parameterType="com.ozstrategy.model.flows.ProcessDef" flushCache="true">
+    <insert id="saveProcessDef" parameterType="Map" flushCache="true">
         <selectKey keyColumn="id" keyProperty="id" resultType="java.lang.Long">
             select LAST_INSERT_ID()
         </selectKey>
-        insert into ProcessDef(id,name,globalTypeId,description,version,actDefId,actResId,graphResId,modelId,depId,enabled,parentId,createDate,lastUpdateDate) 
-        values (#{id},#{name},#{globalType.id},#{description},#{version},#{actDefId},#{actResId},#{graphResId},#{modelId},#{depId},#{enabled},#{parent.id},#{createDate},#{lastUpdateDate})
+        insert into ProcessDef(id,name,flowFormId,globalTypeId,documentation,version,actDefId,actResId,graphResId,modelId,depId,enabled,parentId,createDate,lastUpdateDate) 
+        values (#{id},#{name},#{flowForm.id},#{globalTypeId},#{documentation},#{version},#{actDefId},#{actResId},#{graphResId},#{modelId},#{depId},#{enabled},#{parent.id},#{createDate},#{lastUpdateDate})
     </insert>
 </mapper>

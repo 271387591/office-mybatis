@@ -6,15 +6,15 @@ Ext.define('FlexCenter.forms.model.FormField',{
     fields:[
         'id',
         'name',
-//        'label',
+        'label',
 //        'xtype',
 //        'html',
         'flowFormId',
-//        {name:'createDate',convert:function(v){
-//            return Ext.util.Format.date(new Date(v), 'Y-m-d H:i:s');
-//        }},
-//        {name:'lastUpdateDate',convert:function(v){
-//            return Ext.util.Format.date(new Date(v), 'Y-m-d H:i:s');
-//        }}
+        {name:'createDate',convert:function(v){
+            return Ext.util.Format.date(new Date(v), 'Y-m-d H:i:s');
+        }},
+        {name:'lastUpdateDate',convert:function(v){
+            return Ext.util.Format.date(new Date(v), 'Y-m-d H:i:s');
+        }}
     ]
 });

@@ -18,9 +18,12 @@ public class ProcessDefCommand extends BaseObjectCommand {
     private String graphResId;
     private String modelId;
     private String depId;
-    private String description;
+    private String documentation;
     private Long parentId;
     private String category;
+    private Long flowFormId;
+    private String flowFormName;
+    private Long globalTypeId;
     private Set<ProcessDefCommand> children=new HashSet<ProcessDefCommand>();
     public ProcessDefCommand(ProcessDef processDef) {
         super(processDef);
@@ -32,9 +35,12 @@ public class ProcessDefCommand extends BaseObjectCommand {
         this.graphResId= processDef.getGraphResId();
         this.modelId= processDef.getModelId();
         this.depId= processDef.getDepId();
-        this.description= processDef.getDescription();
+        this.documentation= processDef.getDocumentation();
         this.category=processDef.getCategory();
         this.parentId= processDef.getParent()!=null? processDef.getParent().getId():null;
+        this.flowFormId= processDef.getFlowForm()!=null? processDef.getFlowForm().getId():null;
+        this.flowFormName= processDef.getFlowForm()!=null? processDef.getFlowForm().getName():null;
+        this.globalTypeId=processDef.getGlobalTypeId();
         Set<ProcessDef> processDefs= processDef.getChildren();
         if(processDefs!=null && processDefs.size()>0){
             for(ProcessDef child:processDefs){
@@ -106,13 +112,6 @@ public class ProcessDefCommand extends BaseObjectCommand {
         this.depId = depId;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
     public Long getParentId() {
         return parentId;
@@ -136,5 +135,37 @@ public class ProcessDefCommand extends BaseObjectCommand {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public String getDocumentation() {
+        return documentation;
+    }
+
+    public void setDocumentation(String documentation) {
+        this.documentation = documentation;
+    }
+
+    public Long getFlowFormId() {
+        return flowFormId;
+    }
+
+    public void setFlowFormId(Long flowFormId) {
+        this.flowFormId = flowFormId;
+    }
+
+    public String getFlowFormName() {
+        return flowFormName;
+    }
+
+    public void setFlowFormName(String flowFormName) {
+        this.flowFormName = flowFormName;
+    }
+
+    public Long getGlobalTypeId() {
+        return globalTypeId;
+    }
+
+    public void setGlobalTypeId(Long globalTypeId) {
+        this.globalTypeId = globalTypeId;
     }
 }

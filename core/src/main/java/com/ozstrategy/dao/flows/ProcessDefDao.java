@@ -1,6 +1,7 @@
 package com.ozstrategy.dao.flows;
 
 import com.ozstrategy.model.flows.ProcessDef;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 
 import java.util.List;
@@ -17,8 +18,10 @@ public interface ProcessDefDao {
     ProcessDef getProcessDefByActId(String actId);
     ProcessDef getProcessDefByModelId(String modelId);
     ProcessDef getProcessDefByDepId(String depId);
+    ProcessDef getProcessDefByName(@Param("name")String name,@Param("typeId")Long typeId);
     void saveProcessDef(ProcessDef processDef);
     void updateProcessDef(ProcessDef processDef);
-    void deleteProcessDef(ProcessDef processDef);
+    void deleteProcessDef(Long id);
     void removeChild(Long parentId);
+    Long checkNameExist(@Param("name")String name,@Param("typeId")Long typeId);
 }

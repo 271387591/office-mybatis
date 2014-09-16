@@ -1,18 +1,28 @@
 package com.ozstrategy.webapp.controller.flows;
 
 import com.ozstrategy.model.flows.ProcessDef;
+import com.ozstrategy.model.flows.ProcessFormFiledInstance;
 import com.ozstrategy.service.flows.ProcessDefManager;
+import com.ozstrategy.service.forms.FlowFormManager;
 import com.ozstrategy.webapp.command.BaseResultCommand;
 import com.ozstrategy.webapp.command.JsonReaderResponse;
 import com.ozstrategy.webapp.command.flows.ProcessDefCommand;
+import com.ozstrategy.webapp.command.flows.ProcessFormFiledInstanceCommand;
 import com.ozstrategy.webapp.controller.BaseController;
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +34,10 @@ import java.util.Map;
 public class ProcessDefController extends BaseController {
     @Autowired
     ProcessDefManager processDefManager;
+    @Autowired
+    FlowFormManager flowFormManager;
+    private Log logger= LogFactory.getLog(ProcessDefController.class);
+    
     @RequestMapping(params = "method=listProcessDefs")
     @ResponseBody
     public JsonReaderResponse<ProcessDefCommand> listProcessDefs(HttpServletRequest request) {
@@ -41,42 +55,93 @@ public class ProcessDefController extends BaseController {
         Integer count=processDefManager.listProcessDefsCount(map);
         return new JsonReaderResponse<ProcessDefCommand>(commands,count);
     }
+    @RequestMapping(params = "method=listDefFormField")
+    @ResponseBody
+    public JsonReaderResponse<ProcessFormFiledInstanceCommand> listDefFormField(HttpServletRequest request) {
+        Long formId=parseLong(request.getParameter("formId"));
+        List<ProcessFormFiledInstanceCommand> commands=new ArrayList<ProcessFormFiledInstanceCommand>();
+        if(formId!=null){
+            List<ProcessFormFiledInstance> flowForms= processDefManager.getDefFormFieldByFormId(formId);
+            if(flowForms!=null && flowForms.size()>0){
+                for(ProcessFormFiledInstance flowForm : flowForms){
+                    ProcessFormFiledInstanceCommand command=new ProcessFormFiledInstanceCommand(flowForm);
+                    commands.add(command);
+                }
+            }
+        }
+        return new JsonReaderResponse<ProcessFormFiledInstanceCommand>(commands);
+    }
     @RequestMapping(params = "method=save")
     @ResponseBody
     public BaseResultCommand save(HttpServletRequest request){
-        return  saveOrUpdate(request,true);
+        try {
+            Map<String,Object> map=requestMap(request);
+            String name=request.getParameter("name");
+            Long globalTypeId=parseLong(request.getParameter("globalTypeId"));
+            if(StringUtils.isNotEmpty(name) && globalTypeId!=null){
+                if(processDefManager.checkNameExist(name,globalTypeId)!=null){
+                    return new BaseResultCommand("流程名称已经存在",Boolean.FALSE);
+                }
+            }
+            ProcessDef def=new ProcessDef();
+            BeanUtils.populate(def, map);
+            def.setCreateDate(new Date());
+            def.setLastUpdateDate(new Date());
+            def.setVersion(1);
+            String formId=request.getParameter("flowFormId");
+            if(StringUtils.isNotEmpty(formId)){
+                def.setFlowForm(flowFormManager.getNoCascadeFlowFormById(parseLong(formId)));
+            }
+            processDefManager.save(def);
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+            logger.error("保存流程失败，详细异常:",e);
+            return new BaseResultCommand(getMessage("message.error.saveuser.fail",request),Boolean.FALSE);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            logger.error("保存流程失败，详细异常:",e);
+            return new BaseResultCommand(getMessage("message.error.saveuser.fail",request),Boolean.FALSE);
+        }catch (Exception e) {
+            e.printStackTrace();
+            logger.error("保存流程失败，详细异常:",e);
+            return new BaseResultCommand(getMessage("message.error.saveuser.fail",request),Boolean.FALSE);
+        }
+        return new BaseResultCommand(getMessage("message.error.saveuser.fail",request),Boolean.TRUE);
     }
-    private BaseResultCommand saveOrUpdate(HttpServletRequest request,boolean save){
-        ProcessDef        processDef        = null;
-        String id=request.getParameter("id");
-        String name=request.getParameter("name");
-        String description=request.getParameter("description");
-        String content=request.getParameter("content");
-//        try{
-//            if(StringUtils.isNotEmpty(id)){
-//                processDef=processDefManager.getProcessDefByName(name);
-//                if(flowForm!=null && StringUtils.equals(name,flowForm.getName()) && parseLong(id)!=flowForm.getId()){
-//                    return new BaseResultCommand(getMessage("message.error.getMobileUser.exist",request),Boolean.FALSE);
-//                }
-//                flowForm=flowFormManager.getFlowFormById(parseLong(id));
-//            }else{
-//                flowForm=flowFormManager.getFlowFormByName(name);
-//                if(flowForm!=null){
-//                    return new BaseResultCommand(getMessage("message.error.getMobileUser.exist",request),Boolean.FALSE);
-//                }
-//                flowForm=new FlowForm();
-//                flowForm.setCreateDate(new Date());
-//            }
-//            flowForm.setLastUpdateDate(new Date());
-//            flowForm.setName(name);
-//            flowForm.setDisplayName(displayName);
-//            flowForm.setContent(content);
-//            flowForm.setDescription(description);
-//            flowFormManager.saveOrUpdate(flowForm);
-//            return new BaseResultCommand("",true);
-//        }catch (Exception e){
-//            log.error(e.getMessage(),e);
-//        }
-        return new BaseResultCommand(getMessage("message.error.saveuser.fail",request),Boolean.FALSE);
+    @RequestMapping(params = "method=update")
+    @ResponseBody
+    public BaseResultCommand update(HttpServletRequest request){
+        try {
+            Map<String,Object> map=requestMap(request);
+            String actRes=request.getParameter("actRes");
+            String graRes=request.getParameter("graRes");
+            Long id=parseLong(request.getParameter("id"));
+            String name=request.getParameter("name");
+            Long globalTypeId=parseLong(request.getParameter("globalTypeId"));
+            if(id==null){
+                return new BaseResultCommand("流程不存在",Boolean.FALSE); 
+            }
+            ProcessDef def = processDefManager.getProcessDefById(id);
+            if(StringUtils.isNotEmpty(name) && globalTypeId!=null){
+                if(processDefManager.checkNameExist(name,globalTypeId)!=id && globalTypeId==def.getGlobalTypeId()){
+                    return new BaseResultCommand("流程名称已经存在",Boolean.FALSE);
+                }
+            }
+            BeanUtils.populate(def, map);
+            Long formId=parseLong(request.getParameter("flowFormId"));
+            if(formId!=null){
+                def.setFlowForm(flowFormManager.getNoCascadeFlowFormById(formId));
+            }
+            processDefManager.update(def,actRes,graRes);
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.error("解析流程数据错误",e);
+            return new BaseResultCommand("解析流程数据错误",Boolean.FALSE);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("保存流程失败，详细异常:",e);
+            return new BaseResultCommand("保存流程失败",Boolean.FALSE);
+        }
+        return new BaseResultCommand("保存流程失败",Boolean.TRUE);
     }
 }

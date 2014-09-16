@@ -70,11 +70,11 @@ Ext.define('FlexCenter.forms.view.FlowFormSelector', {
             Ext.MessageBox.show({
                 title: '提示消息',
                 width: 200,
-                msg: '对不起，请选择人员',
+                msg: '对不起，请选择表单',
                 buttons: Ext.MessageBox.OK,
                 icon: Ext.MessageBox.INFO
             });
         }
-    },
+    }
 });
 

@@ -1,6 +1,7 @@
 package com.ozstrategy.model.flows;
 
 import com.ozstrategy.model.BaseObject;
+import com.ozstrategy.model.forms.FlowForm;
 import com.ozstrategy.model.system.GlobalType;
 
 import javax.persistence.Column;
@@ -21,6 +22,8 @@ import java.util.Set;
  */
 @Entity
 public class ProcessDef extends BaseObject {
+    public static final String ACT_RES="ACT_RES_"; 
+    public static final String GRA_RES="GRA_RES_"; 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -44,8 +47,11 @@ public class ProcessDef extends BaseObject {
     private String modelId;
     @Column
     private String depId;
+    @ManyToOne
+    @JoinColumn(name = "flowFormId")
+    private FlowForm flowForm;
     @Column(columnDefinition = "TEXT")
-    private String description;
+    private String documentation;
     @Column
     private Boolean enabled=Boolean.TRUE;
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "processDef")
@@ -160,12 +166,12 @@ public class ProcessDef extends BaseObject {
         this.children = children;
     }
 
-    public String getDescription() {
-        return description;
+    public String getDocumentation() {
+        return documentation;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDocumentation(String documentation) {
+        this.documentation = documentation;
     }
 
     public Long getGlobalTypeId() {
@@ -182,5 +188,19 @@ public class ProcessDef extends BaseObject {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public FlowForm getFlowForm() {
+        return flowForm;
+    }
+
+    public void setFlowForm(FlowForm flowForm) {
+        this.flowForm = flowForm;
+    }
+    public String getActRes(){
+        return ACT_RES+this.id;
+    }
+    public String getGraRes(){
+        return GRA_RES+this.id;
     }
 }

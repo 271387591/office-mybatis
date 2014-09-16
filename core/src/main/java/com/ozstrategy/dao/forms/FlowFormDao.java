@@ -14,6 +14,7 @@ public interface FlowFormDao{
     Integer listFlowFormsCount(Map<String,Object> map);
     FlowForm getFlowFormByNameAndParentId(String name, Long parentId);
     FlowForm getFlowFormById(Long id);
+    FlowForm getNoCascadeFlowFormById(Long id);
     List<FlowForm> getFlowFormByName(String name);
     void removeChild(Long parentId);
     void saveFlowForm(FlowForm flowForm);

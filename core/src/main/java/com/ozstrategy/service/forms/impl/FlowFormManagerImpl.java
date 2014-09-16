@@ -146,6 +146,10 @@ public class FlowFormManagerImpl implements FlowFormManager {
         return flowFormDao.getFlowFormById(id);
     }
 
+    public FlowForm getNoCascadeFlowFormById(Long id) {
+        return flowFormDao.getNoCascadeFlowFormById(id);
+    }
+
     public FlowForm getFlowFormByName(String name) {
         List<FlowForm> list = flowFormDao.getFlowFormByName(name);
         if(list!=null && list.size()>0)

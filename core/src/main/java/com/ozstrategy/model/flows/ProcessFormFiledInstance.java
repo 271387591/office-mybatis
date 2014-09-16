@@ -25,6 +25,8 @@ public class ProcessFormFiledInstance {
     @Column
     private Integer chmod;
 
+    @Column
+    private String expression;
     @ManyToOne
     @JoinColumn(name = "processElementId")
     private ProcessElement processElement;
@@ -71,5 +73,13 @@ public class ProcessFormFiledInstance {
 
     public void setProcessDef(ProcessDef processDef) {
         this.processDef = processDef;
+    }
+
+    public String getExpression() {
+        return expression;
+    }
+
+    public void setExpression(String expression) {
+        this.expression = expression;
     }
 }

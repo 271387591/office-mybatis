@@ -45,6 +45,7 @@
         f.type=#{type} , 
         f.label=#{label} , 
         f.taskKey=#{taskKey} , 
+        f.actClass=#{actClass} , 
         f.processDefId=#{processDef.id}  
         where f.id=#{id}
     </update>
@@ -52,7 +53,7 @@
         <selectKey keyColumn="id" keyProperty="id" resultType="java.lang.Long">
             select LAST_INSERT_ID()
         </selectKey>
-        insert into ProcessElement(id,type,label,taskKey,processDefId) 
-        values (#{id},#{type},#{label},#{taskKey},#{processDef.id})
+        insert into ProcessElement(id,type,label,taskKey,processDefId,actClass) 
+        values (#{id},#{type},#{label},#{taskKey},#{processDef.id},#{actClass})
     </insert>
 </mapper>

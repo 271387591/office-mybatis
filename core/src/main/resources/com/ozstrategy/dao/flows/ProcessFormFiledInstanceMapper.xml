@@ -6,6 +6,7 @@
         <id column="id" property="id" javaType="long"/>
         <association property="processElement" column="processElementId" select="com.ozstrategy.dao.flows.ProcessElementDao.getProcessElementById"/>
         <association property="processDef" column="processDefId" select="com.ozstrategy.dao.flows.ProcessDefDao.getNoCascadeProcessDefById"/>
+        <association property="formField" column="formFieldId" select="com.ozstrategy.dao.forms.FormFieldDao.getNoCascadeFormField"/>
     </resultMap>
     
     <select id="listProcessFormFiledInstances" resultMap="processFormFiledInstanceResult" parameterType="Map">
@@ -21,6 +22,13 @@
     <select id="getProcessFormFiledInstancesByEid" resultMap="processFormFiledInstanceResult" parameterType="long">
         select f.* from ProcessFormFiledInstance f where f.processElementId=#{id} 
     </select>
+    <select id="getDefFormFieldByFormId" resultMap="processFormFiledInstanceResult" parameterType="long">
+        select fdf.*,pf.chmod,pf.expression from(
+        select fd.* from FormField fd join (
+        select * from FlowForm ff where ff.parentId=#{formId} or ff.id=#{formId}
+        )fl on fd.flowFormId=fl.id where fd.xtype!='detailGrid'
+        )fdf left join ProcessFormFiledInstance pf on fdf.id=pf.formFieldId
+    </select>
     
     
     <delete id="deleteProcessFormFiledInstance" parameterType="long">
@@ -34,19 +42,21 @@
     </delete>
     
     
+    
     <update id="updateProcessFormFiledInstance" parameterType="com.ozstrategy.model.flows.ProcessFormFiledInstance" flushCache="true">
         update ProcessFormFiledInstance f set 
         f.formFieldId=#{formField.id} , 
         f.chmod=#{chmod} , 
         f.processElementId=#{processElement.id}, 
-        f.processDefId=#{processDef.id} 
+        f.processDefId=#{processDef.id}, 
+        f.expression=#{expression} 
         where f.id=#{id}
     </update>
     <insert id="saveProcessFormFiledInstance" parameterType="com.ozstrategy.model.flows.ProcessFormFiledInstance" flushCache="true">
         <selectKey keyColumn="id" keyProperty="id" resultType="java.lang.Long">
             select LAST_INSERT_ID()
         </selectKey>
-        insert into ProcessFormFiledInstance(id,formFieldId,chmod,processElementId,processDefId) 
-        values (#{id},#{formField.id},#{chmod},#{processElement.id},#{processDef.id})
+        insert into ProcessFormFiledInstance(id,formFieldId,chmod,processElementId,processDefId,expression) 
+        values (#{id},#{formField.id},#{chmod},#{processElement.id},#{processDef.id},#{expression})
     </insert>
 </mapper>

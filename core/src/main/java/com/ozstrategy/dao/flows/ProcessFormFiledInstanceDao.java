@@ -19,4 +19,5 @@ public interface ProcessFormFiledInstanceDao {
     void deleteProcessFormFiledInstance(Long id);
     void deleteProcessFormFiledInstanceByElementId(Long elementId);
     void deleteProcessFormFiledInstanceByDefId(Long defId);
+    List<ProcessFormFiledInstance> getDefFormFieldByFormId(Long formId);
 }

@@ -30,6 +30,16 @@
     <select id="getFormFieldById" resultMap="formFieldResult" parameterType="long">
         select f.* from FormField f where f.id=#{id} 
     </select>
+    <select id="getNoCascadeFormField" resultType="com.ozstrategy.model.forms.FormField" parameterType="long">
+        select f.* from FormField f where f.id=#{id} 
+    </select>
+    
+    <select id="getDefFormFieldByFormId" resultMap="formFieldResult" parameterType="long">
+        SELECT fd.* from FormField fd join (
+        select * from FlowForm ff where ff.parentId=#{formId} OR ff.id=#{formId}
+        )fl on fd.flowFormId=fl.id where fd.xtype!='detailGrid'
+    </select>
+    
     
     <update id="updateFormField" parameterType="com.ozstrategy.model.forms.FormField" flushCache="true">
         update FormField f set 

@@ -3,27 +3,142 @@
  */
 Ext.define('FlexCenter.flows.view.ProcessListForm',{
     requires:[
-        'FlexCenter.flows.view.Modeler'
+        'FlexCenter.flows.view.Modeler',
+        'FlexCenter.system.store.GlobalTypes',
+        'FlexCenter.forms.view.FlowFormSelector'
     ],
     extend:'Ext.Window',
     alias: 'widget.processListForm',
     itemId:'processListForm',
-    title: '流程设计',
-    maximized: true,
-    maximizable:false,
-    iconCls: 'workflow-manager-16',
-    animCollapse : true, 
-//    animateTarget : Ext.getBody(),
-    shim:false,
+    layout:'fit',
     modal: true,
-    layout: 'fit',
+    title:'流程信息',
+    buttonSave:false,
+    width:400,
+    getCategoryStore:function(){
+        var store=Ext.StoreManager.lookup("processListViewGlobalTypes");
+        if(!store){
+            store=Ext.create("FlexCenter.system.store.GlobalTypes",{
+                storeId:'processListViewGlobalTypes',
+                listeners:{
+                    beforeload: function (s, e) {
+                        e.params = {catKey:'Workflow'}; //ajax 附加参数
+                    }
+                }
+            });
+        }
+        store.load();
+        return store;
+    },
     initComponent:function(){
         var me=this;
-        me.items = [
+        me.items=[
             {
-                xtype:'modeler',
-                processRecord:me.processRecord,
-                border:false
+                xtype:'form',
+                layout: 'anchor',
+                border:false,
+                defaults: {
+                    anchor: '100%',
+                    labelWidth:60
+                },
+                bodyPadding:5,
+                defaultType: 'textfield',
+                listeners:{
+                    afterrender:function(form){
+                        if(me.process){
+                            form.getForm().setValues(me.process.properties);
+                        }
+                    }
+                },
+                buttons: [
+                    {
+                        text: globalRes.buttons.save,
+                        formBind: true,
+                        scope: me,
+                        handler: function () {
+                            var value=me.down('form').getForm().getValues();
+                            if(!me.buttonSave){
+                                me.fireEvent('addFlow',me,value);
+                            }else{
+                                if(me.process){
+                                    value.actRes=Ext.encode(me.process);
+                                }
+                                if(me.graRes){
+                                    value.graRes=me.graRes;
+                                }
+                                console.log(value);
+                                me.fireEvent('updateFlow',value);
+                            }
+                        }
+                    },
+                    {
+                        text: '取消',
+                        handler: function () {
+                            me.close();
+                        }
+                    }
+                ],
+                items: [
+                    {
+                        xtype:'hidden',
+                        name:'id'
+                    },
+                    {
+                        xtype:'hidden',
+                        name:'flowFormId'
+                    },
+                    {
+                        xtype:'hidden',
+                        name:'globalTypeId'
+                    },
+                    {
+                        fieldLabel: '流程名称<font color="red">*</font>',
+                        allowBlank: false,
+                        blankText:globalRes.tooltip.notEmpty,
+                        name: 'name'
+                    },{
+                        fieldLabel:'流程分类<font color="red">*</font>',
+                        xtype:'combo',
+                        name:'category',
+                        editable:false,
+                        triggerAction:'all',
+                        displayField: 'typeName',
+                        valueField: 'typeName',
+                        allowBlank: false,
+                        store:me.getCategoryStore(),
+                        listeners: {
+                            select: function (combo, records) {
+                                if(records.length>0){
+                                    var rec=records[0];
+                                    me.down('form').down('hidden[name=globalTypeId]').setValue(rec.get('typeId'));
+                                }
+                            }
+                        }
+                    },{
+                        fieldLabel: '引用表单<font color="red">*</font>',
+                        name:'flowFormName',
+                        allowBlank:false,
+                        readOnly:true,
+                        blankText:globalRes.tooltip.notEmpty,
+                        listeners:{
+                            focus:function(){
+                                if(!me.buttonSave){
+                                    Ext.widget('flowFormSelector',{
+                                        selectorSingle:true,
+                                        resultBack:function(ids,names){
+                                            me.down('form').down('textfield[name=flowFormName]').setValue(names);
+                                            me.down('form').down('hidden[name=flowFormId]').setValue(ids);
+                                        }
+                                    }).show();
+                                }
+                            }
+                        }
+                    },{
+                        xtype:'textareafield',
+                        grow: true,
+                        fieldLabel:'描述',
+                        name:'documentation'
+                    }]
             }
         ];
         me.callParent();

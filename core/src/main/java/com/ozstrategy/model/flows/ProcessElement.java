@@ -28,6 +28,9 @@ public class ProcessElement {
     @Column
     private String type;
     @Column
+    private String actClass;
+    
+    @Column
     private String label;
     @Column
     private String taskKey;
@@ -101,5 +104,13 @@ public class ProcessElement {
 
     public void setTaskKey(String taskKey) {
         this.taskKey = taskKey;
+    }
+
+    public String getActClass() {
+        return actClass;
+    }
+
+    public void setActClass(String actClass) {
+        this.actClass = actClass;
     }
 }

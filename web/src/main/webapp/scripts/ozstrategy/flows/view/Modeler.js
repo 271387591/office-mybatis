@@ -3,7 +3,7 @@
  */
 Ext.define('FlexCenter.flows.view.Modeler', {
     requires: [
-        'Ext.Component'
+        'FlexCenter.forms.view.FormFieldSetter'
     ],
     extend: 'Ext.panel.Panel',
     alias: 'widget.modeler',
@@ -96,7 +96,7 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                 text: '保存',
                 iconCls: 'save',
                 handler: function(button,evt){
-//                            me.fireEvent('save',button,evt);
+                    me.savefunc();
                 }
             },'-',
             {
@@ -469,6 +469,23 @@ Ext.define('FlexCenter.flows.view.Modeler', {
 //        ];
         me.callParent(arguments);
     },
+    savefunc:function(){
+        var me=this,graRes;
+        if(me.graph){
+            var encoder = new mxCodec();
+            var node = encoder.encode(me.graph.getModel());
+            graRes= mxUtils.getPrettyXml(node);
+        }
+        var win=Ext.widget('processListForm',{
+            buttonSave:true,
+            graRes:graRes,
+            process:me.process
+        });
+        me.mon(win, 'updateFlow', function (data) {
+            me.fireEvent('updateFlow',data);
+        });
+        win.show();
+    },
     redraw:function(){
         this.graph.model.clear();
     },
@@ -571,6 +588,24 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                 this.stencil={id:'SequenceFlow'};
                 this.outgoing.push({resourceId:cell.source.id});
                 this.setTarget(cell.target.id)
+                this.dockers=[
+                    {
+                        "x": 50.0,
+                        "y": 30.0
+                    },
+                    {
+                        "x": 192.0,
+                        "y": 30.0
+                    },
+                    {
+                        "x": 192.0,
+                        "y": 30.000000000000007
+                    },
+                    {
+                        "x": 50.0,
+                        "y": 30.0
+                    }
+                ];
             }
         };
         
@@ -632,6 +667,7 @@ Ext.define('FlexCenter.flows.view.Modeler', {
             act.setBounds(0,0,window.screen.width,window.screen.height);
             if(me.processRecord){
                 form.getForm().setValues(me.processRecord);
+                me.processRecord=null;
             }
             var value=form.getForm().getValues();
             act.setProperties(value);
@@ -652,6 +688,18 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     name:'process_id'
                 },
                 {
+                    xtype:'hidden',
+                    name:'globalTypeId'
+                },
+                {
+                    xtype:'hidden',
+                    name:'id'
+                },
+                {
+                    xtype:'hidden',
+                    name:'flowFormId'
+                },
+                {
                 fieldLabel: '流程名称',
                 name: 'name',
                 listeners:{
@@ -661,12 +709,23 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                 }
             },{
                 fieldLabel: '引用表单',
-                name:'formName',
+                name:'flowFormName',
                 readOnly:true,
+//                readOnlyCls: 'x-item-disabled',
                 listeners:{
-                    blur:function( f, The, eOpts ){
-                        activity(form);
-                    }
+//                    blur:function( f, The, eOpts ){
+//                        activity(form);
+//                    }
+                }
+            },{
+                fieldLabel: '流程分类',
+                name:'category',
+                readOnly:true,
+//                readOnlyCls: 'x-item-disabled',
+                listeners:{
+//                    blur:function( f, The, eOpts ){
+//                        activity(form);
+//                    }
                 }
             },{
                 xtype:'textareafield',
@@ -796,7 +855,16 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     }
                 },{
                     fieldLabel: '字段设置',
+                    xtype:'trigger',
                     name: 'formproperties',
+                    onTriggerClick:function(){
+                        var win=Ext.widget('formFieldSetter',{
+                            formId:me.process.properties.flowFormId
+                        });
+                        if(win){
+                            win.show();
+                        }
+                    },
                     listeners:{
                         blur:function( f, The, eOpts ){
                             activity(form);

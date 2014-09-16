@@ -66,6 +66,7 @@ public class BaseController {
         if(StringUtils.isEmpty(request.getParameter("limit"))){
             map.put("limit", Constants.LIMIT);
         }
+        
         return map;
     }
     public Integer initLimit(String limit){
@@ -101,16 +102,24 @@ public class BaseController {
         return null;
     }
     public Long parseLong(String filed){
-        return Long.parseLong(filed);
+        if(NumberUtils.isNumber(filed))
+            return Long.parseLong(filed);
+        return null;
     }
     public Integer parseInteger(String filed){
-        return Integer.parseInt(filed);
+        if(NumberUtils.isNumber(filed))
+            return Integer.parseInt(filed);
+        return null;
     }
     public Short parseShort(String filed){
-        return Short.parseShort(filed);
+        if(NumberUtils.isNumber(filed))
+            return Short.parseShort(filed);
+        return null;
     }
     public Double parseDouble(String filed){
-        return Double.parseDouble(filed);
+        if(NumberUtils.isNumber(filed))
+            return Double.parseDouble(filed);
+        return null;
     }
     public void ajax(String str,boolean result,HttpServletResponse response){
         try{
