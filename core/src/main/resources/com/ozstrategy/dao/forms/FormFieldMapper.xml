@@ -22,7 +22,7 @@
         </where>
     </select>
     <select id="getFormFieldByNameAndFlowFormId" resultMap="formFieldResult" parameterType="Map">
-        select f.* from FormField f where f.name=#{name} and f.flowFormId=#{formId} 
+        select f.* from FormField f where f.name=#{name} and f.flowFormId in (select f.id from FlowForm f where f.id=#{formId}  or f.parentId =#{formId})
     </select>
     <select id="getFormFieldByFormId" resultMap="formFieldResult" parameterType="long">
         select f.* from FormField f where f.flowFormId=#{flowFormId} 

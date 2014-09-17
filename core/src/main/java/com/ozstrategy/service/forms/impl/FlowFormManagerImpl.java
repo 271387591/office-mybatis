@@ -181,6 +181,10 @@ public class FlowFormManagerImpl implements FlowFormManager {
         
     }
 
+    public List<FormField> getDefFormFieldByFormId(Long formId) {
+        return formFieldDao.getDefFormFieldByFormId(formId);
+    }
+
     private List<FormField> parseElements(Document document,String table,String selector,boolean detail){
         Elements elements =  document.select("table[name="+table+"] > tbody > tr > td > "+selector);
         if(!detail){

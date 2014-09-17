@@ -3,12 +3,9 @@
  */
 Ext.define('FlexCenter.flows.store.ProcessDef', {
     extend: 'Ext.data.Store',
-    alias: 'store.flowForm',
-
     requires: [
         'FlexCenter.flows.model.ProcessDef'
     ],
-
     model: 'FlexCenter.flows.model.ProcessDef',
     pageSize: 20,
     autoLoad:false,
@@ -19,10 +16,6 @@ Ext.define('FlexCenter.flows.store.ProcessDef', {
             root : 'data',
             totalProperty  : 'total',
             messageProperty: 'message'
-        },
-        writer: {
-            writeAllFields: true,
-            root: 'data'
         },
         listeners: {
             exception: function(proxy, response, operation) {

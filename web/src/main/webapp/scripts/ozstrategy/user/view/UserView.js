@@ -17,7 +17,7 @@ Ext.define('FlexCenter.user.view.UserView', {
     'Ext.toolbar.Paging',
     'Ext.toolbar.TextItem',
     'FlexCenter.user.store.Users',
-      'Oz.grid.feature.Detail',
+      'Ext.ux.grid.feature.Detail',
     'FlexCenter.user.view.UserForm'
   ],
 

@@ -124,7 +124,7 @@
     var apps = {};
     Ext.require([
       'FlexCenter.App',
-      'Oz.util.Utils',
+      'Ext.ux.utils.Utils',
       'FlexCenter.Constants',
       'Ext.data.ArrayStore',
       'Ext.util.CSS'

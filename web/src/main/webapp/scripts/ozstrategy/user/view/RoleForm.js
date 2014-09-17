@@ -10,8 +10,8 @@ Ext.define('FlexCenter.user.view.RoleForm',{
   alias: 'widget.roleForm',
 
   requires: [
-    'Oz.util.Utils',
-    'Oz.form.MultiSelect',
+    'Ext.ux.utils.Utils',
+    'Ext.ux.form.MultiSelect',
       'FlexCenter.user.store.SystemView',
     'FlexCenter.user.store.AllFeatures'
 

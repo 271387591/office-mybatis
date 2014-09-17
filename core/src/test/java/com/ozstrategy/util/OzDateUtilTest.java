@@ -1,5 +1,6 @@
 package com.ozstrategy.util;
 
+import com.ozstrategy.model.flows.ProcessElementType;
 import junit.framework.TestCase;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
@@ -43,7 +44,12 @@ public class OzDateUtilTest extends TestCase {
                 System.out.println("html=="+element.outerHtml());
             }
         }
+    }
+    public void testProcessElementType() throws Exception{
+        System.out.println(ProcessElementType.StartNoneEvent.name());
+        System.out.println(ProcessElementType.StartNoneEvent.getName());
+        System.out.println(ProcessElementType.get("StartEvent"));
         
-       
+        
     }
 }

@@ -9,7 +9,6 @@ Ext.define('FlexCenter.flows.view.ProcessListForm',{
     ],
     extend:'Ext.Window',
     alias: 'widget.processListForm',
-    itemId:'processListForm',
     layout:'fit',
     modal: true,
     title:'流程信息',
@@ -37,6 +36,7 @@ Ext.define('FlexCenter.flows.view.ProcessListForm',{
                 xtype:'form',
                 layout: 'anchor',
                 border:false,
+                itemId:'processListFormForm',
                 defaults: {
                     anchor: '100%',
                     labelWidth:60
@@ -56,18 +56,25 @@ Ext.define('FlexCenter.flows.view.ProcessListForm',{
                         formBind: true,
                         scope: me,
                         handler: function () {
-                            var value=me.down('form').getForm().getValues();
+                            var value=me.down('#processListFormForm').getForm().getValues();
+                            if(me.process){
+                                me.process.properties=value;
+                            }
                             if(!me.buttonSave){
                                 me.fireEvent('addFlow',me,value);
                             }else{
+                                var data={};
+                                for(var i in value){
+                                    data[i]=value[i];
+                                }
                                 if(me.process){
-                                    value.actRes=Ext.encode(me.process);
+                                    data.actRes=Ext.encode(me.process);
                                 }
                                 if(me.graRes){
-                                    value.graRes=me.graRes;
+                                    data.graRes=me.graRes;
                                 }
-                                console.log(value);
-                                me.fireEvent('updateFlow',value);
+                                me.process=null;
+                                me.fireEvent('updateFlow',data);
                             }
                         }
                     },

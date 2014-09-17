@@ -6,7 +6,8 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
         'FlexCenter.flows.view.ProcessListForm',
         'FlexCenter.flows.store.ProcessDef',
         'FlexCenter.system.view.GlobalTypeTree',
-        'FlexCenter.flows.view.ModelerWindow'
+        'FlexCenter.flows.view.ModelerWindow',
+        'FlexCenter.flows.view.ModelerPreviewWindow'
     ],
     extend: 'Ext.panel.Panel',
     alias: 'widget.processListView',
@@ -27,6 +28,9 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
     },
     initComponent: function () {
         var me = this;
+        var store=me.getStore(),sm=Ext.create('Ext.selection.CheckboxModel',{
+            mode:'SINGLE'
+        });
         me.items=[
             {
                 title: '流程分类',
@@ -44,9 +48,9 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
             {
                 xtype:'grid',
                 region:'center',
-//                selModel:sm,
+                selModel:sm,
                 itemId:'processListViewGrid',
-                store:me.getStore(),
+                store:store,
                 autoScroll: true,
                 tbar:[
                     {
@@ -60,10 +64,12 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
                     {
                         xtype: 'button',
                         frame: true,
-                        text: '编辑',
-                        iconCls: 'update',
+                        text: '删除流程',
+                        iconCls: 'delete',
                         scope: this,
-                        handler: me.onUpdateClick
+                        handler: function(){
+                            me.onUpdateClick();
+                        }
                     },
                     '->',
                     {
@@ -98,7 +104,7 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
                 dockedItems:[
                     {
                         xtype: 'pagingtoolbar',
-                        store: me.getStore(),
+                        store: store,
                         dock: 'bottom',
                         displayInfo: true
                     }
@@ -167,17 +173,8 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
 //                        width:'200',
                         items:[
                             {
-                                iconCls:'delete',
-                                tooltip:'删除',
-                                handler:function(grid, rowIndex, colIndex){
-                                    var rec = grid.getStore().getAt(rowIndex),selects=[];
-                                    selects.push(rec);
-                                    me.deleteClick(selects);
-                                }
-                            },'-',
-                            {
                                 iconCls:'btn-flow-design',
-                                tooltip:'编辑',
+                                tooltip:'设计流程',
                                 handler:function(grid, rowIndex, colIndex){
                                     var rec = grid.getStore().getAt(rowIndex);
                                     me.onUpdateClick(rec);
@@ -185,12 +182,10 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
                             },'-',
                             {
                                 iconCls:'btn-preview',
-                                tooltip:'查看表结构',
+                                tooltip:'查看流程图',
                                 handler:function(grid, rowIndex, colIndex){
                                     var rec = grid.getStore().getAt(rowIndex);
-                                    Ext.widget('flowFormDetail',{
-                                        rec:rec
-                                    }).show();
+                                    me.preViewFlow(rec);
                                 }
                             }
                         ]
@@ -206,6 +201,39 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
         ];
         me.callParent(arguments);
     },
+    preViewFlow:function(rec){
+        var me=this;
+        Ext.Ajax.request({
+            url:'processDefController.do?method=getRes',
+            params:{id:rec.get('id')},
+            method: 'POST',
+            success: function (response, options){
+                var result=Ext.decode(response.responseText);
+                if(result.success){
+                    var data=result.data,actRes,graRes;
+                    if(data){
+                        graRes=data.graRes;
+                    }
+                    var moder = Ext.widget('modelerPreviewWindow',{
+                        graRes:graRes,
+                        animateTarget:me.getEl()
+                    });
+                    moder.show();
+                }else{
+                    Ext.MessageBox.alert({
+                        title:'警告',
+                        icon: Ext.MessageBox.ERROR,
+                        msg:result.message,
+                        buttons:Ext.MessageBox.OK
+                    });
+                }
+            },
+            failure: function (response, options) {
+                Ext.MessageBox.alert('失败', '请求超时或网络故障,错误编号：' + response.status);
+            }
+        });
+        
+    },
     onAddClick:function(){
         var me = this;
         var win = Ext.widget('processListForm',{
@@ -216,10 +244,10 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
             me.saveOrUpdate(data,true,win);
         });
     } ,
-    onUpdateClick:function(){
+    onDeleteClick:function(){
         var me = this;
         var grid = me.down('grid');
-        var selection = grid.getView().getSelectionModel().getSelection();
+        var selection = grid.getSelectionModel().getSelection();
         if(selection.length<1){
             Ext.MessageBox.show({
                 title: userRoleRes.editUser,
@@ -230,15 +258,56 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
             });
             return;
         }
-        var moder = Ext.widget('modelerWindow',{
-            processRecord:selection[0].data,
-            animateTarget:me.getEl()
+    },
+    onUpdateClick:function(rec){
+        var me=this;
+        if(!rec){
+            Ext.MessageBox.show({
+                title: userRoleRes.editUser,
+                width: 300,
+                msg: userRoleRes.msg.editUser,
+                buttons: Ext.MessageBox.OK,
+                icon: Ext.MessageBox.INFO
+            });
+            return;
+        }
+        Ext.Ajax.request({
+            url:'processDefController.do?method=getRes',
+            params:{id:rec.get('id')},
+            method: 'POST',
+            success: function (response, options){
+                
+                var result=Ext.decode(response.responseText);
+                if(result.success){
+                    var data=result.data,actRes,graRes;
+                    if(data){
+                        actRes=Ext.decode(data.actRes,true);
+                        graRes=data.graRes;
+                    }
+                    var moder = Ext.widget('modelerWindow',{
+                        processRecord:actRes.properties,
+                        developer:false,
+                        graRes:graRes,
+                        animateTarget:me.getEl()
+                    });
+                    var modeler = moder.down('modeler');
+                    me.mon(modeler, 'updateFlow', function (data) {
+                        me.saveOrUpdate(data,false,moder);
+                    });
+                    moder.show();
+                }else{
+                    Ext.MessageBox.alert({
+                        title:'警告',
+                        icon: Ext.MessageBox.ERROR,
+                        msg:result.message,
+                        buttons:Ext.MessageBox.OK
+                    });
+                }
+            },
+            failure: function (response, options) {
+                Ext.MessageBox.alert('失败', '请求超时或网络故障,错误编号：' + response.status);
+            }
         });
-        var modeler = moder.down('modeler');
-        me.mon(modeler, 'updateFlow', function (data) {
-            me.saveOrUpdate(data,false,moder);
-        });
-        moder.show();
     },
     saveOrUpdate:function(data,save,win){
         var me=this;
@@ -250,14 +319,7 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
             success: function (response, options){
                 var result=Ext.decode(response.responseText);
                 if(result.success){
-                    me.getStore().load();
-                    if(!win.buttonSave){
-                        var moder = Ext.widget('modelerWindow',{
-                            processRecord:data,
-                            animateTarget:me.getEl()
-                        });
-                        moder.show();
-                    }
+                    me.down('grid').getStore().load();
                     win.close();
                 }else{
                     Ext.MessageBox.alert({

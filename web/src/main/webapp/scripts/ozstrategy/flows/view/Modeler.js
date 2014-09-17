@@ -7,13 +7,13 @@ Ext.define('FlexCenter.flows.view.Modeler', {
     ],
     extend: 'Ext.panel.Panel',
     alias: 'widget.modeler',
-//    iconCls: 'workflow-manager-16',
     autoScroll: true,
     layout: 'border',
     navCellWidth:240,
     navCellHeight:35,
     graph:null,
     developer:true,
+    process:null,
     inheritableStatics: {
 //      disableTooltip: false,
 
@@ -28,17 +28,20 @@ Ext.define('FlexCenter.flows.view.Modeler', {
     initComponent: function () {
         var me = this;
         me.process=me.activity();
+        if(me.processRecord){
+            me.process.setProperties(me.processRecord)
+        }
         var store=Ext.create('Ext.data.TreeStore', {
             storeId:'StartEventsStore',
             fields:['text','expanded','children','leaf','stencil'],
             root: {
                 expanded: true,
                 children: [
-                    { text: "Start Events",expanded: false,iconCls:'start-events', children:[
-                        { text: "Start", leaf: true,iconCls:'startevent-none',stencil:'StartNoneEvent' },
-                        { text: "Start timer event", leaf: true,iconCls:'startevent-timer',stencil:'StartTimerEvent' },
-                        { text: "Start message event", leaf: true,iconCls:'startevent-message',stencil:'StartMessageEvent' },
-                        { text: "Start error event", leaf: true,iconCls:'startevent-error',stencil:'StartErrorEvent' }
+                    { text: "开始事件",expanded: false,iconCls:'start-events', children:[
+                        { text: "开始", leaf: true,iconCls:'startevent-none',stencil:'StartNoneEvent' },
+                        { text: "时间事件", leaf: true,iconCls:'startevent-timer',stencil:'StartTimerEvent' },
+                        { text: "消息事件", leaf: true,iconCls:'startevent-message',stencil:'StartMessageEvent' },
+                        { text: "错误事件", leaf: true,iconCls:'startevent-error',stencil:'StartErrorEvent' }
                     ] },
                     { text: "Activities",expanded: false, children:[
                         { text: "User task", leaf: true,iconCls:'activity-type-user',stencil:'UserTask' },
@@ -178,7 +181,7 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                 store:store
             },{
                 region: 'east',
-                title: '属性',
+                title: '流程属性('+me.processRecord.name+')',
                 collapsible: true,
                 itemId:'graphProperties',
                 split: true,
@@ -302,171 +305,6 @@ Ext.define('FlexCenter.flows.view.Modeler', {
             }
             
         ];
-//        me.items=[
-////            {
-////                xtype: 'box',
-////                region: 'north',
-////                html: 'Ext.Layout.Browser',
-////                height: 20
-////            },
-//            {
-//                region: 'center',
-//                layout:'border',
-//                border:false,
-//                tbar:[
-//                    
-//                ],
-//                items:[
-//                    {
-//                        region: 'west',
-//                        title: 'Westsdf水电费',
-//                        split: true,
-//                        width: me.navCellWidth,
-//                        itemId:'navGraphTree',
-//                        xtype:'treepanel',
-//                        rootVisible: false,
-//                        collapsible: true,
-//                        titleCollapse:true,
-////                        onResize: function(){
-////                            console.log('sdf')
-//////                            this.callParent(arguments);
-//////                            if(this.graph){
-//////                                this.graph.sizeDidChange();
-//////                            }
-////                        },
-//                        viewConfig: {
-//                            getRowClass: function(record, rowIndex, rowParams, store){
-//                                return (record.get('leaf')==false) ? "blue-grid-row" : "";
-//                            }
-//                        },
-//                        store:store
-//                    },{
-//                        region: 'east',
-//                        title: '属性',
-//                        collapsible: true,
-//                        itemId:'graphProperties',
-//                        split: true,
-//                        width: 250,
-//                        autoScroll:true,
-//                        items:me.Process()
-//                    },{
-//                        region: 'center',
-//                        itemId:'graphContainer',
-//                        autoScroll:true,
-//                        listeners:{
-//                            afterrender:function(panel){
-//                                var dom=panel.body.dom.firstChild.children[0]
-//                                me.insertVertexTemplate(dom);
-//                            }
-//                        },
-//                        dockedItems: [{
-//                            xtype: 'toolbar',
-//                            dock: 'bottom',
-//                            items: [
-//                                {
-//                                    iconCls: 'zoom',
-//                                    text:'变焦',
-//                                    menu: [{
-//                                            text:'400%',
-//                                            handler: function(item){
-//                                                me.graph.getView().setScale(4);
-//                                            }
-//                                        },
-//                                        {
-//                                            text:'200%',
-//                                            handler: function(item){
-//                                                me.graph.getView().setScale(2);
-//                                            }
-//                                        },
-//                                        {
-//                                            text:'150%',
-//                                            scope:this,
-//                                            handler: function(item){
-//                                                me.graph.getView().setScale(1.5);
-//                                            }
-//                                        },
-//                                        {
-//                                            text:'100%',
-//                                            scope:this,
-//                                            handler: function(item){
-//                                                me.graph.getView().setScale(1);
-//                                            }
-//                                        },
-//                                        {
-//                                            text:'75%',
-//                                            scope:this,
-//                                            handler: function(item){
-//                                                me.graph.getView().setScale(0.75);
-//                                            }
-//                                        },
-//                                        {
-//                                            text:'50%',
-//                                            scope:this,
-//                                            handler: function(item){
-//                                                me.graph.getView().setScale(0.5);
-//                                            }
-//                                        },
-//                                        {
-//                                            text:'25%',
-//                                            scope:this,
-//                                            handler: function(item){
-//                                                me.graph.getView().setScale(0.25);
-//                                            }
-//                                        }]
-//                                    
-//                                },
-//                                {
-//                                    iconCls: 'zoom',
-//                                    tooltip: '缩放比例',
-//                                    handler: function(button,evt){
-//                                        Ext.Msg.prompt('缩放比例','请输入要缩放的比例',function(btn,text){
-//                                            if(btn=='ok'){
-//                                                text=parseInt(text);
-//                                                if(!isNaN(text)){
-//                                                    me.graph.getView().setScale(text / 100);
-//                                                }
-//                                            }
-//                                        });
-//                                    }
-//                                },'-',
-//                                {
-//                                    iconCls: 'zoomIn',
-//                                    tooltip: '放大',
-//                                    handler: function(button,evt){
-//                                        me.zoomIn();
-//                                    }
-//                                },'-',
-//                                {
-//                                    iconCls: 'zoomOut',
-//                                    tooltip: '缩小',
-//                                    handler: function(button,evt){
-//                                        me.zoomOut();
-//                                    }
-//                                },'-',
-//                                {
-//                                    iconCls: 'zoomActual',
-//                                    tooltip: '实际大小',
-//                                    handler: function(button,evt){
-//                                        me.actualSize();
-//                                    }
-//                                }
-//                                ,'->',
-//                                {
-//                                    xtype:'button',
-//                                    text: '预览',
-//                                    enableToggle: true,
-//                                    toggleHandler: function(btn,press){
-//                                        me.showPreviewWin(btn,press);
-//                                    },
-//                                    pressed: false
-//                                }
-//                            ]
-//                        }]
-//                    }
-//                ]
-//
-//            }
-//        ];
         me.callParent(arguments);
     },
     savefunc:function(){
@@ -476,6 +314,7 @@ Ext.define('FlexCenter.flows.view.Modeler', {
             var node = encoder.encode(me.graph.getModel());
             graRes= mxUtils.getPrettyXml(node);
         }
+        me.process=me.updateProcess(me.graph);
         var win=Ext.widget('processListForm',{
             buttonSave:true,
             graRes:graRes,
@@ -483,6 +322,7 @@ Ext.define('FlexCenter.flows.view.Modeler', {
         });
         me.mon(win, 'updateFlow', function (data) {
             me.fireEvent('updateFlow',data);
+            win.close();
         });
         win.show();
     },
@@ -599,7 +439,7 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     },
                     {
                         "x": 192.0,
-                        "y": 30.000000000000007
+                        "y": 30.1
                     },
                     {
                         "x": 50.0,
@@ -668,11 +508,13 @@ Ext.define('FlexCenter.flows.view.Modeler', {
             if(me.processRecord){
                 form.getForm().setValues(me.processRecord);
                 me.processRecord=null;
+                
             }
             var value=form.getForm().getValues();
             act.setProperties(value);
             me.process=act;
         };
+        var process_id=me.processRecord?('process_'+me.processRecord.id):('process_'+new Date().getTime());
         var form=Ext.widget('form',{
             layout: 'anchor',
             border:false,
@@ -685,7 +527,8 @@ Ext.define('FlexCenter.flows.view.Modeler', {
             items: [
                 {
                     xtype:'hidden',
-                    name:'process_id'
+                    name:'process_id',
+                    value:process_id
                 },
                 {
                     xtype:'hidden',
@@ -700,44 +543,36 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     name:'flowFormId'
                 },
                 {
-                fieldLabel: '流程名称',
-                name: 'name',
-                listeners:{
-                    blur:function( f, The, eOpts ){
-                        activity(form);
+                    fieldLabel: '流程名称',
+                    name: 'name',
+                    listeners:{
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            activity(form);
+                        }
                     }
-                }
-            },{
-                fieldLabel: '引用表单',
-                name:'flowFormName',
-                readOnly:true,
-//                readOnlyCls: 'x-item-disabled',
-                listeners:{
-//                    blur:function( f, The, eOpts ){
-//                        activity(form);
-//                    }
-                }
-            },{
-                fieldLabel: '流程分类',
-                name:'category',
-                readOnly:true,
-//                readOnlyCls: 'x-item-disabled',
-                listeners:{
-//                    blur:function( f, The, eOpts ){
-//                        activity(form);
-//                    }
-                }
-            },{
-                xtype:'textareafield',
-                grow: true,
-                fieldLabel:'描述',
-                name:'documentation',
-                listeners:{
-                    blur:function( f, The, eOpts ){
-                        activity(form);
+                },
+                {
+                    fieldLabel: '引用表单',
+                    name:'flowFormName',
+                    readOnly:true,
+                    readOnlyCls:'x-item-disabled'
+                },
+                {
+                    fieldLabel: '流程分类',
+                    name:'category',
+                    readOnly:true,
+                    readOnlyCls:'x-item-disabled'
+                },{
+                    xtype:'textareafield',
+                    grow: true,
+                    fieldLabel:'描述',
+                    name:'documentation',
+                    listeners:{
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            activity(form);
+                        }
                     }
-                }
-            }]
+                }]
         });
         var rec=me.process;
         if(rec){
@@ -784,16 +619,16 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     fieldLabel: '名称',
                     name: 'name',
                     listeners:{
-                        blur:function( f, The, eOpts ){
+                        change:function(combo, newValue, oldValue,eOpts ){
                             activity(form);
-                            me.graph.cellLabelChanged(cell,form.getForm().getValues().name);
+                            me.graph.cellLabelChanged(cell,newValue);
                         }
                     }
                 },{
                     fieldLabel: '流程条件',
                     name: 'conditionsequenceflow',
                     listeners:{
-                        blur:function( f, The, eOpts ){
+                        change:function(combo, newValue, oldValue,eOpts ){
                             activity(form);
                         }
                     }
@@ -803,7 +638,7 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     xtype:'textareafield',
                     grow: true,
                     listeners:{
-                        blur:function( f, The, eOpts ){
+                        change:function(combo, newValue, oldValue,eOpts ){
                             activity(form);
                         }
                     }
@@ -842,15 +677,16 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                 },
                 {
                     xtype:'hidden',
-                    name:'initiator'
+                    name:'initiator',
+                    value:'${starter}'
                 },
                 {
                     fieldLabel: '名称',
                     name: 'name',
                     listeners:{
-                        blur:function( f, The, eOpts ){
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            me.graph.cellLabelChanged(cell,newValue);
                             activity(form);
-                            me.graph.cellLabelChanged(cell,form.getForm().getValues().name);
                         }
                     }
                 },{
@@ -858,16 +694,19 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     xtype:'trigger',
                     name: 'formproperties',
                     onTriggerClick:function(){
+                        var value = form.down('trigger[name=formproperties]').getValue();
                         var win=Ext.widget('formFieldSetter',{
-                            formId:me.process.properties.flowFormId
+                            formId:me.process.properties.flowFormId,
+                            defId:me.process.properties.id,
+                            taskKey:cell.id,
+                            formproperties:value,
+                            callBack:function(data){
+                                form.down('trigger[name=formproperties]').setValue(data);
+                                activity(form);
+                            }
                         });
                         if(win){
                             win.show();
-                        }
-                    },
-                    listeners:{
-                        blur:function( f, The, eOpts ){
-                            activity(form);
                         }
                     }
                 },{
@@ -880,7 +719,7 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     xtype:'textareafield',
                     grow: true,
                     listeners:{
-                        blur:function( f, The, eOpts ){
+                        change:function(combo, newValue, oldValue,eOpts ){
                             activity(form);
                         }
                     }
@@ -890,7 +729,7 @@ Ext.define('FlexCenter.flows.view.Modeler', {
         if(rec){
             var properties=Ext.decode(rec).properties;
             if(properties){
-                form.getForm().setValues(Ext.decode(rec).properties);
+                form.getForm().setValues(properties);
             }
         }
         activity(form);
@@ -921,16 +760,16 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     fieldLabel: '名称',
                     name: 'name',
                     listeners:{
-                        blur:function( f, The, eOpts ){
+                        change:function(combo, newValue, oldValue,eOpts ){
                             activity(form);
-                            me.graph.cellLabelChanged(cell,form.getForm().getValues().name);
+                            me.graph.cellLabelChanged(cell,newValue);
                         }
                     }
                 },{
                     fieldLabel: '持续时间(PT5M)',
                     name: 'timerdurationdefinition',
                     listeners:{
-                        blur:function( f, The, eOpts ){
+                        change:function(combo, newValue, oldValue,eOpts ){
                             activity(form);
                         }
                     }
@@ -938,7 +777,7 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     fieldLabel: '时间(ISO-8601)',
                     name: 'timerdatedefinition',
                     listeners:{
-                        blur:function( f, The, eOpts ){
+                        change:function(combo, newValue, oldValue,eOpts ){
                             activity(form);
                         }
                     }
@@ -946,7 +785,7 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     fieldLabel: '时间周期(R3/PT10H)',
                     name: 'timercycledefinition',
                     listeners:{
-                        blur:function( f, The, eOpts ){
+                        change:function(combo, newValue, oldValue,eOpts ){
                             activity(form);
                         }
                     }
@@ -960,7 +799,7 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     xtype:'textareafield',
                     grow: true,
                     listeners:{
-                        blur:function( f, The, eOpts ){
+                        change:function(combo, newValue, oldValue,eOpts ){
                             activity(form);
                         }
                     }
@@ -1047,6 +886,9 @@ Ext.define('FlexCenter.flows.view.Modeler', {
             var act=me.activity(cell);
             act.setProperties(form.getForm().getValues());
             cell.value.setAttribute('activity',Ext.encode(act));
+            if(me.graph){
+                me.updateProcess(me.graph);
+            }
         }
         var form=Ext.widget('form',{
             layout: 'anchor',
@@ -1067,8 +909,8 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     name: 'name',
                     listeners:{
                         blur:function( f, The, eOpts ){
-                            activity(form);
                             me.graph.cellLabelChanged(cell,form.getForm().getValues().name);
+                            activity(form);
                         }
                     }
                 },{
@@ -1197,7 +1039,7 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     name: 'looptype',
                     hidden:!me.developer,
                     listeners:{
-                        blur:function( f, The, eOpts ){
+                        change:function(combo, newValue, oldValue,eOpts ){
                             activity(form);
                         }
                     }
@@ -1208,7 +1050,7 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     name: 'isforcompensation',
                     hidden:!me.developer,
                     listeners:{
-                        blur:function( f, The, eOpts ){
+                        change:function(combo, newValue, oldValue,eOpts ){
                             activity(form);
                         }
                     }
@@ -1218,9 +1060,9 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     fieldLabel: '名称',
                     name: 'name',
                     listeners:{
-                        blur:function( f, The, eOpts ){
+                        change:function(combo, newValue, oldValue,eOpts ){
                             activity(form);
-                            me.graph.cellLabelChanged(cell,form.getForm().getValues().name);
+                            me.graph.cellLabelChanged(cell,newValue);
                         }
                     }
                 },{
@@ -1228,7 +1070,7 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     name: 'formkeydefinition',
                     hidden:!me.developer,
                     listeners:{
-                        blur:function( f, The, eOpts ){
+                        change:function(combo, newValue, oldValue,eOpts ){
                             activity(form);
                         }
                     }
@@ -1237,7 +1079,7 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     name: 'duedatedefinition',
                     hidden:!me.developer,
                     listeners:{
-                        blur:function( f, The, eOpts ){
+                        change:function(combo, newValue, oldValue,eOpts ){
                             activity(form);
                         }
                     }
@@ -1246,7 +1088,7 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     name: 'prioritydefinition',
                     hidden:!me.developer,
                     listeners:{
-                        blur:function( f, The, eOpts ){
+                        change:function(combo, newValue, oldValue,eOpts ){
                             activity(form);
                         }
                     }
@@ -3467,7 +3309,7 @@ Ext.define('FlexCenter.flows.view.Modeler', {
         var me=this,form,title;
         if(cell){
             if(mxUtils.isNode(cell.value)){
-                var nodeName=cell.value.nodeName,title='属性（'+cell.value.getAttribute('label')+')';
+                var nodeName=cell.value.nodeName,title='节点属性（'+cell.value.getAttribute('label')+')';
                 if('StartNoneEvent'==nodeName){
                     form=me.StartNoneEvent(cell);
                 }else if('StartTimerEvent'==nodeName){
@@ -3531,7 +3373,7 @@ Ext.define('FlexCenter.flows.view.Modeler', {
             }
         }else{
             form=me.Process();
-            title='属性('+form.getForm().getValues().name+')';
+            title='流程属性('+form.getForm().getValues().name+')';
         }
         var  graphProperties=me.down('#graphProperties');
         if(graphProperties){
@@ -3603,7 +3445,7 @@ Ext.define('FlexCenter.flows.view.Modeler', {
             if(graph){
                 var pro = me.updateProcess(graph);
 //                console.log(Ext.encode(me.process))
-                console.log((me.process))
+                console.log(('process',me.process))
             }
         });
         
@@ -3819,6 +3661,7 @@ Ext.define('FlexCenter.flows.view.Modeler', {
         graph.connectionHandler.setCreateTarget(false);
         graph.container.style.cursor = 'default';
         me.setGraph(graph);
+        me.graRes?me.reloadGraph(me.graRes):'';
     },
     insertVertexTemplate:function(dom){
         var me=this,treepanel=me.down('#navGraphTree');
@@ -3939,5 +3782,11 @@ Ext.define('FlexCenter.flows.view.Modeler', {
     },
     getGraph:function(){
         return this.graph;
+    },
+    reloadGraph:function(source){
+        var me=this;
+        var xmlDocument = mxUtils.parseXml(source);
+        var codec = new mxCodec(xmlDocument);
+        codec.decode(xmlDocument.documentElement,me.editor.graph.model);
     }
 });

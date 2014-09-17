@@ -1,6 +1,7 @@
 package com.ozstrategy.dao.forms;
 
 import com.ozstrategy.model.forms.FormField;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.Map;
 public interface FormFieldDao{
     List<FormField> listFormFields(Map<String,Object> map,RowBounds rowBounds);
     Integer listFormFieldsCount(Map<String,Object> map);
-    FormField getFormFieldByNameAndFlowFormId(String name, Long formId);
+    FormField getFormFieldByNameAndFlowFormId(@Param("name")String name, @Param("formId")Long formId);
     FormField getFormFieldById(Long id);
     void deleteByFormId(Long formId);
     void saveFormField(FormField formField);

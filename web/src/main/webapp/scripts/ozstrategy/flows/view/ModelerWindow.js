@@ -7,15 +7,11 @@ Ext.define('FlexCenter.flows.view.ModelerWindow',{
     ],
     extend:'Ext.Window',
     alias: 'widget.modelerWindow',
-    itemId:'modelerWindow',
     title: '流程设计',
     maximized: true,
     maximizable:false,
     iconCls: 'workflow-manager-16',
     animCollapse : true,
-//    animateTarget : Ext.getBody(),
-    shim:false,
-    modal: true,
     layout: 'fit',
     initComponent:function(){
         var me=this;
@@ -23,7 +19,9 @@ Ext.define('FlexCenter.flows.view.ModelerWindow',{
             {
                 xtype:'modeler',
                 processRecord:me.processRecord,
-                border:false
+                border:false,
+                graRes:me.graRes,
+                developer:me.developer
             }
         ];
         me.callParent();

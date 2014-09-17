@@ -10,12 +10,11 @@ Ext.define('FlexCenter.user.view.UserForm', {
   alias: 'widget.userForm',
 
   requires: [
-      'Oz.util.Utils',
     'Ext.form.Panel',
     'Ext.data.Store',
-      'Oz.grid.feature.Search',
-      'Oz.dd.DragZone',
-      'Oz.form.MultiSelect'
+      'Ext.ux.grid.feature.Search',
+      'Ext.ux.Utils',
+      'Ext.ux.form.MultiSelect'
   ],
 
   config: {

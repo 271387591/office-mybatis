@@ -1,0 +1,190 @@
+{"childShapes": [
+    {
+        "childShapes": [],
+        "dockers": [],
+        "stencil": {
+            "id": "StartNoneEvent"
+        },
+        "outgoing": [
+            {
+                "resourceId": "5"
+            }
+        ],
+        "properties": {
+            "overrideid": "",
+            "initiator": "",
+            "name": "",
+            "formproperties": "",
+            "executionlisteners": "",
+            "documentation": ""
+        },
+        "resourceId": "2",
+        "bounds": {
+            "upperLeft": {
+                "x": 60,
+                "y": 90
+            },
+            "lowerRight": {
+                "x": 100,
+                "y": 130
+            }
+        }
+    },
+    {
+        "childShapes": [],
+        "dockers": [],
+        "stencil": {
+            "id": "UserTask"
+        },
+        "outgoing": [
+            {
+                "resourceId": "6"
+            }
+        ],
+        "properties": {
+            "overrideid": "",
+            "looptype": "",
+            "isforcompensation": "",
+            "name": "",
+            "formkeydefinition": "",
+            "duedatedefinition": "",
+            "prioritydefinition": "",
+            "usertaskassignment": "",
+            "formproperties": "",
+            "tasklisteners": "",
+            "asynchronousdefinition": "",
+            "exclusivedefinition": "",
+            "multiinstance_sequential": "",
+            "multiinstance_cardinality": "",
+            "multiinstance_collection": "",
+            "multiinstance_variable": "",
+            "multiinstance_condition": "",
+            "executionlisteners": "",
+            "documentation": ""
+        },
+        "resourceId": "3",
+        "bounds": {
+            "upperLeft": {
+                "x": 210,
+                "y": 80
+            },
+            "lowerRight": {
+                "x": 350,
+                "y": 160
+            }
+        }
+    },
+    {
+        "childShapes": [],
+        "dockers": [],
+        "stencil": {
+            "id": "EndNoneEvent"
+        },
+        "outgoing": [],
+        "properties": {
+            "overrideid": "",
+            "name": "",
+            "executionlisteners": "",
+            "documentation": ""
+        },
+        "resourceId": "4",
+        "bounds": {
+            "upperLeft": {
+                "x": 440,
+                "y": 100
+            },
+            "lowerRight": {
+                "x": 480,
+                "y": 140
+            }
+        }
+    },
+    {
+        "childShapes": [],
+        "dockers": [
+            {
+                "x": 50,
+                "y": 30
+            },
+            {
+                "x": 192,
+                "y": 30
+            },
+            {
+                "x": 192,
+                "y": 30.000000000000007
+            },
+            {
+                "x": 50,
+                "y": 30
+            }
+        ],
+        "stencil": {
+            "id": "SequenceFlow"
+        },
+        "outgoing": [
+            {
+                "resourceId": "2"
+            }
+        ],
+        "properties": {},
+        "resourceId": "5",
+        "target": {
+            "resourceId": "3"
+        }
+    },
+    {
+        "childShapes": [],
+        "dockers": [
+            {
+                "x": 50,
+                "y": 30
+            },
+            {
+                "x": 192,
+                "y": 30
+            },
+            {
+                "x": 192,
+                "y": 30.000000000000007
+            },
+            {
+                "x": 50,
+                "y": 30
+            }
+        ],
+        "stencil": {
+            "id": "SequenceFlow"
+        },
+        "outgoing": [
+            {
+                "resourceId": "3"
+            }
+        ],
+        "properties": {},
+        "resourceId": "6",
+        "target": {
+            "resourceId": "4"
+        }
+    }
+], "dockers": [], "stencil": {
+    "id": "BPMNDiagram"
+}, "outgoing": [], "properties": {
+    "process_id": "",
+    "globalTypeId": "",
+    "id": "4",
+    "flowFormId": "4",
+    "name": "sadfasfafasf",
+    "flowFormName": "test2",
+    "category": "",
+    "documentation": "\u963f\u65af\u987f\u53d1\u6c99\u53d1\u4e0a"
+}, "resourceId": "canvas", "bounds": {
+    "upperLeft": {
+        "x": 0,
+        "y": 0
+    },
+    "lowerRight": {
+        "x": 1280,
+        "y": 800
+    }
+}}

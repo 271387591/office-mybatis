@@ -55,7 +55,7 @@
     <update id="updateProcessDef" parameterType="com.ozstrategy.model.flows.ProcessDef" flushCache="true">
         update ProcessDef f set 
         f.name=#{name} , 
-        f.globalTypeId=#{globalType.id} , 
+        f.globalTypeId=#{globalTypeId} , 
         f.version=#{version} , 
         f.actDefId=#{actDefId} , 
         f.actResId=#{actResId} , 
@@ -70,7 +70,7 @@
         where f.id=#{id}
     </update>
     <update id="deleteProcessDef" parameterType="long" flushCache="true">
-        update ProcessDef u set u.enabled=#{enabled} where u.id=#{id}
+        update ProcessDef u set u.enabled=0 where u.id=#{id}
     </update>
     <insert id="saveProcessDef" parameterType="Map" flushCache="true">
         <selectKey keyColumn="id" keyProperty="id" resultType="java.lang.Long">

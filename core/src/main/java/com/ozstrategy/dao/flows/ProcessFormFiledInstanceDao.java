@@ -1,6 +1,7 @@
 package com.ozstrategy.dao.flows;
 
 import com.ozstrategy.model.flows.ProcessFormFiledInstance;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 
 import java.util.List;
@@ -19,5 +20,5 @@ public interface ProcessFormFiledInstanceDao {
     void deleteProcessFormFiledInstance(Long id);
     void deleteProcessFormFiledInstanceByElementId(Long elementId);
     void deleteProcessFormFiledInstanceByDefId(Long defId);
-    List<ProcessFormFiledInstance> getDefFormFieldByFormId(Long formId);
+    List<ProcessFormFiledInstance> getDefFormFieldByFormId(@Param("formId")Long formId,@Param("processElementId")Long processElementId);
 }

@@ -1,0 +1,48 @@
+{"childShapes": [
+    {
+        "childShapes": [],
+        "dockers": [],
+        "stencil": {
+            "id": "StartNoneEvent"
+        },
+        "outgoing": [],
+        "properties": {
+            "overrideid": "",
+            "initiator": "${starter}",
+            "name": "\u58eb\u5927\u592b",
+            "formproperties": "{\"totalCount\":14,\"items\":[{\"formproperty_id\":\"\",\"formproperty_name\":\"\",\"formproperty_type\":\"\",\"formproperty_expression\":\"\\u6492\\u65e6\",\"formproperty_variable\":\"at\",\"formproperty_required\":\"No\",\"formproperty_readable\":\"No\",\"formproperty_writeable\":\"Yes\",\"formproperty_formvalues\":[]},{\"formproperty_id\":\"\",\"formproperty_name\":\"\",\"formproperty_type\":\"\",\"formproperty_expression\":\"\",\"formproperty_variable\":\"at9\",\"formproperty_required\":\"No\",\"formproperty_readable\":\"No\",\"formproperty_writeable\":\"No\",\"formproperty_formvalues\":[]},{\"formproperty_id\":\"\",\"formproperty_name\":\"\",\"formproperty_type\":\"\",\"formproperty_expression\":\"\",\"formproperty_variable\":\"bt\",\"formproperty_required\":\"No\",\"formproperty_readable\":\"No\",\"formproperty_writeable\":\"Yes\",\"formproperty_formvalues\":[]},{\"formproperty_id\":\"\",\"formproperty_name\":\"\",\"formproperty_type\":\"\",\"formproperty_expression\":\"\",\"formproperty_variable\":\"ct\",\"formproperty_required\":\"No\",\"formproperty_readable\":\"No\",\"formproperty_writeable\":\"Yes\",\"formproperty_formvalues\":[]},{\"formproperty_id\":\"\",\"formproperty_name\":\"\",\"formproperty_type\":\"\",\"formproperty_expression\":\"\",\"formproperty_variable\":\"a\",\"formproperty_required\":\"No\",\"formproperty_readable\":\"No\",\"formproperty_writeable\":\"Yes\",\"formproperty_formvalues\":[]},{\"formproperty_id\":\"\",\"formproperty_name\":\"\",\"formproperty_type\":\"\",\"formproperty_expression\":\"\",\"formproperty_variable\":\"b\",\"formproperty_required\":\"No\",\"formproperty_readable\":\"No\",\"formproperty_writeable\":\"Yes\",\"formproperty_formvalues\":[]},{\"formproperty_id\":\"\",\"formproperty_name\":\"\",\"formproperty_type\":\"\",\"formproperty_expression\":\"\",\"formproperty_variable\":\"c\",\"formproperty_required\":\"No\",\"formproperty_readable\":\"No\",\"formproperty_writeable\":\"Yes\",\"formproperty_formvalues\":[]},{\"formproperty_id\":\"\",\"formproperty_name\":\"\",\"formproperty_type\":\"\",\"formproperty_expression\":\"\",\"formproperty_variable\":\"d\",\"formproperty_required\":\"No\",\"formproperty_readable\":\"No\",\"formproperty_writeable\":\"Yes\",\"formproperty_formvalues\":[]},{\"formproperty_id\":\"\",\"formproperty_name\":\"\",\"formproperty_type\":\"\",\"formproperty_expression\":\"\",\"formproperty_variable\":\"e\",\"formproperty_required\":\"No\",\"formproperty_readable\":\"No\",\"formproperty_writeable\":\"Yes\",\"formproperty_formvalues\":[]},{\"formproperty_id\":\"\",\"formproperty_name\":\"\",\"formproperty_type\":\"\",\"formproperty_expression\":\"\",\"formproperty_variable\":\"a1\",\"formproperty_required\":\"No\",\"formproperty_readable\":\"No\",\"formproperty_writeable\":\"Yes\",\"formproperty_formvalues\":[]},{\"formproperty_id\":\"\",\"formproperty_name\":\"\",\"formproperty_type\":\"\",\"formproperty_expression\":\"\",\"formproperty_variable\":\"b1\",\"formproperty_required\":\"No\",\"formproperty_readable\":\"No\",\"formproperty_writeable\":\"Yes\",\"formproperty_formvalues\":[]},{\"formproperty_id\":\"\",\"formproperty_name\":\"\",\"formproperty_type\":\"\",\"formproperty_expression\":\"\",\"formproperty_variable\":\"c1\",\"formproperty_required\":\"No\",\"formproperty_readable\":\"No\",\"formproperty_writeable\":\"Yes\",\"formproperty_formvalues\":[]},{\"formproperty_id\":\"\",\"formproperty_name\":\"\",\"formproperty_type\":\"\",\"formproperty_expression\":\"\",\"formproperty_variable\":\"d1\",\"formproperty_required\":\"No\",\"formproperty_readable\":\"No\",\"formproperty_writeable\":\"Yes\",\"formproperty_formvalues\":[]},{\"formproperty_id\":\"\",\"formproperty_name\":\"\",\"formproperty_type\":\"\",\"formproperty_expression\":\"\",\"formproperty_variable\":\"e1\",\"formproperty_required\":\"No\",\"formproperty_readable\":\"No\",\"formproperty_writeable\":\"Yes\",\"formproperty_formvalues\":[]}]}",
+            "executionlisteners": "",
+            "documentation": ""
+        },
+        "resourceId": "2",
+        "bounds": {
+            "upperLeft": {
+                "x": 260,
+                "y": 120
+            },
+            "lowerRight": {
+                "x": 300,
+                "y": 160
+            }
+        }
+    }
+], "dockers": [], "stencil": {
+    "id": "BPMNDiagram"
+}, "outgoing": [], "properties": {
+    "id": "6",
+    "flowFormId": "1",
+    "globalTypeId": "8",
+    "name": "test1",
+    "category": "\u4e3a",
+    "flowFormName": "test1",
+    "documentation": "q12"
+}, "resourceId": "canvas", "bounds": {
+    "upperLeft": {
+        "x": 0,
+        "y": 0
+    },
+    "lowerRight": {
+        "x": 1280,
+        "y": 800
+    }
+}}

@@ -3,12 +3,11 @@
 <mapper namespace="com.ozstrategy.dao.flows.ProcessFormFiledInstanceDao">
     <!--<cache type="org.mybatis.caches.ehcache.EhcacheCache"/>-->
     <resultMap id="processFormFiledInstanceResult" type="com.ozstrategy.model.flows.ProcessFormFiledInstance" autoMapping="true">
-        <id column="id" property="id" javaType="long"/>
+        <id column="pfId" property="id" javaType="long"/>
         <association property="processElement" column="processElementId" select="com.ozstrategy.dao.flows.ProcessElementDao.getProcessElementById"/>
         <association property="processDef" column="processDefId" select="com.ozstrategy.dao.flows.ProcessDefDao.getNoCascadeProcessDefById"/>
         <association property="formField" column="formFieldId" select="com.ozstrategy.dao.forms.FormFieldDao.getNoCascadeFormField"/>
     </resultMap>
-    
     <select id="listProcessFormFiledInstances" resultMap="processFormFiledInstanceResult" parameterType="Map">
         select f.* from ProcessFormFiledInstance f where 1=1
     </select>
@@ -22,27 +21,25 @@
     <select id="getProcessFormFiledInstancesByEid" resultMap="processFormFiledInstanceResult" parameterType="long">
         select f.* from ProcessFormFiledInstance f where f.processElementId=#{id} 
     </select>
-    <select id="getDefFormFieldByFormId" resultMap="processFormFiledInstanceResult" parameterType="long">
-        select fdf.*,pf.chmod,pf.expression from(
+    <select id="getDefFormFieldByFormId" resultMap="processFormFiledInstanceResult" parameterType="Map">
+        select fdf.*,pf.chmod,pf.expression,pf.formFieldId,pf.processDefId,pf.id as pfId,pf.processElementId from(
         select fd.* from FormField fd join (
         select * from FlowForm ff where ff.parentId=#{formId} or ff.id=#{formId}
         )fl on fd.flowFormId=fl.id where fd.xtype!='detailGrid'
-        )fdf left join ProcessFormFiledInstance pf on fdf.id=pf.formFieldId
+        )fdf left join ProcessFormFiledInstance pf on fdf.id=pf.formFieldId 
+        <where>
+            <if test="processElementId!=null">pf.processElementId=#{processElementId}</if>
+        </where>
     </select>
-    
-    
-    <delete id="deleteProcessFormFiledInstance" parameterType="long">
+    <delete id="deleteProcessFormFiledInstance" parameterType="long" flushCache="true">
         delete from ProcessFormFiledInstance where id=#{id}
     </delete>
-    <delete id="deleteProcessFormFiledInstanceByElementId" parameterType="long">
+    <delete id="deleteProcessFormFiledInstanceByElementId" parameterType="long" flushCache="true">
         delete from ProcessFormFiledInstance where processElementId=#{processElementId}
     </delete>
-    <delete id="deleteProcessFormFiledInstanceByDefId" parameterType="long">
+    <delete id="deleteProcessFormFiledInstanceByDefId" parameterType="long" flushCache="true">
         delete from ProcessFormFiledInstance where processDefId=#{processElementId}
     </delete>
-    
-    
-    
     <update id="updateProcessFormFiledInstance" parameterType="com.ozstrategy.model.flows.ProcessFormFiledInstance" flushCache="true">
         update ProcessFormFiledInstance f set 
         f.formFieldId=#{formField.id} , 

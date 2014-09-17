@@ -32,14 +32,15 @@
     <select id="getProcessElementByTaskKey" resultMap="processElementResult" parameterType="string">
         select f.* from ProcessElement f where f.taskKey=#{taskKey} 
     </select>
-    
-    <delete id="deleteProcessElement" parameterType="long">
+    <select id="getProcessElementByTaskKeyAndDefId" resultMap="processElementResult" parameterType="Map">
+        select f.* from ProcessElement f where f.taskKey=#{taskKey} and f.processDefId=#{defId} 
+    </select>
+    <delete id="deleteProcessElement" parameterType="long" flushCache="true">
         delete from ProcessElement where id=#{id}
     </delete>
-    <delete id="deleteProcessElementByDefId" parameterType="long">
+    <delete id="deleteProcessElementByDefId" parameterType="long" flushCache="true">
         delete from ProcessElement where processDefId=#{processDefId}
     </delete>
-    
     <update id="updateProcessElement" parameterType="com.ozstrategy.model.flows.ProcessElement" flushCache="true">
         update ProcessElement f set 
         f.type=#{type} , 

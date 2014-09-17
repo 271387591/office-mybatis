@@ -1,7 +1,9 @@
 package com.ozstrategy.webapp.controller.flows;
 
 import com.ozstrategy.model.flows.ProcessDef;
+import com.ozstrategy.model.flows.ProcessElement;
 import com.ozstrategy.model.flows.ProcessFormFiledInstance;
+import com.ozstrategy.model.forms.FormField;
 import com.ozstrategy.service.flows.ProcessDefManager;
 import com.ozstrategy.service.forms.FlowFormManager;
 import com.ozstrategy.webapp.command.BaseResultCommand;
@@ -23,6 +25,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +39,7 @@ public class ProcessDefController extends BaseController {
     ProcessDefManager processDefManager;
     @Autowired
     FlowFormManager flowFormManager;
+    
     private Log logger= LogFactory.getLog(ProcessDefController.class);
     
     @RequestMapping(params = "method=listProcessDefs")
@@ -59,13 +63,28 @@ public class ProcessDefController extends BaseController {
     @ResponseBody
     public JsonReaderResponse<ProcessFormFiledInstanceCommand> listDefFormField(HttpServletRequest request) {
         Long formId=parseLong(request.getParameter("formId"));
+        Long defId=parseLong(request.getParameter("defId"));
+        String taskKey=request.getParameter("taskKey");
         List<ProcessFormFiledInstanceCommand> commands=new ArrayList<ProcessFormFiledInstanceCommand>();
         if(formId!=null){
-            List<ProcessFormFiledInstance> flowForms= processDefManager.getDefFormFieldByFormId(formId);
-            if(flowForms!=null && flowForms.size()>0){
-                for(ProcessFormFiledInstance flowForm : flowForms){
-                    ProcessFormFiledInstanceCommand command=new ProcessFormFiledInstanceCommand(flowForm);
-                    commands.add(command);
+            if(defId!=null && StringUtils.isNotEmpty(taskKey)){
+                ProcessElement element = processDefManager.getProcessElementByTaskKeyAndDefId(defId,taskKey);
+                if(element!=null){
+                    List<ProcessFormFiledInstance> flowForms= processDefManager.getDefFormFieldByFormId(formId,element.getId());
+                    if(flowForms!=null && flowForms.size()>0){
+                        for(ProcessFormFiledInstance flowForm : flowForms){
+                            ProcessFormFiledInstanceCommand command=new ProcessFormFiledInstanceCommand(flowForm);
+                            commands.add(command);
+                        }
+                    }
+                }else{
+                    List<FormField> formFields=flowFormManager.getDefFormFieldByFormId(formId);
+                    if(formFields!=null && formFields.size()>0){
+                        for(FormField formField : formFields){
+                            ProcessFormFiledInstanceCommand command=new ProcessFormFiledInstanceCommand(formField);
+                            commands.add(command);
+                        }
+                    }
                 }
             }
         }
@@ -123,7 +142,8 @@ public class ProcessDefController extends BaseController {
             }
             ProcessDef def = processDefManager.getProcessDefById(id);
             if(StringUtils.isNotEmpty(name) && globalTypeId!=null){
-                if(processDefManager.checkNameExist(name,globalTypeId)!=id && globalTypeId==def.getGlobalTypeId()){
+                Long checkId= processDefManager.checkNameExist(name,globalTypeId);
+                if(checkId!=null && checkId!=id && globalTypeId==def.getGlobalTypeId()){
                     return new BaseResultCommand("流程名称已经存在",Boolean.FALSE);
                 }
             }
@@ -132,7 +152,8 @@ public class ProcessDefController extends BaseController {
             if(formId!=null){
                 def.setFlowForm(flowFormManager.getNoCascadeFlowFormById(formId));
             }
-            processDefManager.update(def,actRes,graRes);
+            
+            processDefManager.update(def, actRes, graRes);
         } catch (IOException e) {
             e.printStackTrace();
             logger.error("解析流程数据错误",e);
@@ -144,4 +165,35 @@ public class ProcessDefController extends BaseController {
         }
         return new BaseResultCommand("保存流程失败",Boolean.TRUE);
     }
+    @RequestMapping(params = "method=getRes")
+    @ResponseBody
+    public BaseResultCommand getRes(HttpServletRequest request){
+        Map<String,String> map=new HashMap<String, String>();
+        try {
+            Long id = parseLong(request.getParameter("id"));
+            if(id!=null){
+                ProcessDef def=processDefManager.getProcessDefById(id);
+                if(def!=null){
+                    if(StringUtils.isNotEmpty(def.getActResId())){
+                        String actRes = processDefManager.getRes(def.getActResId(),def.getActRes());
+                        if(StringUtils.isNotEmpty(actRes)){
+                            map.put("actRes",actRes);
+                        }
+                    }
+                    if(StringUtils.isNotEmpty(def.getGraphResId())){
+                        String graRes = processDefManager.getRes(def.getGraphResId(),def.getGraRes());
+                        if(StringUtils.isNotEmpty(graRes)){
+                            map.put("graRes",graRes);
+                        }
+                    }
+                }
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+            logger.error("获取流程资源失败",e);
+            return new BaseResultCommand("获取流程资源失败",Boolean.FALSE);
+        }
+        return new BaseResultCommand(map);
+    }
+    
 }

@@ -179,116 +179,116 @@
                                 <inputDir>${project.build.directory}/${project.build.finalName}/</inputDir>
                                 <!--files to include, path relative to output's directory or absolute path-->
                                 <includes>
-                                    <include>scripts/ux/Ext/ux/growl/ext-growl.js</include>
-                                    <include>scripts/ux/Ext/ux/grid/Printer.js</include>
-                                    <include>scripts/ux/Ext/ux/CheckColumn.js</include>
-                                    <include>scripts/ux/Ext/ux/TabCloseMenu.js</include>
-                                    <include>scripts/ux/Ext/ux/TreePicker.js</include>
-                                    <include>scripts/ux/Ext/ux/data/PagingMemoryProxy.js</include>
-                                    <include>scripts/ux/Ext/ux/statusbar/StatusBar.js</include>
-                                    <include>scripts/ux/Ext/ux/statusbar/ValidationStatus.js</include>
-                                    <include>scripts/ux/Ext/ux/form/SearchField.js</include>
-                                    <include>scripts/ux/Ext/ux/window/Notification.js</include>
+                                    <!--<include>scripts/ux/Ext/ux/growl/ext-growl.js</include>-->
+                                    <!--<include>scripts/ux/Ext/ux/grid/Printer.js</include>-->
+                                    <!--<include>scripts/ux/Ext/ux/CheckColumn.js</include>-->
+                                    <!--<include>scripts/ux/Ext/ux/TabCloseMenu.js</include>-->
+                                    <!--<include>scripts/ux/Ext/ux/TreePicker.js</include>-->
+                                    <!--<include>scripts/ux/Ext/ux/data/PagingMemoryProxy.js</include>-->
+                                    <!--<include>scripts/ux/Ext/ux/statusbar/StatusBar.js</include>-->
+                                    <!--<include>scripts/ux/Ext/ux/statusbar/ValidationStatus.js</include>-->
+                                    <!--<include>scripts/ux/Ext/ux/form/SearchField.js</include>-->
+                                    <!--<include>scripts/ux/Ext/ux/window/Notification.js</include>-->
 
-                                    <!--<include>scripts/desktop/js/FitAllLayout.js</include>-->
-                                    <include>scripts/desktop/js/Module.js</include>
-                                    <include>scripts/desktop/js/ShortcutModel.js</include>
-                                    <include>scripts/desktop/js/StartMenu.js</include>
-                                    <include>scripts/desktop/js/TaskBar.js</include>
-                                    <include>scripts/desktop/js/Video.js</include>
-                                    <include>scripts/desktop/js/Wallpaper.js</include>
-                                    <include>scripts/desktop/js/Desktop.js</include>
-                                    <include>scripts/desktop/js/App.js</include>
+                                    <!--&lt;!&ndash;<include>scripts/desktop/js/FitAllLayout.js</include>&ndash;&gt;-->
+                                    <!--<include>scripts/desktop/js/Module.js</include>-->
+                                    <!--<include>scripts/desktop/js/ShortcutModel.js</include>-->
+                                    <!--<include>scripts/desktop/js/StartMenu.js</include>-->
+                                    <!--<include>scripts/desktop/js/TaskBar.js</include>-->
+                                    <!--<include>scripts/desktop/js/Video.js</include>-->
+                                    <!--<include>scripts/desktop/js/Wallpaper.js</include>-->
+                                    <!--<include>scripts/desktop/js/Desktop.js</include>-->
+                                    <!--<include>scripts/desktop/js/App.js</include>-->
 
-                                    <include>scripts/ux/Oz/access/RoleAccess.js</include>
+                                    <!--<include>scripts/ux/Oz/access/RoleAccess.js</include>-->
 
-                                    <include>scripts/ux/Oz/chart/SVGToImageExporter.js</include>
-                                    <include>scripts/ux/Oz/graph/XMLToImgExporter.js</include>
-                                    <include>scripts/ux/Oz/util/ImgPrinter.js</include>
-                                    <include>scripts/ux/Oz/util/AceEditorNav.js</include>
+                                    <!--<include>scripts/ux/Oz/chart/SVGToImageExporter.js</include>-->
+                                    <!--<include>scripts/ux/Oz/graph/XMLToImgExporter.js</include>-->
+                                    <!--<include>scripts/ux/Oz/util/ImgPrinter.js</include>-->
+                                    <!--<include>scripts/ux/Oz/util/AceEditorNav.js</include>-->
 
-                                    <include>scripts/ux/Oz/data/DwrProxy.js</include>
-                                    <include>scripts/ux/Oz/data/ModelEx.js</include>
-                                    <include>scripts/ux/Oz/data/StoreEx.js</include>
-                                    <include>scripts/ux/Oz/data/AvailableStore.js</include>
+                                    <!--<include>scripts/ux/Oz/data/DwrProxy.js</include>-->
+                                    <!--<include>scripts/ux/Oz/data/ModelEx.js</include>-->
+                                    <!--<include>scripts/ux/Oz/data/StoreEx.js</include>-->
+                                    <!--<include>scripts/ux/Oz/data/AvailableStore.js</include>-->
 
-                                    <include>scripts/ux/Oz/desktop/Module.js</include>
+                                    <!--<include>scripts/ux/Oz/desktop/Module.js</include>-->
 
-                                    <include>scripts/ux/Oz/layout/component/form/ListDisplay.js</include>
-                                    <include>scripts/ux/Oz/layout/component/form/MultiSelect.js</include>
-                                    <include>scripts/ux/Oz/form/ExtendMultiSelect.js</include>
-                                    <include>scripts/ux/Oz/layout/component/form/PickList.js</include>
-                                    <include>scripts/ux/Oz/layout/component/form/AceEditor.js</include>
+                                    <!--<include>scripts/ux/Oz/layout/component/form/ListDisplay.js</include>-->
+                                    <!--<include>scripts/ux/Oz/layout/component/form/MultiSelect.js</include>-->
+                                    <!--<include>scripts/ux/Oz/form/ExtendMultiSelect.js</include>-->
+                                    <!--<include>scripts/ux/Oz/layout/component/form/PickList.js</include>-->
+                                    <!--<include>scripts/ux/Oz/layout/component/form/AceEditor.js</include>-->
 
-                                    <include>scripts/ux/Oz/picker/Month.js</include>
+                                    <!--<include>scripts/ux/Oz/picker/Month.js</include>-->
 
-                                    <include>scripts/ux/Oz/plugins/form/ClearButton.js</include>
-                                    <include>scripts/ux/Oz/plugins/form/ImageButton.js</include>
-                                    <include>scripts/ux/Oz/plugins/form/HelpTextButton.js</include>
-                                    <include>scripts/ux/Oz/plugins/form/ListDisplay.js</include>
-                                    <include>scripts/ux/Oz/plugins/form/SuggestField.js</include>
-                                    <include>scripts/ux/Oz/plugins/form/ScoreCardSuggest.js</include>
-                                    <include>scripts/ux/Oz/plugins/form/TestManagerSuggest.js</include>
-                                    <include>scripts/ux/Oz/plugins/form/ElTestMgrSuggest.js</include>
-                                    <include>scripts/ux/Oz/plugins/form/ComplianceSuggest.js</include>
-                                    <include>scripts/ux/Oz/plugins/form/TreeStrategySuggest.js</include>
-                                    <include>scripts/ux/Oz/plugins/form/VariableSuggest.js</include>
-                                    <include>scripts/ux/Oz/plugins/form/ConfigurationSuggest.js</include>
-                                    <include>scripts/ux/Oz/plugins/form/PaymentVerificationRuleSuggest.js</include>
-                                    <include>scripts/ux/Oz/plugins/form/PromiseVerificationRuleSuggest.js</include>
-                                    <include>scripts/ux/Oz/plugins/form/MaxWrapButton.js</include>
-                                    <include>scripts/ux/Oz/plugins/form/WorkflowSuggest.js</include>
-                                    <include>scripts/ux/Oz/plugins/form/DashboardSuggest.js</include>
-                                    <include>scripts/ux/Oz/plugins/form/QueueAccountExportSuggest.js</include>
+                                    <!--<include>scripts/ux/Oz/plugins/form/ClearButton.js</include>-->
+                                    <!--<include>scripts/ux/Oz/plugins/form/ImageButton.js</include>-->
+                                    <!--<include>scripts/ux/Oz/plugins/form/HelpTextButton.js</include>-->
+                                    <!--<include>scripts/ux/Oz/plugins/form/ListDisplay.js</include>-->
+                                    <!--<include>scripts/ux/Oz/plugins/form/SuggestField.js</include>-->
+                                    <!--<include>scripts/ux/Oz/plugins/form/ScoreCardSuggest.js</include>-->
+                                    <!--<include>scripts/ux/Oz/plugins/form/TestManagerSuggest.js</include>-->
+                                    <!--<include>scripts/ux/Oz/plugins/form/ElTestMgrSuggest.js</include>-->
+                                    <!--<include>scripts/ux/Oz/plugins/form/ComplianceSuggest.js</include>-->
+                                    <!--<include>scripts/ux/Oz/plugins/form/TreeStrategySuggest.js</include>-->
+                                    <!--<include>scripts/ux/Oz/plugins/form/VariableSuggest.js</include>-->
+                                    <!--<include>scripts/ux/Oz/plugins/form/ConfigurationSuggest.js</include>-->
+                                    <!--<include>scripts/ux/Oz/plugins/form/PaymentVerificationRuleSuggest.js</include>-->
+                                    <!--<include>scripts/ux/Oz/plugins/form/PromiseVerificationRuleSuggest.js</include>-->
+                                    <!--<include>scripts/ux/Oz/plugins/form/MaxWrapButton.js</include>-->
+                                    <!--<include>scripts/ux/Oz/plugins/form/WorkflowSuggest.js</include>-->
+                                    <!--<include>scripts/ux/Oz/plugins/form/DashboardSuggest.js</include>-->
+                                    <!--<include>scripts/ux/Oz/plugins/form/QueueAccountExportSuggest.js</include>-->
 
-                                    <include>scripts/ux/Oz/form/ComboField.js</include>
-                                    <include>scripts/ux/Oz/form/DataDisplayField.js</include>
-                                    <include>scripts/ux/Oz/form/PickList.js</include>
-                                    <include>scripts/ux/Oz/form/ListDisplay.js</include>
-                                    <include>scripts/ux/Oz/form/Month.js</include>
-                                    <include>scripts/ux/Oz/form/MultiSelect.js</include>
-                                    <include>scripts/ux/Oz/form/CKEditor.js</include>
-                                    <include>scripts/ux/Oz/form/AceEditor.js</include>
-                                    <include>scripts/ux/Oz/form/EditArea.js</include>
-                                    <include>scripts/ux/Oz/form/CriteriaEditor.js</include>
-                                    <include>scripts/ux/Oz/form/ComplianceCriteriaEditor.js</include>
-                                    <include>scripts/ux/Oz/form/ConfigurationCriteriaEditor.js</include>
-                                    <include>scripts/ux/Oz/form/ScoreCardCriteriaEditor.js</include>
-                                    <include>scripts/ux/Oz/form/TestManagerCriteriaEditor.js</include>
-                                    <include>scripts/ux/Oz/form/ElTestMgrCriteriaEditor.js</include>
-                                    <include>scripts/ux/Oz/form/TreeStrategyCriteriaEditor.js</include>
-                                    <include>scripts/ux/Oz/form/VariableCriteriaEditor.js</include>
-                                    <include>scripts/ux/Oz/form/WorkflowCriteriaEditor.js</include>
-                                    <include>scripts/ux/Oz/form/DashboardCriteriaEditor.js</include>
-                                    <include>scripts/ux/Oz/form/TreePicker.js</include>
-                                    <include>scripts/ux/Oz/form/FormDataCustomFiled.js</include>
+                                    <!--<include>scripts/ux/Oz/form/ComboField.js</include>-->
+                                    <!--<include>scripts/ux/Oz/form/DataDisplayField.js</include>-->
+                                    <!--<include>scripts/ux/Oz/form/PickList.js</include>-->
+                                    <!--<include>scripts/ux/Oz/form/ListDisplay.js</include>-->
+                                    <!--<include>scripts/ux/Oz/form/Month.js</include>-->
+                                    <!--<include>scripts/ux/Oz/form/MultiSelect.js</include>-->
+                                    <!--<include>scripts/ux/Oz/form/CKEditor.js</include>-->
+                                    <!--<include>scripts/ux/Oz/form/AceEditor.js</include>-->
+                                    <!--<include>scripts/ux/Oz/form/EditArea.js</include>-->
+                                    <!--<include>scripts/ux/Oz/form/CriteriaEditor.js</include>-->
+                                    <!--<include>scripts/ux/Oz/form/ComplianceCriteriaEditor.js</include>-->
+                                    <!--<include>scripts/ux/Oz/form/ConfigurationCriteriaEditor.js</include>-->
+                                    <!--<include>scripts/ux/Oz/form/ScoreCardCriteriaEditor.js</include>-->
+                                    <!--<include>scripts/ux/Oz/form/TestManagerCriteriaEditor.js</include>-->
+                                    <!--<include>scripts/ux/Oz/form/ElTestMgrCriteriaEditor.js</include>-->
+                                    <!--<include>scripts/ux/Oz/form/TreeStrategyCriteriaEditor.js</include>-->
+                                    <!--<include>scripts/ux/Oz/form/VariableCriteriaEditor.js</include>-->
+                                    <!--<include>scripts/ux/Oz/form/WorkflowCriteriaEditor.js</include>-->
+                                    <!--<include>scripts/ux/Oz/form/DashboardCriteriaEditor.js</include>-->
+                                    <!--<include>scripts/ux/Oz/form/TreePicker.js</include>-->
+                                    <!--<include>scripts/ux/Oz/form/FormDataCustomFiled.js</include>-->
 
-                                    <include>scripts/ux/Oz/form/AutoCombo.js</include>
-                                    <!--<include>scripts/ux/Oz/form/FormHtmlEditor.js</include>-->
-                                    <include>scripts/ux/Oz/form/Downloader.js</include>
+                                    <!--<include>scripts/ux/Oz/form/AutoCombo.js</include>-->
+                                    <!--&lt;!&ndash;<include>scripts/ux/Oz/form/FormHtmlEditor.js</include>&ndash;&gt;-->
+                                    <!--<include>scripts/ux/Oz/form/Downloader.js</include>-->
 
-                                    <include>scripts/ux/Oz/graph/action/AbstractAction.js</include>
-                                    <include>scripts/ux/Oz/graph/Panel.js</include>
+                                    <!--<include>scripts/ux/Oz/graph/action/AbstractAction.js</include>-->
+                                    <!--<include>scripts/ux/Oz/graph/Panel.js</include>-->
 
-                                    <include>scripts/ux/Oz/grid/feature/Detail.js</include>
-                                    <include>scripts/ux/Oz/grid/feature/Search.js</include>
-                                    <include>scripts/ux/Oz/grid/RowNumber.js</include>
-                                    <include>scripts/ux/Oz/grid/feature/DetailPanel.js</include>
-                                    <include>scripts/ux/Oz/grid/feature/TemplateDetailPanel.js</include>
-                                    <include>scripts/ux/Oz/grid/column/RadioColumn.js</include>
-                                    <include>scripts/ux/Oz/grid/HeaderToolTip.js</include>
+                                    <!--<include>scripts/ux/Oz/grid/feature/Detail.js</include>-->
+                                    <!--<include>scripts/ux/Oz/grid/feature/Search.js</include>-->
+                                    <!--<include>scripts/ux/Oz/grid/RowNumber.js</include>-->
+                                    <!--<include>scripts/ux/Oz/grid/feature/DetailPanel.js</include>-->
+                                    <!--<include>scripts/ux/Oz/grid/feature/TemplateDetailPanel.js</include>-->
+                                    <!--<include>scripts/ux/Oz/grid/column/RadioColumn.js</include>-->
+                                    <!--<include>scripts/ux/Oz/grid/HeaderToolTip.js</include>-->
 
-                                    <include>scripts/ux/Oz/dd/DragZone.js</include>
-                                    <include>scripts/ux/Oz/dd/ExtendDragZone.js</include>
-                                    <include>scripts/ux/Oz/dd/DropZone.js</include>
+                                    <!--<include>scripts/ux/Oz/dd/DragZone.js</include>-->
+                                    <!--<include>scripts/ux/Oz/dd/ExtendDragZone.js</include>-->
+                                    <!--<include>scripts/ux/Oz/dd/DropZone.js</include>-->
 
-                                    <include>scripts/ux/Oz/panel/PickListGrid.js</include>
-                                    <include>scripts/ux/Oz/panel/ProgressMessageBox.js</include>
+                                    <!--<include>scripts/ux/Oz/panel/PickListGrid.js</include>-->
+                                    <!--<include>scripts/ux/Oz/panel/ProgressMessageBox.js</include>-->
 
-                                    <include>scripts/ux/Oz/util/Utils.js</include>
-                                    <include>scripts/ux/Oz/util/base64.js</include>
+                                    <!--<include>scripts/ux/Oz/util/Utils.js</include>-->
+                                    <!--<include>scripts/ux/Oz/util/base64.js</include>-->
 
-                                    <include>scripts/ux/Oz/form/GeneralImportWin.js</include>
+                                    <!--<include>scripts/ux/Oz/form/GeneralImportWin.js</include>-->
                                     
                                     <include>mxgraph/src/js/mxClient.js</include>
                                     <include>mxgraph/src/js/Shapes.js</include>

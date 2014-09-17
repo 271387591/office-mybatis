@@ -17,4 +17,13 @@ public enum  ProcessElementType {
     public void setName(String name) {
         this.name = name;
     }
+    static public String get(String name){
+        ProcessElementType[] types=ProcessElementType.values();
+        for(ProcessElementType type : types){
+            if(type.getName().equals(name)){
+                return type.name();
+            }
+        }
+        return null;
+    }
 }

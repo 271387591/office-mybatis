@@ -11,7 +11,7 @@ Ext.define('FlexCenter.activiti.view.AModelSettingView',{
         'FlexCenter.activiti.store.TaskNode',
         'Ext.grid.plugin.CellEditing',
         'FlexCenter.activiti.view.FormFieldSelector',
-        'Oz.form.FormDataCustomFiled'
+        'Ext.ux.form.FormDataCustomFiled'
     ],
     extend: 'Ext.panel.Panel',
     alias: 'widget.aModelSettingView',

@@ -9,9 +9,11 @@ import com.ozstrategy.service.flows.ProcessDefManager;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.ExtensionAttribute;
 import org.activiti.editor.language.json.converter.BpmnJsonConverter;
+import org.activiti.engine.RepositoryService;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 
 import java.io.File;
 import java.util.List;
@@ -24,11 +26,13 @@ public class ProcessDefManagerTest extends BaseManagerTestCase  {
     @Autowired
     ProcessDefManager processDefManager;
     @Autowired
+    private RepositoryService repositoryService;
+    @Autowired
     ProcessFormFiledInstanceDao processFormFiledInstanceDao;
     
     @Test
     public void testAct() throws Exception{
-        String path=ProcessDefManagerTest.class.getClassLoader().getResource("act.json").getPath();
+        String path=ProcessDefManagerTest.class.getClassLoader().getResource("act1.json").getPath();
         String value= FileUtils.readFileToString(new File(path));
         BpmnJsonConverter jsonConverter=new BpmnJsonConverter();
         JsonNode jsonNode=new ObjectMapper().readTree(value);
@@ -51,8 +55,16 @@ public class ProcessDefManagerTest extends BaseManagerTestCase  {
     }
     @Test
     public void testgetDefFormFieldByFormId() throws Exception{
-        List<ProcessFormFiledInstance> instances = processFormFiledInstanceDao.getDefFormFieldByFormId(1L);
+        List<ProcessFormFiledInstance> instances = processFormFiledInstanceDao.getDefFormFieldByFormId(4L, 16L);
+        ProcessFormFiledInstance instance=instances.get(0);
+        System.out.println(instance.getFormField().getName());
         int i=0;
     }
+    @Test
+    @Rollback(value = false)
+    public void testDeleteDeployed() throws Exception{
+        int i=0;
+    }
+    
     
 }

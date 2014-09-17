@@ -21,6 +21,7 @@ import org.activiti.bpmn.model.UserTask;
 import org.activiti.editor.language.json.converter.BpmnJsonConverter;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.repository.Deployment;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -71,7 +73,7 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
     }
 
     public void delete(Long id) {
-
+        processDefDao.deleteProcessDef(id);
     }
 
     public ProcessDef getProcessDefByName(String name, Long typeId) {
@@ -113,6 +115,7 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
                         processElement.setTaskKey(id);
                         processElement.setActClass(type);
                         processElement.setProcessDef(processDef);
+                        processElement.setType(ProcessElementType.get(type));
                         processElementDao.saveProcessElement(processElement);
                         if(StringUtils.equals(ProcessElementType.StartNoneEvent.getName(),type)){
                             StartEvent startEvent=(StartEvent)element;
@@ -126,11 +129,11 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
                     }
                 }
             }
-            if(StringUtils.isNotEmpty(processDef.getActDefId())){
-                repositoryService.deleteDeployment(processDef.getActDefId());
+            if(StringUtils.isNotEmpty(processDef.getActResId())){
+                repositoryService.deleteDeployment(processDef.getActResId());
             }
             Deployment deployment = repositoryService.createDeployment().addString(processDef.getActRes(),actRes).deploy();
-            processDef.setActDefId(deployment.getId());
+            processDef.setActResId(deployment.getId());
         }
         if(StringUtils.isNotEmpty(processDef.getGraphResId())){
             repositoryService.deleteDeployment(processDef.getGraphResId());
@@ -140,7 +143,6 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
             processDef.setGraphResId(deployment.getId());
             processDefDao.updateProcessDef(processDef);
         }
-        
     }
     private void insertProcessFormFiledInstance(ProcessDef processDef,ProcessElement processElement,List<FormProperty> properties){
         Long formId=processDef.getFlowForm().getId();
@@ -157,7 +159,15 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
                 instance.setFormField(formField);
                 instance.setProcessElement(processElement);
                 instance.setExpression(property.getExpression());
-                instance.setChmod(property.isReadable()?0:property.isWriteable()?1:property.isRequired()?2:null);
+                Integer chmod=null;
+                if(property.isReadable()){
+                    chmod=0;
+                }else if(property.isWriteable()){
+                    chmod=1;
+                }else{
+                    chmod=2;
+                }
+                instance.setChmod(chmod);
                 processFormFiledInstanceDao.saveProcessFormFiledInstance(instance);
             }
         }else {
@@ -167,13 +177,30 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
                     instance.setProcessDef(processDef);
                     instance.setFormField(formField);
                     instance.setProcessElement(processElement);
+                    instance.setChmod(1);
                     processFormFiledInstanceDao.saveProcessFormFiledInstance(instance);
                 }
             }
         }
     }
 
-    public List<ProcessFormFiledInstance> getDefFormFieldByFormId(Long formId) {
-        return processFormFiledInstanceDao.getDefFormFieldByFormId(formId);
+    public List<ProcessFormFiledInstance> getDefFormFieldByFormId(Long formId,Long processElementId) {
+        return processFormFiledInstanceDao.getDefFormFieldByFormId(formId,processElementId);
+    }
+
+    public String getRes(String resId,String resName) {
+        InputStream inputStream = repositoryService.getResourceAsStream(resId,resName);
+        if(inputStream!=null){
+            try {
+                return IOUtils.toString(inputStream);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public ProcessElement getProcessElementByTaskKeyAndDefId(Long defId, String taskKey) {
+        return processElementDao.getProcessElementByTaskKeyAndDefId(defId,taskKey);
     }
 }

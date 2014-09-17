@@ -18,4 +18,6 @@ public interface FlowFormManager {
     FlowForm getNoCascadeFlowFormById(Long id);
     FlowForm getFlowFormByName(String name);
     void multiRemove(String[] ids);
+    List<FormField> getDefFormFieldByFormId(Long formId);
+    
 }

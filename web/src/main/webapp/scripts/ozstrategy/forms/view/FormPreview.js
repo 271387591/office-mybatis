@@ -7,11 +7,11 @@
  */
 Ext.define('FlexCenter.forms.view.FormPreview',{
     requires:[
-        'Oz.form.FormDataCustomFiled',
+        'Ext.ux.form.FormDataCustomFiled',
 //        'Oz.form.TimePickerField',
-        'Oz.form.DateTimePicker',
+//        'Oz.form.DateTimePicker',
         'FlexCenter.user.view.UserSelector',
-        'Ext.ux.form.DateTimeField'
+//        'Ext.ux.form.field.DateTimeField'
 //        'OzSOA.jiuzhai.view.PositionSelector',
 //        'OzSOA.jiuzhai.view.OrgSelector'
     ],

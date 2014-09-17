@@ -1,6 +1,7 @@
 package com.ozstrategy.webapp.command.flows;
 
 import com.ozstrategy.model.flows.ProcessFormFiledInstance;
+import com.ozstrategy.model.forms.FormField;
 
 /**
  * Created by lihao on 9/15/14.
@@ -19,6 +20,7 @@ public class ProcessFormFiledInstanceCommand {
     protected Boolean readable = true;
     protected Boolean writeable = true;
     protected Boolean required;
+    private Integer chmod;
     public ProcessFormFiledInstanceCommand(ProcessFormFiledInstance instance){
         this.id= instance.getId();
         this.formFieldId=instance.getFormField()!=null?instance.getFormField().getId():null;
@@ -28,8 +30,21 @@ public class ProcessFormFiledInstanceCommand {
         this.readable= instance.getChmod()!=null&&instance.getChmod()==0;
         this.writeable= instance.getChmod()==null || instance.getChmod()==1;
         this.required= instance.getChmod()!=null&&instance.getChmod()==2;
+        this.chmod= instance.getChmod();
         this.expression= instance.getExpression();
     }
+    public ProcessFormFiledInstanceCommand(FormField instance){
+        this.id= instance.getId();
+        this.formFieldId=instance.getId();
+        this.name=instance.getLabel();
+        this.variable=instance.getName();
+        this.type=instance.getDataType();
+        this.readable= true;
+        this.writeable= true;
+        this.required= false;
+        this.chmod= 1;
+    }
+    
 
     public Long getId() {
         return id;
@@ -133,5 +148,13 @@ public class ProcessFormFiledInstanceCommand {
 
     public void setRequired(Boolean required) {
         this.required = required;
+    }
+
+    public Integer getChmod() {
+        return chmod;
+    }
+
+    public void setChmod(Integer chmod) {
+        this.chmod = chmod;
     }
 }
