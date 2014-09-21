@@ -40,6 +40,7 @@
 		<mapper resource="com/ozstrategy/dao/forms/FormFieldMapper.xml"/>
 		<mapper resource="com/ozstrategy/dao/flows/ProcessDefMapper.xml"/>
 		<mapper resource="com/ozstrategy/dao/flows/ProcessElementMapper.xml"/>
-		<mapper resource="com/ozstrategy/dao/flows/ProcessFormFiledInstanceMapper.xml"/>
+		<mapper resource="com/ozstrategy/dao/flows/ProcessElementFormMapper.xml"/>
+		<mapper resource="com/ozstrategy/dao/flows/ProcessDefVersionMapper.xml"/>
 	</mappers>
 </configuration>

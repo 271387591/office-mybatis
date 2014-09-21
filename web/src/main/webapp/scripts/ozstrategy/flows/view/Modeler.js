@@ -3,7 +3,9 @@
  */
 Ext.define('FlexCenter.flows.view.Modeler', {
     requires: [
-        'FlexCenter.forms.view.FormFieldSetter'
+        'FlexCenter.forms.view.FormFieldSetter',
+        'Ext.ux.form.field.DateTimeField',
+        'FlexCenter.flows.view.ProcessUserSetter'
     ],
     extend: 'Ext.panel.Panel',
     alias: 'widget.modeler',
@@ -43,8 +45,8 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                         { text: "消息事件", leaf: true,iconCls:'startevent-message',stencil:'StartMessageEvent' },
                         { text: "错误事件", leaf: true,iconCls:'startevent-error',stencil:'StartErrorEvent' }
                     ] },
-                    { text: "Activities",expanded: false, children:[
-                        { text: "User task", leaf: true,iconCls:'activity-type-user',stencil:'UserTask' },
+                    { text: "任务",expanded: false, children:[
+                        { text: "用户任务", leaf: true,iconCls:'activity-type-user',stencil:'UserTask' },
                         { text: "Service task", leaf: true,iconCls:'activity-type-service',stencil:'ServiceTask' },
                         { text: "Script task", leaf: true,iconCls:'activity-type-script',stencil:'ScriptTask' },
                         { text: "Business rule task", leaf: true,iconCls:'activity-type-business-rule',stencil:'BusinessRule' },
@@ -52,15 +54,15 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                         { text: "Manual task", leaf: true,iconCls:'activity-type-manual',stencil:'ManualTask' },
                         { text: "Mail task", leaf: true,iconCls:'activity-type-send',stencil:'MailTask' }
                     ] },
-                    { text: "Structural",expanded: false, children:[
-                        { text: "Sub process", leaf: true,iconCls:'structural-expanded-subprocess',stencil:'SubProcess'},
-                        { text: "Event sub process", leaf: true,iconCls:'structural-event-subprocess',stencil:'EventSubProcess' },
+                    { text: "子流程",expanded: false, children:[
+                        { text: "普通子流程", leaf: true,iconCls:'structural-expanded-subprocess',stencil:'SubProcess'},
+                        { text: "时间子流程", leaf: true,iconCls:'structural-event-subprocess',stencil:'EventSubProcess' },
                         { text: "Call activity", leaf: true,iconCls:'structural-task',stencil:'CallActivity' }
                     ] },
-                    { text: "Gateways",expanded: false, children:[
-                        { text: "Exclusive gateway", leaf: true,iconCls:'gateway-exclusive-databased',stencil:'ExclusiveGateway' },
-                        { text: "Parallel gateway", leaf: true,iconCls:'gateway-parallel',stencil:'ParallelGateway'  },
-                        { text: "Inclusive gateway", leaf: true,iconCls:'gateway-inclusive',stencil:'InclusiveGateway'  },
+                    { text: "网关",expanded: false, children:[
+                        { text: "排他网关", leaf: true,iconCls:'gateway-exclusive-databased',stencil:'ExclusiveGateway' },
+                        { text: "归并网关", leaf: true,iconCls:'gateway-parallel',stencil:'ParallelGateway'  },
+                        { text: "包含网关", leaf: true,iconCls:'gateway-inclusive',stencil:'InclusiveGateway'  },
                         { text: "Event gateway", leaf: true,iconCls:'gateway-eventbased',stencil:'EventGateway'  }
                     ] },
                     { text: "Boundary Events",expanded: false, children:[
@@ -77,9 +79,9 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                         { text: "Intermediate none throwing event", leaf: true,iconCls:'intermediate-none-throwing-event',stencil:'ThrowNoneEvent' },
                         { text: "Intermediate signal throwing event", leaf: true,iconCls:'intermediate-signal-throwing-event',stencil:'ThrowSignalEvent' }
                     ] },
-                    { text: "End Events",expanded: false, children:[
-                        { text: "End event", leaf: true,iconCls:'end-event',stencil:'EndNoneEvent' },
-                        { text: "End error event", leaf: true,iconCls:'end-error-event',stencil:'EndErrorEvent' }
+                    { text: "结束事件",expanded: false, children:[
+                        { text: "空结束", leaf: true,iconCls:'end-event',stencil:'EndNoneEvent' },
+                        { text: "错误结束", leaf: true,iconCls:'end-error-event',stencil:'EndErrorEvent' }
                     ] }
                 ]
             }
@@ -311,14 +313,17 @@ Ext.define('FlexCenter.flows.view.Modeler', {
         var me=this,graRes;
         if(me.graph){
             var encoder = new mxCodec();
-            var node = encoder.encode(me.graph.getModel());
+            var model=me.graph.getModel();
+            var node = encoder.encode(model);
             graRes= mxUtils.getPrettyXml(node);
+            console.log(graRes);
         }
-        me.process=me.updateProcess(me.graph);
+        console.log(me.processRecord);
         var win=Ext.widget('processListForm',{
             buttonSave:true,
             graRes:graRes,
-            process:me.process
+            processRecord:me.processRecord
+//            process:me.process
         });
         me.mon(win, 'updateFlow', function (data) {
             me.fireEvent('updateFlow',data);
@@ -500,20 +505,6 @@ Ext.define('FlexCenter.flows.view.Modeler', {
     },
     Process:function(){
         var me=this;
-        var activity=function(form){
-            var act=me.process;
-            act.setResourceId('canvas');
-            act.setStencil('BPMNDiagram');
-            act.setBounds(0,0,window.screen.width,window.screen.height);
-            if(me.processRecord){
-                form.getForm().setValues(me.processRecord);
-                me.processRecord=null;
-                
-            }
-            var value=form.getForm().getValues();
-            act.setProperties(value);
-            me.process=act;
-        };
         var process_id=me.processRecord?('process_'+me.processRecord.id):('process_'+new Date().getTime());
         var form=Ext.widget('form',{
             layout: 'anchor',
@@ -528,26 +519,53 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                 {
                     xtype:'hidden',
                     name:'process_id',
-                    value:process_id
+                    value:process_id,
+                    listeners:{
+                        afterrender:function(f){
+                            me.processRecord.process_id= f.getValue();
+                        }
+                    }
                 },
                 {
                     xtype:'hidden',
-                    name:'globalTypeId'
+                    name:'globalTypeId',
+                    value:me.processRecord.globalTypeId,
+                    listeners:{
+                        afterrender:function(f){
+                            me.processRecord.globalTypeId= f.getValue();
+                        }
+                    }
                 },
                 {
                     xtype:'hidden',
-                    name:'id'
+                    name:'id',
+                    value:me.processRecord.id,
+                    listeners:{
+                        afterrender:function(f){
+                            me.processRecord.id= f.getValue();
+                        }
+                    }
                 },
                 {
                     xtype:'hidden',
-                    name:'flowFormId'
+                    name:'flowFormId',
+                    value:me.processRecord.flowFormId,
+                    listeners:{
+                        afterrender:function(f){
+                            me.processRecord.flowFormId= f.getValue();
+                        }
+                    }
                 },
                 {
                     fieldLabel: '流程名称',
                     name: 'name',
+                    value:me.processRecord.name,
                     listeners:{
+                        afterrender:function(f){
+                            me.processRecord.name= f.getValue();
+                        },
                         change:function(combo, newValue, oldValue,eOpts ){
-                            activity(form);
+                            me.processRecord.name=newValue;
                         }
                     }
                 },
@@ -555,12 +573,14 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     fieldLabel: '引用表单',
                     name:'flowFormName',
                     readOnly:true,
+                    value:me.processRecord.flowFormName,
                     readOnlyCls:'x-item-disabled'
                 },
                 {
                     fieldLabel: '流程分类',
                     name:'category',
                     readOnly:true,
+                    value:me.processRecord.category,
                     readOnlyCls:'x-item-disabled'
                 },{
                     xtype:'textareafield',
@@ -569,28 +589,15 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     name:'documentation',
                     listeners:{
                         change:function(combo, newValue, oldValue,eOpts ){
-                            activity(form);
+                            me.processRecord.documentation=newValue;
                         }
                     }
                 }]
         });
-        var rec=me.process;
-        if(rec){
-            var properties=rec.properties;
-            if(properties){
-                form.getForm().setValues(properties);
-            }
-        }
-        activity(form);
         return form;
     },
     SequenceFlow:function(cell){
         var me=this;
-        var activity=function(form){
-            var act=me.activity(cell);
-            act.setProperties(form.getForm().getValues());
-            cell.activity=Ext.encode(act);
-        }
         var form=Ext.widget('form',{
             layout: 'anchor',
             border:false,
@@ -603,33 +610,101 @@ Ext.define('FlexCenter.flows.view.Modeler', {
             items: [
                 {
                     xtype:'hidden',
-                    name:'overrideid'
-                },
-                {
-                    xtype:'hidden',
-                    name:'defaultflow',
-                    value:'None'
-                },
-                {
-                    xtype:'hidden',
-                    name:'conditionalflow',
-                    value:'None'
+                    name:'overrideid',
+                    value:cell.value.getAttribute('overrideid')
                 },
                 {
                     fieldLabel: '名称',
                     name: 'name',
+                    value:cell.value.getAttribute('name'),
                     listeners:{
                         change:function(combo, newValue, oldValue,eOpts ){
-                            activity(form);
                             me.graph.cellLabelChanged(cell,newValue);
+                            cell.value.setAttribute('name',newValue);
                         }
                     }
                 },{
                     fieldLabel: '流程条件',
                     name: 'conditionsequenceflow',
+                    value:cell.value.getAttribute('conditionsequenceflow'),
                     listeners:{
                         change:function(combo, newValue, oldValue,eOpts ){
-                            activity(form);
+                            cell.value.setAttribute('conditionsequenceflow',newValue);
+                        }
+                    }
+                },{
+                    xtype: 'combo',
+                    triggerAction: 'all',
+                    editable: false,
+                    model: 'local',
+//                    hidden:!me.developer,
+                    fieldLabel: '默认流',
+                    valueField: 'type',
+                    displayField: 'displayText',
+                    value:cell.value.getAttribute('defaultflow','None'),
+                    name:'defaultflow',
+                    store: Ext.create('Ext.data.ArrayStore', {
+                        fields: ['type', 'displayText'],
+                        data: [
+                            ['None', '标准'],
+                            ['Default', '默认流程']
+                        ]
+                    }),
+                    listeners:{
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('defaultflow',newValue);
+                            if(newValue == 'Default'){
+                                var overlay = new mxCellOverlay(new mxImage('mxgraph/images/connector/list/type.default.png', 11, 11),'默认流程',mxConstants.ALIGN_CENTER,mxConstants.ALIGN_MIDDLE);
+                                overlay.id='defaultflow';
+                                me.graph.addCellOverlay(cell, overlay);
+                            }else{
+                                var overlays=cell.overlays;
+                                if(overlays){
+                                    for(var i=0;i<overlays.length;i++){
+                                        if(overlays[i].id=='defaultflow'){
+                                            me.graph.removeCellOverlay(cell, overlays[i]);
+                                        }
+                                    }
+                                }
+                                
+                            }
+                        }
+                    }
+                },{
+                    xtype: 'combo',
+                    triggerAction: 'all',
+                    editable: false,
+                    model: 'local',
+//                    hidden:!me.developer,
+                    fieldLabel: '条件流',
+                    valueField: 'type',
+                    displayField: 'displayText',
+                    value:cell.value.getAttribute('conditionalflow','None'),
+                    name:'conditionalflow',
+                    store: Ext.create('Ext.data.ArrayStore', {
+                        fields: ['type', 'displayText'],
+                        data: [
+                            ['None', '标准'],
+                            ['Conditional', '条件流程']
+                        ]
+                    }),
+                    listeners:{
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('conditionalflow',newValue);
+                            if(newValue == 'Conditional'){
+                                var overlay = new mxCellOverlay(new mxImage('mxgraph/images/connector/list/type.expression.png', 11, 11),'默认流程',mxConstants.ALIGN_CENTER,mxConstants.ALIGN_MIDDLE);
+                                overlay.id='conditionalflow';
+                                me.graph.addCellOverlay(cell, overlay);
+                            }else{
+                                var overlays=cell.overlays;
+                                if(overlays){
+                                    for(var i=0;i<overlays.length;i++){
+                                        if(overlays[i].id=='conditionalflow'){
+                                            me.graph.removeCellOverlay(cell, overlays[i]);
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 },{
@@ -637,30 +712,18 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     fieldLabel:'描述',
                     xtype:'textareafield',
                     grow: true,
+                    value:cell.value.getAttribute('documentation'),
                     listeners:{
                         change:function(combo, newValue, oldValue,eOpts ){
-                            activity(form);
+                            cell.value.setAttribute('documentation',newValue);
                         }
                     }
                 }]
         });
-        var rec=cell.activity;
-        if(rec){
-            var properties=Ext.decode(rec).properties;
-            if(properties){
-                form.getForm().setValues(Ext.decode(rec).properties);
-            }
-        }
-        activity(form);
         return form;
     },
     StartNoneEvent:function(cell){
         var me=this;
-        var activity=function(form){
-            var act=me.activity(cell);
-            act.setProperties(form.getForm().getValues());
-            cell.value.setAttribute('activity',Ext.encode(act));
-        }
         var form=Ext.widget('form',{
             layout: 'anchor',
             border:false,
@@ -672,27 +735,37 @@ Ext.define('FlexCenter.flows.view.Modeler', {
             defaultType: 'textfield',
             items: [
                 {
-                    xtype:'hidden',
-                    name:'overrideid'
+                    fieldLabel: 'Id',
+                    hidden:!me.developer,
+                    name:'overrideid',
+                    value:cell.value.getAttribute('overrideid')
                 },
                 {
-                    xtype:'hidden',
+                    fieldLabel: 'initiator',
                     name:'initiator',
-                    value:'${starter}'
+                    hidden:!me.developer,
+                    value:cell.value.getAttribute('initiator')
                 },
                 {
                     fieldLabel: '名称',
                     name: 'name',
+                    value:cell.value.getAttribute('name'),
                     listeners:{
                         change:function(combo, newValue, oldValue,eOpts ){
                             me.graph.cellLabelChanged(cell,newValue);
-                            activity(form);
+                            cell.value.setAttribute('name',newValue);
                         }
                     }
                 },{
                     fieldLabel: '字段设置',
                     xtype:'trigger',
                     name: 'formproperties',
+                    value:cell.value.getAttribute('formproperties'),
+                    listeners:{
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('formproperties',newValue);
+                        }
+                    },
                     onTriggerClick:function(){
                         var value = form.down('trigger[name=formproperties]').getValue();
                         var win=Ext.widget('formFieldSetter',{
@@ -702,7 +775,7 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                             formproperties:value,
                             callBack:function(data){
                                 form.down('trigger[name=formproperties]').setValue(data);
-                                activity(form);
+                                cell.value.setAttribute('formproperties',data);
                             }
                         });
                         if(win){
@@ -712,28 +785,92 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                 },{
                     fieldLabel:'监听器',
                     hidden:!me.developer,
+                    value:cell.value.getAttribute('executionlisteners'),
                     name:'executionlisteners'
                 },{
                     name:'documentation',
                     fieldLabel:'描述',
                     xtype:'textareafield',
+                    value:cell.value.getAttribute('documentation'),
                     grow: true,
                     listeners:{
                         change:function(combo, newValue, oldValue,eOpts ){
-                            activity(form);
+                            cell.value.setAttribute('documentation',newValue);
                         }
                     }
                 }]
         });
-        var rec=cell.value.getAttribute('activity');
-        if(rec){
-            var properties=Ext.decode(rec).properties;
-            if(properties){
-                form.getForm().setValues(properties);
-            }
-        }
-        activity(form);
         return form;
+    },
+    showTimerdurationdefinition:function(){
+        var me=this;
+        var win=Ext.widget('window',{
+            width:300,
+            layout:'fit',
+            title:'时间间隔',
+            items:[
+                {
+                    xtype:'form',
+                    layout: 'anchor',
+                    border:false,
+                    defaults: {
+                        anchor: '100%',
+                        labelWidth:60
+                    },
+                    bodyPadding:5,
+                    defaultType: 'textfield',
+                    buttons: [
+                        {
+                            text: globalRes.buttons.ok,
+                            formBind: true,
+                            scope: me,
+                            handler: function () {
+                                
+                            }
+                        },
+                        {
+                            text: '取消',
+                            handler: function () {
+                                win.close();
+                            }
+                        }
+                    ],
+                    items: [
+                        {
+                            xtype:'container',
+                            layout:'hbox',
+                            items:[
+                                {
+                                    name: 'name',
+                                    xtype: 'numberfield',
+                                    anchor: '100%',
+                                    minValue: 0,
+                                    hideTrigger: true,
+                                    keyNavEnabled: false,
+                                    margin:'0 5 0 0',
+                                    mouseWheelEnabled: false
+                                },{
+                                    xtype:'combo',
+                                    name:'category',
+                                    editable:false,
+                                    triggerAction:'all',
+                                    displayField: 'name',
+                                    valueField: 'value',
+                                    allowBlank: false,
+                                    store:Ext.create('Ext.data.ArrayStore', {
+                                        fields: ['name', 'value'],
+                                        data: [
+                                            ['秒','缺省浅蓝'],
+                                            ['分','浅灰']
+                                        ]
+                                    })
+                                }  
+                            ]
+                        }]
+                }
+            ]
+        });
+        win.show();
     },
     StartTimerEvent:function(cell){
         var me=this;
@@ -759,30 +896,45 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                 {
                     fieldLabel: '名称',
                     name: 'name',
+                    
                     listeners:{
                         change:function(combo, newValue, oldValue,eOpts ){
-                            activity(form);
                             me.graph.cellLabelChanged(cell,newValue);
-                        }
-                    }
-                },{
-                    fieldLabel: '持续时间(PT5M)',
-                    name: 'timerdurationdefinition',
-                    listeners:{
-                        change:function(combo, newValue, oldValue,eOpts ){
                             activity(form);
                         }
                     }
                 },{
-                    fieldLabel: '时间(ISO-8601)',
+                    fieldLabel: '执行时间',
                     name: 'timerdatedefinition',
+                    xtype:'datetimefield',
                     listeners:{
                         change:function(combo, newValue, oldValue,eOpts ){
                             activity(form);
                         }
                     }
                 },{
-                    fieldLabel: '时间周期(R3/PT10H)',
+                    fieldLabel: '间隔时间',
+                    xtype:'trigger',
+                    name: 'timerdurationdefinition',
+                    onTriggerClick:function(){
+                        me.showTimerdurationdefinition();
+//                        var value = form.down('trigger[name=formproperties]').getValue();
+//                        var win=Ext.widget('formFieldSetter',{
+//                            formId:me.process.properties.flowFormId,
+//                            defId:me.process.properties.id,
+//                            taskKey:cell.id,
+//                            formproperties:value,
+//                            callBack:function(data){
+//                                form.down('trigger[name=formproperties]').setValue(data);
+//                                activity(form);
+//                            }
+//                        });
+//                        if(win){
+//                            win.show();
+//                        }
+                    }
+                },{
+                    fieldLabel: '时间周期',
                     name: 'timercycledefinition',
                     listeners:{
                         change:function(combo, newValue, oldValue,eOpts ){
@@ -1014,44 +1166,46 @@ Ext.define('FlexCenter.flows.view.Modeler', {
     },
     UserTask:function(cell){
         var me=this;
-        var activity=function(form){
-            var act=me.activity(cell);
-            act.setProperties(form.getForm().getValues());
-            cell.value.setAttribute('activity',Ext.encode(act));
-        }
         var form=Ext.widget('form',{
             layout: 'anchor',
             border:false,
             bodyPadding:5,
             defaults: {
                 anchor: '100%',
-                labelWidth:100
+                labelWidth:60
             },
             defaultType: 'textfield',
             items: [
                 {
-                    xtype:'hidden',
-                    name:'overrideid'
-                },
-                {
-                    xtype:'hidden',
-                    fieldLabel: '循环类型',
-                    name: 'looptype',
+                    fieldLabel:'Id',
+                    name:'overrideid',
                     hidden:!me.developer,
+                    value:cell.value.getAttribute('overrideid'),
                     listeners:{
                         change:function(combo, newValue, oldValue,eOpts ){
-                            activity(form);
+                            cell.value.setAttribute('overrideid',newValue);
                         }
                     }
                 },
                 {
-                    xtype:'hidden',
+                    fieldLabel: '循环类型',
+                    name: 'looptype',
+                    hidden:!me.developer,
+                    value:cell.value.getAttribute('looptype'),
+                    listeners:{
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('looptype',newValue);
+                        }
+                    }
+                },
+                {
                     fieldLabel: '补偿',
                     name: 'isforcompensation',
                     hidden:!me.developer,
+                    value:cell.value.getAttribute('isforcompensation'),
                     listeners:{
                         change:function(combo, newValue, oldValue,eOpts ){
-                            activity(form);
+                            cell.value.setAttribute('isforcompensation',newValue);
                         }
                     }
                 },
@@ -1059,64 +1213,95 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                 {
                     fieldLabel: '名称',
                     name: 'name',
+                    value:cell.value.getAttribute('name'),
                     listeners:{
                         change:function(combo, newValue, oldValue,eOpts ){
-                            activity(form);
                             me.graph.cellLabelChanged(cell,newValue);
+                            cell.value.setAttribute('name',newValue);
                         }
                     }
                 },{
                     fieldLabel: '表单引用',
                     name: 'formkeydefinition',
                     hidden:!me.developer,
+                    value:cell.value.getAttribute('formkeydefinition'),
                     listeners:{
                         change:function(combo, newValue, oldValue,eOpts ){
-                            activity(form);
+                            cell.value.setAttribute('formkeydefinition',newValue);
                         }
                     }
                 },{
                     fieldLabel: '到期日期',
                     name: 'duedatedefinition',
-                    hidden:!me.developer,
+                    xtype:'datetimefield',
+                    value:cell.value.getAttribute('duedatedefinition'),
                     listeners:{
                         change:function(combo, newValue, oldValue,eOpts ){
-                            activity(form);
+                            cell.value.setAttribute('duedatedefinition',newValue);
                         }
                     }
                 },{
                     fieldLabel: '优先权',
                     name: 'prioritydefinition',
                     hidden:!me.developer,
+                    value:cell.value.getAttribute('prioritydefinition'),
                     listeners:{
                         change:function(combo, newValue, oldValue,eOpts ){
-                            activity(form);
+                            cell.value.setAttribute('prioritydefinition',newValue);
                         }
                     }
                 },{
-                    fieldLabel: '任务分配',
+                    fieldLabel: '人员设置',
+                    xtype:'trigger',
                     name: 'usertaskassignment',
-                    hidden:!me.developer,
-                    listeners:{
-                        blur:function( f, The, eOpts ){
-                            activity(form);
+                    value:(cell.value.getAttribute('assignee')+cell.value.getAttribute('candidateUsers')+cell.value.getAttribute('candidateRoles')),
+                    editble:false,
+                    onTriggerClick:function(){
+                        var value = form.down('trigger[name=usertaskassignment]').getValue();
+                        var win=Ext.widget('processUserSetter',{
+                            callBack:function(assignee,candidateUsers,candidateRoles){
+                                form.down('trigger[name=usertaskassignment]').setValue(assignee+candidateUsers+candidateRoles);
+                                cell.value.setAttribute('assignee',assignee);
+                                cell.value.setAttribute('candidateUsers',candidateUsers);
+                                cell.value.setAttribute('candidateRoles',candidateRoles);
+                            }
+                        });
+                        if(win){
+                            win.show();
                         }
                     }
                 },{
                     fieldLabel: '字段设置',
+                    xtype:'trigger',
                     name: 'formproperties',
-                    hidden:!me.developer,
+                    value:cell.value.getAttribute('formproperties'),
                     listeners:{
-                        blur:function( f, The, eOpts ){
-                            activity(form);
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('formproperties',newValue);
+                        }
+                    },
+                    onTriggerClick:function(){
+                        var value = form.down('trigger[name=formproperties]').getValue();
+                        var win=Ext.widget('formFieldSetter',{
+                            formId:me.processRecord.flowFormId,
+                            formproperties:value,
+                            callBack:function(data){
+                                form.down('trigger[name=formproperties]').setValue(data);
+                                cell.value.setAttribute('formproperties',data);
+                            }
+                        });
+                        if(win){
+                            win.show();
                         }
                     }
                 },{
                     fieldLabel: '监听',
                     name: 'tasklisteners',
                     hidden:!me.developer,
+                    value:cell.value.getAttribute('tasklisteners'),
                     listeners:{
-                        blur:function( f, The, eOpts ){
-                            activity(form);
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('tasklisteners',newValue);
                         }
                     }
                 },{
@@ -1125,6 +1310,7 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     editable: false,
                     model: 'local',
 //                    width: 100,
+                    hidden:!me.developer,
                     fieldLabel: '是否异步',
                     valueField: 'type',
                     displayField: 'displayText',
@@ -1136,9 +1322,10 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                             ['No', '否']
                         ]
                     }),
-                    listeners: {
-                        select: function (combo, record, index) {
-                            activity(form);
+                    value:cell.value.getAttribute('asynchronousdefinition'),
+                    listeners:{
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('asynchronousdefinition',newValue);
                         }
                     }
                 },{
@@ -1148,6 +1335,7 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     model: 'local',
 //                    width: 100,
                     fieldLabel: '是否互斥',
+                    hidden:!me.developer,
                     valueField: 'type',
                     displayField: 'displayText',
                     name:'exclusivedefinition',
@@ -1158,9 +1346,10 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                             ['No', '否']
                         ]
                     }),
-                    listeners: {
-                        select: function (combo, record, index) {
-                            activity(form);
+                    value:cell.value.getAttribute('exclusivedefinition'),
+                    listeners:{
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('exclusivedefinition',newValue);
                         }
                     }
                 },{
@@ -1170,6 +1359,7 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     model: 'local',
 //                    width: 100,
                     fieldLabel: '是否连续(多实例)',
+                    hidden:!me.developer,
                     valueField: 'type',
                     displayField: 'displayText',
                     name:'multiinstance_sequential',
@@ -1180,71 +1370,75 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                             ['No', '否']
                         ]
                     }),
-                    listeners: {
-                        select: function (combo, record, index) {
-                            activity(form);
+                    value:cell.value.getAttribute('multiinstance_sequential'),
+                    listeners:{
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('multiinstance_sequential',newValue);
                         }
                     }
                 },{
                     fieldLabel: '基数(多实例)',
                     name: 'multiinstance_cardinality',
                     hidden:!me.developer,
+                    value:cell.value.getAttribute('multiinstance_cardinality'),
                     listeners:{
-                        blur:function( f, The, eOpts ){
-                            activity(form);
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('multiinstance_cardinality',newValue);
                         }
                     }
                 },{
                     fieldLabel: '集合(多实例)',
                     name: 'multiinstance_collection',
                     hidden:!me.developer,
+                    value:cell.value.getAttribute('multiinstance_collection'),
                     listeners:{
-                        blur:function( f, The, eOpts ){
-                            activity(form);
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('multiinstance_collection',newValue);
                         }
                     }
                 },{
                     fieldLabel: '元素变量(多实例)',
                     name: 'multiinstance_variable',
                     hidden:!me.developer,
+                    value:cell.value.getAttribute('multiinstance_variable'),
                     listeners:{
-                        blur:function( f, The, eOpts ){
-                            activity(form);
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('multiinstance_variable',newValue);
                         }
                     }
                 },{
                     fieldLabel: '完成条件(多实例)',
                     name: 'multiinstance_condition',
                     hidden:!me.developer,
+                    value:cell.value.getAttribute('multiinstance_condition'),
                     listeners:{
-                        blur:function( f, The, eOpts ){
-                            activity(form);
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('multiinstance_condition',newValue);
                         }
                     }
                 },{
                     fieldLabel:'监听器',
                     hidden:!me.developer,
-                    name:'executionlisteners'
+                    name:'executionlisteners',
+                    value:cell.value.getAttribute('executionlisteners'),
+                    listeners:{
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('executionlisteners',newValue);
+                        }
+                    }
                 },{
                     name:'documentation',
                     fieldLabel:'描述',
                     xtype:'textareafield',
                     grow: true,
+                    value:cell.value.getAttribute('documentation'),
                     listeners:{
-                        blur:function( f, The, eOpts ){
-                            activity(form);
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('documentation',newValue);
                         }
                     }
                 }]
         });
-        var rec=cell.value.getAttribute('activity');
-        if(rec){
-            var properties=Ext.decode(rec).properties;
-            if(properties){
-                form.getForm().setValues(Ext.decode(rec).properties);
-            }
-        }
-        activity(form);
         return form;
     },
     ServiceTask:function(cell){
@@ -2558,11 +2752,7 @@ Ext.define('FlexCenter.flows.view.Modeler', {
     },
     SubProcess:function(cell){
         var me=this;
-        var activity=function(form){
-            var act=me.activity(cell);
-            act.setProperties(form.getForm().getValues());
-            cell.value.setAttribute('activity',Ext.encode(act));
-        }
+        
         var form=Ext.widget('form',{
             layout: 'anchor',
             border:false,
@@ -2574,35 +2764,45 @@ Ext.define('FlexCenter.flows.view.Modeler', {
             defaultType: 'textfield',
             items: [
                 {
-                    xtype:'hidden',
-                    name:'overrideid'
+                    fieldLabel: 'ID',
+                    hidden:!me.developer,
+                    name:'overrideid',
+                    value:cell.value.getAttribute('overrideid'),
+                    listeners:{
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('overrideid',newValue);
+                        }
+                    }
                 },
                 {
                     xtype:'hidden',
                     fieldLabel: '循环类型',
                     name: 'looptype',
                     hidden:!me.developer,
+                    value:cell.value.getAttribute('looptype'),
                     listeners:{
-                        blur:function( f, The, eOpts ){
-                            activity(form);
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('looptype',newValue);
                         }
                     }
                 },{
                     fieldLabel: '名称',
                     name: 'name',
+                    value:cell.value.getAttribute('name'),
                     listeners:{
-                        blur:function( f, The, eOpts ){
-                            activity(form);
-                            me.graph.cellLabelChanged(cell,form.getForm().getValues().name);
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            me.graph.cellLabelChanged(cell,newValue);
+                            cell.value.setAttribute('name',newValue);
                         }
                     }
-                },{
+                },,{
                     fieldLabel: '执行监听器',
                     name: 'executionlisteners',
                     hidden:!me.developer,
+                    value:cell.value.getAttribute('executionlisteners'),
                     listeners:{
-                        blur:function( f, The, eOpts ){
-                            activity(form);
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('executionlisteners',newValue);
                         }
                     }
                 },{
@@ -2615,6 +2815,7 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     valueField: 'type',
                     displayField: 'displayText',
                     name:'asynchronousdefinition',
+                    value:cell.value.getAttribute('asynchronousdefinition'),
                     store: Ext.create('Ext.data.ArrayStore', {
                         fields: ['type', 'displayText'],
                         data: [
@@ -2622,9 +2823,9 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                             ['No', '否']
                         ]
                     }),
-                    listeners: {
-                        select: function (combo, record, index) {
-                            activity(form);
+                    listeners:{
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('asynchronousdefinition',newValue);
                         }
                     }
                 },{
@@ -2644,9 +2845,10 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                             ['No', '否']
                         ]
                     }),
-                    listeners: {
-                        select: function (combo, record, index) {
-                            activity(form);
+                    value:cell.value.getAttribute('exclusivedefinition'),
+                    listeners:{
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('exclusivedefinition',newValue);
                         }
                     }
                 },{
@@ -2654,30 +2856,18 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     fieldLabel:'描述',
                     xtype:'textareafield',
                     grow: true,
+                    value:cell.value.getAttribute('documentation'),
                     listeners:{
-                        blur:function( f, The, eOpts ){
-                            activity(form);
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('documentation',newValue);
                         }
                     }
                 }]
         });
-        var rec=cell.value.getAttribute('activity');
-        if(rec){
-            var properties=Ext.decode(rec).properties;
-            if(properties){
-                form.getForm().setValues(Ext.decode(rec).properties);
-            }
-        }
-        activity(form);
         return form;
     },
     EventSubProcess:function(cell){
         var me=this;
-        var activity=function(form){
-            var act=me.activity(cell);
-            act.setProperties(form.getForm().getValues());
-            cell.value.setAttribute('activity',Ext.encode(act));
-        }
         var form=Ext.widget('form',{
             layout: 'anchor',
             border:false,
@@ -2689,25 +2879,34 @@ Ext.define('FlexCenter.flows.view.Modeler', {
             defaultType: 'textfield',
             items: [
                 {
-                    xtype:'hidden',
-                    name:'overrideid'
+                    fieldLabel: 'Id',
+                    name:'overrideid',
+                    hidden:!me.developer,
+                    value:cell.value.getAttribute('overrideid'),
+                    listeners:{
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('overrideid',newValue);
+                        }
+                    }
                 },
                 {
                     fieldLabel: '名称',
                     name: 'name',
+                    value:cell.value.getAttribute('name'),
                     listeners:{
-                        blur:function( f, The, eOpts ){
-                            activity(form);
-                            me.graph.cellLabelChanged(cell,form.getForm().getValues().name);
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            me.graph.cellLabelChanged(cell,newValue);
+                            cell.value.setAttribute('name',newValue);
                         }
                     }
                 },{
                     fieldLabel: '执行监听器',
                     name: 'executionlisteners',
                     hidden:!me.developer,
+                    value:cell.value.getAttribute('executionlisteners'),
                     listeners:{
-                        blur:function( f, The, eOpts ){
-                            activity(form);
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('executionlisteners',newValue);
                         }
                     }
                 },{
@@ -2727,9 +2926,10 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                             ['No', '否']
                         ]
                     }),
-                    listeners: {
-                        select: function (combo, record, index) {
-                            activity(form);
+                    value:cell.value.getAttribute('asynchronousdefinition'),
+                    listeners:{
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('asynchronousdefinition',newValue);
                         }
                     }
                 },{
@@ -2749,9 +2949,10 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                             ['No', '否']
                         ]
                     }),
-                    listeners: {
-                        select: function (combo, record, index) {
-                            activity(form);
+                    value:cell.value.getAttribute('exclusivedefinition'),
+                    listeners:{
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('exclusivedefinition',newValue);
                         }
                     }
                 },{
@@ -2759,30 +2960,18 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     fieldLabel:'描述',
                     xtype:'textareafield',
                     grow: true,
+                    value:cell.value.getAttribute('documentation'),
                     listeners:{
-                        blur:function( f, The, eOpts ){
-                            activity(form);
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('documentation',newValue);
                         }
                     }
                 }]
         });
-        var rec=cell.value.getAttribute('activity');
-        if(rec){
-            var properties=Ext.decode(rec).properties;
-            if(properties){
-                form.getForm().setValues(Ext.decode(rec).properties);
-            }
-        }
-        activity(form);
         return form;
     },
     CallActivity:function(cell){
         var me=this;
-        var activity=function(form){
-            var act=me.activity(cell);
-            act.setProperties(form.getForm().getValues());
-            cell.value.setAttribute('activity',Ext.encode(act));
-        }
         var form=Ext.widget('form',{
             layout: 'anchor',
             border:false,
@@ -2795,16 +2984,27 @@ Ext.define('FlexCenter.flows.view.Modeler', {
             items: [
                 {
                     xtype:'hidden',
-                    name:'overrideid'
+                    name:'overrideid',
+                    value:cell.value.getAttribute('overrideid'),
+                    listeners:{
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('overrideid',newValue);
+                        }
+                    }
                 },
                 {
                     xtype:'hidden',
                     fieldLabel: '循环类型',
                     name: 'looptype',
                     hidden:!me.developer,
+                    value:cell.value.getAttribute('overrideid'),
                     listeners:{
-                        blur:function( f, The, eOpts ){
-                            activity(form);
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('overrideid',newValue);
+                        },
+                        afterrender:function(f){
+                            var value= f.getValue();
+                            cell.value.setAttribute('overrideid', value);
                         }
                     }
                 },
@@ -2813,9 +3013,14 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     fieldLabel: '补偿',
                     name: 'isforcompensation',
                     hidden:!me.developer,
+                    value:cell.value.getAttribute('overrideid'),
                     listeners:{
-                        blur:function( f, The, eOpts ){
-                            activity(form);
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('overrideid',newValue);
+                        },
+                        afterrender:function(f){
+                            var value= f.getValue();
+                            cell.value.setAttribute('overrideid', value);
                         }
                     }
                 },
@@ -2833,36 +3038,56 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     fieldLabel: '执行监听器',
                     name: 'executionlisteners',
                     hidden:!me.developer,
+                    value:cell.value.getAttribute('overrideid'),
                     listeners:{
-                        blur:function( f, The, eOpts ){
-                            activity(form);
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('overrideid',newValue);
+                        },
+                        afterrender:function(f){
+                            var value= f.getValue();
+                            cell.value.setAttribute('overrideid', value);
                         }
                     }
                 },{
                     fieldLabel: '条用元素',
                     name: 'callactivitycalledelement',
                     hidden:!me.developer,
+                    value:cell.value.getAttribute('overrideid'),
                     listeners:{
-                        blur:function( f, The, eOpts ){
-                            activity(form);
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('overrideid',newValue);
+                        },
+                        afterrender:function(f){
+                            var value= f.getValue();
+                            cell.value.setAttribute('overrideid', value);
                         }
                     }
                 },{
                     fieldLabel: '输入参数',
                     name: 'callactivityinparameters',
                     hidden:!me.developer,
+                    value:cell.value.getAttribute('overrideid'),
                     listeners:{
-                        blur:function( f, The, eOpts ){
-                            activity(form);
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('overrideid',newValue);
+                        },
+                        afterrender:function(f){
+                            var value= f.getValue();
+                            cell.value.setAttribute('overrideid', value);
                         }
                     }
                 },{
                     fieldLabel: '输出参数',
                     name: 'callactivityoutparameters',
                     hidden:!me.developer,
+                    value:cell.value.getAttribute('overrideid'),
                     listeners:{
-                        blur:function( f, The, eOpts ){
-                            activity(form);
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('overrideid',newValue);
+                        },
+                        afterrender:function(f){
+                            var value= f.getValue();
+                            cell.value.setAttribute('overrideid', value);
                         }
                     }
                 },{
@@ -2882,9 +3107,14 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                             ['No', '否']
                         ]
                     }),
-                    listeners: {
-                        select: function (combo, record, index) {
-                            activity(form);
+                    value:cell.value.getAttribute('overrideid'),
+                    listeners:{
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('overrideid',newValue);
+                        },
+                        afterrender:function(f){
+                            var value= f.getValue();
+                            cell.value.setAttribute('overrideid', value);
                         }
                     }
                 },{
@@ -2904,9 +3134,14 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                             ['No', '否']
                         ]
                     }),
-                    listeners: {
-                        select: function (combo, record, index) {
-                            activity(form);
+                    value:cell.value.getAttribute('overrideid'),
+                    listeners:{
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('overrideid',newValue);
+                        },
+                        afterrender:function(f){
+                            var value= f.getValue();
+                            cell.value.setAttribute('overrideid', value);
                         }
                     }
                 },{
@@ -2926,45 +3161,70 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                             ['No', '否']
                         ]
                     }),
-                    listeners: {
-                        select: function (combo, record, index) {
-                            activity(form);
+                    value:cell.value.getAttribute('overrideid'),
+                    listeners:{
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('overrideid',newValue);
+                        },
+                        afterrender:function(f){
+                            var value= f.getValue();
+                            cell.value.setAttribute('overrideid', value);
                         }
                     }
                 },{
                     fieldLabel: '基数(多实例)',
                     name: 'multiinstance_cardinality',
                     hidden:!me.developer,
+                    value:cell.value.getAttribute('overrideid'),
                     listeners:{
-                        blur:function( f, The, eOpts ){
-                            activity(form);
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('overrideid',newValue);
+                        },
+                        afterrender:function(f){
+                            var value= f.getValue();
+                            cell.value.setAttribute('overrideid', value);
                         }
                     }
                 },{
                     fieldLabel: '集合(多实例)',
                     name: 'multiinstance_collection',
                     hidden:!me.developer,
+                    value:cell.value.getAttribute('overrideid'),
                     listeners:{
-                        blur:function( f, The, eOpts ){
-                            activity(form);
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('overrideid',newValue);
+                        },
+                        afterrender:function(f){
+                            var value= f.getValue();
+                            cell.value.setAttribute('overrideid', value);
                         }
                     }
                 },{
                     fieldLabel: '元素变量(多实例)',
                     name: 'multiinstance_variable',
                     hidden:!me.developer,
+                    value:cell.value.getAttribute('overrideid'),
                     listeners:{
-                        blur:function( f, The, eOpts ){
-                            activity(form);
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('overrideid',newValue);
+                        },
+                        afterrender:function(f){
+                            var value= f.getValue();
+                            cell.value.setAttribute('overrideid', value);
                         }
                     }
                 },{
                     fieldLabel: '完成条件(多实例)',
                     name: 'multiinstance_condition',
                     hidden:!me.developer,
+                    value:cell.value.getAttribute('overrideid'),
                     listeners:{
-                        blur:function( f, The, eOpts ){
-                            activity(form);
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('overrideid',newValue);
+                        },
+                        afterrender:function(f){
+                            var value= f.getValue();
+                            cell.value.setAttribute('overrideid', value);
                         }
                     }
                 },{
@@ -2972,30 +3232,22 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     fieldLabel:'描述',
                     xtype:'textareafield',
                     grow: true,
+                    value:cell.value.getAttribute('overrideid'),
                     listeners:{
-                        blur:function( f, The, eOpts ){
-                            activity(form);
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('overrideid',newValue);
+                        },
+                        afterrender:function(f){
+                            var value= f.getValue();
+                            cell.value.setAttribute('overrideid', value);
                         }
                     }
                 }]
         });
-        var rec=cell.value.getAttribute('activity');
-        if(rec){
-            var properties=Ext.decode(rec).properties;
-            if(properties){
-                form.getForm().setValues(Ext.decode(rec).properties);
-            }
-        }
-        activity(form);
         return form;
     },
     Gateway:function(cell,type){
         var me=this;
-        var activity=function(form){
-            var act=me.activity(cell);
-            act.setProperties(form.getForm().getValues());
-            cell.value.setAttribute('activity',Ext.encode(act));
-        }
         var form=Ext.widget('form',{
             layout: 'anchor',
             border:false,
@@ -3008,15 +3260,22 @@ Ext.define('FlexCenter.flows.view.Modeler', {
             items: [
                 {
                     xtype:'hidden',
-                    name:'overrideid'
+                    name:'overrideid',
+                    value:cell.value.getAttribute('overrideid'),
+                    listeners:{
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('overrideid',newValue);
+                        }
+                    }
                 },
                 {
                     fieldLabel: '名称',
                     name: 'name',
+                    value:cell.value.getAttribute('name'),
                     listeners:{
-                        blur:function( f, The, eOpts ){
-                            activity(form);
-                            me.graph.cellLabelChanged(cell,form.getForm().getValues().name);
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            me.graph.cellLabelChanged(cell,newValue);
+                            cell.value.setAttribute('name',newValue);
                         }
                     }
                 },
@@ -3025,30 +3284,18 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     fieldLabel:'描述',
                     xtype:'textareafield',
                     grow: true,
+                    value:cell.value.getAttribute('documentation'),
                     listeners:{
-                        blur:function( f, The, eOpts ){
-                            activity(form);
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('documentation',newValue);
                         }
                     }
                 }]
         });
-        var rec=cell.value.getAttribute('activity');
-        if(rec){
-            var properties=Ext.decode(rec).properties;
-            if(properties){
-                form.getForm().setValues(Ext.decode(rec).properties);
-            }
-        }
-        activity(form);
         return form;
     },
     BoundaryErrorEvent:function(cell){
         var me=this;
-        var activity=function(form){
-            var act=me.activity(cell);
-            act.setProperties(form.getForm().getValues());
-            cell.value.setAttribute('activity',Ext.encode(act));
-        }
         var form=Ext.widget('form',{
             layout: 'anchor',
             border:false,
@@ -3061,25 +3308,32 @@ Ext.define('FlexCenter.flows.view.Modeler', {
             items: [
                 {
                     xtype:'hidden',
-                    name:'overrideid'
+                    name:'overrideid',
+                    value:cell.value.getAttribute('overrideid'),
+                    listeners:{
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('overrideid',newValue);
+                        }
+                    }
                 },
                 {
                     fieldLabel: '名称',
                     name: 'name',
+                    value:cell.value.getAttribute('name'),
                     listeners:{
-                        blur:function( f, The, eOpts ){
-                            activity(form);
-                            me.graph.cellLabelChanged(cell,form.getForm().getValues().name);
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            me.graph.cellLabelChanged(cell,newValue);
+                            cell.value.setAttribute('name',newValue);
                         }
                     }
                 },
                 {
                     fieldLabel: '错误引用',
                     name: 'errorref',
+                    value:cell.value.getAttribute('errorref'),
                     listeners:{
-                        blur:function( f, The, eOpts ){
-                            activity(form);
-                            me.graph.cellLabelChanged(cell,form.getForm().getValues().name);
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('errorref',newValue);
                         }
                     }
                 },
@@ -3089,21 +3343,14 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     fieldLabel:'描述',
                     xtype:'textareafield',
                     grow: true,
+                    value:cell.value.getAttribute('documentation'),
                     listeners:{
-                        blur:function( f, The, eOpts ){
-                            activity(form);
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('documentation',newValue);
                         }
                     }
                 }]
         });
-        var rec=cell.value.getAttribute('activity');
-        if(rec){
-            var properties=Ext.decode(rec).properties;
-            if(properties){
-                form.getForm().setValues(Ext.decode(rec).properties);
-            }
-        }
-        activity(form);
         return form;
     },
     BoundaryTimerEvent:function(cell){
@@ -3244,11 +3491,6 @@ Ext.define('FlexCenter.flows.view.Modeler', {
     },
     ThrowNoneEvent:function(cell){
         var me=this;
-        var activity=function(form){
-            var act=me.activity(cell);
-            act.setProperties(form.getForm().getValues());
-            cell.value.setAttribute('activity',Ext.encode(act));
-        }
         var form=Ext.widget('form',{
             layout: 'anchor',
             border:false,
@@ -3261,24 +3503,32 @@ Ext.define('FlexCenter.flows.view.Modeler', {
             items: [
                 {
                     xtype:'hidden',
-                    name:'overrideid'
+                    name:'overrideid',
+                    value:cell.value.getAttribute('overrideid'),
+                    listeners:{
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('overrideid',newValue);
+                        }
+                    }
                 },
                 {
                     fieldLabel: '名称',
                     name: 'name',
+                    value:cell.value.getAttribute('name'),
                     listeners:{
-                        blur:function( f, The, eOpts ){
-                            activity(form);
-                            me.graph.cellLabelChanged(cell,form.getForm().getValues().name);
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            me.graph.cellLabelChanged(cell,newValue);
+                            cell.value.setAttribute('name',newValue);
                         }
                     }
                 },{
                     fieldLabel: '执行监听器',
                     name: 'executionlisteners',
                     hidden:!me.developer,
+                    value:cell.value.getAttribute('executionlisteners'),
                     listeners:{
-                        blur:function( f, The, eOpts ){
-                            activity(form);
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('executionlisteners',newValue);
                         }
                     }
                 },{
@@ -3286,21 +3536,14 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     fieldLabel:'描述',
                     xtype:'textareafield',
                     grow: true,
+                    value:cell.value.getAttribute('documentation'),
                     listeners:{
-                        blur:function( f, The, eOpts ){
-                            activity(form);
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            cell.value.setAttribute('documentation',newValue);
                         }
                     }
                 }]
         });
-        var rec=cell.value.getAttribute('activity');
-        if(rec){
-            var properties=Ext.decode(rec).properties;
-            if(properties){
-                form.getForm().setValues(Ext.decode(rec).properties);
-            }
-        }
-        activity(form);
         return form;
     },
     
@@ -3309,7 +3552,7 @@ Ext.define('FlexCenter.flows.view.Modeler', {
         var me=this,form,title;
         if(cell){
             if(mxUtils.isNode(cell.value)){
-                var nodeName=cell.value.nodeName,title='节点属性（'+cell.value.getAttribute('label')+')';
+                var nodeName=cell.value.nodeName,title='节点属性（'+cell.value.getAttribute('name')+')';
                 if('StartNoneEvent'==nodeName){
                     form=me.StartNoneEvent(cell);
                 }else if('StartTimerEvent'==nodeName){
@@ -3366,10 +3609,9 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     form=me.ThrowNoneEvent(cell);
                 }else if('EndErrorEvent'==nodeName){
                     form=me.BoundaryErrorEvent(cell);
+                }else if('SequenceFlow'==nodeName){
+                    form=me.SequenceFlow(cell);
                 }
-            }else if(cell.isEdge()){
-                form=me.SequenceFlow(cell);
-                title='属性（'+cell.value+')'
             }
         }else{
             form=me.Process();
@@ -3443,9 +3685,9 @@ Ext.define('FlexCenter.flows.view.Modeler', {
             var cell = graph.getSelectionCell();
             me.showProperties(cell);
             if(graph){
-                var pro = me.updateProcess(graph);
+//                var pro = me.updateProcess(graph);
 //                console.log(Ext.encode(me.process))
-                console.log(('process',me.process))
+//                console.log(('process',me.process))
             }
         });
         
@@ -3485,7 +3727,16 @@ Ext.define('FlexCenter.flows.view.Modeler', {
 //        graph.isCellEditable = function(cell){
 //            return !this.getModel().isEdge(cell);
 //        };
-       
+
+        var createEdge=mxConnectionHandler.prototype.createEdge;
+
+        mxConnectionHandler.prototype.createEdge = function(value, source, target, style){
+            var cell=me.editor.templates['SequenceFlow'];
+            value=cell.value;
+            var edge=createEdge.apply(this, arguments);
+            edge.setValue(value);
+            return edge;
+        }
         
         var mxConnectionHandlerInsertEdge = mxConnectionHandler.prototype.insertEdge;
         mxConnectionHandler.prototype.insertEdge = function(parent, id, value, source, target, style){
@@ -3519,12 +3770,11 @@ Ext.define('FlexCenter.flows.view.Modeler', {
         
         
         graph.convertValueToString = function(cell){
-//            return mxUtils.isNode(cell.value)?cell.getAttribute('label', ''):'';
-            return 'sdfsdf';
+            return mxUtils.isNode(cell.value)?cell.getAttribute('name', ''):'';
         };
         
         graph.getLabel=function(cell){
-            return cell?(mxUtils.isNode(cell.value)?cell.getAttribute('value', ''):(cell.isEdge()?cell.value:'')):'';
+            return cell?(mxUtils.isNode(cell.value)?cell.getAttribute('name', ''):(cell.isEdge()?cell.value:'')):'';
         };
         graph.panningHandler.factoryMethod = function(menu, cell, evt)
         {
@@ -3571,7 +3821,7 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                 var value = (pos > 0) ? newValue.substring(0,
                     pos) : newValue;
                 var elt = cell.value.cloneNode(true);
-                elt.setAttribute('value', value);
+                elt.setAttribute('name', value);
                 newValue = elt;
                 autoSize = false;
             }
@@ -3580,7 +3830,7 @@ Ext.define('FlexCenter.flows.view.Modeler', {
         };
         
         graph.getEditingValue = function(cell) {
-            return mxUtils.isNode(cell.value)?cell.getAttribute('value', ''):'';
+            return mxUtils.isNode(cell.value)?cell.getAttribute('name', ''):'';
         };
         graph.flipEdge = function(edge){
             if (edge != null){
@@ -3617,6 +3867,7 @@ Ext.define('FlexCenter.flows.view.Modeler', {
             }
             return oldResizable.apply(this, arguments);
         };
+        
         graph.init(dom);
         if (mxClient.IS_GC || mxClient.IS_SF){
             graph.container.style.background = '-webkit-gradient(linear, 0% 0%, 100% 0%, from(#FFFFFF), to(#FFFFEE))';
@@ -3690,34 +3941,30 @@ Ext.define('FlexCenter.flows.view.Modeler', {
         var funct = function(graph, evt, target, x, y){
             cells = graph.getImportableCells(cells);
             if (cells.length > 0){
-                var select = null;
-                var boundary=mxUtils.isNode(cells[0].value) && cells[0].value.getAttribute('type')=='boundaryEvent';
-                var tar=target && mxUtils.isNode(target.value) && (target.value.getAttribute('type')=='subProcess' || target.value.getAttribute('type')=='task');
+                var select = null,cell=cells[0],value=cell.value;
+                var boundary=(value.getAttribute('type')=='boundaryEvent');
+                var tar=target && (target.value.getAttribute('type')=='subProcess' || target.value.getAttribute('type')=='task');
                 if(target==null && boundary){
                     return;
                 }
-                if(boundary && !tar){
+                if(target && boundary && (target.value.getAttribute('type')=='edge')){
                     return;
                 }
-                if(target && mxUtils.isNode(target.value) &&(target.value.getAttribute('type')=='task' || target.value.getAttribute('type')=='subProcess')){
-                    if(boundary){
-                        var xMin=target.geometry.x-cells[0].geometry.width/2;
-                        var xMax=target.geometry.x+target.geometry.width-cells[0].geometry.width/2;
-                        x=Math.max(x,xMin);
-                        x=Math.min(x,xMax);
-                        var ymin=target.geometry.y+target.geometry.height-cells[0].geometry.height/2;
-                        var ymax=ymin;
-                        y=ymax
-                        select = graph.importCells(cells, x, y, target);
-                        if(select && select.length>0){
-                            select[0].setParent(target)
-                            graph.scrollCellToVisible(select[0]);
-                            graph.setSelectionCells(select);
-                        }
-                        return;
-                    }else{
-                        return; 
+                if(target && boundary &&(target.value.getAttribute('type')=='task' || target.value.getAttribute('type')=='subProcess')){
+                    var xMin=target.geometry.x-cells[0].geometry.width/2;
+                    var xMax=target.geometry.x+target.geometry.width-cells[0].geometry.width/2;
+                    x=Math.max(x,xMin);
+                    x=Math.min(x,xMax);
+                    var ymin=target.geometry.y+target.geometry.height-cells[0].geometry.height/2;
+                    var ymax=ymin;
+                    y=ymax
+                    select = graph.importCells(cells, x, y, target);
+                    if(select && select.length>0){
+                        select[0].setParent(target)
+                        graph.scrollCellToVisible(select[0]);
+                        graph.setSelectionCells(select);
                     }
+                    return;
                 }
                 var validDropTarget = (target != null) ?
                     graph.isValidDropTarget(target, cells, evt) : false;

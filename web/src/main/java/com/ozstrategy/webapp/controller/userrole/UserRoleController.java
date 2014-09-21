@@ -197,7 +197,6 @@ public class UserRoleController extends BaseController {
   @RequestMapping(params = "method=listRoles")
   @ResponseBody 
   public JsonReaderResponse<RoleCommand> listRoles(HttpServletRequest request) {
-      String roleName=request.getParameter("roleName");
       Integer start=Integer.parseInt(request.getParameter("start"));
       Integer limit=Integer.parseInt(request.getParameter("limit"));
       Map<String,Object> map=requestMap(request);
@@ -208,7 +207,7 @@ public class UserRoleController extends BaseController {
         if ((roles != null) && (roles.size() > 0)) {
           for (Role role : roles) {
               RoleCommand command=new RoleCommand(role);
-              List<RoleFeature> roleFeatures=new ArrayList<RoleFeature>();//roleManager.getRoleFeature(role.getId());
+              List<RoleFeature> roleFeatures=roleManager.getRoleFeatureByRoleId(role.getId());
               List<FeatureCommand> featureCommands=new ArrayList<FeatureCommand>();
               if(roleFeatures!=null){
                   for(RoleFeature roleFeature : roleFeatures){

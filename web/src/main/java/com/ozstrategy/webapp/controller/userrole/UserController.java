@@ -4,6 +4,7 @@ import com.ozstrategy.model.userrole.Role;
 import com.ozstrategy.model.userrole.User;
 import com.ozstrategy.service.userrole.RoleManager;
 import com.ozstrategy.service.userrole.UserManager;
+import com.ozstrategy.webapp.Constants;
 import com.ozstrategy.webapp.command.BaseResultCommand;
 import com.ozstrategy.webapp.command.JsonReaderResponse;
 import com.ozstrategy.webapp.command.userrole.UserCommand;
@@ -40,12 +41,20 @@ public class UserController extends BaseController {
     public JsonReaderResponse<UserCommand> listUsers(HttpServletRequest request) {
         String start=request.getParameter("start");
         String limit=request.getParameter("limit");
+        String processAssignee=request.getParameter("processAssignee");
         Map<String,Object> map=requestMap(request);
         if(checkIsNotNumber(start)){
             return new JsonReaderResponse<UserCommand>(emptyData, Boolean.FALSE,getMessage("message.error.start",request));
         }
         List<User> users        = userManager.listUsers(map, parseInteger(start), initLimit(limit));
         List<UserCommand> userCommands = new ArrayList<UserCommand>();
+        
+        if(StringUtils.isNotEmpty(processAssignee)){
+            UserCommand userCommand=new UserCommand();
+            userCommand.setUsername(Constants.processAssigneeExpression);
+            userCommand.setFullName("发起人");
+            userCommands.add(userCommand);
+        }
 
         if ((users != null) && (users.size() > 0)) {
             for (User user : users) {
@@ -54,6 +63,9 @@ public class UserController extends BaseController {
             }
         }
         int count = userManager.listUsersCount(map);
+        if(StringUtils.isNotEmpty(processAssignee)){
+            count=count+1;
+        }
         return new JsonReaderResponse<UserCommand>(userCommands,count);
     }
     @RequestMapping(params = "method=listAllUsers")

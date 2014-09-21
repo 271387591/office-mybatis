@@ -71,4 +71,8 @@ public class RoleManagerImpl  implements RoleManager {
     public boolean hasFeature(Set<String> roleName, String feature) {
         return true;
     }
+
+    public List<RoleFeature> getRoleFeatureByRoleId(Long roleId) {
+        return roleFeatureDao.getRoleFeatureByRoleId(roleId);
+    }
 }

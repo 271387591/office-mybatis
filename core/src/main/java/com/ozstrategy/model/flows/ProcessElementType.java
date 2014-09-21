@@ -4,7 +4,10 @@ package com.ozstrategy.model.flows;
  * Created by lihao on 9/15/14.
  */
 public enum  ProcessElementType {
-    StartNoneEvent("StartEvent"),UserTask("UserTask");
+    SequenceFlow("SequenceFlow"),
+    StartNoneEvent("StartEvent"),
+    UserTask("UserTask"),
+    EndNoneEvent("EndEvent");
     private String name;
     private ProcessElementType(String name){
         this.name=name;

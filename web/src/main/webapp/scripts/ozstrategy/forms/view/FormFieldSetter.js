@@ -17,32 +17,34 @@ Ext.define('FlexCenter.forms.view.FormFieldSetter', {
         var me=this;
         var store=Ext.StoreManager.lookup("FormFieldSetterStore");
         if(me.formproperties){
-            var formproperties=Ext.decode(me.formproperties);
-            var items=formproperties.items,len=items.length,data=[];
-            for(var i=0;i<len;i++){
-                var obj={},item=items[i];
-                obj.name=item.formproperty_name;
-                obj.variable=item.formproperty_variable;
-                obj.type=item.formproperty_type;
-                obj.readable=item.formproperty_readable;
-                obj.writeable=item.formproperty_writeable;
-                obj.required=item.formproperty_required;
-                obj.expression=item.formproperty_expression;
-                if(item.formproperty_readable=='Yes'){
-                    obj.chmod=0;
-                }else if(item.formproperty_writeable=='Yes'){
-                    obj.chmod=1;
-                }else{
-                    obj.chmod=2;
+            var formproperties=Ext.decode(me.formproperties,true);
+            if(formproperties!=null){
+                var items=formproperties.items,len=items.length,data=[];
+                for(var i=0;i<len;i++){
+                    var obj={},item=items[i];
+                    obj.name=item.formproperty_name;
+                    obj.variable=item.formproperty_variable;
+                    obj.type=item.formproperty_type;
+                    obj.readable=item.formproperty_readable;
+                    obj.writeable=item.formproperty_writeable;
+                    obj.required=item.formproperty_required;
+                    obj.expression=item.formproperty_expression;
+                    if(item.formproperty_readable=='Yes'){
+                        obj.chmod=0;
+                    }else if(item.formproperty_writeable=='Yes'){
+                        obj.chmod=1;
+                    }else{
+                        obj.chmod=2;
+                    }
+                    data.push(obj);
                 }
-                data.push(obj);
+                store=Ext.create("Ext.data.Store",{
+                    storeId:'FormFieldSetterStore',
+                    fields:['name','variable','type','readable','writeable','required','expression','chmod'],
+                    data:data
+                });
+                return store;
             }
-            store=Ext.create("Ext.data.Store",{
-                storeId:'FormFieldSetterStore',
-                fields:['name','variable','type','readable','writeable','required','expression','chmod'],
-                data:data
-            });
-            return store;
         }
         if(!store){
             store=Ext.create("Ext.data.Store",{
@@ -76,9 +78,7 @@ Ext.define('FlexCenter.forms.view.FormFieldSetter', {
         }
         store.load({
             params:{
-                formId:me.formId,
-                defId:me.defId,
-                taskKey:me.taskKey
+                formId:me.formId
             }
         });
         return store;

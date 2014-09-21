@@ -2,6 +2,7 @@ package com.ozstrategy.service.userrole;
 
 import com.ozstrategy.model.userrole.Feature;
 import com.ozstrategy.model.userrole.Role;
+import com.ozstrategy.model.userrole.RoleFeature;
 
 import java.util.List;
 import java.util.Map;
@@ -17,4 +18,5 @@ public interface RoleManager  {
     Role getRoleByName(String name);
     Role getRoleById(Long id);
     boolean hasFeature(Set<String> roleName,String feature);
+    List<RoleFeature> getRoleFeatureByRoleId(Long roleId);
 } 

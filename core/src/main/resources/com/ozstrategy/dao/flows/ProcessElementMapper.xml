@@ -5,24 +5,24 @@
     <resultMap id="processElementResult" type="com.ozstrategy.model.flows.ProcessElement" autoMapping="true">
         <id column="id" property="id" javaType="long"/>
         <association property="processDef" column="processDefId" select="com.ozstrategy.dao.flows.ProcessDefDao.getNoCascadeProcessDefById"/>
-        <collection property="instances" column="id" select="com.ozstrategy.dao.flows.ProcessFormFiledInstanceDao.getProcessFormFiledInstancesByEid"/>
-        <collection property="users" column="id" select="getProcessElementUsers"/>
+        <collection property="instances" column="id" select="com.ozstrategy.dao.flows.ProcessElementFormDao.getProcessElementFormsByEid"/>
+        <!--<collection property="users" column="id" select="getProcessElementUsers"/>-->
     </resultMap>
     
     <select id="listProcessElements" resultMap="processElementResult" parameterType="Map">
-        select f.* from ProcessElement f where 1=1
+        select <include refid="fieldMapping"/> from ProcessElement f where 1=1
         <if test="keyword!=null and keyword!=''">and (f.taskKey like CONCAT(CONCAT('%', #{keyword}), '%') or f.label like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
     </select>
     <select id="listProcessElementsCount" resultType="java.lang.Integer" parameterType="Map">
-        select count(*) from ProcessElement f where 1=1
+        select count(id) from ProcessElement f where 1=1
         <if test="keyword!=null and keyword!=''">and (f.taskKey like CONCAT(CONCAT('%', #{keyword}), '%') or f.label like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
     </select>
     
     <select id="getProcessElementById" resultMap="processElementResult" parameterType="long" flushCache="true">
-        select f.* from ProcessElement f where f.id=#{id} 
+        select <include refid="fieldMapping"/> from ProcessElement f where f.id=#{id} 
     </select>
     <select id="getProcessElementByDefId" resultMap="processElementResult" parameterType="long" flushCache="true">
-        select f.* from ProcessElement f where f.processDefId=#{defId} 
+        select <include refid="fieldMapping"/> from ProcessElement f where f.processDefId=#{defId} 
     </select>
     
     <select id="getProcessElementUsers" resultMap="com.ozstrategy.dao.userrole.UserDao.userResult" parameterType="long" flushCache="true">
@@ -30,17 +30,41 @@
     </select>
     
     <select id="getProcessElementByTaskKey" resultMap="processElementResult" parameterType="string">
-        select f.* from ProcessElement f where f.taskKey=#{taskKey} 
+        select <include refid="fieldMapping"/> from ProcessElement f where f.taskKey=#{taskKey} 
     </select>
     <select id="getProcessElementByTaskKeyAndDefId" resultMap="processElementResult" parameterType="Map">
-        select f.* from ProcessElement f where f.taskKey=#{taskKey} and f.processDefId=#{defId} 
+        select <include refid="fieldMapping"/> from ProcessElement f where f.taskKey=#{taskKey} and f.processDefId=#{defId} 
     </select>
+    <select id="loadElementActResource" resultType="string" parameterType="long">
+        select actResource from ProcessElement f where f.id=#{id}
+    </select>
+    
+    
+    
+    <insert id="saveProcessElementRole" flushCache="true" parameterType="Map">
+        insert into ProcessElementRole(roleId,elementId) values (#{roleId},#{id})
+    </insert>
+    <delete id="deleteProcessElementRoleById" flushCache="true" parameterType="long">
+        delete from ProcessElementRole where elementId=#{id}
+    </delete>
+    <insert id="saveProcessElementUser" flushCache="true" parameterType="Map">
+        insert into ProcessElementUser(userId,elementId) values (#{userId},#{id})
+    </insert>
+    <delete id="deleteProcessElementUserById" flushCache="true" parameterType="long">
+        delete from ProcessElementUser where elementId=#{id}
+    </delete>
+    
     <delete id="deleteProcessElement" parameterType="long" flushCache="true">
         delete from ProcessElement where id=#{id}
     </delete>
     <delete id="deleteProcessElementByDefId" parameterType="long" flushCache="true">
         delete from ProcessElement where processDefId=#{processDefId}
     </delete>
+    <update id="updateActResource" flushCache="true" parameterType="com.ozstrategy.model.flows.ProcessElement">
+        update ProcessElement f set 
+        f.actResource=#{actResource} 
+        where f.id=#{id}
+    </update>
     <update id="updateProcessElement" parameterType="com.ozstrategy.model.flows.ProcessElement" flushCache="true">
         update ProcessElement f set 
         f.type=#{type} , 
@@ -54,7 +78,10 @@
         <selectKey keyColumn="id" keyProperty="id" resultType="java.lang.Long">
             select LAST_INSERT_ID()
         </selectKey>
-        insert into ProcessElement(id,type,label,taskKey,processDefId,actClass) 
-        values (#{id},#{type},#{label},#{taskKey},#{processDef.id},#{actClass})
+        insert into ProcessElement(id,type,label,taskKey,processDefId,actClass,actResource) 
+        values (#{id},#{type},#{label},#{taskKey},#{processDef.id},#{actClass},#{actResource})
     </insert>
+    <sql id="fieldMapping">
+        id,type,actClass,label,taskKey,processDefId
+    </sql>
 </mapper>

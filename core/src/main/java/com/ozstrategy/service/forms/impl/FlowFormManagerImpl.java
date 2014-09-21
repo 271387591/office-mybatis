@@ -31,8 +31,8 @@ public class FlowFormManagerImpl implements FlowFormManager {
     private FlowFormDao flowFormDao;
     @Autowired
     private FormFieldDao formFieldDao;
-    
-    @Transactional
+
+    @Transactional(rollbackFor = Throwable.class)
     public void saveOrUpdate(FlowForm flowForm) {
         String html=flowForm.getContent();
         if(StringUtils.isNotEmpty(html)){
@@ -171,7 +171,7 @@ public class FlowFormManagerImpl implements FlowFormManager {
             }
         }
     }
-    @Transactional
+    @Transactional(rollbackFor = Throwable.class)
     public void multiRemove(String[] ids) {
         for(String id : ids){
             if(NumberUtils.isNumber(id)){

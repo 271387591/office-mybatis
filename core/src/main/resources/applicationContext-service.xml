@@ -13,7 +13,7 @@
        default-lazy-init="true">
 
     <!-- Enable @Transactional support -->
-    <tx:annotation-driven/>
+    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
     
     <!-- Enable @AspectJ support -->
     <aop:aspectj-autoproxy/>

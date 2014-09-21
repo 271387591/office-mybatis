@@ -1,6 +1,7 @@
 package com.ozstrategy.dao.userrole;
 
 import com.ozstrategy.model.userrole.User;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 
 import java.util.List;
@@ -12,7 +13,7 @@ public interface UserDao {
     Integer listUsersCount(Map<String,Object> map);
     void saveUser(User user);
     void updateUser(User user);
-    List<User> getUserByRoleId(Long roleId);
+    List<User> getUserByRoleId(@Param("roleId")Long roleId);
     void enabledUser(Long userId);
     void updateUserPassword(User user);
     User getUserById(Long id);

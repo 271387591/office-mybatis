@@ -198,7 +198,7 @@ public class ProcessDef extends BaseObject {
         this.flowForm = flowForm;
     }
     public String getActRes(){
-        return ACT_RES+this.id;
+        return ACT_RES+this.id+".bpmn20.xml";
     }
     public String getGraRes(){
         return GRA_RES+this.id;

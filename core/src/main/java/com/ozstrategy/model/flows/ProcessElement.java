@@ -2,6 +2,7 @@ package com.ozstrategy.model.flows;
 
 import com.ozstrategy.model.userrole.User;
 
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,9 +12,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,7 +24,7 @@ import java.util.Set;
  * Created by lihao on 9/9/14.
  */
 @Entity
-public class ProcessElement {
+public class ProcessElement implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -29,13 +32,12 @@ public class ProcessElement {
     private String type;
     @Column
     private String actClass;
-    
     @Column
     private String label;
     @Column
     private String taskKey;
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "processElement")
-    private Set<ProcessFormFiledInstance> instances=new HashSet<ProcessFormFiledInstance>();
+    private Set<ProcessElementForm> instances=new HashSet<ProcessElementForm>();
     @JoinTable(
             name               = "ProcessElementUser",
             joinColumns        = { @JoinColumn(name = "userId") },
@@ -46,9 +48,25 @@ public class ProcessElement {
             cascade = {CascadeType.REFRESH}
     )
     private Set<User> users=new HashSet<User>();
+    @JoinTable(
+            name               = "ProcessElementRole",
+            joinColumns        = { @JoinColumn(name = "roleId") },
+            inverseJoinColumns = @JoinColumn(name = "elementId")
+    )
+    @ManyToMany(
+            fetch   = FetchType.LAZY,
+            cascade = {CascadeType.REFRESH}
+    )
+    private Set<User> roles=new HashSet<User>();
+    
     @ManyToOne
     @JoinColumn(name = "processDefId")
     private ProcessDef processDef;
+    
+    @Column
+    @Lob
+    @Basic(fetch=FetchType.LAZY)
+    private byte[] actResource;
 
     public Long getId() {
         return id;
@@ -74,11 +92,11 @@ public class ProcessElement {
         this.label = label;
     }
 
-    public Set<ProcessFormFiledInstance> getInstances() {
+    public Set<ProcessElementForm> getInstances() {
         return instances;
     }
 
-    public void setInstances(Set<ProcessFormFiledInstance> instances) {
+    public void setInstances(Set<ProcessElementForm> instances) {
         this.instances = instances;
     }
 
@@ -112,5 +130,21 @@ public class ProcessElement {
 
     public void setActClass(String actClass) {
         this.actClass = actClass;
+    }
+
+    public byte[] getActResource() {
+        return actResource;
+    }
+
+    public void setActResource(byte[] actResource) {
+        this.actResource = actResource;
+    }
+
+    public Set<User> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<User> roles) {
+        this.roles = roles;
     }
 }

@@ -4,16 +4,16 @@
     <resultMap id="roleResult" type="com.ozstrategy.model.userrole.Role" autoMapping="true">
         <id column="id" property="id" javaType="long"/>
         <result column="systemViewId" javaType="java.lang.Long"/>
-        <association property="systemView" column="systemViewId" select="com.ozstrategy.dao.userrole.SystemViewDao.getSystemViewById" javaType="com.ozstrategy.model.userrole.SystemView"/>
+        <association property="systemView" column="systemViewId" select="com.ozstrategy.dao.userrole.SystemViewDao.getSystemViewById"/>
     </resultMap>
-    <select id="listRoles" resultMap="roleResult"  parameterType="string">
+    <select id="listRoles" resultMap="roleResult"  parameterType="Map">
         select * from Role r where r.enabled=1
         <if test="keyword!=null and keyword!=''">and (r.name like CONCAT(CONCAT('%', #{keyword}), '%') or r.displayName like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
         order by r.createDate desc
     </select>
     <select id="listRolesCount" resultType="java.lang.Integer" parameterType="Map">
         select count(*) from Role r
-        where u.enabled=1
+        where r.enabled=1
         <if test="keyword!=null and keyword!=''">and (r.name like CONCAT(CONCAT('%', #{keyword}), '%') or r.displayName like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
     </select>
     <select id="getRoleByName" resultMap="roleResult" parameterType="java.lang.String">

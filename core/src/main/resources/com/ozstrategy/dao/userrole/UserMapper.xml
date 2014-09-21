@@ -41,7 +41,10 @@
         select u.* from User u where u.mobile=#{mobile} 
     </select>
     <select id="getUserByRoleId" parameterType="long" resultMap="userResult">
-        select u.* from User u join UserRole ur on u.id=ur.userId where ur.roleId=#{roleId}
+        select u.* from User u join UserRole ur on u.id=ur.userId 
+        <where>
+            <if test="roleId!=null">ur.roleId=#{roleId}</if>
+        </where>
     </select>
     
     <update id="enabledUser" parameterType="Long" flushCache="true">

@@ -1,6 +1,7 @@
 package com.ozstrategy.dao.userrole;
 
 import com.ozstrategy.model.userrole.Role;
+import com.ozstrategy.model.userrole.RoleFeature;
 import org.apache.ibatis.session.RowBounds;
 
 import java.util.List;
@@ -15,4 +16,5 @@ public interface RoleDao {
     Role getRoleByName(String name);
     Role getRoleById(Long id);
     List<Role> getRoleByUserId(Long userId);
+    
 } 

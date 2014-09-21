@@ -1,190 +1,308 @@
-{"childShapes": [
+{"bounds": {
+    "lowerRight": {
+        "x": 1485.0,
+        "y": 1050.0
+    },
+    "upperLeft": {
+        "x": 0.0,
+        "y": 0.0
+    }
+}, "resourceId": "canvas", "stencil": {
+    "id": "BPMNDiagram"
+}, "stencilset": {
+    "namespace": "http://b3mn.org/stencilset/bpmn2.0#",
+    "url": "../editor/stencilsets/bpmn2.0/bpmn2.0.json"
+}, "properties": {
+    "process_id": "process_1",
+    "name": "test1",
+    "process_executable": "Yes",
+    "process_namespace": ""
+}, "childShapes": [
     {
-        "childShapes": [],
-        "dockers": [],
+        "resourceId": "T_8",
         "stencil": {
-            "id": "StartNoneEvent"
+            "id": "SequenceFlow"
+        },
+        "dockers": [
+            {
+                "x": 50.0,
+                "y": 30.0
+            },
+            {
+                "x": 192.0,
+                "y": 30.0
+            }
+        ],
+        "target": {
+            "resourceId": "T_5"
         },
         "outgoing": [
             {
-                "resourceId": "5"
+                "resourceId": "T_5"
             }
         ],
+        "bounds": {
+            "lowerRight": {
+                "x": 0.0,
+                "y": 0.0
+            },
+            "upperLeft": {
+                "x": 0.0,
+                "y": 0.0
+            }
+        },
+        "childShapes": [],
         "properties": {
             "overrideid": "",
-            "initiator": "",
-            "name": "",
-            "formproperties": "",
-            "executionlisteners": "",
-            "documentation": ""
-        },
-        "resourceId": "2",
-        "bounds": {
-            "upperLeft": {
-                "x": 60,
-                "y": 90
-            },
-            "lowerRight": {
-                "x": 100,
-                "y": 130
-            }
+            "name": "flow3",
+            "documentation": "",
+            "defaultflow": "",
+            "conditionalflow": "",
+            "conditionsequenceflow": ""
         }
     },
     {
-        "childShapes": [],
-        "dockers": [],
+        "resourceId": "T_7",
         "stencil": {
-            "id": "UserTask"
+            "id": "SequenceFlow"
+        },
+        "dockers": [
+            {
+                "x": 50.0,
+                "y": 30.0
+            },
+            {
+                "x": 192.0,
+                "y": 30.0
+            }
+        ],
+        "target": {
+            "resourceId": "T_4"
         },
         "outgoing": [
             {
-                "resourceId": "6"
+                "resourceId": "T_4"
             }
         ],
+        "bounds": {
+            "lowerRight": {
+                "x": 0.0,
+                "y": 0.0
+            },
+            "upperLeft": {
+                "x": 0.0,
+                "y": 0.0
+            }
+        },
+        "childShapes": [],
         "properties": {
             "overrideid": "",
-            "looptype": "",
-            "isforcompensation": "",
-            "name": "",
-            "formkeydefinition": "",
-            "duedatedefinition": "",
-            "prioritydefinition": "",
-            "usertaskassignment": "",
-            "formproperties": "",
-            "tasklisteners": "",
-            "asynchronousdefinition": "",
-            "exclusivedefinition": "",
-            "multiinstance_sequential": "",
-            "multiinstance_cardinality": "",
-            "multiinstance_collection": "",
-            "multiinstance_variable": "",
-            "multiinstance_condition": "",
-            "executionlisteners": "",
-            "documentation": ""
-        },
-        "resourceId": "3",
-        "bounds": {
-            "upperLeft": {
-                "x": 210,
-                "y": 80
-            },
-            "lowerRight": {
-                "x": 350,
-                "y": 160
-            }
+            "name": "flow2",
+            "documentation": "",
+            "defaultflow": "",
+            "conditionalflow": "",
+            "conditionsequenceflow": ""
         }
     },
     {
+        "resourceId": "T_6",
+        "stencil": {
+            "id": "SequenceFlow"
+        },
+        "dockers": [
+            {
+                "x": 50.0,
+                "y": 30.0
+            },
+            {
+                "x": 192.0,
+                "y": 30.0
+            }
+        ],
+        "target": {
+            "resourceId": "T_3"
+        },
+        "outgoing": [
+            {
+                "resourceId": "T_3"
+            }
+        ],
+        "bounds": {
+            "lowerRight": {
+                "x": 0.0,
+                "y": 0.0
+            },
+            "upperLeft": {
+                "x": 0.0,
+                "y": 0.0
+            }
+        },
         "childShapes": [],
-        "dockers": [],
+        "properties": {
+            "overrideid": "",
+            "name": "flow1",
+            "documentation": "",
+            "defaultflow": "",
+            "conditionalflow": "",
+            "conditionsequenceflow": ""
+        }
+    },
+    {
+        "resourceId": "T_5",
         "stencil": {
             "id": "EndNoneEvent"
         },
+        "dockers": [],
         "outgoing": [],
+        "bounds": {
+            "lowerRight": {
+                "x": 720.0,
+                "y": 140.0
+            },
+            "upperLeft": {
+                "x": 680.0,
+                "y": 100.0
+            }
+        },
+        "childShapes": [],
         "properties": {
             "overrideid": "",
-            "name": "",
-            "executionlisteners": "",
-            "documentation": ""
+            "name": "结束",
+            "documentation": "",
+            "executionlisteners": ""
+        }
+    },
+    {
+        "resourceId": "T_4",
+        "stencil": {
+            "id": "UserTask"
         },
-        "resourceId": "4",
+        "dockers": [],
+        "outgoing": [
+            {
+                "resourceId": "T_8"
+            }
+        ],
         "bounds": {
-            "upperLeft": {
-                "x": 440,
-                "y": 100
-            },
             "lowerRight": {
-                "x": 480,
-                "y": 140
+                "x": 590.0,
+                "y": 160.0
+            },
+            "upperLeft": {
+                "x": 450.0,
+                "y": 80.0
+            }
+        },
+        "childShapes": [],
+        "properties": {
+            "overrideid": "",
+            "name": "任务2",
+            "documentation": "",
+            "formproperties": "{\"totalCount\":6,\"items\":[{\"formproperty_id\":1,\"formproperty_name\":\"ss\",\"formproperty_type\":\"\",\"formproperty_expression\":\"\",\"formproperty_variable\":\"sss\",\"formproperty_required\":\"No\",\"formproperty_readable\":\"No\",\"formproperty_writeable\":\"No\",\"formproperty_formvalues\":[]},{\"formproperty_id\":2,\"formproperty_name\":\"sdf\",\"formproperty_type\":\"\",\"formproperty_expression\":\"\",\"formproperty_variable\":\"fds\",\"formproperty_required\":\"No\",\"formproperty_readable\":\"No\",\"formproperty_writeable\":\"No\",\"formproperty_formvalues\":[]},{\"formproperty_id\":3,\"formproperty_name\":\"d\",\"formproperty_type\":\"\",\"formproperty_expression\":\"\",\"formproperty_variable\":\"s\",\"formproperty_required\":\"No\",\"formproperty_readable\":\"No\",\"formproperty_writeable\":\"No\",\"formproperty_formvalues\":[]},{\"formproperty_id\":4,\"formproperty_name\":\"ff\",\"formproperty_type\":\"\",\"formproperty_expression\":\"\",\"formproperty_variable\":\"ff\",\"formproperty_required\":\"No\",\"formproperty_readable\":\"No\",\"formproperty_writeable\":\"No\",\"formproperty_formvalues\":[]},{\"formproperty_id\":5,\"formproperty_name\":\"f\",\"formproperty_type\":\"\",\"formproperty_expression\":\"\",\"formproperty_variable\":\"f\",\"formproperty_required\":\"No\",\"formproperty_readable\":\"No\",\"formproperty_writeable\":\"No\",\"formproperty_formvalues\":[]},{\"formproperty_id\":6,\"formproperty_name\":\"df\",\"formproperty_type\":\"\",\"formproperty_expression\":\"\",\"formproperty_variable\":\"aa\",\"formproperty_required\":\"No\",\"formproperty_readable\":\"No\",\"formproperty_writeable\":\"No\",\"formproperty_formvalues\":[]}]}",
+            "formkeydefinition": "",
+            "executionlisteners": "",
+            "duedatedefinition": "",
+            "tasklisteners": "",
+            "asynchronousdefinition": "",
+            "exclusivedefinition": "",
+            "looptype": "",
+            "multiinstance_sequential": "",
+            "multiinstance_cardinality": "",
+            "multiinstance_condition": "",
+            "multiinstance_collection": "",
+            "multiinstance_variable": "",
+            "isforcompensation": "",
+            "usertaskassignment": {
+                "totalCount": 2,
+                "items": [
+                    {},
+                    {
+                        "assignment_type": "candidateUsers",
+                        "resourceassignmentexpr": "admin"
+                    }
+                ]
             }
         }
     },
     {
-        "childShapes": [],
-        "dockers": [
-            {
-                "x": 50,
-                "y": 30
-            },
-            {
-                "x": 192,
-                "y": 30
-            },
-            {
-                "x": 192,
-                "y": 30.000000000000007
-            },
-            {
-                "x": 50,
-                "y": 30
-            }
-        ],
+        "resourceId": "T_3",
         "stencil": {
-            "id": "SequenceFlow"
+            "id": "UserTask"
         },
+        "dockers": [],
         "outgoing": [
             {
-                "resourceId": "2"
+                "resourceId": "T_7"
             }
         ],
-        "properties": {},
-        "resourceId": "5",
-        "target": {
-            "resourceId": "3"
+        "bounds": {
+            "lowerRight": {
+                "x": 380.0,
+                "y": 160.0
+            },
+            "upperLeft": {
+                "x": 240.0,
+                "y": 80.0
+            }
+        },
+        "childShapes": [],
+        "properties": {
+            "overrideid": "",
+            "name": "任务1",
+            "documentation": "",
+            "formproperties": "{\"totalCount\":6,\"items\":[{\"formproperty_id\":1,\"formproperty_name\":\"ss\",\"formproperty_type\":\"\",\"formproperty_expression\":\"\",\"formproperty_variable\":\"sss\",\"formproperty_required\":\"No\",\"formproperty_readable\":\"No\",\"formproperty_writeable\":\"No\",\"formproperty_formvalues\":[]},{\"formproperty_id\":2,\"formproperty_name\":\"sdf\",\"formproperty_type\":\"\",\"formproperty_expression\":\"\",\"formproperty_variable\":\"fds\",\"formproperty_required\":\"No\",\"formproperty_readable\":\"No\",\"formproperty_writeable\":\"No\",\"formproperty_formvalues\":[]},{\"formproperty_id\":3,\"formproperty_name\":\"d\",\"formproperty_type\":\"\",\"formproperty_expression\":\"\",\"formproperty_variable\":\"s\",\"formproperty_required\":\"No\",\"formproperty_readable\":\"No\",\"formproperty_writeable\":\"No\",\"formproperty_formvalues\":[]},{\"formproperty_id\":4,\"formproperty_name\":\"ff\",\"formproperty_type\":\"\",\"formproperty_expression\":\"\",\"formproperty_variable\":\"ff\",\"formproperty_required\":\"No\",\"formproperty_readable\":\"No\",\"formproperty_writeable\":\"No\",\"formproperty_formvalues\":[]},{\"formproperty_id\":5,\"formproperty_name\":\"f\",\"formproperty_type\":\"\",\"formproperty_expression\":\"\",\"formproperty_variable\":\"f\",\"formproperty_required\":\"No\",\"formproperty_readable\":\"No\",\"formproperty_writeable\":\"No\",\"formproperty_formvalues\":[]},{\"formproperty_id\":6,\"formproperty_name\":\"df\",\"formproperty_type\":\"\",\"formproperty_expression\":\"\",\"formproperty_variable\":\"aa\",\"formproperty_required\":\"No\",\"formproperty_readable\":\"No\",\"formproperty_writeable\":\"No\",\"formproperty_formvalues\":[]}]}",
+            "formkeydefinition": "",
+            "executionlisteners": "",
+            "duedatedefinition": "",
+            "tasklisteners": "",
+            "asynchronousdefinition": "",
+            "exclusivedefinition": "",
+            "looptype": "",
+            "multiinstance_sequential": "",
+            "multiinstance_cardinality": "",
+            "multiinstance_condition": "",
+            "multiinstance_collection": "",
+            "multiinstance_variable": "",
+            "isforcompensation": "",
+            "usertaskassignment": {
+                "totalCount": 2,
+                "items": [
+                    {},
+                    {}
+                ]
+            }
         }
     },
     {
-        "childShapes": [],
-        "dockers": [
-            {
-                "x": 50,
-                "y": 30
-            },
-            {
-                "x": 192,
-                "y": 30
-            },
-            {
-                "x": 192,
-                "y": 30.000000000000007
-            },
-            {
-                "x": 50,
-                "y": 30
-            }
-        ],
+        "resourceId": "T_2",
         "stencil": {
-            "id": "SequenceFlow"
+            "id": "StartNoneEvent"
         },
+        "dockers": [],
         "outgoing": [
             {
-                "resourceId": "3"
+                "resourceId": "T_6"
             }
         ],
-        "properties": {},
-        "resourceId": "6",
-        "target": {
-            "resourceId": "4"
+        "bounds": {
+            "lowerRight": {
+                "x": 140.0,
+                "y": 140.0
+            },
+            "upperLeft": {
+                "x": 100.0,
+                "y": 100.0
+            }
+        },
+        "childShapes": [],
+        "properties": {
+            "initiator": "${initiator}",
+            "overrideid": "",
+            "name": "开始",
+            "documentation": "",
+            "formproperties": "{\"totalCount\":6,\"items\":[{\"formproperty_id\":\"\",\"formproperty_name\":\"\",\"formproperty_type\":\"\",\"formproperty_expression\":\"\",\"formproperty_variable\":\"sss\",\"formproperty_required\":\"No\",\"formproperty_readable\":\"No\",\"formproperty_writeable\":\"Yes\",\"formproperty_formvalues\":[]},{\"formproperty_id\":\"\",\"formproperty_name\":\"\",\"formproperty_type\":\"\",\"formproperty_expression\":\"\",\"formproperty_variable\":\"fds\",\"formproperty_required\":\"No\",\"formproperty_readable\":\"No\",\"formproperty_writeable\":\"No\",\"formproperty_formvalues\":[]},{\"formproperty_id\":\"\",\"formproperty_name\":\"\",\"formproperty_type\":\"\",\"formproperty_expression\":\"\",\"formproperty_variable\":\"s\",\"formproperty_required\":\"No\",\"formproperty_readable\":\"No\",\"formproperty_writeable\":\"No\",\"formproperty_formvalues\":[]},{\"formproperty_id\":\"\",\"formproperty_name\":\"\",\"formproperty_type\":\"\",\"formproperty_expression\":\"\",\"formproperty_variable\":\"ff\",\"formproperty_required\":\"No\",\"formproperty_readable\":\"No\",\"formproperty_writeable\":\"No\",\"formproperty_formvalues\":[]},{\"formproperty_id\":\"\",\"formproperty_name\":\"\",\"formproperty_type\":\"\",\"formproperty_expression\":\"\",\"formproperty_variable\":\"f\",\"formproperty_required\":\"No\",\"formproperty_readable\":\"No\",\"formproperty_writeable\":\"No\",\"formproperty_formvalues\":[]},{\"formproperty_id\":\"\",\"formproperty_name\":\"\",\"formproperty_type\":\"\",\"formproperty_expression\":\"\",\"formproperty_variable\":\"aa\",\"formproperty_required\":\"No\",\"formproperty_readable\":\"No\",\"formproperty_writeable\":\"No\",\"formproperty_formvalues\":[]}]}",
+            "formkeydefinition": "",
+            "executionlisteners": ""
         }
     }
-], "dockers": [], "stencil": {
-    "id": "BPMNDiagram"
-}, "outgoing": [], "properties": {
-    "process_id": "",
-    "globalTypeId": "",
-    "id": "4",
-    "flowFormId": "4",
-    "name": "sadfasfafasf",
-    "flowFormName": "test2",
-    "category": "",
-    "documentation": "\u963f\u65af\u987f\u53d1\u6c99\u53d1\u4e0a"
-}, "resourceId": "canvas", "bounds": {
-    "upperLeft": {
-        "x": 0,
-        "y": 0
-    },
-    "lowerRight": {
-        "x": 1280,
-        "y": 800
-    }
-}}
+]}

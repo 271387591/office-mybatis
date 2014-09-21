@@ -121,7 +121,7 @@ public class UserManagerTest extends BaseManagerTestCase {
     @Test
     @Rollback(value = false)
     public void testgetFormFieldByFormId() throws Exception {
-       String path=UserManagerTest.class.getClassLoader().getResource("jsoup.txt").getPath();
+       String path=UserManagerTest.class.getClassLoader().getResource("jsoup1.txt").getPath();
         String html= FileUtils.readFileToString(new File(path));
         FlowForm flowForm=new FlowForm();
         flowForm.setName("sdjflkjdslfkjdsljfl");

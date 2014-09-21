@@ -10,21 +10,24 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import java.io.Serializable;
 
 /**
  * Created by lihao on 9/9/14.
  */
 @Entity
-public class ProcessFormFiledInstance {
+public class ProcessElementForm implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @OneToOne
-    @JoinColumn(name = "formFieldId")
-    private FormField formField;
+    @Column
+    private String name;
+    @Column
+    protected String variable;
+    @Column
+    protected String type;
     @Column
     private Integer chmod;
-
     @Column
     private String expression;
     @ManyToOne
@@ -41,14 +44,6 @@ public class ProcessFormFiledInstance {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public FormField getFormField() {
-        return formField;
-    }
-
-    public void setFormField(FormField formField) {
-        this.formField = formField;
     }
 
     public Integer getChmod() {
@@ -81,5 +76,29 @@ public class ProcessFormFiledInstance {
 
     public void setExpression(String expression) {
         this.expression = expression;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getVariable() {
+        return variable;
+    }
+
+    public void setVariable(String variable) {
+        this.variable = variable;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

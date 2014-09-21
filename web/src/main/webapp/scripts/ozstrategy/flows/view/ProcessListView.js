@@ -281,11 +281,10 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
                 if(result.success){
                     var data=result.data,actRes,graRes;
                     if(data){
-                        actRes=Ext.decode(data.actRes,true);
                         graRes=data.graRes;
                     }
                     var moder = Ext.widget('modelerWindow',{
-                        processRecord:actRes.properties,
+                        processRecord:rec.data,
                         developer:false,
                         graRes:graRes,
                         animateTarget:me.getEl()

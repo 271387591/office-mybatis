@@ -23,4 +23,14 @@ public interface ProcessElementDao {
     void updateProcessElement(ProcessElement ProcessElement);
     void deleteProcessElement(Long id);
     void deleteProcessElementByDefId(Long defId);
+
+    void saveProcessElementRole(@Param("roleId")Long roleId,@Param("id")Long id);
+    void deleteProcessElementRoleById(@Param("id")Long id);
+
+    void saveProcessElementUser(@Param("userId")Long userId,@Param("id")Long id);
+    void deleteProcessElementUserById(@Param("id")Long id);
+    
+    void updateActResource(ProcessElement ProcessElement);
+
+    String loadElementActResource(Long id);
 }

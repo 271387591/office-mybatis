@@ -1,15 +1,14 @@
 package com.ozstrategy.webapp.controller.flows;
 
+import com.ozstrategy.exception.OzException;
 import com.ozstrategy.model.flows.ProcessDef;
-import com.ozstrategy.model.flows.ProcessElement;
-import com.ozstrategy.model.flows.ProcessFormFiledInstance;
 import com.ozstrategy.model.forms.FormField;
 import com.ozstrategy.service.flows.ProcessDefManager;
 import com.ozstrategy.service.forms.FlowFormManager;
 import com.ozstrategy.webapp.command.BaseResultCommand;
 import com.ozstrategy.webapp.command.JsonReaderResponse;
 import com.ozstrategy.webapp.command.flows.ProcessDefCommand;
-import com.ozstrategy.webapp.command.flows.ProcessFormFiledInstanceCommand;
+import com.ozstrategy.webapp.command.flows.ProcessElementFormCommand;
 import com.ozstrategy.webapp.controller.BaseController;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
@@ -61,34 +60,19 @@ public class ProcessDefController extends BaseController {
     }
     @RequestMapping(params = "method=listDefFormField")
     @ResponseBody
-    public JsonReaderResponse<ProcessFormFiledInstanceCommand> listDefFormField(HttpServletRequest request) {
+    public JsonReaderResponse<ProcessElementFormCommand> listDefFormField(HttpServletRequest request) {
         Long formId=parseLong(request.getParameter("formId"));
-        Long defId=parseLong(request.getParameter("defId"));
-        String taskKey=request.getParameter("taskKey");
-        List<ProcessFormFiledInstanceCommand> commands=new ArrayList<ProcessFormFiledInstanceCommand>();
+        List<ProcessElementFormCommand> commands=new ArrayList<ProcessElementFormCommand>();
         if(formId!=null){
-            if(defId!=null && StringUtils.isNotEmpty(taskKey)){
-                ProcessElement element = processDefManager.getProcessElementByTaskKeyAndDefId(defId,taskKey);
-                if(element!=null){
-                    List<ProcessFormFiledInstance> flowForms= processDefManager.getDefFormFieldByFormId(formId,element.getId());
-                    if(flowForms!=null && flowForms.size()>0){
-                        for(ProcessFormFiledInstance flowForm : flowForms){
-                            ProcessFormFiledInstanceCommand command=new ProcessFormFiledInstanceCommand(flowForm);
-                            commands.add(command);
-                        }
-                    }
-                }else{
-                    List<FormField> formFields=flowFormManager.getDefFormFieldByFormId(formId);
-                    if(formFields!=null && formFields.size()>0){
-                        for(FormField formField : formFields){
-                            ProcessFormFiledInstanceCommand command=new ProcessFormFiledInstanceCommand(formField);
-                            commands.add(command);
-                        }
-                    }
+            List<FormField> formFields=flowFormManager.getDefFormFieldByFormId(formId);
+            if(formFields!=null && formFields.size()>0){
+                for(FormField formField : formFields){
+                    ProcessElementFormCommand command=new ProcessElementFormCommand(formField);
+                    commands.add(command);
                 }
             }
         }
-        return new JsonReaderResponse<ProcessFormFiledInstanceCommand>(commands);
+        return new JsonReaderResponse<ProcessElementFormCommand>(commands);
     }
     @RequestMapping(params = "method=save")
     @ResponseBody
@@ -132,7 +116,6 @@ public class ProcessDefController extends BaseController {
     public BaseResultCommand update(HttpServletRequest request){
         try {
             Map<String,Object> map=requestMap(request);
-            String actRes=request.getParameter("actRes");
             String graRes=request.getParameter("graRes");
             Long id=parseLong(request.getParameter("id"));
             String name=request.getParameter("name");
@@ -153,7 +136,7 @@ public class ProcessDefController extends BaseController {
                 def.setFlowForm(flowFormManager.getNoCascadeFlowFormById(formId));
             }
             
-            processDefManager.update(def, actRes, graRes);
+            processDefManager.update(def, graRes);
         } catch (IOException e) {
             e.printStackTrace();
             logger.error("解析流程数据错误",e);
@@ -162,6 +145,9 @@ public class ProcessDefController extends BaseController {
             e.printStackTrace();
             logger.error("保存流程失败，详细异常:",e);
             return new BaseResultCommand("保存流程失败",Boolean.FALSE);
+        } catch (OzException e) {
+            e.printStackTrace();
+            return new BaseResultCommand(getMessage(e.getKey(),request),Boolean.FALSE);
         }
         return new BaseResultCommand("保存流程失败",Boolean.TRUE);
     }
@@ -174,12 +160,6 @@ public class ProcessDefController extends BaseController {
             if(id!=null){
                 ProcessDef def=processDefManager.getProcessDefById(id);
                 if(def!=null){
-                    if(StringUtils.isNotEmpty(def.getActResId())){
-                        String actRes = processDefManager.getRes(def.getActResId(),def.getActRes());
-                        if(StringUtils.isNotEmpty(actRes)){
-                            map.put("actRes",actRes);
-                        }
-                    }
                     if(StringUtils.isNotEmpty(def.getGraphResId())){
                         String graRes = processDefManager.getRes(def.getGraphResId(),def.getGraRes());
                         if(StringUtils.isNotEmpty(graRes)){

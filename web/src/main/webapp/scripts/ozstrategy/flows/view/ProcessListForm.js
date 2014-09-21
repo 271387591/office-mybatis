@@ -45,8 +45,8 @@ Ext.define('FlexCenter.flows.view.ProcessListForm',{
                 defaultType: 'textfield',
                 listeners:{
                     afterrender:function(form){
-                        if(me.process){
-                            form.getForm().setValues(me.process.properties);
+                        if(me.processRecord){
+                            form.getForm().setValues(me.processRecord);
                         }
                     }
                 },
@@ -57,9 +57,7 @@ Ext.define('FlexCenter.flows.view.ProcessListForm',{
                         scope: me,
                         handler: function () {
                             var value=me.down('#processListFormForm').getForm().getValues();
-                            if(me.process){
-                                me.process.properties=value;
-                            }
+                            
                             if(!me.buttonSave){
                                 me.fireEvent('addFlow',me,value);
                             }else{
@@ -67,13 +65,9 @@ Ext.define('FlexCenter.flows.view.ProcessListForm',{
                                 for(var i in value){
                                     data[i]=value[i];
                                 }
-                                if(me.process){
-                                    data.actRes=Ext.encode(me.process);
-                                }
                                 if(me.graRes){
                                     data.graRes=me.graRes;
                                 }
-                                me.process=null;
                                 me.fireEvent('updateFlow',data);
                             }
                         }

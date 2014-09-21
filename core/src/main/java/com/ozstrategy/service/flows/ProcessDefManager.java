@@ -1,8 +1,8 @@
 package com.ozstrategy.service.flows;
 
+import com.ozstrategy.exception.OzException;
 import com.ozstrategy.model.flows.ProcessDef;
 import com.ozstrategy.model.flows.ProcessElement;
-import com.ozstrategy.model.flows.ProcessFormFiledInstance;
 
 import java.io.IOException;
 import java.util.List;
@@ -21,8 +21,9 @@ public interface ProcessDefManager {
     Long checkNameExist(String name,Long typeId);
     ProcessDef getProcessDefById(Long id);
     void save(ProcessDef processDef);
-    void update(ProcessDef processDef, String actRes,String graRes) throws IOException,Exception;
-    List<ProcessFormFiledInstance> getDefFormFieldByFormId(Long formId,Long processElementId);
+    void update(ProcessDef processDef,String graRes) throws IOException,OzException;
     String getRes(String resId,String resName);
     ProcessElement getProcessElementByTaskKeyAndDefId(Long defId,String taskKey);
+    
+    void deployed(ProcessDef processDef) throws IOException,OzException;
 }

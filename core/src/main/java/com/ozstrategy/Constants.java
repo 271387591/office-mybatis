@@ -65,6 +65,10 @@ public final class Constants {
   /** DOCUMENT ME! */
   public static final String JdbcUrl_oralce = "jdbc:oracle:thin:@{0}:{1}:{2}";
 
+    public static final String MESSAGE_PROCESS_SAVE_USER = "message.error.save.process.fail";
+    public static final String MESSAGE_PROCESS_DEPLOYED_NULL = "message.error.deployed.null";
+    public static final String MESSAGE_PROCESS_DEPLOYED_PROCESS_NOT_FOUND = "message.error.process.not.found";
+
     public static final String TASK_SIGN_NAME = "Sign_";
     public static final String TASK_SIGN_subType = "subType";
     public static final String TASK_SIGN_signType = "signType";
