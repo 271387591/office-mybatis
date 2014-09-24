@@ -19,6 +19,7 @@ public interface FormFieldDao{
     void saveFormField(FormField formField);
     void updateFormField(FormField formField);
     List<FormField> getFormFieldByFormId(Long formId);
-    List<FormField> getDefFormFieldByFormId(Long formId);
+    
+    void deleteChild(Long id);
     
 }

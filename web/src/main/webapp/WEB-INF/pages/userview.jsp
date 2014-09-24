@@ -2,8 +2,15 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <html>
+<%
+    String language = response.getLocale().toString();
+    if ("en_US".equalsIgnoreCase(language)) {
+        language = "en";
+    }
+%>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <c:set var="language"><%=language %></c:set>
     <%--<title>Flex Center Desktop</title>--%>
     <%--<link href="<c:url value='/favicon.ico'/>" rel="icon" type="image/x-icon" />--%>
     <%--<link href="<c:url value='/favicon.ico'/>" rel="shortcut icon" type="image/x-icon" />--%>
@@ -30,12 +37,17 @@
     <script type="text/javascript" src="<c:url value="/jscripts/desktopRes.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/jscripts/jscriptRes.js"/>"></script>
     <%--<script type="text/javascript" src="<c:url value='/desktop/classes.js'/>"></script>--%>
-
+    
+    <script type="text/javascript" src="<c:url value='/scripts/ext/locale/ext-lang-${language}.js'/>"></script>
 
     <script type="text/javascript">
         extTheme = '<c:url value="/scripts/ext/resources/css/"/>';
         basePath = '<c:url value="/"/>';
+        mxBasePath = basePath+'mxgraph/src';
     </script>
+
+    <script type="text/javascript" src="<c:url value="/mxgraph/src/js/mxClient.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/mxgraph/src/js/mxModeler.js"/>"></script>
 
     <!-- Loads and initiaizes the library -->
     <%--<script type="text/javascript" src='<c:url value="/mxgraph/js/mxClient.js"/>'></script>--%>
@@ -121,7 +133,6 @@
         var apps = {};
         Ext.require([
             'FlexCenter.Viewport',
-            'Oz.util.Utils',
             'Ext.data.ArrayStore',
             'Ext.util.CSS'
         ]);

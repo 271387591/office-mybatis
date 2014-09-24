@@ -1,12 +1,11 @@
 package com.ozstrategy.webapp.controller.forms;
 
 import com.ozstrategy.model.forms.FlowForm;
-import com.ozstrategy.model.forms.FormField;
+import com.ozstrategy.model.forms.FlowFormStatus;
 import com.ozstrategy.service.forms.FlowFormManager;
 import com.ozstrategy.webapp.command.BaseResultCommand;
 import com.ozstrategy.webapp.command.JsonReaderResponse;
 import com.ozstrategy.webapp.command.forms.FlowFormCommand;
-import com.ozstrategy.webapp.command.forms.FormFieldCommand;
 import com.ozstrategy.webapp.controller.BaseController;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +27,6 @@ import java.util.Map;
 public class FlowFormController extends BaseController{
     @Autowired
     private FlowFormManager flowFormManager;
-    
     @RequestMapping(params = "method=listFlowForms")
     @ResponseBody
     public JsonReaderResponse<FlowFormCommand> listFlowForms(HttpServletRequest request) {
@@ -73,11 +71,33 @@ public class FlowFormController extends BaseController{
     public BaseResultCommand multiRemove(HttpServletRequest request){
         String ids=request.getParameter("ids");
         if(StringUtils.isNotEmpty(ids)){
-            flowFormManager.multiRemove(ids.split(","));
+            try{
+                flowFormManager.multiRemove(ids.split(","));
+            }catch (Exception e){
+                logger.error("删除流程失败",e);
+                return new BaseResultCommand("删除流程失败",false);
+            }
             return new BaseResultCommand("",true);
         }
         return new BaseResultCommand("",false);
     }
+    @RequestMapping(params = "method=publish")
+    @ResponseBody
+    public BaseResultCommand publish(HttpServletRequest request){
+        String ids=request.getParameter("ids");
+        if(StringUtils.isNotEmpty(ids)){
+            try{
+                flowFormManager.publish(ids.split(","));
+            }catch (Exception e){
+                logger.error("发布流程失败",e);
+                return new BaseResultCommand("发布流程失败",false);
+            }
+            ;
+            return new BaseResultCommand("",true);
+        }
+        return new BaseResultCommand("",false);
+    }
+    
     
     private BaseResultCommand saveOrUpdate(HttpServletRequest request,boolean save){
         FlowForm        flowForm        = null;
@@ -86,6 +106,7 @@ public class FlowFormController extends BaseController{
         String description=request.getParameter("description");
         String content=request.getParameter("content");
         String displayName=request.getParameter("displayName");
+        String jsonHtml=request.getParameter("jsonHtml");
         try{
             if(StringUtils.isNotEmpty(id)){
                 flowForm=flowFormManager.getFlowFormByName(name);
@@ -106,11 +127,12 @@ public class FlowFormController extends BaseController{
             flowForm.setDisplayName(displayName);
             flowForm.setContent(content);
             flowForm.setDescription(description);
-            flowFormManager.saveOrUpdate(flowForm);
+            flowForm.setStatus(FlowFormStatus.Draft.name());
+            flowFormManager.saveOrUpdate(flowForm,jsonHtml);
             return new BaseResultCommand("",true);
         }catch (Exception e){
-            log.error(e.getMessage(),e);
-        }
+            logger.error(e.getMessage(), e);
+        } 
         return new BaseResultCommand(getMessage("message.error.saveuser.fail",request),Boolean.FALSE);
     }
 }

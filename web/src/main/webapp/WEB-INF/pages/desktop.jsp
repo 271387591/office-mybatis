@@ -51,6 +51,7 @@
 //        mxDefaultLanguage='zh_CN';
     </script>
     <script type="text/javascript" src="<c:url value="/mxgraph/src/js/mxClient.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/mxgraph/src/js/mxModeler.js"/>"></script>
     <%--<script type="text/javascript" src="<c:url value="/mxgraph/js/mxApplication.js"/>"></script>--%>
 
     <!-- Loads and initiaizes the library -->
@@ -129,7 +130,6 @@
       'Ext.data.ArrayStore',
       'Ext.util.CSS'
     ]);
-
     var flexCenterApp;
     var treeRegister;
     var surveyRegister;

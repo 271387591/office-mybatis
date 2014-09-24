@@ -9,6 +9,8 @@ Ext.define('FlexCenter.forms.model.FormField',{
         'label',
 //        'xtype',
 //        'html',
+        'dataType',
+        'dateFormat',
         'flowFormId',
         {name:'createDate',convert:function(v){
             return Ext.util.Format.date(new Date(v), 'Y-m-d H:i:s');

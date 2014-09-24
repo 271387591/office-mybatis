@@ -28,7 +28,7 @@ import java.util.Map;
  */
 @Controller
 public class BaseController {
-    protected final transient Log log = LogFactory.getLog(getClass());
+    protected final transient Log logger = LogFactory.getLog(getClass());
     @Autowired
     private ApplicationContext context;
     protected static final List emptyData= Collections.EMPTY_LIST;
@@ -126,7 +126,7 @@ public class BaseController {
             response.setContentType("text/html;charset=UTF-8");
             response.getWriter().write("{\"communicate\":"+str+",\"result\":\""+result+"\"}");
         }catch(IOException e){
-            log.error(e.getMessage(),e);
+            logger.error(e.getMessage(),e);
         }
     }
 }

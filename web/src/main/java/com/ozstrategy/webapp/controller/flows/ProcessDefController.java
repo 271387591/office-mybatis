@@ -2,9 +2,15 @@ package com.ozstrategy.webapp.controller.flows;
 
 import com.ozstrategy.exception.OzException;
 import com.ozstrategy.model.flows.ProcessDef;
+import com.ozstrategy.model.forms.FlowForm;
+import com.ozstrategy.model.forms.FlowFormStatus;
 import com.ozstrategy.model.forms.FormField;
+import com.ozstrategy.model.userrole.Role;
+import com.ozstrategy.model.userrole.User;
 import com.ozstrategy.service.flows.ProcessDefManager;
 import com.ozstrategy.service.forms.FlowFormManager;
+import com.ozstrategy.service.userrole.RoleManager;
+import com.ozstrategy.service.userrole.UserManager;
 import com.ozstrategy.webapp.command.BaseResultCommand;
 import com.ozstrategy.webapp.command.JsonReaderResponse;
 import com.ozstrategy.webapp.command.flows.ProcessDefCommand;
@@ -12,8 +18,6 @@ import com.ozstrategy.webapp.command.flows.ProcessElementFormCommand;
 import com.ozstrategy.webapp.controller.BaseController;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,8 +29,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by lihao on 9/10/14.
@@ -38,8 +44,12 @@ public class ProcessDefController extends BaseController {
     ProcessDefManager processDefManager;
     @Autowired
     FlowFormManager flowFormManager;
+    @Autowired
+    UserManager userManager;
+    @Autowired
+    RoleManager roleManager;
     
-    private Log logger= LogFactory.getLog(ProcessDefController.class);
+    
     
     @RequestMapping(params = "method=listProcessDefs")
     @ResponseBody
@@ -64,6 +74,10 @@ public class ProcessDefController extends BaseController {
         Long formId=parseLong(request.getParameter("formId"));
         List<ProcessElementFormCommand> commands=new ArrayList<ProcessElementFormCommand>();
         if(formId!=null){
+            FlowForm flowForm=flowFormManager.getFlowFormById(formId);
+            if(flowForm == null || StringUtils.equals(flowForm.getStatus(), FlowFormStatus.Draft.name())){
+                return new JsonReaderResponse<ProcessElementFormCommand>(commands);
+            }
             List<FormField> formFields=flowFormManager.getDefFormFieldByFormId(formId);
             if(formFields!=null && formFields.size()>0){
                 for(FormField formField : formFields){
@@ -90,10 +104,12 @@ public class ProcessDefController extends BaseController {
             BeanUtils.populate(def, map);
             def.setCreateDate(new Date());
             def.setLastUpdateDate(new Date());
-            def.setVersion(1);
             String formId=request.getParameter("flowFormId");
             if(StringUtils.isNotEmpty(formId)){
                 def.setFlowForm(flowFormManager.getNoCascadeFlowFormById(parseLong(formId)));
+                if(def.getFlowForm()==null){
+                    return new BaseResultCommand(getMessage("流程表单已删除",request),Boolean.FALSE);
+                }
             }
             processDefManager.save(def);
         } catch (InvocationTargetException e) {
@@ -134,6 +150,9 @@ public class ProcessDefController extends BaseController {
             Long formId=parseLong(request.getParameter("flowFormId"));
             if(formId!=null){
                 def.setFlowForm(flowFormManager.getNoCascadeFlowFormById(formId));
+                if(def.getFlowForm()==null){
+                    return new BaseResultCommand(getMessage("流程表单已删除",request),Boolean.FALSE);
+                }
             }
             
             processDefManager.update(def, graRes);
@@ -141,14 +160,14 @@ public class ProcessDefController extends BaseController {
             e.printStackTrace();
             logger.error("解析流程数据错误",e);
             return new BaseResultCommand("解析流程数据错误",Boolean.FALSE);
+        } catch (OzException e) {
+            e.printStackTrace();
+            return new BaseResultCommand(getMessage(e.getKey(),request),Boolean.FALSE);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("保存流程失败，详细异常:",e);
             return new BaseResultCommand("保存流程失败",Boolean.FALSE);
-        } catch (OzException e) {
-            e.printStackTrace();
-            return new BaseResultCommand(getMessage(e.getKey(),request),Boolean.FALSE);
-        }
+        } 
         return new BaseResultCommand("保存流程失败",Boolean.TRUE);
     }
     @RequestMapping(params = "method=getRes")
@@ -170,10 +189,79 @@ public class ProcessDefController extends BaseController {
             }
         }catch (Exception e) {
             e.printStackTrace();
-            logger.error("获取流程资源失败",e);
+            logger.error("获取流程资源失败", e);
             return new BaseResultCommand("获取流程资源失败",Boolean.FALSE);
         }
         return new BaseResultCommand(map);
     }
+    @RequestMapping(params = "method=deploy")
+    @ResponseBody
+    public BaseResultCommand deploy(HttpServletRequest request){
+        Map<String,String> map=new HashMap<String, String>();
+        try {
+            Long id = parseLong(request.getParameter("id"));
+            if(id!=null){
+                ProcessDef def=processDefManager.getProcessDefById(id);
+                if(def!=null){
+                    processDefManager.deployed(def);
+                }
+            }
+        }catch (OzException e) {
+            e.printStackTrace();
+            logger.error(getMessage(e.getKey(),request),e);
+            return new BaseResultCommand(getMessage(e.getKey(),request),Boolean.FALSE);
+        }catch (Exception e) {
+            e.printStackTrace();
+            logger.error("获取流程资源失败",e);
+            return new BaseResultCommand("获取流程资源失败",Boolean.FALSE);
+        } 
+        return new BaseResultCommand(map);
+    }
+    @RequestMapping(params = "method=authorization")
+    @ResponseBody
+    public BaseResultCommand authorization(HttpServletRequest request){
+        Map<String,String> map=new HashMap<String, String>();
+        try {
+            Long id = parseLong(request.getParameter("id"));
+            if(id!=null){
+                ProcessDef def=processDefManager.getProcessDefById(id);
+                if(def!=null){
+                    String userIds=request.getParameter("userIds");
+                    Set<User> userSet=new HashSet<User>();
+                    if(StringUtils.isNotEmpty(userIds)){
+                        String[] users=userIds.split(",");
+                        for(String userId : users){
+                            User user=userManager.getUserById(parseLong(userId));
+                            if(user!=null){
+                                userSet.add(user);
+                            }
+                        }
+                    }
+                    String roleIds=request.getParameter("roleIds");
+                    Set<Role> roleSet=new HashSet<Role>();
+                    if(StringUtils.isNotEmpty(roleIds)){
+                        String[] roles=roleIds.split(",");
+                        for(String roleId : roles){
+                            Role role=roleManager.getRoleById(parseLong(roleId));
+                            if(role!=null){
+                                roleSet.add(role);
+                            }
+                        }
+                    }
+                    def.getUsers().clear();
+                    def.getUsers().addAll(userSet);
+                    def.getRoles().clear();
+                    def.getRoles().addAll(roleSet);
+                    processDefManager.authorizationProcessDef(def);
+                }
+            }
+        }catch (Exception e) {
+            logger.error("流程授权失败",e);
+            return new BaseResultCommand("流程授权失败",Boolean.FALSE);
+        } 
+        return new BaseResultCommand(map);
+    }
+    
+    
     
 }

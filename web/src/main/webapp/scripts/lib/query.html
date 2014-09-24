@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-cn">
+    <meta charset="UTF-8">
+    <title></title>
+    <script type="text/javascript" src="jquery-1.7.1.min.js"></script>
+</head>
+<body>
+
+<div id="div1">
+    <table border="1" cellpadding="1" cellspacing="1" style="width:800px" xtype="table">
+        <tbody>
+        <tr>
+            <th colspan="4">标题</th>
+        </tr>
+        <tr>
+            <th style="width: 200px;">字段一</th>
+            <td><input name="at" txtlabel="at" type="string" xtype="textfield" /></td>
+            <th style="width: 200px;"><strong>字段二</strong></th>
+            <td><textarea name="bt" txtlabel="bt" xtype="textareafield"></textarea></td>
+        </tr>
+        <tr>
+            <th><strong>字段三</strong></th>
+            <td><select name="ct" txtlabel="c" xtype="combo"><option value="1">1</option><option value="2">2</option></select></td>
+            <th><strong>字段四</strong></th>
+            <td><input name="at9" txtlabel="at9" type="string" xtype="textfield" /></td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                <table column="5" isgrid="true" index="1" name="dee" txtlabel="ddd" style="border-collapse:collapse; border:1px solid blue; width:500px" xtype="detailGrid">
+                    <tbody>
+                    <tr style="border: 1px solid blue;">
+                        <th style="border: 1px solid blue;">1</th>
+                        <th style="border: 1px solid blue;">2</th>
+                        <th style="border: 1px solid blue;">3</th>
+                        <th style="border: 1px solid blue;">4</th>
+                        <th style="border: 1px solid blue;">5</th>
+                    </tr>
+                    <tr style="border: 1px solid blue;">
+                        <td style="border: 1px solid blue;"><input name="a" txtlabel="a" type="string" xtype="textfield" /></td>
+                        <td style="border: 1px solid blue;"><textarea name="b" txtlabel="b" xtype="textareafield"></textarea></td>
+                        <td style="border: 1px solid blue;"><select name="c" txtlabel="c" xtype="combo"><option value="1">1</option><option value="2">2</option></select></td>
+                        <td style="border: 1px solid blue;"><boxgroup multiple="true" name="d" txtlabel="d" xtype="boxgroup"><span><input name="d" txtlabel="1" type="checkbox" value="1" /><span>1</span></span><span><input name="d" txtlabel="2" type="checkbox" value="2" /><span>2</span></span></boxgroup></td>
+                        <td style="border: 1px solid blue;"><boxgroup name="e" txtlabel="e" xtype="boxgroup"><span><input name="e" txtlabel="1" type="radio" value="1" /><span>1</span></span><span><input name="e" txtlabel="2" type="radio" value="2" /><span>2</span></span></boxgroup></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                <table column="5" isgrid="true" index="2" name="dee1" txtlabel="ddd1" style="border-collapse:collapse; border:1px solid blue; width:500px" xtype="detailGrid">
+                    <tbody>
+                    <tr style="border: 1px solid blue;">
+                        <th style="border: 1px solid blue;">1</th>
+                        <th style="border: 1px solid blue;">2</th>
+                        <th style="border: 1px solid blue;">3</th>
+                        <th style="border: 1px solid blue;">4</th>
+                        <th style="border: 1px solid blue;">5</th>
+                    </tr>
+                    <tr style="border: 1px solid blue;">
+                        <td style="border: 1px solid blue;"><input name="a1" txtlabel="a" type="string" xtype="textfield" /></td>
+                        <td style="border: 1px solid blue;"><textarea name="b1" txtlabel="b" xtype="textareafield"></textarea></td>
+                        <td style="border: 1px solid blue;"><select name="c1" txtlabel="c" xtype="combo"><option value="1">1</option><option value="2">2</option></select></td>
+                        <td style="border: 1px solid blue;"><boxgroup multiple="true" name="d1" txtlabel="d" xtype="boxgroup"><span><input name="d" txtlabel="1" type="checkbox" value="1" /><span>1</span></span><span><input name="d" txtlabel="2" type="checkbox" value="2" /><span>2</span></span></boxgroup></td>
+                        <td style="border: 1px solid blue;"><boxgroup name="e1" txtlabel="e" xtype="boxgroup"><span><input name="e" txtlabel="1" type="radio" value="1" /><span>1</span></span><span><input name="e" txtlabel="2" type="radio" value="2" /><span>2</span></span></boxgroup></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript">
+    var value= $('#div1').html();
+    var form = document.createElement('form');
+    form.innerHTML = value;
+    var selectors=[
+        'input[xtype=textfield]',
+        'textarea[xtype=textareafield]',
+        'input[xtype=datefield]',
+        'select[xtype=combo]',
+        'boxgroup[xtype=boxgroup]',
+        'input[xtype=userselector]',
+        'input[xtype=depselector]',
+        'table[xtype=detailGrid]',
+        'input[xtype=posselector]'
+    ];
+    var table=$('table[xtype=table]',form);
+    var detailGrids=$('table[xtype=detailGrid]',table);
+    var createObj=function(item){
+        var obj={};
+        obj.name=item.attr('name');
+        obj.label=item.attr('txtlabel');
+        obj.xtype=item.attr('xtype');
+        obj.dataType=item.attr('dataType')?item.attr('dataType'):'string';
+        obj.dataType=obj.xtype=='detailGrid'?'array':obj.dataType;
+        obj.dateFormat=item.attr('txtvaluetype');
+        return obj;
+    }
+    var items=[];
+    for(var i=0;i<selectors.length;i++){
+        var obj;
+        var item=$(selectors[i],table).not($(selectors[i],detailGrids));
+        item.each(function(index,it){
+            obj=createObj($(it));
+            items.push(obj);
+        });
+    }
+    
+    for(var i=0;i<items.length;i++){
+        var item=items[i];
+        if(item.xtype=='detailGrid'){
+            var children = $('table[xtype=detailGrid][name='+item.name+']',table);
+            var childs=[];
+            for(var m=0;m<selectors.length;m++){
+                var sel=$(selectors[m],children);
+                sel.each(function(index,se){
+                    var obj=createObj($(se));
+                    childs.push(obj);
+                })
+            }
+            item.children=childs;
+        }
+       
+    }
+    console.log(items); 
+    
+    
+    
+    
+    
+    
+    
+    
+
+    var textareas=$('textarea[xtype=textareafield]',table).not($('textarea[xtype=textareafield]',detailGrids));
+//    console.log(textareas)
+    
+    
+    
+</script>
+    
+
+</body>
+</html>

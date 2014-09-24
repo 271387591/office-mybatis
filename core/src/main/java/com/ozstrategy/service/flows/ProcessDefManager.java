@@ -25,5 +25,7 @@ public interface ProcessDefManager {
     String getRes(String resId,String resName);
     ProcessElement getProcessElementByTaskKeyAndDefId(Long defId,String taskKey);
     
-    void deployed(ProcessDef processDef) throws IOException,OzException;
+    void deployed(ProcessDef processDef) throws IOException,OzException,Exception;
+    
+    void authorizationProcessDef(ProcessDef def) throws Exception;
 }

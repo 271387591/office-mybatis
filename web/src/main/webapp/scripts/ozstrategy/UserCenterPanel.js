@@ -4,11 +4,11 @@ Ext.define('FlexCenter.UserCenterPanel', {
 	requires: [
 		'Ext.ux.TabCloseMenu',
 		'FlexCenter.UserToolbar',
-        'FlexCenter.activiti.view.ProcessDefinitionView',
-        'FlexCenter.activiti.view.ApplyProcessDetailView',
-        'FlexCenter.activiti.view.ApplyProcessView',
-        'FlexCenter.activiti.view.ClawBackTaskView',
-        'FlexCenter.activiti.view.ATaskView'
+//        'FlexCenter.activiti.view.ProcessDefinitionView',
+//        'FlexCenter.activiti.view.ApplyProcessDetailView',
+//        'FlexCenter.activiti.view.ApplyProcessView',
+//        'FlexCenter.activiti.view.ClawBackTaskView',
+//        'FlexCenter.activiti.view.ATaskView'
 //		'FlexCenter.view.home.IndexView'
 	],
 

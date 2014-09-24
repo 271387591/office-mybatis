@@ -11,9 +11,10 @@ public class FormFieldCommand extends BaseObjectCommand {
     private String name;
     private String label;
     private String xtype;
-    private String html;
     private Long flowFormId;
     private String dataType;
+    private String dateFormat;
+    
 
     public FormFieldCommand(FormField formField) {
         super(formField);
@@ -21,11 +22,11 @@ public class FormFieldCommand extends BaseObjectCommand {
         this.name= formField.getName();
         this.label= formField.getLabel();
         this.xtype= formField.getXtype();
-        this.html= formField.getHtml();
         this.dataType= formField.getDataType();
         this.flowFormId= formField.getFlowForm()!=null? formField.getFlowForm().getId():null;
+        this.dateFormat=formField.getDateFormat();
     }
-
+    
     public Long getId() {
         return id;
     }
@@ -58,12 +59,12 @@ public class FormFieldCommand extends BaseObjectCommand {
         this.xtype = xtype;
     }
 
-    public String getHtml() {
-        return html;
+    public String getDateFormat() {
+        return dateFormat;
     }
 
-    public void setHtml(String html) {
-        this.html = html;
+    public void setDateFormat(String dateFormat) {
+        this.dateFormat = dateFormat;
     }
 
     public Long getFlowFormId() {

@@ -285,7 +285,7 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
             }
         }else {
             Long formId=processDef.getFlowForm().getId();
-            List<FormField> formFields=formFieldDao.getDefFormFieldByFormId(formId);
+            List<FormField> formFields=formFieldDao.getFormFieldByFormId(formId);
             if(formFields!=null && formFields.size()>0){
                 for(FormField formField : formFields){
                     ProcessElementForm instance=new ProcessElementForm();
@@ -319,7 +319,7 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
     }
 
     @Transactional(rollbackFor = Throwable.class)
-    public void deployed(ProcessDef processDef) throws IOException, OzException {
+    public void deployed(ProcessDef processDef) throws IOException, OzException,Exception {
         ObjectMapper objectMapper=new ObjectMapper();
         Set<ProcessElement> elements=processDef.getElements();
         ObjectNode objectNode= ActivityJsonConverUtil.createProcess(processDef);
@@ -339,9 +339,15 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
         objectNode.put(ActivityJsonConverUtil.EDITOR_CHILD_SHAPES,arrayNode);
         BpmnJsonConverter jsonConverter=new BpmnJsonConverter();
         BpmnModel model = jsonConverter.convertToBpmnModel(objectNode);
+        
+        
+        
         BpmnXMLConverter bpmnXMLConverter=new BpmnXMLConverter();
         byte[] xml=bpmnXMLConverter.convertToXML(model,"UTF-8");
         System.out.println(new String(xml));
+        
+        
+        
         Deployment deployment = repositoryService
                 .createDeployment()
                 .addBpmnModel(processDef.getActRes(), model)
@@ -362,5 +368,23 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
         ProcessDefVersion version=new ProcessDefVersion();
         version = version.copy(processDef);
         processDefVersionDao.saveProcessDefVersion(version);
+    }
+
+    @Transactional(rollbackFor = Throwable.class)
+    public void authorizationProcessDef(ProcessDef def) throws Exception{
+        Set<User> users=def.getUsers();
+        if(users!=null && users.size()>0){
+            processDefDao.deleteProcessDefUser(def.getId());
+            for(User user : users){
+                processDefDao.saveProcessDefUser(user.getId(),def.getId());
+            }
+        }
+        Set<Role> roles=def.getRoles();
+        if(roles!=null && roles.size()>0){
+            processDefDao.deleteProcessDefRole(def.getId());
+            for(Role role : roles){
+                processDefDao.saveProcessDefRole(role.getId(),def.getId());
+            }
+        }
     }
 }

@@ -9,17 +9,40 @@ Ext.define('FlexCenter.forms.view.CKEditor', {
     extend: 'Ext.form.field.TextArea',
     alias: 'widget.ckeditor',
     id: 'ckeditor',
-    value:'<table xtype="table" border="1" cellpadding="1" cellspacing="1" style="border-collapse:collapse; border:1px solid;width:1000px"><tbody><tr><th colspan="4">标题</th></tr><tr><th style="width: 200px;">字段一</th><td>&nbsp;</td><th style="width: 200px;"><strong>字段二</strong></th><td>&nbsp;</td></tr><tr><th><strong>字段三</strong></th><td>&nbsp;</td><th><strong>字段四</strong></th><td>&nbsp;</td></tr></tbody></table>',
-    onRender : function(ct, position){
-        if(!this.el){
-            this.defaultAutoCreate = {
-                tag: "textarea",
-                autocomplete: "off"
-            };
+    value:'<table xtype="table" border="1" cellpadding="1" cellspacing="1" style="border-collapse:collapse; border:1px solid;width:100%"><tbody><tr><th colspan="4">标题</th></tr><tr><th style="width: 200px;">字段一</th><td>&nbsp;</td><th style="width: 200px;"><strong>字段二</strong></th><td>&nbsp;</td></tr><tr><th><strong>字段三</strong></th><td>&nbsp;</td><th><strong>字段四</strong></th><td>&nbsp;</td></tr></tbody></table>',
+    listeners:{
+        afterrender:function(f){
+            this.editor = CKEDITOR.replace(this.inputEl.id,{
+                toolbarStartupExpanded:true,
+                language:'zh-cn',
+                height:445,
+                extraPlugins:'dforms,sourcearea',
+                baseFloatZIndex:19900,
+                toolbar:[
+                    [ 'Source'],
+                    [ 'Cut','Copy','Paste','PasteText','PasteFromWord','-','Undo','Redo','Find','Replace','-','SelectAll' ],
+                    [ 'HorizontalRule','Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat','NumberedList','BulletedList','-','Outdent','Indent','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl' ],
+                    [ 'TextField','Textarea','Select','BoxGroup','DateField','Grid','UserSelector','DepSelector','PosSelector'],
+                    [ 'FontSize','TextColor','BGColor' ]
+                ]
+
+            });
+            this.editor.setData('');
+            this.editor.setData(f.getValue()? f.getValue():this.value);
         }
-        this.callParent(arguments);
-        this.editor = CKEDITOR.replace(this.inputEl.id,{
-        }
+    },
+    
+//    onRender : function(ct, position){
+//        if(!this.el){
+//            this.defaultAutoCreate = {
+//                tag: "textarea",
+//                autocomplete: "off"
+//            };
+//        }
+//        this.callParent(arguments);
+//        this.editor = CKEDITOR.replace(this.inputEl.id,{
+//                
+//        });
 //            ,{
 //                language: 'zh-cn',
 //                uiColor: '#AADC6E',
@@ -59,9 +82,9 @@ Ext.define('FlexCenter.forms.view.CKEditor', {
 //                extraPlugins :'dforms,myButton,sourcearea'
 //
 //        }
-);
+//);
 //        CKFinder.setupCKEditor(this.editor,'scripts/ckfinder/');
-    },
+//    },
 
     setValue: function(value) {
         this.callParent(arguments);

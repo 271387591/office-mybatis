@@ -172,7 +172,7 @@ Ext.define("Ext.ux.form.FormDataCustomFiled", {
      * @method
      */
     setValue: function(v){
-        Oz.form.FormDataCustomFiled.superclass.setValue.call(this, v);
+        Ext.ux.form.FormDataCustomFiled.superclass.setValue.call(this, v);
     },
 
     reset : function(){

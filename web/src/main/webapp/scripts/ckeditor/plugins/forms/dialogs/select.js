@@ -92,7 +92,7 @@ CKEDITOR.dialog.add("select", function (c) {
                 children :
                     [
                         {id: "txtName",
-                            type: "text", label: c.lang.common.name, "default": "", accessKey: "N",validate : CKEDITOR.dialog.validate.notEmpty('下拉框名称不能为空'), setup: function (a, b) {
+                            type: "text", label: c.lang.common.name, "default": "", accessKey: "N",validate : CKEDITOR.dialog.validate.notEmpty(c.lang.dforms.dcommon.validatename), setup: function (a, b) {
                             "clear" == a ? this.setValue(this["default"] || "") : "select" == a && b.getAttribute('xtype') == null && this.setValue(b.data("cke-saved-name") || b.getAttribute("name") || "")
                         }, commit: function (a) {
                             this.getValue() ? a.data("cke-saved-name", this.getValue()) : (a.data("cke-saved-name", !1), a.removeAttribute("name"))
@@ -100,7 +100,7 @@ CKEDITOR.dialog.add("select", function (c) {
                         {
                             id : 'txtlabel',
                             type : 'text',
-                            validate : CKEDITOR.dialog.validate.notEmpty('标签名称不能为空'),
+                            validate : CKEDITOR.dialog.validate.notEmpty(c.lang.dforms.dcommon.validatetextlable),
                             label : c.lang.dforms.dcommon.txtlabel,
                             'default' : '',
                             accessKey : 'V',
@@ -122,18 +122,18 @@ CKEDITOR.dialog.add("select", function (c) {
             }, setup: function (a, b) {
                 "clear" == a ? this.setValue("") : "option" == a && b.getAttribute("selected") && this.setValue(b.$.value)
             }},
-            {type: "hbox", widths: ["175px", "170px"], children: [
-                {id: "txtSize", type: "text", labelLayout: "horizontal", label: c.lang.forms.select.size, "default": "", accessKey: "S", style: "width:175px", validate: function () {
-                    var a = CKEDITOR.dialog.validate.integer(c.lang.common.validateNumberFailed);
-                    return"" === this.getValue() || a.apply(this)
-                }, setup: function (a, b) {
-                    "select" == a && this.setValue(b.getAttribute("size") || "");
-                    CKEDITOR.env.webkit && this.getInputElement().setStyle("width", "86px")
-                }, commit: function (a) {
-                    this.getValue() ? a.setAttribute("size", this.getValue()) : a.removeAttribute("size")
-                }},
-                {type: "html", html: "<span>" + CKEDITOR.tools.htmlEncode(c.lang.forms.select.lines) + "</span>"}
-            ]},
+//            {type: "hbox", widths: ["175px", "170px"], children: [
+//                {id: "txtSize", type: "text", labelLayout: "horizontal", label: c.lang.forms.select.size, "default": "", accessKey: "S", style: "width:175px", validate: function () {
+//                    var a = CKEDITOR.dialog.validate.integer(c.lang.common.validateNumberFailed);
+//                    return"" === this.getValue() || a.apply(this)
+//                }, setup: function (a, b) {
+//                    "select" == a && this.setValue(b.getAttribute("size") || "");
+//                    CKEDITOR.env.webkit && this.getInputElement().setStyle("width", "86px")
+//                }, commit: function (a) {
+//                    this.getValue() ? a.setAttribute("size", this.getValue()) : a.removeAttribute("size")
+//                }},
+//                {type: "html", html: "<span>" + CKEDITOR.tools.htmlEncode(c.lang.forms.select.lines) + "</span>"}
+//            ]},
             {type: "html", html: "<span>" + CKEDITOR.tools.htmlEncode(c.lang.forms.select.opAvail) + "</span>"},
             {type: "hbox", widths: ["115px",
                 "115px", "100px"], children: [
@@ -223,22 +223,22 @@ CKEDITOR.dialog.add("select", function (c) {
                     CKEDITOR.env.webkit && this.getElement().getParent().setStyle("vertical-align", "middle")
                 }, commit: function (a) {
                     this.getValue() ? a.setAttribute("multiple", this.getValue()) : a.removeAttribute("multiple")
-                }},
-                {id: "txtisnotnull", type: "checkbox", label: c.lang.dforms.dcommon.notNull, "default": "", accessKey: "M", value: "checked", setup: function (a, b) {
-                    if(a=='select'){
-                        var value=b.getAttribute( 'xvtype' );
-                        if(value=='notNull'){
-                            this.setValue(true);
-                        }
-                    }
-                    CKEDITOR.env.webkit && this.getElement().getParent().setStyle("vertical-align", "middle")
-                }, commit: function (element) {
-                    var value = this.getValue();
-                    if ( value )
-                        element.setAttribute( 'xvtype','notNull');
-                    else
-                        element.setAttribute( 'xvtype','notVal');
                 }}
+//                {id: "txtisnotnull", type: "checkbox", label: c.lang.dforms.dcommon.notNull, "default": "", accessKey: "M", value: "checked", setup: function (a, b) {
+//                    if(a=='select'){
+//                        var value=b.getAttribute( 'xvtype' );
+//                        if(value=='notNull'){
+//                            this.setValue(true);
+//                        }
+//                    }
+//                    CKEDITOR.env.webkit && this.getElement().getParent().setStyle("vertical-align", "middle")
+//                }, commit: function (element) {
+//                    var value = this.getValue();
+//                    if ( value )
+//                        element.setAttribute( 'xvtype','notNull');
+//                    else
+//                        element.setAttribute( 'xvtype','notVal');
+//                }}
             ]}
         ]}
     ]}

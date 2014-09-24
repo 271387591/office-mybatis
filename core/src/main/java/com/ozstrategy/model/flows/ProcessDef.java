@@ -3,7 +3,10 @@ package com.ozstrategy.model.flows;
 import com.ozstrategy.model.BaseObject;
 import com.ozstrategy.model.forms.FlowForm;
 import com.ozstrategy.model.system.GlobalType;
+import com.ozstrategy.model.userrole.Role;
+import com.ozstrategy.model.userrole.User;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,6 +14,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
@@ -56,11 +61,29 @@ public class ProcessDef extends BaseObject {
     private Boolean enabled=Boolean.TRUE;
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "processDef")
     private Set<ProcessElement> elements=new HashSet<ProcessElement>();
-    @ManyToOne
-    @JoinColumn(name = "parentId",nullable = true)
-    private ProcessDef parent;
-    @OneToMany(mappedBy = "parent",fetch = FetchType.LAZY)
-    private Set<ProcessDef> children=new HashSet<ProcessDef>();
+
+    @JoinTable(
+            name               = "ProcessDefUser",
+            joinColumns        = { @JoinColumn(name = "userId",referencedColumnName = "id") },
+            inverseJoinColumns = @JoinColumn(name = "processDefId",referencedColumnName = "id")
+    )
+    @ManyToMany(
+            fetch   = FetchType.LAZY,
+            cascade = {CascadeType.REFRESH}
+    )
+    private Set<User> users=new HashSet<User>();
+
+    @JoinTable(
+            name               = "ProcessDefRole",
+            joinColumns        = { @JoinColumn(name = "roleId",referencedColumnName = "id") },
+            inverseJoinColumns = @JoinColumn(name = "processDefId",referencedColumnName = "id")
+    )
+    @ManyToMany(
+            fetch   = FetchType.LAZY,
+            cascade = {CascadeType.REFRESH}
+    )
+    private Set<Role> roles=new HashSet<Role>();
+    
 
     public Long getId() {
         return id;
@@ -150,22 +173,6 @@ public class ProcessDef extends BaseObject {
         this.depId = depId;
     }
 
-    public ProcessDef getParent() {
-        return parent;
-    }
-
-    public void setParent(ProcessDef parent) {
-        this.parent = parent;
-    }
-
-    public Set<ProcessDef> getChildren() {
-        return children;
-    }
-
-    public void setChildren(Set<ProcessDef> children) {
-        this.children = children;
-    }
-
     public String getDocumentation() {
         return documentation;
     }
@@ -197,6 +204,23 @@ public class ProcessDef extends BaseObject {
     public void setFlowForm(FlowForm flowForm) {
         this.flowForm = flowForm;
     }
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
     public String getActRes(){
         return ACT_RES+this.id+".bpmn20.xml";
     }

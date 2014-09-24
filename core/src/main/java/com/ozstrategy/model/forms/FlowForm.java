@@ -11,8 +11,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,13 +31,10 @@ public class FlowForm extends BaseObject {
     private String description;
     @Column(columnDefinition = "TEXT")
     private String content;
-    @Column(columnDefinition = "char",length = 1)
+    @Column
     private Boolean  enabled=Boolean.TRUE;
-    @ManyToOne
-    @JoinColumn(name = "parentId",nullable = true)
-    private FlowForm parent;
-    @OneToMany(mappedBy = "parent",fetch = FetchType.LAZY)
-    private Set<FlowForm> children=new HashSet<FlowForm>();
+    @Column
+    private String status;
     @OneToMany(mappedBy ="flowForm" ,fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private Set<FormField> fields=new HashSet<FormField>();
 
@@ -86,22 +81,6 @@ public class FlowForm extends BaseObject {
         this.content = content;
     }
 
-    public FlowForm getParent() {
-        return parent;
-    }
-
-    public void setParent(FlowForm parent) {
-        this.parent = parent;
-    }
-
-    public Set<FlowForm> getChildren() {
-        return children;
-    }
-
-    public void setChildren(Set<FlowForm> children) {
-        this.children = children;
-    }
-
     public Set<FormField> getFields() {
         return fields;
     }
@@ -116,6 +95,14 @@ public class FlowForm extends BaseObject {
 
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override

@@ -18,7 +18,7 @@
     <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ext/resources/css/ext-all.css'/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ozstrategy/css/flexcenter.css'/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ozstrategy/css/BoxSelect.css'/>"/>
-    
+
     <%--<link rel="stylesheet" type="text/css" href="<c:url value='/mxgraph/css/common.css'/>"/>--%>
     <%--<link rel="stylesheet" type="text/css" href="<c:url value='/mxgraph/css/explorer.css'/>"/>--%>
     <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/shared/icons.css'/>"/>
@@ -49,19 +49,19 @@
         basePath = '<c:url value="/"/>';
         mxBasePath = basePath+'mxgraph/src';
         <%--defaultExtTheme=${defaultExtTheme};--%>
-//        mxDefaultLanguage='zh_CN';
+        //        mxDefaultLanguage='zh_CN';
     </script>
-    <script type="text/javascript" src="<c:url value="/mxgraph/src/js/mxClient.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/mxgraph/src/js/mxModeler.js"/>"></script>
+    <%--<script type="text/javascript" src="<c:url value="/mxgraph/src/js/mxClient.js"/>"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value="/mxgraph/src/js/mxModeler.js"/>"></script>--%>
     <%--<script type="text/javascript" src="<c:url value="/mxgraph/js/mxApplication.js"/>"></script>--%>
 
     <script type="text/javascript" src='<c:url value="/scripts/ozstrategy/global.js"/>'></script>
-  <style type="text/css" >
-      .x-message-box .ext-mb-loading {
-          background: url("<c:url value="/scripts/ext/resources/themes/images/default/grid/loading.gif"/>") no-repeat scroll 6px 0 transparent;
-          height: 52px !important;
-      }
-  </style>
+    <style type="text/css" >
+        .x-message-box .ext-mb-loading {
+            background: url("<c:url value="/scripts/ext/resources/themes/images/default/grid/loading.gif"/>") no-repeat scroll 6px 0 transparent;
+            height: 52px !important;
+        }
+    </style>
     <script type="text/javascript">
         Ext.Loader.setConfig({
                     enabled: true,
@@ -76,57 +76,34 @@
             Oz: '<c:url value="/scripts/ux/Oz"/>'
         });
     </script>
-    
+
 </head>
 
 <body>
-
+<textarea id="editorArea">
+</textarea>
 <script type="text/javascript">
-    var apps = {};
-    Ext.require([
-        'FlexCenter.Constants',
-        'Ext.data.ArrayStore',
-        'Ext.util.CSS',
-        'FlexCenter.flows.view.Modeler'
-    ]);
-    Ext.onReady(function () {
-        Ext.create('Ext.container.Viewport',{
-            layout: 'border',
-            items:[
-                {
-                    region:'center',
-                    xtype:'modeler',
-                    processRecord:{name:'3'}
-                }
+    
+    
+    CKEDITOR.replace( 'editorArea', { 
+        height: 100,
+            language : 'zh-cn',
+            extraPlugins : 'dforms,sourcearea',
+        toolbar :
+            [
+                [ 'Source','-','Print', 'ShowBlocks'],
+//                [ 'Cut','Copy','Paste','PasteText','PasteFromWord','-','Undo','Redo' ],
+//                [ 'Find','Replace','-','SelectAll','-', 'Scayt' ],
+                ['HiddenField','Select','TextField','Textarea','BoxGroup','DateField','Grid','UserSelector','DepSelector','PosSelector','DSelect'],
+//                ['ImageButton', '-','Image','Flash','Table','HorizontalRule','Smiley','SpecialChar','PageBreak','Iframe','-','Link','Unlink','Anchor' ],
+//                [ 'Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat' ],
+//                [ 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl' ],
+//                [ 'Styles','Format','Font','FontSize' ],
+//                [ 'TextColor','BGColor' ]
             ]
-        });
-        var oDiv = document.getElementById('loading');
-        oDiv.style.display = "none";
-        for (var i = 0; i < oDiv.childNodes.length; i++)
-            oDiv.removeChild(oDiv.childNodes[i]);
-        function doKey(e) {
-            var ev = e || window.event;//bet event obj
-            var obj = ev.target || ev.srcElement;//get event source
-            var t = obj.type || obj.getAttribute('type');//get event soruce type
-
-            if (ev.keyCode == 8 && t == null) {
-                return false;
-            }
-        }
-
-        if (Ext.isIE) {
-            //in IE,Chrome
-            document.onkeydown = doKey;
-        } else {
-            //in Firefox,Opera
-            document.onkeypress = doKey;
-        }
-    });
+    } );
+    
 </script>
 
-<div id="loading" class="loading">
-    <div class="ozMiddleIcon"></div>
-</div>
-<%--<div style="background-image: url(mxgraph/images/connector.gif)"></div>--%>
 </body>
 </html>

@@ -11,12 +11,15 @@ function mxModeler(dom,templates)
     this.initGraph(graph,dom);
     this.keyHandler(graph);
     this.addMenu(graph);
-    this.addGraphListeners(graph);
-    this.overrideGraph(graph);
+    this.addGraphListeners(graph,this.showProperties);
+    this.overrideGraph(graph,this.editor);
     this.graph=graph;
     this.templates=templates;
 };
-mxModeler.prototype.connectImagePath=null;
+mxModeler.prototype.setConnectImagePath=function(connect){
+    mxConnectionHandler.prototype.connectImage = new mxImage(connect, 16, 16);
+    this.connectImagePath=connect;
+};
 mxModeler.prototype.getEditor=function(){
     return this.editor?this.editor:null;
 };
@@ -27,7 +30,7 @@ mxModeler.prototype.getGraph=function(){
 
 mxModeler.prototype.initGraph = function(graph,dom)
 {
-    mxEvent.disableContextMenu(document.body);
+    
     mxCellEditor.prototype.modified=false;
     mxGraph.prototype.cellsResizable=false;
     
@@ -38,9 +41,6 @@ mxModeler.prototype.initGraph = function(graph,dom)
     graph.constrainChildren = false;
     graph.extendParents = false;
     graph.extendParentsOnAdd = true;
-    if(this.connectImage!=null){
-        mxConnectionHandler.prototype.connectImage = new mxImage(this.connectImagePath, 16, 16);
-    }
     graph.init(dom);
     if (mxClient.IS_GC || mxClient.IS_SF){
         graph.container.style.background = '-webkit-gradient(linear, 0% 0%, 100% 0%, from(#FFFFFF), to(#FFFFEE))';
@@ -55,7 +55,7 @@ mxModeler.prototype.initGraph = function(graph,dom)
     graph.setConnectable(true);
     graph.setDropEnabled(true);
     graph.setPanning(true);
-    graph.setTooltips(true);
+    graph.setTooltips(false);
     graph.setMultigraph(false);
     graph.setCellsResizable(true);
     graph.connectionHandler.setCreateTarget(false);
@@ -213,26 +213,25 @@ mxModeler.prototype.makeDraggable=function(treepanel,cells,graphcallback){
     
 };
 mxModeler.prototype.reloadGraph=function(source){
-    var me=this;
     var xmlDocument = mxUtils.parseXml(source);
     var codec = new mxCodec(xmlDocument);
     codec.decode(xmlDocument.documentElement,this.editor.graph.model);
 };
 mxModeler.prototype.showProperties=function(cell){
-    
 };
 
-mxModeler.prototype.addGraphListeners = function(graph,dom)
+mxModeler.prototype.addGraphListeners = function(graph,showProperties)
 {
-    var me=this;
     graph.getSelectionModel().addListener(mxEvent.CHANGE, function(model, evt){
         graph.container.focus();
         var cell = graph.getSelectionCell();
-        me.showProperties(cell);
+        if(showProperties){
+            showProperties(cell);
+        }
     });
 };
 
-mxModeler.prototype.overrideGraph = function(graph)
+mxModeler.prototype.overrideGraph = function(graph,editor)
 {
     mxGuide.prototype.isEnabledForEvent = function(evt)
     {
@@ -241,7 +240,7 @@ mxModeler.prototype.overrideGraph = function(graph)
     var createEdge=mxConnectionHandler.prototype.createEdge;
 
     mxConnectionHandler.prototype.createEdge = function(value, source, target, style){
-        var cell=me.editor.templates['SequenceFlow'];
+        var cell=editor.templates['SequenceFlow'];
         value=cell.value;
         var edge=createEdge.apply(this, arguments);
         edge.setValue(value);

@@ -15,6 +15,7 @@ Ext.define('FlexCenter.flows.view.ModelerPreviewWindow',{
     layout: 'fit',
     width:1000,
     height:600,
+    modal:true,
     initComponent:function(){
         var me=this;
         me.items = [

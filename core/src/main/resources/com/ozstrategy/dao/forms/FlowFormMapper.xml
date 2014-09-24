@@ -4,8 +4,8 @@
     <!--<cache type="org.mybatis.caches.ehcache.EhcacheCache"/>-->
     <resultMap id="flowFormResult" type="com.ozstrategy.model.forms.FlowForm" autoMapping="true">
         <id column="id" property="id" javaType="long"/>
-        <association property="parent" column="parentId" select="getFlowFormById"/>
-        <collection property="children" column="id" select="getChild" ofType="com.ozstrategy.model.forms.FlowForm"/>
+        <!--<association property="parent" column="parentId" select="getFlowFormById"/>-->
+        <!--<collection property="children" column="id" select="getChild" ofType="com.ozstrategy.model.forms.FlowForm"/>-->
         <collection property="fields" column="id" select="com.ozstrategy.dao.forms.FormFieldDao.getFormFieldByFormId"/>
         <!--<collection property="children" resultMap="flowFormResult"/>-->
         <!--<collection property="children" resultMap="flowFormResult"/>-->
@@ -14,19 +14,15 @@
     
     
     <select id="listFlowForms" resultMap="flowFormResult" parameterType="string">
-        select f.* from FlowForm f where f.enabled=1 and f.parentId is null
-        <if test="keyword!=null and keyword!=''">and (f.name like CONCAT(CONCAT('%', #{keyword}), '%') or f.displayName like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
+        select f.* from FlowForm f where f.enabled=1
+        <if test="keyword!=null and keyword!=''">and (f.name like CONCAT(CONCAT('%', #{keyword}), '%') or f.displayName like CONCAT(CONCAT('%', #{keyword}), '%')) </if>
+        <if test="status!=null and status!=''"> and f.status=#{status} </if>
         order by f.createDate desc
     </select>
     <select id="listFlowFormsCount" resultType="java.lang.Integer" parameterType="string">
-        select count(*) from FlowForm f where f.enabled=1 and f.parentId is null
-        <if test="keyword!=null and keyword!=''">and (f.name like CONCAT(CONCAT('%', #{keyword}), '%') or f.displayName like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
-    </select>
-    <select id="getFlowFormByNameAndParentId" resultMap="flowFormResult" parameterType="Map">
-        select f.* from FlowForm f where f.enabled=1 and f.name=#{name} and f.parentId=#{parentId} 
-    </select>
-    <select id="getChild" resultMap="flowFormResult" parameterType="long">
-        select f.* from FlowForm f where f.enabled=1 and f.parentId=#{id} 
+        select count(*) from FlowForm f where f.enabled=1
+        <if test="keyword!=null and keyword!=''">and (f.name like CONCAT(CONCAT('%', #{keyword}), '%') or f.displayName like CONCAT(CONCAT('%', #{keyword}), '%')) </if>
+        <if test="status!=null and status!=''"> and f.status=#{status} </if>
     </select>
     <select id="getFlowFormById" resultMap="flowFormResult" parameterType="long" flushCache="true">
         select f.* from FlowForm f where f.id=#{id} and f.enabled=1 
@@ -37,12 +33,13 @@
     <select id="getFlowFormByName" resultMap="flowFormResult" parameterType="string">
         select * from FlowForm f where f.name=#{name} and f.enabled=1 
     </select>
+    <update id="deleteFlowForm" parameterType="long" flushCache="true">
+        update FlowForm u set u.enabled=0 where u.id=#{id}
+    </update>
+    <update id="publish" parameterType="long" flushCache="true">
+        update FlowForm u set u.status='Active' where u.id=#{id}
+    </update>
     
-    
-    
-    <delete id="removeChild" parameterType="long">
-        delete from FlowForm where parentId=#{parentId}
-    </delete>
     <update id="updateFlowForm" parameterType="com.ozstrategy.model.forms.FlowForm" flushCache="true">
         update FlowForm f set 
         f.name=#{name} , 
@@ -50,18 +47,16 @@
         f.description=#{description} , 
         f.content=#{content} , 
         f.enabled=#{enabled} , 
-        f.parentId=#{parent.id} , 
+        f.status=#{status} , 
         f.lastUpdateDate=#{lastUpdateDate} 
         where f.id=#{id}
     </update>
-    <update id="deleteFlowForm" parameterType="com.ozstrategy.model.forms.FlowForm" flushCache="true">
-        update FlowForm u set u.enabled=#{enabled} where u.id=#{id}
-    </update>
+    
     <insert id="saveFlowForm" parameterType="com.ozstrategy.model.forms.FlowForm" flushCache="true">
         <selectKey keyColumn="id" keyProperty="id" resultType="java.lang.Long">
             select LAST_INSERT_ID()
         </selectKey>
-        insert into FlowForm(id,name,displayName,description,content,enabled,parentId,createDate,lastUpdateDate) 
-        values (#{id},#{name},#{displayName},#{description},#{content},#{enabled},#{parent.id},#{createDate},#{lastUpdateDate})
+        insert into FlowForm(id,name,displayName,description,content,enabled,status,createDate,lastUpdateDate) 
+        values (#{id},#{name},#{displayName},#{description},#{content},#{enabled},#{status},#{createDate},#{lastUpdateDate})
     </insert>
 </mapper>

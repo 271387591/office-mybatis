@@ -8,18 +8,13 @@
 Ext.define('FlexCenter.forms.view.FormPreview',{
     requires:[
         'Ext.ux.form.FormDataCustomFiled',
-//        'Oz.form.TimePickerField',
-//        'Oz.form.DateTimePicker',
         'FlexCenter.user.view.UserSelector',
-//        'Ext.ux.form.field.DateTimeField'
-//        'OzSOA.jiuzhai.view.PositionSelector',
-//        'OzSOA.jiuzhai.view.OrgSelector'
+        'Ext.ux.form.field.DateTimeField'
     ],
     extend:'Ext.panel.Panel',
     alias: 'widget.formPreview',
     itemId:'formPreview',
     border:false,
-    editorStyle: 'margin: 5px 2px 0px 0px;color:#03386C;border-collapse:collapse;',
     thStyle:'text-align:center;background-color: #D0E0F4;',
     layout:'fit',
     autoScroll: true,
@@ -46,7 +41,7 @@ Ext.define('FlexCenter.forms.view.FormPreview',{
                             anchor: '100%'
                         },
                         html : me.formHtml,
-                        bodyPadding: 3,
+//                        bodyPadding: 3,
                         collapsed: false,
                         listeners:{
                             afterrender:function(proto){
@@ -324,9 +319,9 @@ Ext.define('FlexCenter.forms.view.FormPreview',{
             renderTo: span,
             columns: columns,
             itemId: name,
-            width: width,
+//            width: width,
             autoHeight:true,
-            minHeight: 200,
+            height: 250,
             sType:'detail',
             tbar: [{
                 text: '添加记录',
@@ -617,7 +612,7 @@ Ext.define('FlexCenter.forms.view.FormPreview',{
         var value = item.getAttribute('value');
         var chmod = item.getAttribute('chmod');
         var xtype = item.getAttribute('xtype');
-        var xvtype = item.getAttribute('xvtype');
+        var datatype = item.getAttribute('datatype');
 //        var span=me.createSpan(item);
         var span = document.createElement('span');
         var parentNode=item.parentNode;
@@ -636,18 +631,24 @@ Ext.define('FlexCenter.forms.view.FormPreview',{
         var config={
             itemId: name,
             name:name,
+            anchor: '100%',
             readOnly: chmod == 1?true: false,
             hidden: chmod == 2?true: false,
             readOnlyCls:'x-item-disabled'
         };
+        if(datatype=='number'){
+            config.hideTrigger= true;
+            config.keyNavEnabled= false;
+            config.mouseWheelEnabled= false;
+        }
         if(value){
             config.value=value;
         }
-        if(xvtype=='notNull'){
-            config.allowBlank=false;
-        }
         if(!grid){
             config.renderTo=span;
+        }
+        if(datatype=='number'){
+            return Ext.widget('numberfield',config);
         }
         return Ext.widget('textfield',config);
     }

@@ -98,24 +98,6 @@ Ext.define('FlexCenter.flows.view.ProcessListForm',{
                         blankText:globalRes.tooltip.notEmpty,
                         name: 'name'
                     },{
-                        fieldLabel:'流程分类<font color="red">*</font>',
-                        xtype:'combo',
-                        name:'category',
-                        editable:false,
-                        triggerAction:'all',
-                        displayField: 'typeName',
-                        valueField: 'typeName',
-                        allowBlank: false,
-                        store:me.getCategoryStore(),
-                        listeners: {
-                            select: function (combo, records) {
-                                if(records.length>0){
-                                    var rec=records[0];
-                                    me.down('form').down('hidden[name=globalTypeId]').setValue(rec.get('typeId'));
-                                }
-                            }
-                        }
-                    },{
                         fieldLabel: '引用表单<font color="red">*</font>',
                         name:'flowFormName',
                         allowBlank:false,
@@ -131,6 +113,23 @@ Ext.define('FlexCenter.flows.view.ProcessListForm',{
                                             me.down('form').down('hidden[name=flowFormId]').setValue(ids);
                                         }
                                     }).show();
+                                }
+                            }
+                        }
+                    },{
+                        fieldLabel:'流程分类',
+                        xtype:'combo',
+                        name:'category',
+                        editable:false,
+                        triggerAction:'all',
+                        displayField: 'typeName',
+                        valueField: 'typeName',
+                        store:me.getCategoryStore(),
+                        listeners: {
+                            select: function (combo, records) {
+                                if(records.length>0){
+                                    var rec=records[0];
+                                    me.down('form').down('hidden[name=globalTypeId]').setValue(rec.get('typeId'));
                                 }
                             }
                         }

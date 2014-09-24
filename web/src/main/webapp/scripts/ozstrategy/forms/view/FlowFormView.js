@@ -3,6 +3,8 @@
  */
 Ext.define('FlexCenter.forms.view.FlowFormView',{
     requires:[
+        'Ext.grid.*',
+        'Ext.data.*',
         'FlexCenter.forms.store.FlowForm',
         'FlexCenter.forms.view.FlowFormForm',
         'FlexCenter.forms.view.FlowFormDetail',
@@ -13,13 +15,16 @@ Ext.define('FlexCenter.forms.view.FlowFormView',{
     itemId:'flowFormView',
     layout:'border',
     selector:false,
-    selectorSingle:false,
     autoScroll:true,
+    
     getStore: function(){
-        var store=Ext.StoreManager.lookup("flowFormViewStore");
-        if(!store){
-            store=Ext.create("FlexCenter.forms.store.FlowForm",{
-                storeId:'flowFormViewStore'
+        var store=Ext.create("FlexCenter.forms.store.FlowForm",{
+        });
+        if(this.selector){
+            store.on('beforeload',function(s,e){
+                e.params = {
+                    status:'Active'
+                };
             });
         }
         store.load();
@@ -29,7 +34,7 @@ Ext.define('FlexCenter.forms.view.FlowFormView',{
         var me=this;
         var store = me.getStore();
         var sm = Ext.create('Ext.selection.CheckboxModel',{
-            mode:me.selectorSingle?'SINGLE':'MULTI'
+            mode:'SINGLE'
         });
         me.items=[
             {
@@ -41,23 +46,40 @@ Ext.define('FlexCenter.forms.view.FlowFormView',{
                 autoScroll: true,
                 tbar:[
                     {
-                        xtype:'button',
-                        frame:true,
-                        text:'新建表单',
-                        iconCls:'user-add',
-                        scope:this,
-                        hidden: me.selector,
-                        handler:me.onAddClick
+                        xtype: 'buttongroup',
+                        items:[
+                            {
+                                xtype:'button',
+                                frame:true,
+                                text:'添加',
+                                iconCls:'table-add',
+                                scope:me,
+                                hidden: me.selector,
+                                handler:me.onAddClick
+                            },
+                            {
+                                xtype: 'button',
+                                frame: true,
+                                text: '编辑',
+                                iconCls: 'table-edit',
+                                hidden: me.selector,
+                                scope: me,
+                                handler: me.updateClick
+                            },
+                            {
+                                xtype: 'button',
+                                frame: true,
+                                text: '删除',
+                                iconCls: 'table-delete',
+                                hidden: me.selector,
+                                scope: me,
+                                handler: me.onDeleteClick
+                            }
+                        ]
                     },
-//                    {
-//                        xtype: 'button',
-//                        frame: true,
-//                        text: '批量删除',
-//                        iconCls: 'delete',
-//                        scope: this,
-//                        handler: me.onDeleteClick
-//                    },
-                    me.selector?{}:'->',
+                    
+//                    me.selector?'->':'->',
+                    '->',
                     {
                         xtype: 'textfield',
                         name: 'name',
@@ -106,27 +128,31 @@ Ext.define('FlexCenter.forms.view.FlowFormView',{
                         flex:1,
                         dataIndex: 'displayName'
                     },
-                    {
-                        header: '明细表',
-                        flex:1,
-                        dataIndex: 'children',
-                        renderer: function (v,m,rec) {
-                            var names=[];
-                            for(var i=0;i< v.length;i++){
-                                names.push(v[i].displayName);
-                            }
-                            if(names.length>0){
-                                return names.join(',');
-                            }
-                            return '无';
-                        }
-                    },
                     
                     {
                         header: '表单描述',
                         flex:1,
                         dataIndex: 'description'
                     },
+                    {
+                        header: '状态',
+                        flex:1,
+                        dataIndex: 'status',
+                        renderer:function(v){
+                            if(v=='Draft'){
+                                return '草稿';
+                            }else if(v=='Active'){
+                                return "已发布";
+                            }
+                            return v;
+                        }
+                    },
+                    {
+                        header: '创建时间',
+                        flex:1,
+                        dataIndex: 'createDate'
+                    },
+                    
                     me.selector?{
                         xtype:'actioncolumn',
                         header:'操作',
@@ -149,34 +175,30 @@ Ext.define('FlexCenter.forms.view.FlowFormView',{
                         xtype:'actioncolumn',
                         header:'管理',
                         flex:1,
-//                        width:'200',
                         hidden: me.selector,
                         items:[
                             {
-                                iconCls:'delete',
-                                tooltip:'删除',
+                                iconCls:'btn-preview',
+                                tooltip:'预览',
                                 handler:function(grid, rowIndex, colIndex){
                                     var rec = grid.getStore().getAt(rowIndex),selects=[];
-                                    selects.push(rec);
-                                    me.deleteClick(selects);
-                                }
-                            },'-',
-                            {
-                                iconCls:'btn-flow-design',
-                                tooltip:'编辑',
-                                handler:function(grid, rowIndex, colIndex){
-                                    var rec = grid.getStore().getAt(rowIndex);
-                                    me.onUpdateClick(rec);
-                                }
-                            },'-',
-                            {
-                                iconCls:'btn-preview',
-                                tooltip:'查看表结构',
-                                handler:function(grid, rowIndex, colIndex){
-                                    var rec = grid.getStore().getAt(rowIndex);
-                                    Ext.widget('flowFormDetail',{
-                                        rec:rec
+                                    var formHtml=rec.get('content');
+                                    Ext.widget('formPreviewWindow',{
+                                        formHtml:formHtml
                                     }).show();
+                                }
+                            },'-',
+                            {
+                                tooltip:'发布',
+                                handler:function(grid, rowIndex, colIndex){
+                                    var rec = grid.getStore().getAt(rowIndex);
+                                    me.publishTable(rec);
+                                },
+                                getClass:function(v,metadata,record){
+                                    if(record.get('status')=='Draft'){
+                                        return 'icon-publish';
+                                    }
+                                    return 'x-hide-display';
                                 }
                             }
                         ]
@@ -186,11 +208,27 @@ Ext.define('FlexCenter.forms.view.FlowFormView',{
                     itemdblclick:function(grid, record, item, index, e, eOpts){
                         me.onUpdateClick(record)
                     }
-
                 }
             }
         ];
         this.callParent();
+    },
+    publishTable:function(rec){
+        var me=this,ids=[];
+        ids.push(rec.get('id'))
+        ajaxPostRequest('flowFormController.do?method=publish',{ids:ids.join(',')},function(result){
+            if(result.success){
+                me.down('grid').getStore().load();
+            }else{
+                Ext.MessageBox.alert({
+                    title:'警告',
+                    icon: Ext.MessageBox.ERROR,
+                    msg:result.message,
+                    buttons:Ext.MessageBox.OK
+                });
+            }
+        });
+        
     },
     onAddClick:function(){
         var me = this;
@@ -205,8 +243,24 @@ Ext.define('FlexCenter.forms.view.FlowFormView',{
 
         });
     },
+    updateClick:function(){
+        var me=this;
+        me.onUpdateClick();
+    },
     onUpdateClick:function(record){
         var me = this;
+        var store=me.down('grid').getStore();
+        var selects=me.down('grid').getSelectionModel().getSelection();
+        var record=record?record:(selects.length>0?store.getById(selects[0].get('id')):null);
+        if(record==null){
+            Ext.MessageBox.alert({
+                title:'编辑',
+                icon: Ext.MessageBox.ERROR,
+                msg:"请选择要编辑的表单",
+                buttons:Ext.MessageBox.OK
+            });
+            return;
+        }
         var win = Ext.create('FlexCenter.forms.view.FlowFormForm',{
             title:'编辑表单'
         });
@@ -224,7 +278,7 @@ Ext.define('FlexCenter.forms.view.FlowFormView',{
     },
 
     deleteClick:function(selects){
-        var me=this,diaryIds=[];
+        var me=this,ids=[];
         if(!selects || selects.length<1){
             Ext.MessageBox.alert({
                 title:'删除表单',
@@ -234,71 +288,53 @@ Ext.define('FlexCenter.forms.view.FlowFormView',{
             });
             return;
         }
+        var status=selects[0].get('status');
+        var msg='确定要删除选中的表单';
+        if(status=='Active'){
+            msg='该表单已发布，可能被其他流程引用，删除会影响流程的使用，你确定要删除该表单?';
+        }
         Ext.Array.each(selects,function(mode){
-            diaryIds.push(mode.get("id"));
+            ids.push(mode.get("id"));
         });
-//        var diaryIdStr=diaryIds.join(",");
         Ext.MessageBox.show({
             title:'删除表单',
             buttons:Ext.MessageBox.YESNO,
-            msg:'确定要删除选中的表单?',
+            msg:msg,
             icon:Ext.MessageBox.QUESTION,
             fn:function(btn){
                 if(btn == 'yes'){
-                    Ext.Ajax.request({
-                        url:'flowFormController.do?method=multiRemove',
-                        params:{
-                            ids:diaryIds
-                        },
-                        method: 'POST',
-                        success: function (response, options){
-                            var result=Ext.decode(response.responseText);
-                            if(result.success){
-                                me.down('grid').getStore().load();
-                            }else{
-                                Ext.MessageBox.alert({
-                                    title:'警告',
-                                    icon: Ext.MessageBox.ERROR,
-                                    msg:result.message,
-                                    buttons:Ext.MessageBox.OK
-                                });
-                            }
-                        },
-                        failure: function (response, options) {
-                            Ext.MessageBox.alert('失败', '请求超时或网络故障,错误编号：' + response.status);
+                    ajaxPostRequest('flowFormController.do?method=multiRemove',{ids:ids},function(result){
+                        if(result.success){
+                            me.down('grid').getStore().load();
+                        }else{
+                            Ext.MessageBox.alert({
+                                title:'警告',
+                                icon: Ext.MessageBox.ERROR,
+                                msg:result.message,
+                                buttons:Ext.MessageBox.OK
+                            });
                         }
-                    })
+                    });
                 }
             }
         });
 
     },
-    deploy:function(){
-
-    },
+    
     saveOrUpdate:function(data,save,win){
         var me=this;
         var url='flowFormController.do?method='+(save?'save':'update');
-        Ext.Ajax.request({
-            url:url,
-            params:data,
-            method: 'POST',
-            success: function (response, options){
-                var result=Ext.decode(response.responseText);
-                if(result.success){
-                    me.getStore().load();
-                    win.close();
-                }else{
-                    Ext.MessageBox.alert({
-                        title:'警告',
-                        icon: Ext.MessageBox.ERROR,
-                        msg:result.message,
-                        buttons:Ext.MessageBox.OK
-                    });
-                }
-            },
-            failure: function (response, options) {
-                Ext.MessageBox.alert('失败', '请求超时或网络故障,错误编号：' + response.status);
+        ajaxPostRequest(url,data,function(result){
+            if(result.success){
+                me.down('grid').getStore().load();
+                win.close();
+            }else{
+                Ext.MessageBox.alert({
+                    title:'警告',
+                    icon: Ext.MessageBox.ERROR,
+                    msg:result.message,
+                    buttons:Ext.MessageBox.OK
+                });
             }
         });
     }

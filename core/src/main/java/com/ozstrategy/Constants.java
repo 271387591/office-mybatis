@@ -7,7 +7,7 @@ package com.ozstrategy;
  * @author   <a href="mailto:matt@raibledesigns.com">Matt Raible</a>
  * @version  $Revision$, $Date$
  */
-public final class Constants {
+public interface Constants {
   //~ Static fields/initializers ---------------------------------------------------------------------------------------
 
   /** The name of the ResourceBundle used in this application. */
@@ -68,6 +68,8 @@ public final class Constants {
     public static final String MESSAGE_PROCESS_SAVE_USER = "message.error.save.process.fail";
     public static final String MESSAGE_PROCESS_DEPLOYED_NULL = "message.error.deployed.null";
     public static final String MESSAGE_PROCESS_DEPLOYED_PROCESS_NOT_FOUND = "message.error.process.not.found";
+    public static final String MESSAGE_FORM_READ_HTML_FIELD = "message.form.read.html.field";
+    public static final String MESSAGE_FORM_SAVE_FIELD = "message.form.save.field";
 
     public static final String TASK_SIGN_NAME = "Sign_";
     public static final String TASK_SIGN_subType = "subType";
@@ -102,9 +104,4 @@ public final class Constants {
     public static final String MAIL_TEMP_ATTACH = "mailTemp/";
     public static final String GRAPH_xmlns_CONVER = "exam";
 
-  //~ Constructors -----------------------------------------------------------------------------------------------------
-
-  private Constants() {
-    // hide me
-  }
 } // end class Constants

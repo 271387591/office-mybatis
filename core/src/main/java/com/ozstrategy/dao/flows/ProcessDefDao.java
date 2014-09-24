@@ -1,7 +1,8 @@
 package com.ozstrategy.dao.flows;
 
 import com.ozstrategy.model.flows.ProcessDef;
-import com.ozstrategy.model.flows.ProcessDefVersion;
+import com.ozstrategy.model.userrole.Role;
+import com.ozstrategy.model.userrole.User;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 
@@ -25,6 +26,14 @@ public interface ProcessDefDao {
     void deleteProcessDef(Long id);
     void removeChild(Long parentId);
     Long checkNameExist(@Param("name")String name,@Param("typeId")Long typeId);
+    
+    void saveProcessDefUser(@Param("userId")Long userId,@Param("id")Long id);
+    void saveProcessDefRole(@Param("roleId")Long roleId,@Param("id")Long id);
+    void deleteProcessDefUser(Long id);
+    void deleteProcessDefRole(Long id);
+    
+    List<User> getProcessDefUser(Long id);
+    List<Role> getProcessDefRole(Long id);
     
     
 }

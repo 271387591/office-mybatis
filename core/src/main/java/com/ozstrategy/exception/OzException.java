@@ -3,7 +3,7 @@ package com.ozstrategy.exception;
 /**
  * Created by lihao on 9/20/14.
  */
-public class OzException extends Throwable {
+public class OzException extends Exception {
     private String key;
 
     public OzException(String key) {

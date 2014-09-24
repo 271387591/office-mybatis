@@ -8,22 +8,33 @@ Ext.define('FlexCenter.forms.view.FormPreviewWindow',{
     extend:'Ext.Window',
     alias: 'widget.formPreviewWindow',
     itemId:'formPreviewWindow',
-    width:1010,
+    width:1000,
     autoHeight:true,
-    minHeight:500,
+    maxHeight:600,
     modal:true,
     shim:false,
     title:'表单预览',
     autoScroll:true,
+    border:false,
     initComponent:function(){
         var me=this;
-        me.buttons=[{
-            xtype: 'button',
-            text: globalRes.buttons.close,
-            handler: function(){
-                me.close();
+        me.buttons=[
+            {
+                xtype: 'button',
+                text: globalRes.buttons.close,
+                handler: function(){
+                    me.close();
+                }
+            },
+            {
+                xtype: 'button',
+                text: '取值',
+                handler: function(){
+                    var data = me.down('formPreview').getFormValue();
+                    console.log('data',data);
+                }
             }
-        }];
+        ];
         me.items=[
             {
                 xtype:'formPreview',

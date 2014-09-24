@@ -19,62 +19,70 @@ Ext.define('FlexCenter.forms.view.FlowFormForm',{
     initComponent:function(){
         Ext.WindowManager.setBase(0);
         var me=this;
+        var ckeditor=Ext.create('FlexCenter.forms.view.CKEditor',{
+            name:'content'
+        });
         var form = Ext.create('Ext.form.Panel',{
             border:false,
             layout: 'border',
-//            buttonAlign: 'left',
-            buttons:[
-            {
-                xtype: 'button',
-                text: '预览',
-                handler:function(){
-                    var value =me.down('#ckeditoritemId').getValue();
-                    if(!value)return;
-                    var ret = me.checkNames(value);
-                    if(ret){
-                        Ext.MessageBox.alert(ret.title,ret.msg);
-                        return;
+            bodyPadding:1,
+            tbar:[
+                '-',
+                {
+                    xtype:'button',
+                    text:' 保存',
+                    iconCls: 'save',
+                    formBind: true,
+                    handler: function(){
+                        var ret = me.checkHtml(ckeditor.getValue());
+                        if(ret){
+                            Ext.MessageBox.alert(ret.title,ret.msg);
+                            return;
+                        }
+                        if(!me.down('form').getForm().isValid()){
+                            return;
+                        }
+                        var jsonHtml=me.convertJson(ckeditor.getValue());
+                        var data=me.down('form').getValues();
+                        data.jsonHtml=Ext.encode(jsonHtml,true);
+                        var m=me.activeRecord;
+                        if(!m)
+                            me.fireEvent('addForm',me,data);
+                        else{
+                            me.fireEvent('updateForm',me,data)
+                        }
                     }
-                    Ext.widget('formPreviewWindow',{
-                        formHtml:value
-                    }).show();
+                },
+                {
+                    xtype: 'button',
+                    text: '预览',
+                    iconCls:'btn-preview',
+                    handler:function(){
+                        var value =ckeditor.getValue();
+                        if(!value)return;
+                        var ret = me.checkHtml(value);
+                        if(ret){
+                            Ext.MessageBox.alert(ret.title,ret.msg);
+                            return;
+                        }
+                        Ext.widget('formPreviewWindow',{
+                            formHtml:value
+                        }).show();
+                    }
+                },
+                {
+                    xtype: 'button',
+                    text: '关闭',
+                    iconCls:'close',
+                    handler:function(){
+                        me.close();
+                    }
                 }
-            },
-            {
-                xtype:'button',
-                text:' 保存',
-                formBind: true,
-                handler: function(){
-                    var ckeditor=me.down('#ckeditoritemId');
-                    var ret = me.checkNames(ckeditor.getValue());
-                    if(ret){
-                        Ext.MessageBox.alert(ret.title,ret.msg);
-                        return;
-                    }
-                    if(!me.down('form').getForm().isValid()){
-                        return;
-                    }
-                    var data=me.down('form').getValues();
-                    var m=me.activeRecord;
-                    if(!m)
-                        me.fireEvent('addForm',me,data);
-                    else{
-                        me.fireEvent('updateForm',me,data)
-                    }
-                }
-            },
-            {
-                xtype:'button',
-                text: globalRes.buttons.close,
-                handler: function(){
-                    me.close();
-                }
-            }
-        ],
+            ],
             items:[
                 {
                     xtype: 'panel',
-                    region:'west',
+                    region:'east',
                     frame: false,
                     collapsible: true,
                     title: '表单信息',
@@ -84,7 +92,8 @@ Ext.define('FlexCenter.forms.view.FlowFormForm',{
                         anchor: '100%'
                     },
                     layout:'form',
-                    width:200,
+                    bodyPadding:5,
+                    width:220,
                     split: true,
                     margins: '0 1 0 0',
                     autoScroll:true,
@@ -145,28 +154,9 @@ Ext.define('FlexCenter.forms.view.FlowFormForm',{
                     defaults: {               
                         anchor: '100%'
                     },
-                    layout:'fit',
-                    tbar:[
-                        {
-                            xtype:'button',
-                            frame:true,
-                            text:'格式化处理',
-                            iconCls:'user-add',
-                            scope:this,
-                            handler:function(){
-                                var ckeditor=me.down('#ckeditoritemId');
-                                var value = me.formatValue(ckeditor.getValue() || '');
-                                ckeditor.setValue(value);
-                            }
-                        }
-
-                    ],
+                    layout:'form',
                     items:[
-                        {
-                            itemId:'ckeditoritemId',
-                            xtype: 'ckeditor',
-                            name: 'content'
-                        }
+                        ckeditor
                     ]
                 }
 
@@ -189,6 +179,58 @@ Ext.define('FlexCenter.forms.view.FlowFormForm',{
         } else {
             this.getFormPanel().reset();
         }
+    },
+    convertJson:function(v){
+        var form = document.createElement('form');
+        form.innerHTML = v;
+        var selectors=[
+            'input[xtype=textfield]',
+            'textarea[xtype=textareafield]',
+            'input[xtype=datefield]',
+            'select[xtype=combo]',
+            'boxgroup[xtype=boxgroup]',
+            'input[xtype=userselector]',
+            'input[xtype=depselector]',
+            'table[xtype=detailGrid]',
+            'input[xtype=posselector]'
+        ];
+        var table=$('table[xtype=table]',form);
+        var detailGrids=$('table[xtype=detailGrid]',table);
+        var createObj=function(item){
+            var obj={};
+            obj.name=item.attr('name');
+            obj.label=item.attr('txtlabel');
+            obj.xtype=item.attr('xtype');
+            obj.dataType=item.attr('dataType')?item.attr('dataType'):'string';
+            obj.dataType=obj.xtype=='detailGrid'?'array':obj.dataType;
+            obj.dateFormat=item.attr('txtvaluetype') || '';
+            return obj;
+        }
+        var items=[];
+        for(var i=0;i<selectors.length;i++){
+            var obj;
+            var item=$(selectors[i],table).not($(selectors[i],detailGrids));
+            item.each(function(index,it){
+                obj=createObj($(it));
+                items.push(obj);
+            });
+        }
+        for(var i=0;i<items.length;i++){
+            var item=items[i];
+            if(item.xtype=='detailGrid'){
+                var children = $('table[xtype=detailGrid][name='+item.name+']',table);
+                var childs=[];
+                for(var m=0;m<selectors.length;m++){
+                    var sel=$(selectors[m],children);
+                    sel.each(function(index,se){
+                        var obj=createObj($(se));
+                        childs.push(obj);
+                    });
+                }
+                item.children=childs;
+            }
+        }
+        return items;
     },
     formatValue:function(v){
         var form = document.createElement('form');
@@ -214,10 +256,17 @@ Ext.define('FlexCenter.forms.view.FlowFormForm',{
         }
         return form.innerHTML;
     },
-    checkNames:function(v){
+    checkHtml:function(v){
         var me = this;
         var form = document.createElement('form');
         form.innerHTML = v;
+        var table=$('table[xtype=table]',form);
+        if(table.length<1){
+            var ret={};
+            ret.title='格式错误';
+            ret.msg='表单格式错误，表单至少要包含一个【table】html标签！';
+            return ret;
+        }
         var selectors=[
             'input[xtype=textfield][name]',
             'textarea[xtype=textareafield][name]',
@@ -231,19 +280,27 @@ Ext.define('FlexCenter.forms.view.FlowFormForm',{
         var names=[];
         for(var i=0;i<selectors.length;i++){
             var items=$(selectors[i],form);
-            for(var j=0;j<items.length;j++){
+            items.each(function(index,item){
                 var obj={};
-                obj.name=items[j].getAttribute('name');
-                obj.label=items[j].getAttribute('txtlabel');
+                obj.name=$(item).attr('name');
+                obj.label=$(item).attr('txtlabel');
                 names.push(obj);
-            }
+            });
         }
         var detailTables=$('table[xtype=detailGrid]',form);
         for(var i=0;i<detailTables.length;i++){
+            var detail=detailTables[i];
+            var detailChild=$('table[xtype=detailGrid]',detail);
+            if(detailChild.length>0){
+                var ret={};
+                ret.title='子表格式错误';
+                ret.msg='子表中不能再包含子表，请重新设计。';
+                return ret;
+            }
             var obj={};
-            obj.name=detailTables[i].getAttribute('name');
-            obj.label=detailTables[i].getAttribute('txtlabel');
-            obj.xtype=detailTables[i].getAttribute('xtype');
+            obj.name=$(detail).attr('name');
+            obj.label=$(detail).attr('txtlabel');
+            obj.xtype=$(detail).attr('xtype');
             names.push(obj);
         }
         for(var i=0;i<names.length;i++){

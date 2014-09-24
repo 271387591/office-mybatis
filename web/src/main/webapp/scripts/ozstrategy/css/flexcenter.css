@@ -4,6 +4,9 @@ html{
 .x-field.x-window-text.x-form-item.x-field-default.x-anchor-form-item{
   width: 100%;
 }
+.flow-form-table{
+    
+}
 .user-edit {
   background-image: url(icons/user_edit.gif) !important;
     width: 16px;
@@ -42,10 +45,16 @@ html{
     height: 16px;
 }
 .clear {
-    background-image: url(icons/reset.png) !important;
+    background-image: url(icons/clear.png) !important;
     width: 16px;
     height: 16px;
 }
+.close {
+    background-image: url(icons/close.png) !important;
+    width: 16px;
+    height: 16px;
+}
+
 .refresh,.btn-refresh{
     background-image: url(icons/refresh.png) !important;
     width: 16px;
@@ -70,6 +79,18 @@ html{
     background: url(icons/update.gif) no-repeat !important;
     width: 16px;
     height: 16px;
+}
+.table-add {
+    background-image: url(icons/table_add.png) !important;
+}
+
+.table-edit {
+    background-image: url(icons/table_edit.png) !important;
+}
+.table-delete {
+    background-image: url(icons/table_delete.png) !important;
+    height: 16px;
+    width: 16px;
 }
 .cut {
     background: url(icons/cut.gif) no-repeat !important;
@@ -463,6 +484,15 @@ html{
     background: url('icons/collapse.png') !important;
     width: 16px;
     height: 16px;
+}
+.icon-publish {
+    background-image:url(icons/icon-publish.png) !important;
+}
+.deploy {
+    background-image: url(icons/deploy.png) !important;
+}
+.view_tree {
+    background-image: url(icons/view_tree.png) !important;
 }
 
 

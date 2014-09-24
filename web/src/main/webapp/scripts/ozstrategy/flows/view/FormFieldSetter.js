@@ -1,7 +1,7 @@
 /**
  * Created by lihao on 9/15/14.
  */
-Ext.define('FlexCenter.forms.view.FormFieldSetter', {
+Ext.define('FlexCenter.flows.view.FormFieldSetter', {
     requires: [
     ],
     extend: 'Ext.Window',

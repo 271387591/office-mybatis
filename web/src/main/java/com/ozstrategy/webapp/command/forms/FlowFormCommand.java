@@ -17,8 +17,7 @@ public class FlowFormCommand extends BaseObjectCommand {
     private String description;
     private String content;
     private Boolean  enabled=Boolean.TRUE;
-    private Long parentId;
-    private Set<FlowFormCommand> children=new HashSet<FlowFormCommand>();
+    private String status;
     private Set<FormFieldCommand> fields=new HashSet<FormFieldCommand>();
 
     public FlowFormCommand(FlowForm flowForm) {
@@ -29,13 +28,7 @@ public class FlowFormCommand extends BaseObjectCommand {
         this.description= flowForm.getDescription();
         this.content= flowForm.getContent();
         this.enabled= flowForm.getEnabled();
-        this.parentId= flowForm.getParent()!=null?flowForm.getParent().getId():null;
-        Set<FlowForm> flowForms=flowForm.getChildren();
-        if(flowForms!=null && flowForms.size()>0){
-            for(FlowForm form : flowForms){
-                this.children.add(new FlowFormCommand(form));
-            }
-        }
+        this.status=flowForm.getStatus();
         Set<FormField> formFields=flowForm.getFields();
         if(formFields!=null && formFields.size()>0){
             for(FormField formField : formFields){
@@ -92,27 +85,19 @@ public class FlowFormCommand extends BaseObjectCommand {
         this.enabled = enabled;
     }
 
-    public Long getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(Long parentId) {
-        this.parentId = parentId;
-    }
-
-    public Set<FlowFormCommand> getChildren() {
-        return children;
-    }
-
-    public void setChildren(Set<FlowFormCommand> children) {
-        this.children = children;
-    }
-
     public Set<FormFieldCommand> getFields() {
         return fields;
     }
 
     public void setFields(Set<FormFieldCommand> fields) {
         this.fields = fields;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

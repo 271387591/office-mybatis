@@ -25,7 +25,7 @@ Ext.define('FlexCenter.FlowFormManager', {
         win = desktop.getWindow('myFlowManagerWindow');
         if (!win) {
             win = desktop.createWindow({
-                id:'myFlowManagerWindow',
+                id:'myFlowFormManagerWindow',
                 title:'表单管理',
                 shim:false,
                 border:false,

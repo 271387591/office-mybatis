@@ -14,12 +14,12 @@ Ext.define('FlexCenter.forms.view.FlowFormSelector', {
     layout: 'fit',
     width:600,
     height:400,
+    border:false,
     initComponent:function(){
         var me=this,rec=me.rec;
         me.items=[
             {
                 xtype:'flowFormView',
-                selectorSingle:me.selectorSingle,
                 selector:true
             }
         ];

@@ -27,13 +27,16 @@ public class FormField extends BaseObject {
     private String label;
     @Column
     private String xtype;
-    @Column(columnDefinition = "TEXT")
-    private String html;
     @ManyToOne
     @JoinColumn(name = "flowFormId")
     private FlowForm flowForm;
     @Column
     private String dataType;
+    @Column
+    private String dateFormat;
+    @JoinColumn(name = "parentId")
+    @ManyToOne
+    private FormField parent; 
 
     public FormField() {
     }
@@ -78,20 +81,28 @@ public class FormField extends BaseObject {
         this.label = label;
     }
 
-    public String getHtml() {
-        return html;
-    }
-
-    public void setHtml(String html) {
-        this.html = html;
-    }
-
     public String getDataType() {
         return dataType;
     }
 
     public void setDataType(String dataType) {
         this.dataType = dataType;
+    }
+
+    public String getDateFormat() {
+        return dateFormat;
+    }
+
+    public void setDateFormat(String dateFormat) {
+        this.dateFormat = dateFormat;
+    }
+
+    public FormField getParent() {
+        return parent;
+    }
+
+    public void setParent(FormField parent) {
+        this.parent = parent;
     }
 
     @Override

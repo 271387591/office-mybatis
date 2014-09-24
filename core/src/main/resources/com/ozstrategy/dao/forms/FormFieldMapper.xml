@@ -10,34 +10,24 @@
         <!--<association property="flowForm" resultMap="com.ozstrategy.dao.forms.FlowFormDao.flowFormResult"/>-->
     </resultMap>
     <select id="listFormFields" resultMap="formFieldResult" parameterType="string">
-        select f.* from FormField f 
-        <where>
-            <if test="keyword!=null">and f.name like CONCAT(CONCAT('%', #{keyword}), '%')</if>
-        </where>
+        select f.* from FormField f where f.parentId is null
+        <if test="keyword!=null">and f.name like CONCAT(CONCAT('%', #{keyword}), '%')</if>
     </select>
     <select id="listFormFieldsCount" resultType="java.lang.Integer" parameterType="string">
-        select count(*) from FormField f 
-        <where>
-            <if test="keyword!=null">and f.name like CONCAT(CONCAT('%', #{keyword}), '%')</if>
-        </where>
+        select count(*) from FormField f where f.parentId is null
+        <if test="keyword!=null">and f.name like CONCAT(CONCAT('%', #{keyword}), '%')</if>
     </select>
     <select id="getFormFieldByNameAndFlowFormId" resultMap="formFieldResult" parameterType="Map">
-        select f.* from FormField f where f.name=#{name} and f.flowFormId in (select f.id from FlowForm f where f.id=#{formId}  or f.parentId =#{formId})
+        select f.* from FormField f where f.name=#{name} and f.parentId is null and f.flowFormId in (select f.id from FlowForm f where f.id=#{formId})
     </select>
     <select id="getFormFieldByFormId" resultMap="formFieldResult" parameterType="long">
-        select f.* from FormField f where f.flowFormId=#{flowFormId} 
+        select f.* from FormField f where f.flowFormId=#{flowFormId} and f.parentId is null 
     </select>
     <select id="getFormFieldById" resultMap="formFieldResult" parameterType="long">
         select f.* from FormField f where f.id=#{id} 
     </select>
     <select id="getNoCascadeFormField" resultType="com.ozstrategy.model.forms.FormField" parameterType="long">
-        select f.* from FormField f where f.id=#{id} 
-    </select>
-    
-    <select id="getDefFormFieldByFormId" resultMap="formFieldResult" parameterType="long">
-        SELECT fd.* from FormField fd join (
-        select * from FlowForm ff where ff.parentId=#{formId} OR ff.id=#{formId}
-        )fl on fd.flowFormId=fl.id where fd.xtype!='detailGrid'
+        select f.* from FormField f where f.id=#{id} and f.parentId is null 
     </select>
     
     
@@ -45,21 +35,26 @@
         update FormField f set 
         f.name=#{name} , 
         f.xtype=#{xtype} , 
-        f.html=#{html} , 
         f.flowFormId=#{flowForm.id} , 
         f.dataType=#{dataType} , 
         f.lastUpdateDate=#{lastUpdateDate} , 
-        f.label=#{label}  
+        f.label=#{label},  
+        f.dateFormat=#{dateFormat},  
+        f.parentId=#{parent.id}  
         where f.id=#{id}
     </update>
     <delete id="deleteByFormId" parameterType="long" flushCache="true">
         delete from FormField where flowFormId=#{formId}
     </delete>
+    <delete id="deleteChild" parameterType="long" flushCache="true">
+        delete from FormField where parentId=#{parentId}
+    </delete>
+    
     <insert id="saveFormField" parameterType="com.ozstrategy.model.forms.FormField" flushCache="true">
         <selectKey keyColumn="id" keyProperty="id" resultType="java.lang.Long">
             select LAST_INSERT_ID()
         </selectKey>
-        insert into FormField(id,name,xtype,html,flowFormId,dataType,createDate,lastUpdateDate,label) 
-        values (#{id},#{name},#{xtype},#{html},#{flowForm.id},#{dataType},#{createDate},#{lastUpdateDate},#{label})
+        insert into FormField(id,name,xtype,flowFormId,dataType,createDate,lastUpdateDate,label,dateFormat,parentId) 
+        values (#{id},#{name},#{xtype},#{flowForm.id},#{dataType},#{createDate},#{lastUpdateDate},#{label},#{dateFormat},#{parent.id})
     </insert>
 </mapper>

@@ -9,7 +9,6 @@ Ext.define('FlexCenter.forms.view.FlowFormDetail', {
     extend: 'Ext.Window',
     alias: 'widget.flowFormDetail',
     itemId: 'flowFormDetail',
-    title: '表单结构',
     shim: false,
     modal: true,
     layout: 'fit',
@@ -25,11 +24,27 @@ Ext.define('FlexCenter.forms.view.FlowFormDetail', {
                 header: '字段标题',
                 flex:1,
                 dataIndex: 'label'
+            },{
+                header: '数据类型',
+                flex:1,
+                dataIndex: 'dataType',
+                renderer:function(v){
+                    if(v=='string'){
+                        return '字符';
+                    }else if(v=='number'){
+                        return "数字";
+                    }else if(v=='array'){
+                        return "数组";
+                    }else if(v=='date'){
+                        return "日期";
+                    }
+                    return v;
+                }
             }
         ];
         var fields=rec.get('fields');
         var store=Ext.create('Ext.data.Store',{
-            fields:['id','name','label'],
+            fields:['id','name','label','dataType'],
             proxy:{
                 type:'memory',
                 reader: {
@@ -42,54 +57,17 @@ Ext.define('FlexCenter.forms.view.FlowFormDetail', {
         var items=[
             {
                 xtype:'grid',
-                title:'主表：【'+rec.get('displayName')+'】字段',
                 columns:columns,
                 region:'center',
                 margin:'0 1 0 0',
                 autoScroll: true,
+                margin:1,
                 store:store
             }
         ];
+        me.title='表单：<font color="blue">'+rec.get('displayName')+'</font>';
         me.width=600;
         me.height=400;
-        var children=rec.get('children');
-        if(children.length>0){
-            var citems=[];
-            for(var i=0;i<children.length;i++){
-                var cfield=children[i].fields;
-                var cstore=Ext.create('Ext.data.Store',{
-                    fields:['id','name','label'],
-                    proxy:{
-                        type:'memory',
-                        reader: {
-                            type: 'json'
-                        }
-                    },
-                    data:cfield
-                });
-                var cgrid={
-                    xtype:'grid',
-                    border:false,
-                    title:'明细表：【'+children[i].displayName+'】字段',
-                    columns:columns,
-                    autoScroll: true,
-                    store:cstore
-                }
-                citems.push(cgrid);
-            }
-            var cpanel={
-                xtype:'panel',
-                width:300,
-                region:'east',
-                
-                autoScroll: true,
-                items:citems
-            }
-            items.push(cpanel);
-            me.width=800;
-            me.height=500;
-        }
-        
         me.items=[
             {
                 xtype:'panel',
