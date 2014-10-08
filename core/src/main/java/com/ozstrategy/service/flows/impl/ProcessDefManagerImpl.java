@@ -46,6 +46,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -364,6 +365,7 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
         processDef.setActResId(deployment.getId());
         processDef.setActDefId(processDefinition.getId());
         processDef.setVersion(processDefinition.getVersion());
+        processDef.setDeployDate(new Date());
         processDefDao.updateProcessDef(processDef);
         ProcessDefVersion version=new ProcessDefVersion();
         version = version.copy(processDef);
@@ -386,5 +388,13 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
                 processDefDao.saveProcessDefRole(role.getId(),def.getId());
             }
         }
+    }
+
+    public List<ProcessDef> getProcessDefinition(Map<String, Object> map,Integer start,Integer limit) {
+        return processDefDao.getProcessDefinition(map,new RowBounds(start,limit));
+    }
+
+    public Integer getProcessDefinitionCount(Map<String, Object> map) {
+        return processDefDao.getProcessDefinitionCount(map);
     }
 }

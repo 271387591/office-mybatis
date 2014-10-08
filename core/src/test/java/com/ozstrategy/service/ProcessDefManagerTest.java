@@ -2,27 +2,26 @@ package com.ozstrategy.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mxgraph.io.mxCodec;
 import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.util.mxXmlUtils;
+import com.ozstrategy.dao.flows.ProcessDefDao;
 import com.ozstrategy.dao.flows.ProcessElementDao;
 import com.ozstrategy.dao.flows.ProcessElementFormDao;
 import com.ozstrategy.model.flows.ProcessDef;
 import com.ozstrategy.service.flows.ProcessDefManager;
-import com.ozstrategy.util.ActivityJsonConverUtil;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.ExtensionAttribute;
 import org.activiti.editor.language.json.converter.BpmnJsonConverter;
 import org.activiti.engine.RepositoryService;
-import org.activiti.image.impl.DefaultProcessDiagramGenerator;
 import org.apache.commons.io.FileUtils;
+import org.apache.ibatis.session.RowBounds;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
 import java.io.File;
-import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +37,9 @@ public class ProcessDefManagerTest extends BaseManagerTestCase  {
     ProcessElementFormDao processElementFormDao;
     @Autowired
     ProcessElementDao processElementDao;
+    @Autowired
+    ProcessDefDao processDefDao;
+    
     
     
     @Test
@@ -54,12 +56,21 @@ public class ProcessDefManagerTest extends BaseManagerTestCase  {
     @Test
     @Rollback(value = false)
     public void testUpdate() throws Exception,Throwable {
-        String path=ProcessDefManagerTest.class.getClassLoader().getResource("graph.xml").getPath();
-        String value= FileUtils.readFileToString(new File(path));
+        Map<String,Object> map=new HashMap<String, Object>();
+        map.put("userId",2);
+        map.put("roleIds","-1,-2");
+        List<ProcessDef> processDefs = processDefDao.getProcessDefinition(map,new RowBounds(0,5));
+        int count=processDefDao.getProcessDefinitionCount(map);
+        int i=0;
+        
+        
+        
+//        String path=ProcessDefManagerTest.class.getClassLoader().getResource("graph.xml").getPath();
+//        String value= FileUtils.readFileToString(new File(path));
 //        value.replaceAll("&quot;","\"");
 //        System.out.println(value);
-        ProcessDef processDef = processDefManager.getProcessDefById(1L);
-        processDefManager.update(processDef,value);
+//        ProcessDef processDef = processDefManager.getProcessDefById(1L);
+//        processDefManager.update(processDef,value);
 //        mxGraphModel model=getMxGraphModel(value);
         
 //        ObjectNode node = ActivityJsonConverUtil.createProcess(model, processDef);

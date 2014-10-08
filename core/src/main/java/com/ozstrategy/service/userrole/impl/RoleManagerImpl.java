@@ -75,4 +75,8 @@ public class RoleManagerImpl  implements RoleManager {
     public List<RoleFeature> getRoleFeatureByRoleId(Long roleId) {
         return roleFeatureDao.getRoleFeatureByRoleId(roleId);
     }
+
+    public List<Role> getRoleByUserId(Long userId) {
+        return roleDao.getRoleByUserId(userId);
+    }
 }

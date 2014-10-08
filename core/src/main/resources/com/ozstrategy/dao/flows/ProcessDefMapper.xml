@@ -10,6 +10,12 @@
         <collection property="users" column="id" select="getProcessDefUser"/>
         <collection property="roles" column="id" select="getProcessDefRole"/>
     </resultMap>
+    <resultMap id="processDefinitionResult" type="com.ozstrategy.model.flows.ProcessDef" autoMapping="true">
+        <id column="id" property="id" javaType="long"/>
+        <result column="typeName" property="category" javaType="string"/>
+        <association property="flowForm" column="flowFormId" select="com.ozstrategy.dao.forms.FlowFormDao.getNoCascadeFlowFormById"/>
+    </resultMap>
+    
     
     <select id="listProcessDefs" resultMap="processDefResult" parameterType="Map">
         select g.typeName,p.* from ProcessDef p left join GlobalType g on g.typeId=p.globalTypeId where p.enabled=1
@@ -22,6 +28,33 @@
         <if test="keyword!=null and keyword!=''">and p.name like CONCAT(CONCAT('%', #{keyword}), '%')</if>
         <if test="typeId!=null and typeId!=''">and p.globalTypeId=#{typeId}</if>
     </select>
+    
+    <select id="getProcessDefinition" resultMap="processDefinitionResult" parameterType="Map">
+        select g.typeName,p.* from ProcessDef p left join GlobalType g on g.typeId=p.globalTypeId 
+        where p.enabled=1
+        <if test="keyword!=null and keyword!=''">and p.name like CONCAT(CONCAT('%', #{keyword}), '%') </if>
+        <if test="typeId!=null and typeId!=''">and p.globalTypeId=#{typeId} </if>
+        and p.actDefId is not null 
+        and (p.id in (select pu.processDefId from ProcessDefUser pu where pu.userId=#{userId})
+            or
+            p.id in (select pr.processDefId from ProcessDefRole pr where pr.roleId in (#{roleIds})))
+    </select>
+    <select id="getProcessDefinitionCount" resultType="java.lang.Integer" parameterType="Map">
+        select count(*) from ProcessDef p left join GlobalType g on g.typeId=p.globalTypeId 
+        where p.enabled=1
+        <if test="keyword!=null and keyword!=''">and p.name like CONCAT(CONCAT('%', #{keyword}), '%') </if>
+        <if test="typeId!=null and typeId!=''">and p.globalTypeId=#{typeId} </if>
+        and p.actDefId is not null 
+        and (p.id in (select pu.processDefId from ProcessDefUser pu where pu.userId=#{userId})
+            or
+            p.id in (select pr.processDefId from ProcessDefRole pr where pr.roleId in (#{roleIds})))
+    </select>
+    
+    
+    
+    
+    
+    
     <select id="getProcessDefById" resultMap="processDefResult" parameterType="long" flushCache="true">
         select f.* from ProcessDef f where f.enabled=1 and f.id=#{id} 
     </select>
@@ -78,6 +111,8 @@
         f.documentation=#{documentation} , 
         f.enabled=#{enabled} , 
         f.flowFormId=#{flowForm.id} , 
+        f.deployDate=#{deployDate} , 
+        f.suspended=#{suspended} , 
         f.lastUpdateDate=#{lastUpdateDate} 
         where f.id=#{id}
     </update>
@@ -88,7 +123,7 @@
         <selectKey keyColumn="id" keyProperty="id" resultType="java.lang.Long">
             select LAST_INSERT_ID()
         </selectKey>
-        insert into ProcessDef(id,name,flowFormId,globalTypeId,documentation,version,actDefId,actResId,graphResId,modelId,depId,enabled,createDate,lastUpdateDate) 
-        values (#{id},#{name},#{flowForm.id},#{globalTypeId},#{documentation},#{version},#{actDefId},#{actResId},#{graphResId},#{modelId},#{depId},#{enabled},#{createDate},#{lastUpdateDate})
+        insert into ProcessDef(id,name,flowFormId,globalTypeId,documentation,version,actDefId,actResId,graphResId,modelId,depId,enabled,createDate,lastUpdateDate,deployDate,suspended) 
+        values (#{id},#{name},#{flowForm.id},#{globalTypeId},#{documentation},#{version},#{actDefId},#{actResId},#{graphResId},#{modelId},#{depId},#{enabled},#{createDate},#{lastUpdateDate},#{deployDate},#{suspended})
     </insert>
 </mapper>

@@ -6,6 +6,7 @@ import com.ozstrategy.model.userrole.User;
 import com.ozstrategy.webapp.command.BaseObjectCommand;
 import org.apache.commons.lang.StringUtils;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,7 +33,10 @@ public class ProcessDefCommand extends BaseObjectCommand {
     private String userFullNames="";
     private String roleIds="";
     private String roleNames="";
-    public ProcessDefCommand(ProcessDef processDef) {
+    private Date deployDate;
+    private Boolean suspended;
+    private String formHtml;
+    public ProcessDefCommand(ProcessDef processDef,boolean html) {
         super(processDef);
         this.id= processDef.getId();
         this.name= processDef.getName();
@@ -47,6 +51,11 @@ public class ProcessDefCommand extends BaseObjectCommand {
         this.flowFormId= processDef.getFlowForm()!=null? processDef.getFlowForm().getId():null;
         this.flowFormName= processDef.getFlowForm()!=null? processDef.getFlowForm().getName():null;
         this.globalTypeId=processDef.getGlobalTypeId();
+        this.deployDate=processDef.getDeployDate();
+        this.suspended=processDef.getSuspended();
+        if(html){
+            this.formHtml=processDef.getFlowForm()!=null? processDef.getFlowForm().getContent():null;
+        }
         Set<User> users=processDef.getUsers();
         if(users!=null && users.size()>0){
             for(User user : users){
@@ -58,7 +67,7 @@ public class ProcessDefCommand extends BaseObjectCommand {
         if(roles!=null && roles.size()>0){
             for(Role role : roles){
                 this.roleIds+=","+role.getId();
-                this.roleNames+=","+role.getName();
+                this.roleNames+=","+role.getDisplayName();
             }
         }
         this.userIds= StringUtils.isNotEmpty(this.userIds)?this.userIds.substring(1):null;
@@ -218,5 +227,29 @@ public class ProcessDefCommand extends BaseObjectCommand {
 
     public void setRoleNames(String roleNames) {
         this.roleNames = roleNames;
+    }
+
+    public Date getDeployDate() {
+        return deployDate;
+    }
+
+    public void setDeployDate(Date deployDate) {
+        this.deployDate = deployDate;
+    }
+
+    public Boolean getSuspended() {
+        return suspended;
+    }
+
+    public void setSuspended(Boolean suspended) {
+        this.suspended = suspended;
+    }
+
+    public String getFormHtml() {
+        return formHtml;
+    }
+
+    public void setFormHtml(String formHtml) {
+        this.formHtml = formHtml;
     }
 }

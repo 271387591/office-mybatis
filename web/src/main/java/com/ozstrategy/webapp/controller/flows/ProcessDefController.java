@@ -61,13 +61,48 @@ public class ProcessDefController extends BaseController {
         List<ProcessDef> items= processDefManager.listProcessDefs(map, parseInteger(start), parseInteger(limit));
         if(items!=null && items.size()>0){
             for(ProcessDef item : items){
-                ProcessDefCommand command=new ProcessDefCommand(item);
+                ProcessDefCommand command=new ProcessDefCommand(item,false);
                 commands.add(command);
             }
         }
         Integer count=processDefManager.listProcessDefsCount(map);
         return new JsonReaderResponse<ProcessDefCommand>(commands,count);
     }
+    @RequestMapping(params = "method=getProcessDefinitions")
+    @ResponseBody
+    public JsonReaderResponse<ProcessDefCommand> getProcessDefinitions(HttpServletRequest request) {
+        String start=request.getParameter("start");
+        String limit=request.getParameter("limit");
+        Map<String,Object> map=requestMap(request);
+        String username=request.getRemoteUser();
+        if(StringUtils.isNotEmpty(username)){
+            User user = userManager.getUserByUsername(username);
+            if(user!=null){
+                map.put("userId",user.getId());
+                List<Role> roles = roleManager.getRoleByUserId(user.getId());
+                String roleIds="";
+                if(roles!=null && roles.size()>0){
+                    for(Role role : roles){
+                        roleIds+=","+role.getId();
+                    }
+                }
+                if(StringUtils.isNotEmpty(roleIds)){
+                    map.put("roleIds",roleIds.substring(1));
+                }
+            }
+        }
+        List<ProcessDefCommand> commands=new ArrayList<ProcessDefCommand>();
+        List<ProcessDef> items= processDefManager.getProcessDefinition(map, parseInteger(start), parseInteger(limit));
+        if(items!=null && items.size()>0){
+            for(ProcessDef item : items){
+                ProcessDefCommand command=new ProcessDefCommand(item,true);
+                commands.add(command);
+            }
+        }
+        Integer count=processDefManager.getProcessDefinitionCount(map);
+        return new JsonReaderResponse<ProcessDefCommand>(commands,count);
+    }
+    
     @RequestMapping(params = "method=listDefFormField")
     @ResponseBody
     public JsonReaderResponse<ProcessElementFormCommand> listDefFormField(HttpServletRequest request) {

@@ -2,6 +2,10 @@ package com.ozstrategy.model;
 
 import com.ozstrategy.model.userrole.User;
 
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 
 /**
  * This class is used to store object creator and last updater information.
@@ -16,10 +20,21 @@ public abstract class CreatorObject extends BaseObject {
 
   private static final long serialVersionUID = 579757832122255158L;
 
-  
+    @JoinColumn(
+            name       = "creatorId",
+            insertable = true,
+            updatable  = false
+    )
+    @ManyToOne(fetch = FetchType.LAZY)
   protected User creator;
 
-  
+
+    @JoinColumn(
+            name       = "lastUpdaterId",
+            insertable = true,
+            updatable  = true
+    )
+    @ManyToOne(fetch = FetchType.LAZY)
   protected User lastUpdater;
 
   //~ Methods ----------------------------------------------------------------------------------------------------------

@@ -9,6 +9,11 @@
         <association property="defaultRole" select="com.ozstrategy.dao.userrole.RoleDao.getRoleById" column="defaultRoleId" javaType="com.ozstrategy.model.userrole.Role"/>
         <collection property="roles" column="id" select="com.ozstrategy.dao.userrole.RoleDao.getRoleByUserId" fetchType="lazy"/>
     </resultMap>
+    <resultMap id="userNoCascadeResult" type="com.ozstrategy.model.userrole.User" autoMapping="true">
+        <id property="id" column="id"/>
+        <association property="address" resultMap="addressResult" javaType="com.ozstrategy.model.userrole.Address"/>
+    </resultMap>
+    
     <resultMap id="addressResult" type="com.ozstrategy.model.userrole.Address">
         <result column="address" javaType="java.lang.String" property="address"/>
         <result column="city" javaType="java.lang.String" property="city"/>
@@ -16,6 +21,7 @@
         <result column="postalCode" javaType="java.lang.String" property="postalCode"/>
         <result column="province" javaType="java.lang.String" property="province"/>
     </resultMap>
+    
     
     
     <select id="listUsers" resultMap="userResult" parameterType="string">
@@ -46,6 +52,10 @@
             <if test="roleId!=null">ur.roleId=#{roleId}</if>
         </where>
     </select>
+    <select id="getNoCascadeUserById" parameterType="long" resultMap="userNoCascadeResult">
+        select u.* from User u join User where u.id=#{id}
+    </select>
+    
     
     <update id="enabledUser" parameterType="Long" flushCache="true">
         update User u set u.enabled='0' where u.id=#{id}

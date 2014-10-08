@@ -2,6 +2,7 @@ package com.ozstrategy.dao.userrole;
 
 import com.ozstrategy.model.userrole.Role;
 import com.ozstrategy.model.userrole.RoleFeature;
+import com.ozstrategy.model.userrole.User;
 import org.apache.ibatis.session.RowBounds;
 
 import java.util.List;

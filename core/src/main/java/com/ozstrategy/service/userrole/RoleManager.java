@@ -19,4 +19,5 @@ public interface RoleManager  {
     Role getRoleById(Long id);
     boolean hasFeature(Set<String> roleName,String feature);
     List<RoleFeature> getRoleFeatureByRoleId(Long roleId);
+    List<Role> getRoleByUserId(Long userId);
 } 

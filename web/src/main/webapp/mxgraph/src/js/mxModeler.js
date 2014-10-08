@@ -3,6 +3,7 @@
  */
 function mxModeler(dom,templates)
 {
+    
     var xmlRequest = mxUtils.load(templates);
     var node = xmlRequest.getDocumentElement();
     var editor = new mxEditor(node);
@@ -10,11 +11,12 @@ function mxModeler(dom,templates)
     var graph=editor.graph;
     this.initGraph(graph,dom);
     this.keyHandler(graph);
-    this.addMenu(graph);
+//    this.addMenu(graph,editor);
     this.addGraphListeners(graph,this.showProperties);
-    this.overrideGraph(graph,this.editor);
+    this.overrideGraph(graph,editor);
     this.graph=graph;
     this.templates=templates;
+    
 };
 mxModeler.prototype.setConnectImagePath=function(connect){
     mxConnectionHandler.prototype.connectImage = new mxImage(connect, 16, 16);
@@ -41,6 +43,7 @@ mxModeler.prototype.initGraph = function(graph,dom)
     graph.constrainChildren = false;
     graph.extendParents = false;
     graph.extendParentsOnAdd = true;
+    mxEvent.disableContextMenu(document.body);
     graph.init(dom);
     if (mxClient.IS_GC || mxClient.IS_SF){
         graph.container.style.background = '-webkit-gradient(linear, 0% 0%, 100% 0%, from(#FFFFFF), to(#FFFFEE))';
@@ -95,7 +98,7 @@ mxModeler.prototype.keyHandler=function(graph){
     });
     
 };
-mxModeler.prototype.addMenu=function(graph){
+mxModeler.prototype.addMenu=function(graph,editor){
     graph.panningHandler.factoryMethod = function(menu, cell, evt)
     {
         var selected = !graph.isSelectionEmpty();

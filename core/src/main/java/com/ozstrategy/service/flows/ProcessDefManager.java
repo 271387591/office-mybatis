@@ -28,4 +28,7 @@ public interface ProcessDefManager {
     void deployed(ProcessDef processDef) throws IOException,OzException,Exception;
     
     void authorizationProcessDef(ProcessDef def) throws Exception;
+
+    List<ProcessDef> getProcessDefinition(Map<String,Object> map,Integer start,Integer limit);
+    Integer getProcessDefinitionCount(Map<String,Object> map);
 }

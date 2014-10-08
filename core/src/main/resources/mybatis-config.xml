@@ -42,5 +42,7 @@
 		<mapper resource="com/ozstrategy/dao/flows/ProcessElementMapper.xml"/>
 		<mapper resource="com/ozstrategy/dao/flows/ProcessElementFormMapper.xml"/>
 		<mapper resource="com/ozstrategy/dao/flows/ProcessDefVersionMapper.xml"/>
+		<mapper resource="com/ozstrategy/dao/flows/ProcessFileAttachMapper.xml"/>
+		<mapper resource="com/ozstrategy/dao/flows/ProcessDefInstanceDraftMapper.xml"/>
 	</mappers>
 </configuration>

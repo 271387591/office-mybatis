@@ -39,7 +39,7 @@
     <%--<script type="text/javascript" src="<c:url value='/desktop/classes.js'/>"></script>--%>
     
     <script type="text/javascript" src="<c:url value='/scripts/ext/locale/ext-lang-${language}.js'/>"></script>
-
+    
     <script type="text/javascript">
         extTheme = '<c:url value="/scripts/ext/resources/css/"/>';
         basePath = '<c:url value="/"/>';
@@ -48,6 +48,7 @@
 
     <script type="text/javascript" src="<c:url value="/mxgraph/src/js/mxClient.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/mxgraph/src/js/mxModeler.js"/>"></script>
+    <script type="text/javascript" src="<c:url value='/scripts/lib/jquery-1.7.1.min.js'/>"></script>
 
     <!-- Loads and initiaizes the library -->
     <%--<script type="text/javascript" src='<c:url value="/mxgraph/js/mxClient.js"/>'></script>--%>

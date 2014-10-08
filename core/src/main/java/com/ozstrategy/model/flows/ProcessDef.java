@@ -18,7 +18,10 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -52,6 +55,13 @@ public class ProcessDef extends BaseObject {
     private String modelId;
     @Column
     private String depId;
+
+    @Column
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date deployDate;
+    @Column
+    private Boolean suspended;
+    
     @ManyToOne
     @JoinColumn(name = "flowFormId")
     private FlowForm flowForm;
@@ -219,6 +229,22 @@ public class ProcessDef extends BaseObject {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public Date getDeployDate() {
+        return deployDate;
+    }
+
+    public void setDeployDate(Date deployDate) {
+        this.deployDate = deployDate;
+    }
+
+    public Boolean getSuspended() {
+        return suspended;
+    }
+
+    public void setSuspended(Boolean suspended) {
+        this.suspended = suspended;
     }
 
     public String getActRes(){
