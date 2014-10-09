@@ -13,8 +13,6 @@ Ext.define('FlexCenter.forms.view.FormPreview',{
     ],
     extend:'Ext.panel.Panel',
     alias: 'widget.formPreview',
-    itemId:'formPreview',
-    border:false,
     thStyle:'text-align:center;background-color: #D0E0F4;',
     layout:'fit',
     autoScroll: true,

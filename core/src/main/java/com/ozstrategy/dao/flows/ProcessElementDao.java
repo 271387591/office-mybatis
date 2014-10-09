@@ -32,5 +32,5 @@ public interface ProcessElementDao {
     
     void updateActResource(ProcessElement ProcessElement);
 
-    String loadElementActResource(Long id);
+    ProcessElement loadElementActResource(Long id);
 }

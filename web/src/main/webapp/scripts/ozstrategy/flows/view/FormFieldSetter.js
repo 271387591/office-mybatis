@@ -216,7 +216,7 @@ Ext.define('FlexCenter.flows.view.FormFieldSetter', {
                         var model={};
                         model.formproperty_id=rec.get('id')||'';
                         model.formproperty_name=rec.get('name')||'';
-                        model.formproperty_type=rec.get('type')||'';
+                        model.formproperty_type=rec.get('type')=='array'?'string':(rec.get('type')||'');
                         model.formproperty_expression=rec.get('expression')||'';
                         model.formproperty_variable=rec.get('variable')||'';
                         model.formproperty_required='No';

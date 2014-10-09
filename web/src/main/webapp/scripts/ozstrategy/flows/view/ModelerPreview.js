@@ -68,7 +68,7 @@ Ext.define('FlexCenter.flows.view.ModelerPreview', {
     initGraph:function(dom){
         var me=this;
         var modeler=new mxModeler(dom,'mxgraph/config/templates.xml');
-        modeler.setConnectImagePath('mxgraph/images/connector.gif');
+//        modeler.setConnectImagePath('mxgraph/images/connector.gif');
         me.graph=modeler.getGraph();
         me.editor= modeler.getEditor();
         
@@ -98,6 +98,7 @@ Ext.define('FlexCenter.flows.view.ModelerPreview', {
             me.tooltip.hide();
         };
         me.graph.setCellsLocked(true);
+        me.graph.setConnectable(false);
         me.graRes?modeler.reloadGraph(me.graRes):'';
     }
 });

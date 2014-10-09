@@ -171,10 +171,10 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
                     {
                         header: '是否部署',
                         flex:1,
-                        dataIndex: 'depId',
+                        dataIndex: 'actDefId',
                         renderer: function (v,m,rec) {
                             if(v){
-                                return '<font color="red">已部署</font>>'
+                                return '<font color="red">已部署</font>'
                             }
                             return '未部署';
                         }
@@ -251,6 +251,7 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
             ajaxPostRequest('processDefController.do?method=authorization',data,function(result){
                 if(result.success){
                     me.down('grid').getStore().load();
+                    me.down('grid').getSelectionModel().deselectAll();
                     win.close();
                 }else{
                     Ext.MessageBox.alert({
@@ -266,24 +267,18 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
     deployed:function(rec){
         var me=this;
         ajaxPostRequest('processDefController.do?method=deploy',{id:rec.get('id')},function(result){
+            var msg;
             if(result.success){
-                var data=result.data,actRes,graRes;
-                if(data){
-                    graRes=data.graRes;
-                }
-                var moder = Ext.widget('modelerPreviewWindow',{
-                    graRes:graRes,
-                    animateTarget:me.getEl()
-                });
-                moder.show();
-            }else{
-                Ext.MessageBox.alert({
-                    title:'警告',
-                    icon: Ext.MessageBox.ERROR,
-                    msg:result.message,
-                    buttons:Ext.MessageBox.OK
-                });
+                msg='部署成功！';
             }
+            me.down('grid').getStore().load();
+            me.down('grid').getSelectionModel().deselectAll();
+            Ext.MessageBox.alert({
+                title:'提示',
+                icon: Ext.MessageBox.INFO,
+                msg:msg?msg:result.message,
+                buttons:Ext.MessageBox.OK
+            });
         });
     },
     

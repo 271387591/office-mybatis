@@ -1,6 +1,7 @@
 package com.ozstrategy.model.flows;
 
 import com.ozstrategy.model.BaseObject;
+import com.ozstrategy.model.CreatorObject;
 import com.ozstrategy.model.userrole.User;
 
 import javax.persistence.Column;
@@ -22,7 +23,7 @@ import java.util.Set;
  * Created by lihao on 9/27/14.
  */
 @Entity
-public class TaskInstance extends BaseObject{
+public class TaskInstance extends CreatorObject{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -46,7 +47,7 @@ public class TaskInstance extends BaseObject{
     @JoinColumn(name = "assigneeId")
     private User assignee;
     @ManyToOne
-    @JoinColumn(name = "elementId")
+    @JoinColumn(name = "instanceId")
     private ProcessDefInstance instance;
     @Column(columnDefinition = "TEXT")
     private String remarks;

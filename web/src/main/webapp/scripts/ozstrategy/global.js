@@ -33,6 +33,7 @@ function ajaxPostRequest(url,params,callback){
         url: url || '',
         params: params || {},
         method: 'POST',
+        waitMsg: '发送请求........',
         success: function (response, options) {
             var result = Ext.decode(response.responseText,true);
             if(callback){
@@ -50,13 +51,18 @@ Ext.Ajax.on('requestcomplete',checkUserSessionStatus, this);
 function checkUserSessionStatus(conn,response,options){
 //  debugger;
     //Ext重新封装了response对象
-    if(response.getAllResponseHeaders().sessionstatus){
-        setTimeout(function (){
-            Ext.MessageBox.alert(globalRes.title.fail,globalRes.msg.logoutTimeout,function (){
-                location.href = location.href;
-            });
-        },500);
+    try{
+        if(response && response.getAllResponseHeaders().sessionstatus){
+            setTimeout(function (){
+                Ext.MessageBox.alert(globalRes.title.fail,globalRes.msg.logoutTimeout,function (){
+                    location.href = location.href;
+                });
+            },500);
+        }
+    }catch (e){
+        
     }
+    
 }
 function setCookie(name,value,expires,path,domain,secure) {
     document.cookie = name + "=" + escape (value) +

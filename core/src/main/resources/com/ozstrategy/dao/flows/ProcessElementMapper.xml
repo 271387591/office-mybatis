@@ -35,10 +35,9 @@
     <select id="getProcessElementByTaskKeyAndDefId" resultMap="processElementResult" parameterType="Map">
         select <include refid="fieldMapping"/> from ProcessElement f where f.taskKey=#{taskKey} and f.processDefId=#{defId} 
     </select>
-    <select id="loadElementActResource" resultType="string" parameterType="long">
+    <select id="loadElementActResource" resultType="com.ozstrategy.model.flows.ProcessElement" parameterType="long" >
         select actResource from ProcessElement f where f.id=#{id}
     </select>
-    
     
     
     <insert id="saveProcessElementRole" flushCache="true" parameterType="Map">

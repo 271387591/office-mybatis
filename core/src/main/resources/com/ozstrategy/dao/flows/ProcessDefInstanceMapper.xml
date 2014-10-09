@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ozstrategy.dao.flows.ProcessDefInstanceDao">
+    <!--<cache type="org.mybatis.caches.ehcache.EhcacheCache"/>-->
+    <resultMap id="processDefInstanceResult" type="com.ozstrategy.model.flows.ProcessDefInstance" autoMapping="true">
+        <id column="id" property="id" javaType="long"/>
+        <association property="creator" column="creatorId" select="com.ozstrategy.dao.userrole.UserDao.getNoCascadeUserById"/>
+        <association property="lastUpdater" column="lastUpdaterId" select="com.ozstrategy.dao.userrole.UserDao.getNoCascadeUserById"/>
+        <association property="processDef" column="processDefId" select="com.ozstrategy.dao.flows.ProcessDefDao.getNoCascadeProcessDefById"/>
+    </resultMap>
+    
+    <select id="listProcessDefInstances" resultMap="processDefInstanceResult" parameterType="Map">
+        select p.* from ProcessDefInstance p where p.creatorId=#{creatorId}
+        <if test="keyword!=null and keyword!=''">and p.name like CONCAT(CONCAT('%', #{keyword}), '%')</if>
+        order by p.createDate desc
+    </select>
+    <select id="listProcessDefInstancesCount" resultType="java.lang.Integer" parameterType="Map">
+        select count(*) from ProcessDefInstance p where p.creatorId=#{creatorId}
+        <if test="keyword!=null and keyword!=''">and p.name like CONCAT(CONCAT('%', #{keyword}), '%')</if>
+    </select>
+    
+    <select id="getProcessDefInstanceById" resultMap="processDefInstanceResult" parameterType="long">
+        select f.* from ProcessDefInstance f where f.id=#{id} 
+    </select>
+   
+    <delete id="deleteProcessDefInstance" parameterType="long" flushCache="true">
+        delete from ProcessDefInstance where id=#{id}
+    </delete>
+    <insert id="saveProcessDefInstance" parameterType="com.ozstrategy.model.flows.ProcessDefInstance" flushCache="true">
+        <selectKey keyColumn="id" keyProperty="id" resultType="java.lang.Long">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into ProcessDefInstance(id,name,processDefId,version,actInstanceId,suspended,startDate,endDate,createDate,lastUpdateDate,creatorId,lastUpdaterId) 
+        values (#{id},#{name},#{processDef.id},#{version},#{actInstanceId},#{suspended},#{startDate},#{endDate},#{createDate},#{lastUpdateDate},#{creator.id},#{lastUpdater.id})
+    </insert>
+</mapper>

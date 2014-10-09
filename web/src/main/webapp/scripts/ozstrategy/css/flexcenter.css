@@ -494,6 +494,18 @@ html{
 .view_tree {
     background-image: url(icons/view_tree.png) !important;
 }
+.file-download {
+    background-image: url(icons/download_file.png) !important;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+.save {
+    background-image: url(icons/save.gif) !important;
+}
+
+
+
 
 
 

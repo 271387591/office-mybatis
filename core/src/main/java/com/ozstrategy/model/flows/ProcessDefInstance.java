@@ -36,6 +36,8 @@ public class ProcessDefInstance extends CreatorObject{
     @Column
     @Temporal(TemporalType.TIMESTAMP)
     private Date endDate;
+    @Column
+    private String name;
 
     public Long getId() {
         return id;
@@ -91,5 +93,13 @@ public class ProcessDefInstance extends CreatorObject{
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

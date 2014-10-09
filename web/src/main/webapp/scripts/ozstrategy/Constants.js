@@ -154,6 +154,13 @@ Ext.define('FlexCenter.Constants', {
                 widget: 'clawBackTaskView',
                 widgetItemId: 'clawBackTaskView',
                 leaf: true
+            },
+{
+                id: '5',
+                text: '草稿箱',
+                widget: 'processDefInstanceDraftView',
+                widgetItemId: 'processDefInstanceDraftView',
+                leaf: true
             }
 
 

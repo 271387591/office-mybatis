@@ -2,10 +2,13 @@ package com.ozstrategy.service;
 
 import com.ozstrategy.dao.flows.ProcessDefDao;
 import com.ozstrategy.model.flows.ProcessDef;
+import org.activiti.engine.HistoryService;
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricActivityInstance;
+import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
@@ -31,10 +34,12 @@ public class ProcessDefInstanceManagerTest extends BaseManagerTestCase  {
     TaskService taskService;
     @Autowired
     private IdentityService identityService;
+    @Autowired
+    HistoryService historyService;
     
     
     @Test
-    @Rollback(value = false)
+    @Rollback(value = true)
     public void testRun() throws Exception{
         ProcessDef def=processDefDao.getProcessDefById(1L);
         String actDefId=def.getActDefId();
@@ -51,5 +56,31 @@ public class ProcessDefInstanceManagerTest extends BaseManagerTestCase  {
         int i=0;
         
     }
+    @Test
+    @Rollback(value = true)
+    public void testTask() throws Exception{
+        
+        List<Task> tasks = taskService.createTaskQuery().taskCandidateUser("dep").list();
+        System.out.println(tasks.size());
+        tasks = taskService.createTaskQuery().taskCandidateUser("hr").list();
+        System.out.println(tasks.size());
+
+        List<HistoricTaskInstance> taskInstances = historyService.createHistoricTaskInstanceQuery().list();
+
+        System.out.println(taskInstances.size());
+        
+        List<HistoricActivityInstance> activityInstances = historyService.createHistoricActivityInstanceQuery().finished().list();
+
+        System.out.println(activityInstances.size());
+
+
+        Map<String,Object> map = runtimeService.getVariables("120001");
+        
+        
+        
+        int i=0;
+        
+    }
+    
     
 }

@@ -20,7 +20,6 @@ import com.ozstrategy.model.flows.ProcessDefVersion;
 import com.ozstrategy.model.flows.ProcessElement;
 import com.ozstrategy.model.flows.ProcessElementForm;
 import com.ozstrategy.model.flows.ProcessElementType;
-import com.ozstrategy.model.forms.FormField;
 import com.ozstrategy.model.userrole.Role;
 import com.ozstrategy.model.userrole.User;
 import com.ozstrategy.service.flows.ProcessDefManager;
@@ -284,33 +283,30 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
                 instance.setChmod(chmod);
                 processElementFormDao.saveProcessElementForm(instance);
             }
-        }else {
-            Long formId=processDef.getFlowForm().getId();
-            List<FormField> formFields=formFieldDao.getFormFieldByFormId(formId);
-            if(formFields!=null && formFields.size()>0){
-                for(FormField formField : formFields){
-                    ProcessElementForm instance=new ProcessElementForm();
-                    instance.setProcessDef(processDef);
-                    instance.setName(formField.getLabel());
-                    instance.setVariable(formField.getName());
-                    instance.setType(formField.getDataType());
-                    instance.setProcessElement(processElement);
-                    instance.setChmod(1);
-                    processElementFormDao.saveProcessElementForm(instance);
-                }
-            }
         }
+//        else {
+//            Long formId=processDef.getFlowForm().getId();
+//            List<FormField> formFields=formFieldDao.getFormFieldByFormId(formId);
+//            if(formFields!=null && formFields.size()>0){
+//                for(FormField formField : formFields){
+//                    ProcessElementForm instance=new ProcessElementForm();
+//                    instance.setProcessDef(processDef);
+//                    instance.setName(formField.getLabel());
+//                    instance.setVariable(formField.getName());
+//                    instance.setType(formField.getDataType());
+//                    instance.setProcessElement(processElement);
+//                    instance.setChmod(1);
+//                    processElementFormDao.saveProcessElementForm(instance);
+//                }
+//            }
+//        }
     }
 
 
-    public String getRes(String resId,String resName) {
+    public String getRes(String resId,String resName) throws IOException{
         InputStream inputStream = repositoryService.getResourceAsStream(resId,resName);
         if(inputStream!=null){
-            try {
-                return IOUtils.toString(inputStream);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            return IOUtils.toString(inputStream);
         }
         return null;
     }
@@ -320,7 +316,7 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
     }
 
     @Transactional(rollbackFor = Throwable.class)
-    public void deployed(ProcessDef processDef) throws IOException, OzException,Exception {
+    public void deployed(ProcessDef processDef) throws Exception {
         ObjectMapper objectMapper=new ObjectMapper();
         Set<ProcessElement> elements=processDef.getElements();
         ObjectNode objectNode= ActivityJsonConverUtil.createProcess(processDef);
@@ -328,7 +324,11 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
         if(elements!=null && elements.size()>0){
             for(ProcessElement element : elements){
                 Long eId=element.getId();
-                String resource=processElementDao.loadElementActResource(eId);
+                ProcessElement res=processElementDao.loadElementActResource(eId);
+                String resource=null;
+                if(res!=null){
+                    resource=new String(res.getActResource(),"UTF-8");
+                }
                 if(StringUtils.isNotEmpty(resource)){
                     JsonNode jsonNode = objectMapper.readTree(resource);
                     if(jsonNode!=null){
@@ -341,10 +341,8 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
         BpmnJsonConverter jsonConverter=new BpmnJsonConverter();
         BpmnModel model = jsonConverter.convertToBpmnModel(objectNode);
         
-        
-        
         BpmnXMLConverter bpmnXMLConverter=new BpmnXMLConverter();
-        byte[] xml=bpmnXMLConverter.convertToXML(model,"UTF-8");
+        byte[] xml=bpmnXMLConverter.convertToXML(model);
         System.out.println(new String(xml));
         
         

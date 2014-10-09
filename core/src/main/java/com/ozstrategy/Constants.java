@@ -70,6 +70,7 @@ public interface Constants {
     public static final String MESSAGE_PROCESS_DEPLOYED_PROCESS_NOT_FOUND = "message.error.process.not.found";
     public static final String MESSAGE_FORM_READ_HTML_FIELD = "message.form.read.html.field";
     public static final String MESSAGE_FORM_SAVE_FIELD = "message.form.save.field";
+    public static final String MESSAGE_START_PROCESS_FAIL = "message.start.process.fail";
 
     public static final String TASK_SIGN_NAME = "Sign_";
     public static final String TASK_SIGN_subType = "subType";

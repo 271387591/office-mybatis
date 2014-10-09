@@ -24,10 +24,11 @@
         update ProcessFileAttach f set 
         f.fileName=#{fileName} , 
         f.filePath=#{filePath} , 
-        f.index=#{index} , 
+        f.fileIndex=#{fileIndex} , 
         f.fileSize=#{fileSize} , 
         f.lastUpdaterId=#{lastUpdater.id} , 
-        f.taskInstanceId=#{instance.id} 
+        f.lastUpdateDate=#{lastUpdateDate} , 
+        f.instanceId=#{instance.id} 
         where f.id=#{id}
     </update>
     <delete id="deleteProcessFileAttach" parameterType="long" flushCache="true">

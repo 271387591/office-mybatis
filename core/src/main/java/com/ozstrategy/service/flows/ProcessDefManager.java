@@ -22,10 +22,10 @@ public interface ProcessDefManager {
     ProcessDef getProcessDefById(Long id);
     void save(ProcessDef processDef);
     void update(ProcessDef processDef,String graRes) throws IOException,OzException;
-    String getRes(String resId,String resName);
+    String getRes(String resId,String resName)throws IOException;
     ProcessElement getProcessElementByTaskKeyAndDefId(Long defId,String taskKey);
     
-    void deployed(ProcessDef processDef) throws IOException,OzException,Exception;
+    void deployed(ProcessDef processDef) throws Exception;
     
     void authorizationProcessDef(ProcessDef def) throws Exception;
 

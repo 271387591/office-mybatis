@@ -1,6 +1,7 @@
 package com.ozstrategy.webapp.controller;
 
 import com.ozstrategy.webapp.Constants;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -121,6 +122,13 @@ public class BaseController {
             return Double.parseDouble(filed);
         return null;
     }
+    public Boolean parseBoolean(String filed){
+        if(StringUtils.isNotEmpty(filed)){
+            return BooleanUtils.toBooleanObject(filed);
+        }
+        return null;
+    }
+    
     public void ajax(String str,boolean result,HttpServletResponse response){
         try{
             response.setContentType("text/html;charset=UTF-8");
