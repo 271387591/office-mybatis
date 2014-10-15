@@ -8,229 +8,273 @@ Ext.define('FlexCenter.flows.view.ProcessDefinitionHeader',{
     alias: 'widget.processDefinitionHeader',
     border:false,
     defaults: {anchor: '100%'},
-    layout:{
-        type: 'hbox'
-    },
+//    layout:{
+//        type: 'hbox'
+//    },
     bodyPadding:1,
     initComponent:function(){
         var me=this;
-        var record=me.record?me.record.data:{};
+        var record=me.record?me.record:{};
+        console.log(record);
         me.items=[
             {
-                flex:.4,
                 xtype: 'buttongroup',
-                rowspan:3,
-
                 items:[
                     {
-                        labelWidth:30,
-                        xtype: 'textareafield',
-                        grow: true,
-                        height:86,
-                        flex:1,
-                        name: 'remarks',
-                        value:record.remarks,
-                        width:400,
-                        itemId:'remarks',
-                        fieldLabel:'备注'
+                        labelWidth:35,
+                        xtype: me.drawType?'textfield':'displayfield',
+                        name: 'title',
+                        value:record.title,
+                        itemId:'title',
+                        width:500,
+                        fieldLabel:me.drawType?'标题<font color="red">*</font>':'标题'
                     }
                 ]
             },
             {
                 xtype:'container',
-                flex:.6,
-                margin:'0 0 0 2',
+                layout:'hbox',
                 items:[
                     {
+                        flex:.4,
                         xtype: 'buttongroup',
+                        rowspan:3,
                         items:[
                             {
-                                xtype:'hidden',
-                                itemId:'fileAttachOne',
-                                value:record.fileAttachOne
-                            },
-                            {
-                                labelWidth:50,
-                                xtype: 'displayfield',
+                                labelWidth:30,
+                                xtype: 'textareafield',
                                 grow: true,
-                                itemId:'fileAttachOneName',
-                                name: 'fileAttachOneName',
-                                value:record.fileAttachOneName,
-                                fieldLabel:'附件一'
-                            },
-                            {
-                                xtype:'button',
-                                frame:true,
-                                iconCls:'upload-file',
-                                tooltip:'上传',
-                                text:'上传',
-                                itemId:'fileAttachOneUploadBtn',
-                                scope:me,
-                                margin:'0 0 0 10',
-                                handler:function(){
-                                    me.uploadFile(1,'fileAttachOne','fileAttachOneName','fileAttachOneUploadBtn','fileAttachOneDeleteBtn','fileAttachOneDownloadBtn');
-                                }
-                            },
-                            {
-                                xtype:'button',
-                                frame:true,
-                                iconCls:'close',
-                                scope:me,
-                                tooltip:'删除',
-                                disabled:true,
-                                text:'删除',
-                                itemId:'fileAttachOneDeleteBtn',
-                                margin:'0 0 0 5',
-                                handler:function(){
-                                    me.deleteFile(1,'fileAttachOne','fileAttachOneName','fileAttachOneUploadBtn','fileAttachOneDeleteBtn','fileAttachOneDownloadBtn');
-                                }
-                            },
-                            {
-                                xtype:'button',
-                                frame:true,
-                                iconCls:'file-download',
-                                scope:me,
-                                text:'下载',
-                                tooltip:'下载',
-                                disabled:true,
-                                itemId:'fileAttachOneDownloadBtn',
-                                margin:'0 0 0 5',
-                                handler:function(){
-                                    me.downloadFile(1,'fileAttachOne');
-                                }
-                            }
-                            
-                        ]
-                    },
-                    {
-                        xtype: 'buttongroup',
-                        margin:'1 0 0 0',
-                        items:[
-                            {
-                                xtype:'hidden',
-                                itemId:'fileAttachTwo',
-                                value:record.fileAttachTwo
-                            },
-                            {
-                                labelWidth:50,
-                                xtype: 'displayfield',
-                                grow: true,
-                                name: 'fileAttachTwoName',
-                                value:record.fileAttachTwoName,
-                                itemId:'fileAttachTwoName',
-                                fieldLabel:'附件二'
-                            },
-                            {
-                                xtype:'button',
-                                frame:true,
-                                iconCls:'upload-file',
-                                tooltip:'上传',
-                                text:'上传',
-                                itemId:'fileAttachTwoUploadBtn',
-                                scope:me,
-                                margin:'0 0 0 10',
-                                handler:function(){
-                                    me.uploadFile(2,'fileAttachTwo','fileAttachTwoName','fileAttachTwoUploadBtn','fileAttachTwoDeleteBtn','fileAttachTwoDownloadBtn');
-                                }
-                            },
-                            {
-                                xtype:'button',
-                                frame:true,
-                                iconCls:'close',
-                                scope:me,
-                                tooltip:'删除',
-                                text:'删除',
-                                disabled:true,
-                                itemId:'fileAttachTwoDeleteBtn',
-                                margin:'0 0 0 5',
-                                handler:function(){
-                                    me.deleteFile(2,'fileAttachTwo','fileAttachTwoName','fileAttachTwoUploadBtn','fileAttachTwoDeleteBtn','fileAttachTwoDownloadBtn');
-                                }
-                            },
-                            {
-                                xtype:'button',
-                                frame:true,
-                                iconCls:'file-download',
-                                scope:me,
-                                tooltip:'下载',
-                                text:'下载',
-                                disabled:true,
-                                itemId:'fileAttachTwoDownloadBtn',
-                                margin:'0 0 0 5',
-                                handler:function(){
-                                    me.downloadFile(2,'fileAttachTwo');
-                                }
+                                height:86,
+                                flex:1,
+                                name: 'remarks',
+                                value:record.remarks,
+                                width:400,
+                                itemId:'remarks',
+                                fieldLabel:'备注'
                             }
                         ]
                     },
                     {
-                        xtype: 'buttongroup',
-                        margin:'1 0 1 0',
+                        xtype:'container',
+                        flex:.6,
+                        margin:'0 0 0 2',
                         items:[
                             {
-                                xtype:'hidden',
-                                itemId:'fileAttachThree',
-                                value:record.fileAttachThree
+                                xtype: 'buttongroup',
+                                items:[
+                                    {
+                                        xtype:'hidden',
+                                        itemId:'fileAttachOne',
+                                        value:record.fileAttachOne
+                                    },
+                                    {
+                                        labelWidth:50,
+                                        xtype: 'displayfield',
+                                        grow: true,
+                                        itemId:'fileAttachOneName',
+                                        name: 'fileAttachOneName',
+                                        value:record.fileAttachOneName,
+                                        fieldLabel:'附件一'
+                                    },
+                                    {
+                                        xtype:'button',
+                                        frame:true,
+                                        iconCls:'upload-file',
+                                        tooltip:'上传',
+                                        text:'上传',
+                                        itemId:'fileAttachOneUploadBtn',
+                                        scope:me,
+                                        margin:'0 0 0 10',
+                                        handler:function(){
+                                            me.uploadFile(1,'fileAttachOne','fileAttachOneName','fileAttachOneUploadBtn','fileAttachOneDeleteBtn','fileAttachOneDownloadBtn');
+                                        }
+                                    },
+                                    {
+                                        xtype:'button',
+                                        frame:true,
+                                        iconCls:'close',
+                                        scope:me,
+                                        tooltip:'删除',
+                                        disabled:true,
+                                        text:'删除',
+                                        itemId:'fileAttachOneDeleteBtn',
+                                        margin:'0 0 0 5',
+                                        handler:function(){
+                                            me.deleteFile(1,'fileAttachOne','fileAttachOneName','fileAttachOneUploadBtn','fileAttachOneDeleteBtn','fileAttachOneDownloadBtn');
+                                        }
+                                    },
+                                    {
+                                        xtype:'button',
+                                        frame:true,
+                                        iconCls:'file-download',
+                                        scope:me,
+                                        text:'下载',
+                                        tooltip:'下载',
+                                        disabled:true,
+                                        itemId:'fileAttachOneDownloadBtn',
+                                        margin:'0 0 0 5',
+                                        handler:function(){
+                                            me.downloadFile(1,'fileAttachOne');
+                                        }
+                                    }
+
+                                ]
                             },
                             {
-                                labelWidth:50,
-                                xtype: 'displayfield',
-                                itemId:'fileAttachThreeName',
-                                value:record.fileAttachThreeName,
-                                name: 'fileAttachThreeName',
-                                fieldLabel:'附件三'
+                                xtype: 'buttongroup',
+                                margin:'1 0 0 0',
+                                items:[
+                                    {
+                                        xtype:'hidden',
+                                        itemId:'fileAttachTwo',
+                                        value:record.fileAttachTwo
+                                    },
+                                    {
+                                        labelWidth:50,
+                                        xtype: 'displayfield',
+                                        grow: true,
+                                        name: 'fileAttachTwoName',
+                                        value:record.fileAttachTwoName,
+                                        itemId:'fileAttachTwoName',
+                                        fieldLabel:'附件二'
+                                    },
+                                    {
+                                        xtype:'button',
+                                        frame:true,
+                                        iconCls:'upload-file',
+                                        tooltip:'上传',
+                                        text:'上传',
+                                        itemId:'fileAttachTwoUploadBtn',
+                                        scope:me,
+                                        margin:'0 0 0 10',
+                                        handler:function(){
+                                            me.uploadFile(2,'fileAttachTwo','fileAttachTwoName','fileAttachTwoUploadBtn','fileAttachTwoDeleteBtn','fileAttachTwoDownloadBtn');
+                                        }
+                                    },
+                                    {
+                                        xtype:'button',
+                                        frame:true,
+                                        iconCls:'close',
+                                        scope:me,
+                                        tooltip:'删除',
+                                        text:'删除',
+                                        disabled:true,
+                                        itemId:'fileAttachTwoDeleteBtn',
+                                        margin:'0 0 0 5',
+                                        handler:function(){
+                                            me.deleteFile(2,'fileAttachTwo','fileAttachTwoName','fileAttachTwoUploadBtn','fileAttachTwoDeleteBtn','fileAttachTwoDownloadBtn');
+                                        }
+                                    },
+                                    {
+                                        xtype:'button',
+                                        frame:true,
+                                        iconCls:'file-download',
+                                        scope:me,
+                                        tooltip:'下载',
+                                        text:'下载',
+                                        disabled:true,
+                                        itemId:'fileAttachTwoDownloadBtn',
+                                        margin:'0 0 0 5',
+                                        handler:function(){
+                                            me.downloadFile(2,'fileAttachTwo');
+                                        }
+                                    }
+                                ]
                             },
                             {
-                                xtype:'button',
-                                frame:true,
-                                iconCls:'upload-file',
-                                tooltip:'上传',
-                                text:'上传',
-                                itemId:'fileAttachThreeUploadBtn',
-                                scope:me,
-                                margin:'0 0 0 10',
-                                handler:function(){
-                                    me.uploadFile(3,'fileAttachThree','fileAttachThreeName','fileAttachThreeUploadBtn','fileAttachThreeDeleteBtn','fileAttachThreeDownloadBtn');
-                                }
-                            },
-                            {
-                                xtype:'button',
-                                frame:true,
-                                iconCls:'close',
-                                scope:me,
-                                tooltip:'删除',
-                                text:'删除',
-                                disabled:true,
-                                itemId:'fileAttachThreeDeleteBtn',
-                                margin:'0 0 0 5',
-                                handler:function(){
-                                    me.deleteFile(3,'fileAttachThree','fileAttachThreeName','fileAttachThreeUploadBtn','fileAttachThreeDeleteBtn','fileAttachThreeDownloadBtn');
-                                }
-                            },
-                            {
-                                xtype:'button',
-                                frame:true,
-                                iconCls:'file-download',
-                                scope:me,
-                                tooltip:'下载',
-                                text:'下载',
-                                disabled:true,
-                                itemId:'fileAttachThreeDownloadBtn',
-                                margin:'0 0 0 5',
-                                handler:function(){
-                                    me.downloadFile(3,'fileAttachThree');
-                                }
+                                xtype: 'buttongroup',
+                                margin:'1 0 1 0',
+                                items:[
+                                    {
+                                        xtype:'hidden',
+                                        itemId:'fileAttachThree',
+                                        value:record.fileAttachThree
+                                    },
+                                    {
+                                        labelWidth:50,
+                                        xtype: 'displayfield',
+                                        itemId:'fileAttachThreeName',
+                                        value:record.fileAttachThreeName,
+                                        name: 'fileAttachThreeName',
+                                        fieldLabel:'附件三'
+                                    },
+                                    {
+                                        xtype:'button',
+                                        frame:true,
+                                        iconCls:'upload-file',
+                                        tooltip:'上传',
+                                        text:'上传',
+                                        itemId:'fileAttachThreeUploadBtn',
+                                        scope:me,
+                                        margin:'0 0 0 10',
+                                        handler:function(){
+                                            me.uploadFile(3,'fileAttachThree','fileAttachThreeName','fileAttachThreeUploadBtn','fileAttachThreeDeleteBtn','fileAttachThreeDownloadBtn');
+                                        }
+                                    },
+                                    {
+                                        xtype:'button',
+                                        frame:true,
+                                        iconCls:'close',
+                                        scope:me,
+                                        tooltip:'删除',
+                                        text:'删除',
+                                        disabled:true,
+                                        itemId:'fileAttachThreeDeleteBtn',
+                                        margin:'0 0 0 5',
+                                        handler:function(){
+                                            me.deleteFile(3,'fileAttachThree','fileAttachThreeName','fileAttachThreeUploadBtn','fileAttachThreeDeleteBtn','fileAttachThreeDownloadBtn');
+                                        }
+                                    },
+                                    {
+                                        xtype:'button',
+                                        frame:true,
+                                        iconCls:'file-download',
+                                        scope:me,
+                                        tooltip:'下载',
+                                        text:'下载',
+                                        disabled:true,
+                                        itemId:'fileAttachThreeDownloadBtn',
+                                        margin:'0 0 0 5',
+                                        handler:function(){
+                                            me.downloadFile(3,'fileAttachThree');
+                                        }
+                                    }
+                                ]
                             }
                         ]
                     }
                 ]
             }
+            
         ];
+        me.listeners={
+            afterrender:function(f){
+                var fileAttachOneValue = me.down('#fileAttachOne').getValue();
+                if(fileAttachOneValue){
+                    me.down('#fileAttachOneUploadBtn').setDisabled(true);
+                    me.down('#fileAttachOneDeleteBtn').setDisabled(false);
+                    me.down('#fileAttachOneDownloadBtn').setDisabled(false);
+                }
+                var fileAttachTwoValue = me.down('#fileAttachTwo').getValue();
+                if(fileAttachTwoValue){
+                    me.down('#fileAttachTwoUploadBtn').setDisabled(true);
+                    me.down('#fileAttachTwoDeleteBtn').setDisabled(false);
+                    me.down('#fileAttachTwoDownloadBtn').setDisabled(false);
+                }
+                var fileAttachThreeValue = me.down('#fileAttachThree').getValue();
+                if(fileAttachThreeValue){
+                    me.down('#fileAttachThreeUploadBtn').setDisabled(true);
+                    me.down('#fileAttachThreeDeleteBtn').setDisabled(false);
+                    me.down('#fileAttachThreeDownloadBtn').setDisabled(false);
+                }
+            }
+        };
         this.callParent();
     },
     getHeaderValue:function(){
         var me=this;
         var remarks=me.down('#remarks').getValue();
+        var title=me.down('#title').getValue();
         var fileAttachOne=me.down('#fileAttachOne').getValue();
         var fileAttachOneName=me.down('#fileAttachOneName').getValue();
         var fileAttachTwo=me.down('#fileAttachTwo').getValue();
@@ -239,6 +283,7 @@ Ext.define('FlexCenter.flows.view.ProcessDefinitionHeader',{
         var fileAttachThreeName=me.down('#fileAttachThreeName').getValue();
         var obj={},fileAttaches=[];
         obj.remarks=remarks;
+        obj.title=title;
 //        obj.fileAttachOne=fileAttachOne;
 //        obj.fileAttachOneName=fileAttachOneName;
 //        obj.fileAttachTwo=fileAttachTwo;

@@ -23,12 +23,10 @@ public class ProcessDefCommand extends BaseObjectCommand {
     private String modelId;
     private String depId;
     private String documentation;
-    private Long parentId;
     private String category;
     private Long flowFormId;
     private String flowFormName;
     private Long globalTypeId;
-    private Set<ProcessDefCommand> children=new HashSet<ProcessDefCommand>();
     private String userIds="";
     private String userFullNames="";
     private String roleIds="";
@@ -138,23 +136,6 @@ public class ProcessDefCommand extends BaseObjectCommand {
 
     public void setDepId(String depId) {
         this.depId = depId;
-    }
-
-
-    public Long getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(Long parentId) {
-        this.parentId = parentId;
-    }
-
-    public Set<ProcessDefCommand> getChildren() {
-        return children;
-    }
-
-    public void setChildren(Set<ProcessDefCommand> children) {
-        this.children = children;
     }
 
     public String getCategory() {

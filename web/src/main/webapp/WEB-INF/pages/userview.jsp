@@ -15,6 +15,7 @@
     <%--<link href="<c:url value='/favicon.ico'/>" rel="icon" type="image/x-icon" />--%>
     <%--<link href="<c:url value='/favicon.ico'/>" rel="shortcut icon" type="image/x-icon" />--%>
     <%--<link rel="stylesheet" type="text/css" href="<c:url value='/scripts/desktop/css/desktop.css'/>"/>--%>
+    <%--<link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ext/resources/css/ext-all-neptune.css'/>"/>--%>
     <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ext/resources/css/ext-all.css'/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ozstrategy/css/flexcenter.css'/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ozstrategy/css/BoxSelect.css'/>"/>
@@ -25,7 +26,8 @@
 
     <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/shared/growl/css/ext-growl.css'/>"/>
 
-    <c:url var="defaultExtTheme" value="/scripts/ext/resources/css/ext-all.css"/>
+    <%--<c:url var="defaultExtTheme" value="/scripts/ext/resources/css/ext-all.css"/>--%>
+    <c:url var="defaultExtTheme" value="/scripts/ext/resources/css/ext-all-neptune.css"/>
     <%--<c:url var="grayExtTheme" value="/scripts/ext/resources/css/ext-all-gray.css"/>--%>
     <%--<c:url var="accessExtTheme" value="/scripts/ext/resources/css/ext-all-access.css"/>--%>
     <%--<script type="text/javascript" src="<c:url value='/ext/ext-core.js'/>"></script>--%>
@@ -49,6 +51,7 @@
     <script type="text/javascript" src="<c:url value="/mxgraph/src/js/mxClient.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/mxgraph/src/js/mxModeler.js"/>"></script>
     <script type="text/javascript" src="<c:url value='/scripts/lib/jquery-1.7.1.min.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/scripts/lib/ajax-pushlet-client.js'/>"></script>
 
     <!-- Loads and initiaizes the library -->
     <%--<script type="text/javascript" src='<c:url value="/mxgraph/js/mxClient.js"/>'></script>--%>
@@ -151,9 +154,9 @@
             Ext.QuickTips.init();
             var storeTheme = getCookie('OzSOA-Ext-Theme');
             if (storeTheme == null || storeTheme == '') {
-                storeTheme = 'ext-all';
+                storeTheme = 'ext-all-neptune';
             }
-            Ext.util.CSS.swapStyleSheet("OzSOA-Ext-Theme", extTheme + storeTheme + ".css");
+//            Ext.util.CSS.swapStyleSheet("OzSOA-Ext-Theme", extTheme + storeTheme + ".css");
             if (!ozSOA) {
                 ozSOA = new Ext.util.MixedCollection();
             }

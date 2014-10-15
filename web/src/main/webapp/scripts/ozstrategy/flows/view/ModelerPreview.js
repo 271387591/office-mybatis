@@ -68,6 +68,7 @@ Ext.define('FlexCenter.flows.view.ModelerPreview', {
     initGraph:function(dom){
         var me=this;
         var modeler=new mxModeler(dom,'mxgraph/config/templates.xml');
+        
 //        modeler.setConnectImagePath('mxgraph/images/connector.gif');
         me.graph=modeler.getGraph();
         me.editor= modeler.getEditor();

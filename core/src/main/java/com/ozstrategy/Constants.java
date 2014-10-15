@@ -68,9 +68,12 @@ public interface Constants {
     public static final String MESSAGE_PROCESS_SAVE_USER = "message.error.save.process.fail";
     public static final String MESSAGE_PROCESS_DEPLOYED_NULL = "message.error.deployed.null";
     public static final String MESSAGE_PROCESS_DEPLOYED_PROCESS_NOT_FOUND = "message.error.process.not.found";
+    public static final String MESSAGE_PROCESS_DEPLOYED_PROCESS_START_NODE_HAS_ONE_MORE_TASK = "message.error.process.start.node.has.one.more.task";
     public static final String MESSAGE_FORM_READ_HTML_FIELD = "message.form.read.html.field";
     public static final String MESSAGE_FORM_SAVE_FIELD = "message.form.save.field";
     public static final String MESSAGE_START_PROCESS_FAIL = "message.start.process.fail";
+    public static final String MESSAGE_START_PROCESS_NOT_FOUND_START_TASK = "message.start.process.not.found.start.task";
+    public static final String MESSAGE_RETURN_TASK_FAIL = "message.return.task.fail";
 
     public static final String TASK_SIGN_NAME = "Sign_";
     public static final String TASK_SIGN_subType = "subType";

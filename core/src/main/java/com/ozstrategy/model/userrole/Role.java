@@ -7,14 +7,18 @@ import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @NamedQueries(
@@ -37,6 +41,9 @@ public class Role extends BaseObject implements Serializable, GrantedAuthority {
     private String displayName;
     @Column
     private Boolean enabled;
+    
+    @ManyToMany(fetch = FetchType.LAZY,mappedBy = "roles")
+    private Set<User> users=new HashSet<User>();
     @ManyToOne
     @JoinColumn(name = "systemViewId")
     private SystemView systemView;
@@ -90,6 +97,14 @@ public class Role extends BaseObject implements Serializable, GrantedAuthority {
 
     public void setSystemView(SystemView systemView) {
         this.systemView = systemView;
+    }
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 
     @Override

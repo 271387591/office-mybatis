@@ -3,6 +3,7 @@ package com.ozstrategy.model.flows;
 import com.ozstrategy.model.BaseObject;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -10,6 +11,7 @@ import javax.persistence.Id;
 /**
  * Created by lihao on 9/20/14.
  */
+@Entity
 public class ProcessDefVersion extends BaseObject{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

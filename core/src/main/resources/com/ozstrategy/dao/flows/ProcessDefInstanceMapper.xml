@@ -22,6 +22,10 @@
     <select id="getProcessDefInstanceById" resultMap="processDefInstanceResult" parameterType="long">
         select f.* from ProcessDefInstance f where f.id=#{id} 
     </select>
+    <select id="getNoCascadeProcessDefInstanceById" resultType="com.ozstrategy.model.flows.ProcessDefInstance" parameterType="long">
+        select f.* from ProcessDefInstance f where f.id=#{id} 
+    </select>
+    
    
     <delete id="deleteProcessDefInstance" parameterType="long" flushCache="true">
         delete from ProcessDefInstance where id=#{id}
@@ -30,7 +34,7 @@
         <selectKey keyColumn="id" keyProperty="id" resultType="java.lang.Long">
             select LAST_INSERT_ID()
         </selectKey>
-        insert into ProcessDefInstance(id,name,processDefId,version,actInstanceId,suspended,startDate,endDate,createDate,lastUpdateDate,creatorId,lastUpdaterId) 
-        values (#{id},#{name},#{processDef.id},#{version},#{actInstanceId},#{suspended},#{startDate},#{endDate},#{createDate},#{lastUpdateDate},#{creator.id},#{lastUpdater.id})
+        insert into ProcessDefInstance(id,name,title,processDefId,version,actInstanceId,suspended,startDate,endDate,createDate,lastUpdateDate,creatorId,lastUpdaterId) 
+        values (#{id},#{name},#{title},#{processDef.id},#{version},#{actInstanceId},#{suspended},#{startDate},#{endDate},#{createDate},#{lastUpdateDate},#{creator.id},#{lastUpdater.id})
     </insert>
 </mapper>

@@ -102,9 +102,9 @@ Ext.define('FlexCenter.flows.view.ProcessUserSetter', {
                                     win.show();
                                 }else if(type == 'candidateRoles'){
                                     var win = Ext.widget('roleSelector',{
-                                        resultBack:function(ids,names){
+                                        resultBack:function(ids,names,userIds,userNames,userFullNames){
                                             rec.set('resourceassignmentexprDisplay',names);
-                                            rec.set('resourceassignmentexpr',ids);
+                                            rec.set('resourceassignmentexpr',userNames);
                                         }
                                     });
                                     win.show();

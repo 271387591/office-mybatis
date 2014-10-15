@@ -15,4 +15,5 @@ public interface ProcessFileAttachManager {
     void updateProcessFileAttach(ProcessFileAttach attach);
     void deleteProcessFileAttach(Long id);
     void saveProcessFileAttach(ProcessFileAttach attach);
+    List<ProcessFileAttach> getProcessFileAttachByInstanceId(Long instanceId);
 }

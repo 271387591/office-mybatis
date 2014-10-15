@@ -27,6 +27,7 @@
         <from>/scripts/**</from>
         <to>/scripts/$1</to>
     </rule>
+    
     <rule>
         <from>/styles/**</from>
         <to>/styles/$1</to>
@@ -54,6 +55,11 @@
         <from>/service/**</from>
         <to>/service/$1</to>
     </rule>
+    <rule>
+        <from>/pushlet.srv</from>
+        <to>/pushlet.srv</to>
+    </rule>
+    
     
     
     

@@ -21,6 +21,7 @@ Ext.define('FlexCenter.flows.view.ModelerWindow',{
                 processRecord:me.processRecord,
                 border:false,
                 graRes:me.graRes,
+                
                 developer:me.developer
             }
         ];

@@ -19,6 +19,10 @@
     <select id="getProcessFileAttachById" resultMap="processFileAttachResult" parameterType="long" flushCache="true">
         select f.* from ProcessFileAttach f where f.id=#{id} 
     </select>
+    <select id="getProcessFileAttachByInstanceId" resultMap="processFileAttachResult" parameterType="long" flushCache="true">
+        select f.* from ProcessFileAttach f where f.instanceId=#{instanceId} 
+    </select>
+    
     
     <update id="updateProcessFileAttach" parameterType="com.ozstrategy.model.flows.ProcessFileAttach" flushCache="true">
         update ProcessFileAttach f set 
@@ -28,6 +32,7 @@
         f.fileSize=#{fileSize} , 
         f.lastUpdaterId=#{lastUpdater.id} , 
         f.lastUpdateDate=#{lastUpdateDate} , 
+        f.actInstanceId=#{actInstanceId} , 
         f.instanceId=#{instance.id} 
         where f.id=#{id}
     </update>
@@ -38,7 +43,7 @@
         <selectKey keyColumn="id" keyProperty="id" resultType="java.lang.Long">
             select LAST_INSERT_ID()
         </selectKey>
-        insert into ProcessFileAttach(id,fileName,filePath,fileIndex,instanceId,createDate,lastUpdateDate,creatorId,lastUpdaterId) 
-        values (#{id},#{fileName},#{filePath},#{fileIndex},#{instance.id},#{createDate},#{lastUpdateDate},#{creator.id},#{lastUpdater.id})
+        insert into ProcessFileAttach(id,fileName,filePath,fileIndex,instanceId,actInstanceId,createDate,lastUpdateDate,creatorId,lastUpdaterId) 
+        values (#{id},#{fileName},#{filePath},#{fileIndex},#{instance.id},#{actInstanceId},#{createDate},#{lastUpdateDate},#{creator.id},#{lastUpdater.id})
     </insert>
 </mapper>

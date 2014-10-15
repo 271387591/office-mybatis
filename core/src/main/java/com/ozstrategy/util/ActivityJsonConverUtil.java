@@ -8,17 +8,39 @@ import com.mxgraph.io.mxCodec;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.model.mxICell;
+import com.mxgraph.util.mxUtils;
 import com.mxgraph.util.mxXmlUtils;
+import com.ozstrategy.Constants;
+import com.ozstrategy.exception.OzException;
 import com.ozstrategy.model.flows.ProcessDef;
+import com.ozstrategy.model.flows.TaskType;
 import com.sun.org.apache.xerces.internal.dom.ParentNode;
+import org.activiti.bpmn.BpmnAutoLayout;
+import org.activiti.bpmn.model.BpmnModel;
+import org.activiti.bpmn.model.EndEvent;
+import org.activiti.bpmn.model.ExtensionAttribute;
+import org.activiti.bpmn.model.FlowElement;
+import org.activiti.bpmn.model.FormProperty;
+import org.activiti.bpmn.model.SequenceFlow;
+import org.activiti.bpmn.model.StartEvent;
+import org.activiti.bpmn.model.UserTask;
 import org.activiti.editor.constants.EditorJsonConstants;
 import org.activiti.editor.constants.StencilConstants;
 import org.activiti.editor.language.json.converter.BpmnJsonConverterUtil;
+import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by lihao on 9/18/14.
@@ -31,9 +53,195 @@ public class ActivityJsonConverUtil implements EditorJsonConstants, StencilConst
     public static final String CONDITIONAL_FLOW ="conditionalflow";
     public static final String TARGET ="target";
     public static final String CANDIDATE_ROLES ="candidateRoles";
-    public final static String INITIATOR_EXPRESSION="${initiator}";
+    public final static String INITIATOR_EXPRESSION="starter";
     public final static String EDITOR_SHAPE_ID_PREFIX="T_";
-    public static ObjectNode createProcess(mxGraphModel graphModel,ProcessDef def){
+    public final static String PROCESS_PREFIX="P_";
+    public final static String TASK_TYPE="tasktype";
+    public final static String TASK_ATTR="taskAttr";
+    
+    
+    public static BpmnModel createBpmnModel(mxGraphModel graphModel,ProcessDef def) throws Exception{
+        BpmnModel model = new BpmnModel();
+        org.activiti.bpmn.model.Process process = new org.activiti.bpmn.model.Process();
+        process.setDocumentation(def.getDocumentation());
+        process.setName(def.getName());
+        process.setId(PROCESS_PREFIX+def.getId());
+        Map<String,Object> map = graphModel.getCells();
+        if(map!=null && map.size()>0){
+            for(String key : map.keySet()){
+                Object obj = map.get(key);
+                mxCell cell = (mxCell)obj;
+                Object value=cell.getValue();
+                if(value instanceof ParentNode){
+                    ParentNode parentNode=(ParentNode)value;
+                    String stencil=parentNode.getNodeName();
+                    int edgeCount=cell.getEdgeCount();
+                    if(StringUtils.equals(STENCIL_EVENT_START_NONE,stencil) && edgeCount>1){
+                        throw new OzException(Constants.MESSAGE_PROCESS_DEPLOYED_PROCESS_START_NODE_HAS_ONE_MORE_TASK);
+                    }
+                    FlowElement element=createFlowElement(cell,stencil);
+                    if(element!=null){
+                        process.addFlowElement(element);
+                    }
+                }
+            }
+        }
+        model.addProcess(process);
+        BpmnAutoLayout bpmnAutoLayout=new BpmnAutoLayout(model);
+        bpmnAutoLayout.execute();
+        return model;
+    }
+    public static FlowElement createFlowElement(mxCell cell,String stencil){
+        FlowElement element=null;
+        if(StringUtils.equals(stencil, STENCIL_EVENT_START_NONE)){
+            element=createStartEvent(cell);
+        }else if(StringUtils.equals(stencil,STENCIL_TASK_USER)){
+            element=createUserTask(cell);
+        }else if(StringUtils.equals(stencil,STENCIL_EVENT_THROW_NONE)){
+        }else if(StringUtils.equals(stencil,STENCIL_EVENT_END_NONE)){
+            element=createEndEvent(cell);
+        }else if(StringUtils.equals(stencil,STENCIL_EVENT_BOUNDARY_ERROR)){
+        }else if(StringUtils.equals(stencil,STENCIL_GATEWAY_EXCLUSIVE)){
+        }else if(StringUtils.equals(stencil,STENCIL_GATEWAY_PARALLEL)){
+        }else if(StringUtils.equals(stencil,STENCIL_GATEWAY_INCLUSIVE)){
+        }else if(StringUtils.equals(stencil,STENCIL_GATEWAY_EVENT)){
+        }else if(StringUtils.equals(stencil,STENCIL_SUB_PROCESS)){
+        }else if(StringUtils.equals(stencil,STENCIL_EVENT_SUB_PROCESS)){
+        }else if(StringUtils.equals(stencil,STENCIL_SEQUENCE_FLOW)){
+            element=createSequenceFlow(cell);
+        }
+        return element;
+    }
+
+    public static StartEvent createStartEvent(mxCell cell){
+        StartEvent startEvent = new StartEvent();
+        String initiator = cell.getAttribute(PROPERTY_NONE_STARTEVENT_INITIATOR);
+        initiator=StringUtils.defaultIfEmpty(initiator,INITIATOR_EXPRESSION);
+        startEvent.setInitiator(initiator);
+        startEvent.setName(cell.getAttribute(PROPERTY_NAME));
+        startEvent.setId(EDITOR_SHAPE_ID_PREFIX+cell.getId());
+        startEvent.setDocumentation(cell.getAttribute(PROPERTY_DOCUMENTATION,""));
+        return startEvent;
+    }
+    public static EndEvent createEndEvent(mxCell cell){
+        EndEvent endEvent = new EndEvent();
+        endEvent.setId(EDITOR_SHAPE_ID_PREFIX + cell.getId());
+        endEvent.setName(cell.getAttribute(PROPERTY_NAME));
+        endEvent.setDocumentation(cell.getAttribute(PROPERTY_DOCUMENTATION,""));
+        return endEvent;
+    }
+    public static UserTask createUserTask(mxCell cell){
+        UserTask userTask = new UserTask();
+        userTask.setName(cell.getAttribute(PROPERTY_NAME, ""));
+        userTask.setId(EDITOR_SHAPE_ID_PREFIX + cell.getId());
+        userTask.setDocumentation(cell.getAttribute(PROPERTY_DOCUMENTATION,""));
+        userTask.setAsynchronous(BooleanUtils.toBooleanObject(StringUtils.defaultIfEmpty(cell.getAttribute(PROPERTY_ASYNCHRONOUS),"No")));
+        ExtensionAttribute attribute=new ExtensionAttribute(TASK_TYPE);
+        attribute.setValue(StringUtils.defaultIfEmpty(cell.getAttribute(TASK_TYPE), TaskType.Commons.name()));
+        List<ExtensionAttribute> extensionAttributes=new ArrayList<ExtensionAttribute>();
+        extensionAttributes.add(attribute);
+        Map<String,List<ExtensionAttribute>> attrMap=new HashMap<String, List<ExtensionAttribute>>();
+        attrMap.put(TASK_ATTR,extensionAttributes);
+        userTask.setAttributes(attrMap);
+
+        
+        String assignee= cell.getAttribute(PROPERTY_USERTASK_ASSIGNEE,"");
+        if(StringUtils.isNotEmpty(assignee)){
+            try {
+                JsonNode assigneeNode = objectMapper.readTree(assignee);
+                if(assigneeNode.size()>0){
+                    String assignees = assigneeNode.get("resourceassignmentexpr").asText();
+                    userTask.setAssignee(assignees);
+                }
+            } catch (IOException e) {
+            }
+        }
+        Set<String> userSet=new HashSet<String>();
+        String candidateUsers= cell.getAttribute(PROPERTY_USERTASK_CANDIDATE_USERS,"");
+        if(StringUtils.isNotEmpty(candidateUsers)){
+            try {
+                JsonNode candidateUsersNode = objectMapper.readTree(candidateUsers);
+                if(candidateUsersNode!=null && candidateUsersNode.size()>0){
+                    String candidateUser=candidateUsersNode.get("resourceassignmentexpr").asText();
+                    String[] strings=candidateUser.split(",");
+                    List<String> users = Arrays.asList(strings);
+                    userSet.addAll(users);
+                }
+            } catch (IOException e) {
+            }
+        }
+        String candidateRoles= cell.getAttribute(CANDIDATE_ROLES);
+        if(StringUtils.isNotEmpty(candidateRoles)){
+            try {
+                JsonNode candidateRolesNode = objectMapper.readTree(candidateRoles);
+                if(candidateRolesNode!=null && candidateRolesNode.size()>0){
+                    String candidateUser=candidateRolesNode.get("resourceassignmentexpr").asText();
+                    String[] strings=candidateUser.split(",");
+                    List<String> users = Arrays.asList(strings);
+                    userSet.addAll(users);
+                    
+                }
+            } catch (IOException e) {
+            }
+        }
+        List<String> userList=new ArrayList<String>();
+        userList.addAll(userSet);
+        userTask.setCandidateUsers(userList);
+        
+        String forms=cell.getAttribute(PROPERTY_FORM_PROPERTIES, "");
+        if(StringUtils.isNotEmpty(forms)){
+            try {
+                JsonNode jsonNode = objectMapper.readTree(forms);
+                if(jsonNode!=null && jsonNode.size()>0){
+                    JsonNode items = jsonNode.get("items");
+                    if(items!=null){
+                        List<Map<String,Object>> list = objectMapper.readValue(items.toString(),List.class);
+                        List<FormProperty> formProperties=new ArrayList<FormProperty>();
+                        if(list!=null && list.size()>0){
+                            for(Map<String,Object> map : list){
+                                FormProperty formProperty=new FormProperty();
+                                formProperty.setName(ObjectUtils.toString(map.get("formproperty_name")));
+                                formProperty.setId(ObjectUtils.toString(map.get("formproperty_id")));
+                                formProperty.setType(ObjectUtils.toString(map.get("formproperty_type")));
+                                formProperty.setExpression(ObjectUtils.toString(map.get("formproperty_expression")));
+                                formProperty.setVariable(ObjectUtils.toString(map.get("formproperty_variable")));
+                                formProperty.setRequired(BooleanUtils.toBooleanObject(ObjectUtils.toString(map.get("formproperty_required"))));
+                                formProperty.setReadable(BooleanUtils.toBooleanObject(ObjectUtils.toString(map.get("formproperty_readable"))));
+                                formProperty.setWriteable(BooleanUtils.toBooleanObject(ObjectUtils.toString(map.get("formproperty_writeable"))));
+                                formProperties.add(formProperty);
+                            }
+                        }
+                        userTask.setFormProperties(formProperties);
+                    }
+                }
+            } catch (IOException e) {
+
+            }
+        }
+        return userTask;
+    }
+    public static SequenceFlow createSequenceFlow(mxCell cell){
+        SequenceFlow flow = new SequenceFlow();
+        flow.setName(cell.getAttribute(PROPERTY_NAME, ""));
+        flow.setId(EDITOR_SHAPE_ID_PREFIX + cell.getId());
+        flow.setDocumentation(cell.getAttribute(PROPERTY_DOCUMENTATION,""));
+        flow.setConditionExpression(cell.getAttribute(PROPERTY_SEQUENCEFLOW_CONDITION, ""));
+        mxICell source = cell.getSource();
+        if(source!=null){
+            flow.setSourceRef(EDITOR_SHAPE_ID_PREFIX+source.getId());
+        }
+        mxICell target=cell.getTarget();
+        if(target!=null){
+            flow.setTargetRef(EDITOR_SHAPE_ID_PREFIX+target.getId());
+        }
+        return flow;
+    }
+    
+    
+    
+    
+    
+    public static ObjectNode createProcess(mxGraphModel graphModel,ProcessDef def) throws Exception{
         ObjectNode modelNode=createProcess(def);
         ArrayNode shapesArrayNode = objectMapper.createArrayNode();
         Map<String,Object> map = graphModel.getCells();
@@ -45,6 +253,10 @@ public class ActivityJsonConverUtil implements EditorJsonConstants, StencilConst
                 if(value instanceof ParentNode){
                     ParentNode parentNode=(ParentNode)value;
                     String stencil=parentNode.getNodeName();
+                    int edgeCount=cell.getEdgeCount();
+                    if(StringUtils.equals(STENCIL_EVENT_START_NONE,stencil) && edgeCount>1){
+                        throw new OzException(Constants.MESSAGE_PROCESS_DEPLOYED_PROCESS_START_NODE_HAS_ONE_MORE_TASK);
+                    }
                     if(!cell.isEdge()){
                         ObjectNode node= createStencil(cell,stencil,false);
                         if(node!=null){
@@ -194,6 +406,7 @@ public class ActivityJsonConverUtil implements EditorJsonConstants, StencilConst
         return node;
     }
     
+    
     public static ObjectNode BoundaryErrorEvent(mxCell cell,String stencil){
         ObjectNode node=Activity(cell, stencil);
         ObjectNode properties=objectMapper.createObjectNode();
@@ -270,11 +483,17 @@ public class ActivityJsonConverUtil implements EditorJsonConstants, StencilConst
         node.put(EDITOR_SHAPE_PROPERTIES,properties);
         return node;
     }
+
+    
+    
+    
+    
    
     public static ObjectNode StartNoneEvent(mxCell cell){
         ObjectNode node=Activity(cell,STENCIL_EVENT_START_NONE);
         ObjectNode properties=objectMapper.createObjectNode();
-        String initiator = cell.getAttribute(PROPERTY_NONE_STARTEVENT_INITIATOR,INITIATOR_EXPRESSION);
+        String initiator = cell.getAttribute(PROPERTY_NONE_STARTEVENT_INITIATOR);
+        initiator=StringUtils.defaultIfEmpty(initiator,INITIATOR_EXPRESSION);
         properties.put(PROPERTY_NONE_STARTEVENT_INITIATOR,initiator);
         String overrideid = cell.getAttribute(PROPERTY_OVERRIDE_ID,"");
         properties.put(PROPERTY_OVERRIDE_ID,overrideid);
@@ -350,5 +569,12 @@ public class ActivityJsonConverUtil implements EditorJsonConstants, StencilConst
         mxGraphModel model = (mxGraphModel) codec.decode(doc.getDocumentElement());
         return model;
     }
+    public static String toMxGraphModelXml(mxGraphModel model){
+        mxCodec codec = new mxCodec();
+        Node node = codec.encode(model);
+        String xml = mxUtils.getPrettyXml(node);
+        return xml;
+    }
+    
     
 }

@@ -38,6 +38,8 @@ public class ProcessDefInstance extends CreatorObject{
     private Date endDate;
     @Column
     private String name;
+    @Column
+    private String title;
 
     public Long getId() {
         return id;
@@ -101,5 +103,13 @@ public class ProcessDefInstance extends CreatorObject{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

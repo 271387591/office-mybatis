@@ -41,4 +41,8 @@ public class ProcessFileAttachManagerImpl implements ProcessFileAttachManager {
     public void saveProcessFileAttach(ProcessFileAttach attach) {
         processFileAttachDao.saveProcessFileAttach(attach);
     }
+
+    public List<ProcessFileAttach> getProcessFileAttachByInstanceId(Long instanceId) {
+        return processFileAttachDao.getProcessFileAttachByInstanceId(instanceId);
+    }
 }

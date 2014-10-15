@@ -2,8 +2,6 @@ package com.ozstrategy.service.flows.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGraphModel;
 import com.ozstrategy.Constants;
@@ -26,12 +24,13 @@ import com.ozstrategy.service.flows.ProcessDefManager;
 import com.ozstrategy.util.ActivityJsonConverUtil;
 import org.activiti.bpmn.converter.BpmnXMLConverter;
 import org.activiti.bpmn.model.BpmnModel;
+import org.activiti.bpmn.model.ExtensionAttribute;
 import org.activiti.bpmn.model.FlowElement;
 import org.activiti.bpmn.model.FormProperty;
 import org.activiti.bpmn.model.Process;
 import org.activiti.bpmn.model.StartEvent;
 import org.activiti.bpmn.model.UserTask;
-import org.activiti.editor.language.json.converter.BpmnJsonConverter;
+import org.activiti.engine.ActivitiObjectNotFoundException;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
@@ -113,12 +112,10 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
     }
 
     @Transactional(rollbackFor = {Throwable.class})
-    public void update(ProcessDef processDef,String graRes) throws IOException,OzException {
+    public void update(ProcessDef processDef,String graRes) throws IOException,Exception {
         if(StringUtils.isNotEmpty(graRes)){
             mxGraphModel graphModel= ActivityJsonConverUtil.getMxGraphModel(graRes);
-            ObjectNode objectNode = ActivityJsonConverUtil.createProcess(graphModel, processDef);
-            BpmnJsonConverter jsonConverter=new BpmnJsonConverter();
-            BpmnModel model = jsonConverter.convertToBpmnModel(objectNode);
+            BpmnModel model = ActivityJsonConverUtil.createBpmnModel(graphModel,processDef);
             List<Process> processes=model.getProcesses();
             if(processes!=null && processes.size()>0){
                 Process process = processes.get(0);
@@ -143,16 +140,25 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
                         processElement.setActClass(type);
                         processElement.setProcessDef(processDef);
                         processElement.setType(ProcessElementType.get(type));
-                        try{
-                            mxCell cell = (mxCell)graphModel.getCell(id.substring(2));
-                            if(cell!=null){
-                                ObjectNode node= ActivityJsonConverUtil.createFlowElements(cell, ProcessElementType.get(type), false);
-                                if(node!=null){
-                                    processElement.setActResource(new ObjectMapper().writeValueAsBytes(node));
-                                }
+                        Map<String,List<ExtensionAttribute>> attrMap = element.getAttributes();
+                        if(attrMap!=null && attrMap.size()>0){
+                            List<ExtensionAttribute> extensionAttributes=attrMap.get(ActivityJsonConverUtil.TASK_ATTR);
+                            if(extensionAttributes!=null && extensionAttributes.size()>0){
+                                ExtensionAttribute extensionAttribute=extensionAttributes.get(0);
+                                String value = extensionAttribute.getValue();
+                                processElement.setTaskType(value);
                             }
-                        }catch (Exception e){
                         }
+//                        try{
+//                            mxCell cell = (mxCell)graphModel.getCell(id.substring(2));
+//                            if(cell!=null){
+//                                ObjectNode node= ActivityJsonConverUtil.createFlowElements(cell, ProcessElementType.get(type), false);
+//                                if(node!=null){
+//                                    processElement.setActResource(new ObjectMapper().writeValueAsBytes(node));
+//                                }
+//                            }
+//                        }catch (Exception e){
+//                        }
                         processElementDao.saveProcessElement(processElement);
                         if(StringUtils.equals(ProcessElementType.StartNoneEvent.getName(),type)){
                             StartEvent startEvent=(StartEvent)element;
@@ -162,18 +168,20 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
                             UserTask userTask=(UserTask)element;
                             List<FormProperty> properties = userTask.getFormProperties();
                             insertProcessElementForm(processDef, processElement, properties);
-                            mxCell cell = (mxCell)graphModel.getCell(id.substring(2));
-                            if(cell!=null){
-                                try{
-                                    Set<String> users=saveElementRole(processElement,cell);
-                                    if(users!=null && users.size()>0){
-                                        saveElementUser(users,processElement);
-                                    }
-                                }catch (Exception e){
-                                    e.printStackTrace();
-                                    throw new OzException(Constants.MESSAGE_PROCESS_SAVE_USER);
-                                }
-                            }
+                            List<String> usernames=userTask.getCandidateUsers();
+                            saveElementUser(usernames,processElement);
+//                            mxCell cell = (mxCell)graphModel.getCell(id.substring(2));
+//                            if(cell!=null){
+//                                try{
+//                                    Set<String> users=saveElementRole(processElement,cell);
+//                                    if(users!=null && users.size()>0){
+//                                        saveElementUser(users,processElement);
+//                                    }
+//                                }catch (Exception e){
+//                                    e.printStackTrace();
+//                                    throw new OzException(Constants.MESSAGE_PROCESS_SAVE_USER);
+//                                }
+//                            }
                         }
                     }
                 }
@@ -188,11 +196,13 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
         processDef.setActDefId(null);
         processDefDao.updateProcessDef(processDef);
     }
-    private void saveElementUser(Set<String> usernames,ProcessElement processElement){
-        for(String username : usernames){
-            User user=userDao.getUserByUsername(username);
-            if(user!=null){
-                processElementDao.saveProcessElementUser(user.getId(),processElement.getId());
+    private void saveElementUser(List<String> usernames,ProcessElement processElement){
+        if(usernames!=null && usernames.size()>0){
+            for(String username : usernames){
+                User user=userDao.getUserByUsername(username);
+                if(user!=null){
+                    processElementDao.saveProcessElementUser(user.getId(),processElement.getId());
+                }
             }
         }
     }
@@ -211,54 +221,54 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
                         Role role=roleDao.getRoleById(Long.parseLong(roleId));
                         if(role!=null){
                             processElementDao.saveProcessElementRole(role.getId(),processElement.getId());
-                            try{
-                                List<User> userList=userDao.getUserByRoleId(Long.parseLong(roleId));
-                                if(userList!=null && userList.size()>0){
-                                    for(User user : userList){
-                                        users.add(user.getUsername());
-                                    }
-                                }
-                            }catch (Exception e){
-                                throw new OzException(Constants.MESSAGE_PROCESS_SAVE_USER);
-                            }
+//                            try{
+//                                List<User> userList=userDao.getUserByRoleId(Long.parseLong(roleId));
+//                                if(userList!=null && userList.size()>0){
+//                                    for(User user : userList){
+//                                        users.add(user.getUsername());
+//                                    }
+//                                }
+//                            }catch (Exception e){
+//                                throw new OzException(Constants.MESSAGE_PROCESS_SAVE_USER);
+//                            }
                         }
                     }
                 }
             }
         }
-        String candidateUsers = cell.getAttribute(ActivityJsonConverUtil.PROPERTY_USERTASK_CANDIDATE_USERS,"");
-        if(StringUtils.isNotEmpty(candidateUsers)){
-            JsonNode jsonNode= objectMapper.readTree(candidateUsers);
-            JsonNode resourceassignmentexprNode=jsonNode.get(ActivityJsonConverUtil.PROPERTY_USERTASK_ASSIGNMENT_EXPRESSION);
-            if(resourceassignmentexprNode!=null){
-                String resourceassignmentexpr = resourceassignmentexprNode.asText();
-                String[] usernames=resourceassignmentexpr.split(",");
-                for(String username : usernames){
-                    users.add(username);
-                }
-            }
-        }
-        String resourceassignmentexpr = StringUtils.join(users.iterator(),",");
-        ObjectNode objectNode=objectMapper.createObjectNode();
-        objectNode.put(ActivityJsonConverUtil.PROPERTY_USERTASK_ASSIGNMENT_TYPE, ActivityJsonConverUtil.PROPERTY_USERTASK_CANDIDATE_USERS);
-        objectNode.put(ActivityJsonConverUtil.PROPERTY_USERTASK_ASSIGNMENT_EXPRESSION,resourceassignmentexpr);
-        cell.setAttribute(ActivityJsonConverUtil.PROPERTY_USERTASK_CANDIDATE_USERS,objectNode.toString());
-        ObjectNode userTask= ActivityJsonConverUtil.UserTask(cell);
-        if(userTask!=null){
-            processElement.setActResource(objectMapper.writeValueAsBytes(userTask));
-            processElementDao.updateActResource(processElement);
-        }
-        String assignee = cell.getAttribute(ActivityJsonConverUtil.PROPERTY_USERTASK_ASSIGNEE,"");
-        if(StringUtils.isNotEmpty(assignee)){
-            JsonNode jsonNode= objectMapper.readTree(assignee);
-            JsonNode assigneeNode=jsonNode.get(ActivityJsonConverUtil.PROPERTY_USERTASK_ASSIGNMENT_EXPRESSION);
-            if(assigneeNode!=null){
-                String username = assigneeNode.asText();
-                if(!StringUtils.equals(username,ActivityJsonConverUtil.INITIATOR_EXPRESSION)){
-                    users.add(username);
-                }
-            }
-        }
+//        String candidateUsers = cell.getAttribute(ActivityJsonConverUtil.PROPERTY_USERTASK_CANDIDATE_USERS,"");
+//        if(StringUtils.isNotEmpty(candidateUsers)){
+//            JsonNode jsonNode= objectMapper.readTree(candidateUsers);
+//            JsonNode resourceassignmentexprNode=jsonNode.get(ActivityJsonConverUtil.PROPERTY_USERTASK_ASSIGNMENT_EXPRESSION);
+//            if(resourceassignmentexprNode!=null){
+//                String resourceassignmentexpr = resourceassignmentexprNode.asText();
+//                String[] usernames=resourceassignmentexpr.split(",");
+//                for(String username : usernames){
+//                    users.add(username);
+//                }
+//            }
+//        }
+//        String resourceassignmentexpr = StringUtils.join(users.iterator(),",");
+//        ObjectNode objectNode=objectMapper.createObjectNode();
+//        objectNode.put(ActivityJsonConverUtil.PROPERTY_USERTASK_ASSIGNMENT_TYPE, ActivityJsonConverUtil.PROPERTY_USERTASK_CANDIDATE_USERS);
+//        objectNode.put(ActivityJsonConverUtil.PROPERTY_USERTASK_ASSIGNMENT_EXPRESSION,resourceassignmentexpr);
+//        cell.setAttribute(ActivityJsonConverUtil.PROPERTY_USERTASK_CANDIDATE_USERS,objectNode.toString());
+//        ObjectNode userTask= ActivityJsonConverUtil.UserTask(cell);
+//        if(userTask!=null){
+//            processElement.setActResource(objectMapper.writeValueAsBytes(userTask));
+//            processElementDao.updateActResource(processElement);
+//        }
+//        String assignee = cell.getAttribute(ActivityJsonConverUtil.PROPERTY_USERTASK_ASSIGNEE,"");
+//        if(StringUtils.isNotEmpty(assignee)){
+//            JsonNode jsonNode= objectMapper.readTree(assignee);
+//            JsonNode assigneeNode=jsonNode.get(ActivityJsonConverUtil.PROPERTY_USERTASK_ASSIGNMENT_EXPRESSION);
+//            if(assigneeNode!=null){
+//                String username = assigneeNode.asText();
+//                if(!StringUtils.equals(username,ActivityJsonConverUtil.INITIATOR_EXPRESSION)){
+//                    users.add(username);
+//                }
+//            }
+//        }
         return users;
     }
     private void insertProcessElementForm(ProcessDef processDef,ProcessElement processElement,List<FormProperty> properties){
@@ -303,10 +313,21 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
     }
 
 
-    public String getRes(String resId,String resName) throws IOException{
+    public String getRes(String resId,String resName,String taskKey) throws IOException,ActivitiObjectNotFoundException {
         InputStream inputStream = repositoryService.getResourceAsStream(resId,resName);
         if(inputStream!=null){
-            return IOUtils.toString(inputStream);
+            String str=IOUtils.toString(inputStream);
+            if(StringUtils.isNotEmpty(taskKey)){
+                mxGraphModel model=ActivityJsonConverUtil.getMxGraphModel(str);
+                model.beginUpdate();
+                mxCell cell = (mxCell)model.getCell(taskKey.substring(2));
+                String style = cell.getStyle();
+                style+=";strokeColor=red";
+                cell.setStyle(style);
+                model.endUpdate();
+                str = ActivityJsonConverUtil.toMxGraphModelXml(model);
+            }
+            return str;
         }
         return null;
     }
@@ -317,29 +338,20 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
 
     @Transactional(rollbackFor = Throwable.class)
     public void deployed(ProcessDef processDef) throws Exception {
-        ObjectMapper objectMapper=new ObjectMapper();
-        Set<ProcessElement> elements=processDef.getElements();
-        ObjectNode objectNode= ActivityJsonConverUtil.createProcess(processDef);
-        ArrayNode arrayNode=objectMapper.createArrayNode();
-        if(elements!=null && elements.size()>0){
-            for(ProcessElement element : elements){
-                Long eId=element.getId();
-                ProcessElement res=processElementDao.loadElementActResource(eId);
-                String resource=null;
-                if(res!=null){
-                    resource=new String(res.getActResource(),"UTF-8");
-                }
-                if(StringUtils.isNotEmpty(resource)){
-                    JsonNode jsonNode = objectMapper.readTree(resource);
-                    if(jsonNode!=null){
-                        arrayNode.add(jsonNode);
-                    }
-                }
-            }
+        
+        String graphResId=processDef.getGraphResId();
+        String graphResName=processDef.getGraRes();
+        InputStream inputStream = repositoryService.getResourceAsStream(graphResId,graphResName);
+        if(inputStream==null){
+            throw new OzException(Constants.MESSAGE_PROCESS_DEPLOYED_NULL);
         }
-        objectNode.put(ActivityJsonConverUtil.EDITOR_CHILD_SHAPES,arrayNode);
-        BpmnJsonConverter jsonConverter=new BpmnJsonConverter();
-        BpmnModel model = jsonConverter.convertToBpmnModel(objectNode);
+        String str=IOUtils.toString(inputStream);
+        if(StringUtils.isEmpty(str)){
+            throw new OzException(Constants.MESSAGE_PROCESS_DEPLOYED_NULL);
+        }
+        mxGraphModel graphModel=ActivityJsonConverUtil.getMxGraphModel(str);
+        
+        BpmnModel model = ActivityJsonConverUtil.createBpmnModel(graphModel,processDef);
         
         BpmnXMLConverter bpmnXMLConverter=new BpmnXMLConverter();
         byte[] xml=bpmnXMLConverter.convertToXML(model);

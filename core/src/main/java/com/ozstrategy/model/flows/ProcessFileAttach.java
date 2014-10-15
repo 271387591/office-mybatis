@@ -26,9 +26,11 @@ public class ProcessFileAttach extends CreatorObject{
     private Long fileSize;
     @ManyToOne
     @JoinColumn(name = "instanceId")
-    private TaskInstance instance;
+    private ProcessDefInstance instance;
     @Column
     private Integer fileIndex;
+    @Column
+    private String actInstanceId;
 
     public Long getId() {
         return id;
@@ -62,19 +64,27 @@ public class ProcessFileAttach extends CreatorObject{
         this.fileSize = fileSize;
     }
 
-    public TaskInstance getInstance() {
-        return instance;
-    }
-
-    public void setInstance(TaskInstance instance) {
-        this.instance = instance;
-    }
-
     public Integer getFileIndex() {
         return fileIndex;
     }
 
     public void setFileIndex(Integer fileIndex) {
         this.fileIndex = fileIndex;
+    }
+
+    public ProcessDefInstance getInstance() {
+        return instance;
+    }
+
+    public void setInstance(ProcessDefInstance instance) {
+        this.instance = instance;
+    }
+
+    public String getActInstanceId() {
+        return actInstanceId;
+    }
+
+    public void setActInstanceId(String actInstanceId) {
+        this.actInstanceId = actInstanceId;
     }
 }

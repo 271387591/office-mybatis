@@ -18,6 +18,7 @@ Ext.define('FlexCenter.forms.view.FormPreview',{
     autoScroll: true,
     initComponent: function(){
         var me = this;
+        me.formHtml=me.setFormValue();
         me.items = [
             {
                 border:false,
@@ -52,6 +53,41 @@ Ext.define('FlexCenter.forms.view.FormPreview',{
             }
         ];
         me.callParent();
+    },
+    setFormValue:function(){
+        var me=this;
+        if(me.formHtml && me.formValue){
+            var formHtml=me.formHtml,formValue= me.formValue;
+            var form = document.createElement('form');
+            form.innerHTML = formHtml;
+            var table=$('table[xtype=table]',form),detail=$('table[xtype=detailGrid]',form);
+            for(var item in formValue){
+                var selectors=[
+                    'input[xtype=textfield][name='+item+']',
+                    'textarea[xtype=textareafield][name='+item+']',
+                    'input[xtype=datefield][name='+item+']',
+                    'select[xtype=combo][name='+item+']',
+                    'boxgroup[xtype=boxgroup][name='+item+']',
+                    'input[xtype=userselector][name='+item+']',
+                    'input[xtype=depselector][name='+item+']',
+                    'input[xtype=posselector][name='+item+']'
+                ];
+                var value=formValue[item];
+                if(!(value instanceof Array)){
+                    for(var i=0;i<selectors.length;i++){
+                        var field=$(selectors[i],table).not($(selectors[i],detail));
+                        if(field.length>0){
+                            field.attr('value',value);
+                        }
+                    }
+                }else{
+                    detail.attr('value',Ext.decode(value,true));
+                }
+            }
+            return form.innerHTML;
+        }
+        return me.formHtml;
+        
     },
     getFormValue:function(){
         var me=this;
@@ -359,6 +395,7 @@ Ext.define('FlexCenter.forms.view.FormPreview',{
             name: name,
             itemId:name,
             labelWidth: 50,
+            value:value,
 //            msgTarget: 'side',
 //            width:200,
 //            anchor: '100%',

@@ -1,8 +1,8 @@
 package com.ozstrategy.service.flows;
 
-import com.ozstrategy.exception.OzException;
 import com.ozstrategy.model.flows.ProcessDef;
 import com.ozstrategy.model.flows.ProcessElement;
+import org.activiti.engine.ActivitiObjectNotFoundException;
 
 import java.io.IOException;
 import java.util.List;
@@ -21,8 +21,8 @@ public interface ProcessDefManager {
     Long checkNameExist(String name,Long typeId);
     ProcessDef getProcessDefById(Long id);
     void save(ProcessDef processDef);
-    void update(ProcessDef processDef,String graRes) throws IOException,OzException;
-    String getRes(String resId,String resName)throws IOException;
+    void update(ProcessDef processDef,String graRes) throws IOException,Exception;
+    String getRes(String resId,String resName,String taskKey)throws IOException,ActivitiObjectNotFoundException;
     ProcessElement getProcessElementByTaskKeyAndDefId(Long defId,String taskKey);
     
     void deployed(ProcessDef processDef) throws Exception;

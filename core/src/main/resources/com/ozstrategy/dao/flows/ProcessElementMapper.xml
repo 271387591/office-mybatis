@@ -21,6 +21,10 @@
     <select id="getProcessElementById" resultMap="processElementResult" parameterType="long" flushCache="true">
         select <include refid="fieldMapping"/> from ProcessElement f where f.id=#{id} 
     </select>
+    <select id="getNoCascadeProcessElementById" resultType="com.ozstrategy.model.flows.ProcessElement" parameterType="long" flushCache="true">
+        select <include refid="fieldMapping"/> from ProcessElement f where f.id=#{id} 
+    </select>
+    
     <select id="getProcessElementByDefId" resultMap="processElementResult" parameterType="long" flushCache="true">
         select <include refid="fieldMapping"/> from ProcessElement f where f.processDefId=#{defId} 
     </select>
@@ -70,6 +74,7 @@
         f.label=#{label} , 
         f.taskKey=#{taskKey} , 
         f.actClass=#{actClass} , 
+        f.taskType=#{taskType} , 
         f.processDefId=#{processDef.id}  
         where f.id=#{id}
     </update>
@@ -77,8 +82,8 @@
         <selectKey keyColumn="id" keyProperty="id" resultType="java.lang.Long">
             select LAST_INSERT_ID()
         </selectKey>
-        insert into ProcessElement(id,type,label,taskKey,processDefId,actClass,actResource) 
-        values (#{id},#{type},#{label},#{taskKey},#{processDef.id},#{actClass},#{actResource})
+        insert into ProcessElement(id,type,label,taskKey,processDefId,actClass,actResource,taskType) 
+        values (#{id},#{type},#{label},#{taskKey},#{processDef.id},#{actClass},#{actResource},#{taskType})
     </insert>
     <sql id="fieldMapping">
         id,type,actClass,label,taskKey,processDefId

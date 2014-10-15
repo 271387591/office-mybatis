@@ -53,6 +53,8 @@
                 <add as="imageAlign" value="left"/>
                 <add as="imageVerticalAlign" value="top"/>
                 <add as="rounded" value="1"/>
+                <!--<add as="gradientColor" value="red"/>-->
+                <!--<add as="strokeColor" value="red"/>-->
                 <!--<add as="labelBackgroundColor" value="red"/>-->
                 <!--<add as="shadow" value="1"/>-->
                 <!--<add as="glass" value="1"/>-->

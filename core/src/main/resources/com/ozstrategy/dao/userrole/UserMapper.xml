@@ -47,10 +47,7 @@
         select u.* from User u where u.mobile=#{mobile} 
     </select>
     <select id="getUserByRoleId" parameterType="long" resultMap="userResult">
-        select u.* from User u join UserRole ur on u.id=ur.userId 
-        <where>
-            <if test="roleId!=null">ur.roleId=#{roleId}</if>
-        </where>
+        select u.* from User u join UserRole ur on u.id=ur.userId where ur.roleId=#{roleId}
     </select>
     <select id="getNoCascadeUserById" parameterType="long" resultMap="userNoCascadeResult">
         select u.* from User u join User where u.id=#{id}

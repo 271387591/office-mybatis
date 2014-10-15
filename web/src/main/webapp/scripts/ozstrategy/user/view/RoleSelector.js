@@ -111,12 +111,21 @@ Ext.define('FlexCenter.user.view.RoleSelector', {
             var records = selMode.getSelection();
             var selectedId = [];
             var selectedValue = [];
+            var userIds=[];
+            var userNames=[];
+            var userFullNames=[];
             Ext.Array.each(records, function (record, index, recordsItSelf) {
                 selectedId.push(record.data.id);
                 selectedValue.push(record.data.displayName);
+                var users=record.data.users;
+                for(var i=0;i<users.length;i++){
+                    userIds.push(users[i].id);
+                    userNames.push(users[i].username);
+                    userFullNames.push(users[i].fullName);
+                }
             });
             if (me.resultBack) {
-                me.resultBack(selectedId.join(','), selectedValue.join(','));
+                me.resultBack(selectedId.join(','), selectedValue.join(','),userIds.join(','),userNames.join(','),userFullNames.join(','));
                 me.close();
             }
         } else {

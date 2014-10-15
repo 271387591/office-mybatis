@@ -23,6 +23,7 @@ Ext.define('FlexCenter.flows.view.ModelerPreviewWindow',{
                 xtype:'modelerPreview',
                 processRecord:me.processRecord,
                 border:false,
+                taskKey:me.taskKey,
                 graRes:me.graRes
             }
         ];

@@ -31,12 +31,7 @@ Ext.define('FlexCenter.flows.model.ProcessDef',{
         }},
         {name:'lastUpdateDate',convert:function(v){
             return Ext.util.Format.date(new Date(v), 'Y-m-d H:i:s');
-        }},
-        'parentId',
-        'children'
-    ],
-    hasMany: [
-        { model: 'FlexCenter.flows.model.ProcessDef', name: 'children' }
+        }}
     ]
 
 });

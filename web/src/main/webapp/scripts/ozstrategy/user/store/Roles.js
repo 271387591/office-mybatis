@@ -10,8 +10,7 @@ Ext.define('FlexCenter.user.store.Roles',{
   alias: 'store.roles',
 
   requires:[
-    'FlexCenter.user.model.Role',
-    'Oz.data.DwrProxy'
+    'FlexCenter.user.model.Role'
   ],
   model:'FlexCenter.user.model.Role',
   proxy:{

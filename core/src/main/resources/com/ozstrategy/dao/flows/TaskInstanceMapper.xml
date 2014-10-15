@@ -6,16 +6,18 @@
         <id column="id" property="id" javaType="long"/>
         <association property="creator" column="creatorId" select="com.ozstrategy.dao.userrole.UserDao.getNoCascadeUserById"/>
         <association property="lastUpdater" column="lastUpdaterId" select="com.ozstrategy.dao.userrole.UserDao.getNoCascadeUserById"/>
-        <association property="processDef" column="processDefId" select="com.ozstrategy.dao.flows.ProcessDefDao.getNoCascadeProcessDefById"/>
+        <association property="element" column="elementId" select="com.ozstrategy.dao.flows.ProcessElementDao.getNoCascadeProcessElementById"/>
+        <association property="assignee" column="assigneeId" select="com.ozstrategy.dao.userrole.UserDao.getNoCascadeUserById"/>
+        <association property="instance" column="instanceId" select="com.ozstrategy.dao.flows.ProcessDefInstanceDao.getNoCascadeProcessDefInstanceById"/>
     </resultMap>
     
     <select id="listTaskInstances" resultMap="TaskInstanceResult" parameterType="Map">
-        select p.* from TaskInstance p where p.creatorId=#{creatorId}
+        select p.* from TaskInstance p where p.instanceId=#{instanceId}
         <if test="keyword!=null and keyword!=''">and p.name like CONCAT(CONCAT('%', #{keyword}), '%')</if>
-        order by p.createDate desc
+        order by p.createDate asc 
     </select>
     <select id="listTaskInstancesCount" resultType="java.lang.Integer" parameterType="Map">
-        select count(*) from TaskInstance p where p.creatorId=#{creatorId}
+        select count(*) from TaskInstance p where p.instanceId=#{instanceId}
         <if test="keyword!=null and keyword!=''">and p.name like CONCAT(CONCAT('%', #{keyword}), '%')</if>
     </select>
    

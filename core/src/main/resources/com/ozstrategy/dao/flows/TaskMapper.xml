@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ozstrategy.dao.flows.TaskDao">
+    <resultMap id="TaskResult" type="com.ozstrategy.model.flows.Task" autoMapping="true">
+        <id column="id" property="id" javaType="string"/>
+    </resultMap>
+    
+    <select id="listCandidateTasks" resultMap="TaskResult" parameterType="Map">
+        select 
+        art.ID_ as id,
+        art.REV_ as version,
+        art.EXECUTION_ID_ as executionId,
+        art.PROC_INST_ID_ as actInstanceId,
+        art.PROC_DEF_ID_ as processDefinitionId,
+        art.NAME_ as name,
+        art.PARENT_TASK_ID_ as parentTaskId,
+        art.DESCRIPTION_ as description,
+        art.TASK_DEF_KEY_ as taskDefinitionKey,
+        art.OWNER_ as owner,
+        art.ASSIGNEE_ as assignee,
+        art.DELEGATION_ as delegationState,
+        art.PRIORITY_ as priority,
+        art.CREATE_TIME_ as createDate,
+        art.DUE_DATE_ as dueDate,
+        art.CATEGORY_ as category,
+        art.SUSPENSION_STATE_ as suspended,
+        art.TENANT_ID_ as tenantId,
+        art.FORM_KEY_ as formKey,
+        pd.name as processDefinitionName,
+        pd.graphResId as graphResId,
+        pd.id as processDefId,
+        pd.actDefId as deploymentId,
+        pi.title as title,
+        pe.taskType as taskType,
+        pi.id as instanceId
+        from ACT_RU_TASK art
+        left join ProcessDef pd on art.PROC_DEF_ID_=pd.actDefId
+        left join ACT_RU_IDENTITYLINK ari on art.ID_=ari.TASK_ID_
+        left join ProcessDefInstance pi on art.PROC_INST_ID_=pi.actInstanceId
+        left join ProcessElement pe on art.TASK_DEF_KEY_=pe.taskKey 
+        where pe.processDefId=pd.id and ari.USER_ID_=#{userId} and art.ASSIGNEE_ is null 
+        <if test="keyword!=null and keyword!=''"> and pd.name like CONCAT(CONCAT('%', #{keyword}), '%')</if>
+        <if test="keyword!=null and keyword!=''"> and art.NAME_ like CONCAT(CONCAT('%', #{keyword}), '%')</if>
+         order by art.CREATE_TIME_ desc
+    </select>
+    <select id="listAssigneeTasks" resultMap="TaskResult" parameterType="Map">
+        SELECT
+        art.ID_ as id,
+        art.REV_ as version,
+        art.EXECUTION_ID_ as executionId,
+        art.PROC_INST_ID_ as actInstanceId,
+        art.PROC_DEF_ID_ as processDefinitionId,
+        art.NAME_ as name,
+        art.PARENT_TASK_ID_ as parentTaskId,
+        art.DESCRIPTION_ as description,
+        art.TASK_DEF_KEY_ as taskDefinitionKey,
+        art.OWNER_ as owner,
+        art.ASSIGNEE_ as assignee,
+        art.DELEGATION_ as delegationState,
+        art.PRIORITY_ as priority,
+        art.CREATE_TIME_ as createDate,
+        art.DUE_DATE_ as dueDate,
+        art.CATEGORY_ as category,
+        art.SUSPENSION_STATE_ as suspended,
+        art.TENANT_ID_ as tenantId,
+        art.FORM_KEY_ as formKey,
+        pd.name as processDefinitionName,
+        pd.graphResId as graphResId,
+        pd.id as processDefId,
+        pd.actDefId as deploymentId,
+        pi.title as title,
+        pe.taskType as taskType,
+        pi.id as instanceId
+        from ACT_RU_TASK art 
+        left join ProcessDef pd on art.PROC_DEF_ID_=pd.actDefId
+        left join ProcessDefInstance pi on art.PROC_INST_ID_=pi.actInstanceId
+        left join ProcessElement pe on art.TASK_DEF_KEY_=pe.taskKey 
+        where pe.processDefId=pd.id and art.ASSIGNEE_=#{userId}
+        <if test="keyword!=null and keyword!=''"> and pd.name like CONCAT(CONCAT('%', #{keyword}), '%')</if>
+        <if test="keyword!=null and keyword!=''"> and art.NAME_ like CONCAT(CONCAT('%', #{keyword}), '%')</if>
+         order by art.CREATE_TIME_ desc
+    </select>
+    
+    
+</mapper>

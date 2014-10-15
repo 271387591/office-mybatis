@@ -62,6 +62,8 @@ public class ProcessElement implements Serializable {
     @ManyToOne
     @JoinColumn(name = "processDefId")
     private ProcessDef processDef;
+    @Column(length = 32)
+    private String taskType;
     
     @Column
     @Lob
@@ -146,5 +148,13 @@ public class ProcessElement implements Serializable {
 
     public void setRoles(Set<User> roles) {
         this.roles = roles;
+    }
+
+    public String getTaskType() {
+        return taskType;
+    }
+
+    public void setTaskType(String taskType) {
+        this.taskType = taskType;
     }
 }

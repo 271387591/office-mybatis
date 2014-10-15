@@ -1,7 +1,6 @@
 package com.ozstrategy.dao.flows;
 
 import com.ozstrategy.model.flows.ProcessFileAttach;
-import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 
 import java.util.List;
@@ -17,4 +16,5 @@ public interface ProcessFileAttachDao {
     void updateProcessFileAttach(ProcessFileAttach attach);
     void deleteProcessFileAttach(Long id);
     void saveProcessFileAttach(ProcessFileAttach attach);
+    List<ProcessFileAttach> getProcessFileAttachByInstanceId(Long instanceId);
 }

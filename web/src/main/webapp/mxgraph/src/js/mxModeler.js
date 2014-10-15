@@ -29,7 +29,6 @@ mxModeler.prototype.getEditor=function(){
 mxModeler.prototype.getGraph=function(){
     return this.graph?this.graph:null;
 };
-
 mxModeler.prototype.initGraph = function(graph,dom)
 {
     
@@ -228,6 +227,14 @@ mxModeler.prototype.addGraphListeners = function(graph,showProperties)
     graph.getSelectionModel().addListener(mxEvent.CHANGE, function(model, evt){
         graph.container.focus();
         var cell = graph.getSelectionCell();
+        
+        if(cell && cell.isEdge()){
+            var source=cell.source;
+            var target=cell.target;
+            if(source && target && (source.value.getAttribute('type')=='startEvent')){
+                target.value.setAttribute('tasktype','Starter');
+            }
+        }
         if(showProperties){
             showProperties(cell);
         }
@@ -256,6 +263,9 @@ mxModeler.prototype.overrideGraph = function(graph,editor)
     };
     var  validateConnection=mxConnectionHandler.prototype.validateConnection;
     mxConnectionHandler.prototype.validateConnection=function(source, target){
+        if(source && (source.value.getAttribute('type')=='startEvent') && (source.edges!=null) && source.edges.length>0){
+            return source;
+        }
         if(source && target && target.edges){
             var sid=source.id;
             for(var i=0;i<target.edges.length;i++){

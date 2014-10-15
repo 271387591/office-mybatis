@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mxgraph.io.mxCodec;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGraphModel;
+import com.mxgraph.util.mxUtils;
 import com.mxgraph.util.mxXmlUtils;
 import com.ozstrategy.model.forms.FormField;
 import com.sun.org.apache.xerces.internal.dom.ParentNode;
@@ -18,6 +19,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.junit.Test;
+import org.w3c.dom.Node;
 
 import java.io.File;
 import java.util.Iterator;
@@ -101,6 +103,25 @@ public class OzDateUtilTest extends TestCase {
 //        ObjectNode node = ActivityJsonConverUtil.Activiti(cell,"dsf");
 //        System.out.println(node.toString());
         int i=0;
+        
+        
+        
+    }
+    public void testgetRes() throws Exception{
+        String path=OzDateUtilTest.class.getClassLoader().getResource("graph.xml").getPath();
+        String xml= FileUtils.readFileToString(new File(path));
+        mxGraphModel model=getMxGraphModel(xml);
+        model.beginUpdate();
+        mxCell cell = (mxCell)model.getCell("3");
+        String style = cell.getStyle();
+        style+=";strokeColor=red";
+        cell.setStyle(style);
+        model.endUpdate();
+        mxCodec codec = new mxCodec();
+        Node node = codec.encode(model);
+        String str = mxUtils.getPrettyXml(node);
+        System.out.println(str);
+        
     }
     private static mxGraphModel getMxGraphModel(String gxml){
         mxCodec codec = new mxCodec();

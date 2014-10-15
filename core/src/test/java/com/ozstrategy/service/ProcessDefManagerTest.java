@@ -10,6 +10,8 @@ import com.ozstrategy.dao.flows.ProcessElementDao;
 import com.ozstrategy.dao.flows.ProcessElementFormDao;
 import com.ozstrategy.model.flows.ProcessDef;
 import com.ozstrategy.service.flows.ProcessDefManager;
+import com.ozstrategy.util.ActivityJsonConverUtil;
+import org.activiti.bpmn.converter.BpmnXMLConverter;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.ExtensionAttribute;
 import org.activiti.editor.language.json.converter.BpmnJsonConverter;
@@ -65,26 +67,35 @@ public class ProcessDefManagerTest extends BaseManagerTestCase  {
         
         
         
-//        String path=ProcessDefManagerTest.class.getClassLoader().getResource("graph.xml").getPath();
-//        String value= FileUtils.readFileToString(new File(path));
-//        value.replaceAll("&quot;","\"");
-//        System.out.println(value);
-//        ProcessDef processDef = processDefManager.getProcessDefById(1L);
-//        processDefManager.update(processDef,value);
-//        mxGraphModel model=getMxGraphModel(value);
-        
-//        ObjectNode node = ActivityJsonConverUtil.createProcess(model, processDef);
-//        System.out.println(node.toString());
-        
-        
-//        BpmnJsonConverter jsonConverter=new BpmnJsonConverter();
-//        JsonNode jsonNode=new ObjectMapper().readTree(value);
-//        BpmnModel bpmnModel = jsonConverter.convertToBpmnModel(node);
-//        InputStream inputStream = new DefaultProcessDiagramGenerator().generatePngDiagram(bpmnModel);
-//        FileUtils.copyInputStreamToFile(inputStream,new File("/Users/lihao/Downloads/graphtest.png"));
-//        int i=0;
+
         
     }
+    @Test
+    public void testJSON() throws Exception{
+        String path=ProcessDefManagerTest.class.getClassLoader().getResource("act.json").getPath();
+        String value= FileUtils.readFileToString(new File(path));
+        BpmnJsonConverter jsonConverter=new BpmnJsonConverter();
+        JsonNode jsonNode=new ObjectMapper().readTree(value);
+        BpmnModel bpmnModel = jsonConverter.convertToBpmnModel(jsonNode);
+        int i=0;
+    }
+    @Test
+    public void testCreateBpmnModel() throws Exception{
+        String path=ProcessDefManagerTest.class.getClassLoader().getResource("graph.xml").getPath();
+        String value= FileUtils.readFileToString(new File(path));
+        mxGraphModel graphModel=getMxGraphModel(value);
+        ProcessDef def=processDefManager.getProcessDefById(2L);
+        BpmnModel model = ActivityJsonConverUtil.createBpmnModel(graphModel,def);
+        BpmnJsonConverter jsonConverter=new BpmnJsonConverter();
+        System.out.println(jsonConverter.convertToJson(model).toString());
+
+        BpmnXMLConverter bpmnXMLConverter =new BpmnXMLConverter();
+        byte[] data=bpmnXMLConverter.convertToXML(model,"UTF-8");
+        String xml=new String(data);
+        System.out.println(xml);
+        
+    }
+    
     @Test
     @Rollback(value = true)
     public void testDeployed() throws Exception,Throwable{

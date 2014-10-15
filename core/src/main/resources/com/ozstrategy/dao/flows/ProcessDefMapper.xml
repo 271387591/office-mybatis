@@ -77,10 +77,10 @@
         select f.id from ProcessDef f where f.name=#{name} and f.enabled=1 and f.globalTypeId=#{typeId}
     </select>
     <select id="getProcessDefUser" resultType="com.ozstrategy.model.userrole.User" parameterType="long">
-        select u.* from User u join ProcessDefUser p on u.id=p.userId
+        select u.* from User u join ProcessDefUser p on u.id=p.userId where p.processDefId=#{id}
     </select>
     <select id="getProcessDefRole" resultType="com.ozstrategy.model.userrole.Role" parameterType="long">
-        select r.* from Role r join ProcessDefRole p on r.id=p.roleId
+        select r.* from Role r join ProcessDefRole p on r.id=p.roleId where p.processDefId=#{id}
     </select>
     
     <insert id="saveProcessDefUser" parameterType="Map" flushCache="true">

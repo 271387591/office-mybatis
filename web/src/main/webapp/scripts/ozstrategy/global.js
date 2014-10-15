@@ -29,18 +29,21 @@ if (top != self) {
 
 var countDown = 30;
 function ajaxPostRequest(url,params,callback){
+    var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"请等候..."});
+    myMask.show();
     Ext.Ajax.request({
         url: url || '',
         params: params || {},
         method: 'POST',
-        waitMsg: '发送请求........',
         success: function (response, options) {
+            if (myMask != undefined){ myMask.destroy();}
             var result = Ext.decode(response.responseText,true);
             if(callback){
                 callback(result);
             }
         },
         failure: function (response, options) {
+            if (myMask != undefined){ myMask.hide();}
             Ext.MessageBox.alert('失败', '请求超时或网络故障,错误编号：' + response.status);
         }
     });

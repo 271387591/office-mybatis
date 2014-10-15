@@ -3,7 +3,9 @@ Ext.define('FlexCenter.UserMenu', {
 	alias: 'widget.userMenu',
 	requires: [
         'FlexCenter.flows.view.ProcessDefinitionView',
-        'FlexCenter.flows.view.ProcessDefInstanceDraftView'
+        'FlexCenter.flows.view.ProcessDefInstanceDraftView',
+        'FlexCenter.flows.view.TaskView',
+        'FlexCenter.flows.view.TaskAssigneeView'
 	],
 
 	initComponent: function () {

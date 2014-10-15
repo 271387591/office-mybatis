@@ -215,7 +215,7 @@ public class ProcessDefController extends BaseController {
                 ProcessDef def=processDefManager.getProcessDefById(id);
                 if(def!=null){
                     if(StringUtils.isNotEmpty(def.getGraphResId())){
-                        String graRes = processDefManager.getRes(def.getGraphResId(),def.getGraRes());
+                        String graRes = processDefManager.getRes(def.getGraphResId(),def.getGraRes(),request.getParameter("taskKey"));
                         if(StringUtils.isNotEmpty(graRes)){
                             map.put("graRes",graRes);
                         }

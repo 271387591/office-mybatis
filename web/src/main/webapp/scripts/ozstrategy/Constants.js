@@ -137,8 +137,8 @@ Ext.define('FlexCenter.Constants', {
                 id: '2',
                 text: '待办事项',
                 iconCls: 'icon-flowWait',
-                widget: 'aTaskView',
-                widgetItemId: 'aTaskView',
+                widget: 'taskView',
+                widgetItemId: 'taskView',
                 leaf: true
             },
             {

@@ -13,6 +13,7 @@ public class ProcessFileAttachCommand extends CreatorObjcetCommand {
     private Long fileSize;
     private Long instanceId;
     private Integer fileIndex;
+    private String actInstanceId;
 
     public ProcessFileAttachCommand(ProcessFileAttach attach) {
         super(attach);
@@ -22,6 +23,7 @@ public class ProcessFileAttachCommand extends CreatorObjcetCommand {
         this.fileSize= attach.getFileSize();
         this.instanceId=attach.getInstance()!=null?attach.getInstance().getId():null;
         this.fileIndex=attach.getFileIndex();
+        this.actInstanceId= attach.getActInstanceId();
     }
 
     public Long getId() {
@@ -70,5 +72,13 @@ public class ProcessFileAttachCommand extends CreatorObjcetCommand {
 
     public void setFileIndex(Integer fileIndex) {
         this.fileIndex = fileIndex;
+    }
+
+    public String getActInstanceId() {
+        return actInstanceId;
+    }
+
+    public void setActInstanceId(String actInstanceId) {
+        this.actInstanceId = actInstanceId;
     }
 }

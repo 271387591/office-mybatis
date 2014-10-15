@@ -319,7 +319,6 @@ Ext.define('FlexCenter.flows.view.Modeler', {
             graRes= mxUtils.getPrettyXml(node);
             console.log(graRes);
         }
-        console.log(me.processRecord);
         var win=Ext.widget('processListForm',{
             buttonSave:true,
             graRes:graRes,
@@ -761,6 +760,7 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     fieldLabel: '字段设置',
                     xtype:'trigger',
                     name: 'formproperties',
+                    hidden:true,
                     value:cell.value.getAttribute('formproperties'),
                     listeners:{
                         change:function(combo, newValue, oldValue,eOpts ){

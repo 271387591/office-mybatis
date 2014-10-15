@@ -79,6 +79,7 @@ Ext.define('FlexCenter.flows.view.NewProcessDefinition',{
         me.items=[
             {
                 region:'north',
+                drawType:'new',
                 xtype:'processDefinitionHeader'
             },
             {
@@ -127,6 +128,15 @@ Ext.define('FlexCenter.flows.view.NewProcessDefinition',{
     runProcess:function(){
         var me=this;
         var value=me.getDefinitionValue();
+        if(!value.title){
+            Ext.MessageBox.alert({
+                title:'警告',
+                icon: Ext.MessageBox.ERROR,
+                msg:'标题不能为空，请重新填写。',
+                buttons:Ext.MessageBox.OK
+            });
+            return;
+        }
         ajaxPostRequest('processDefInstanceController.do?method=runStartNoneEvent',value,function(result){
             if(result.success){
                 Ext.MessageBox.alert({
