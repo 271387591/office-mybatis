@@ -9,6 +9,12 @@ Ext.define('FlexCenter.flows.store.ProcessDefinition', {
     model: 'FlexCenter.flows.model.ProcessDef',
     pageSize: 20,
     autoLoad:false,
+    sorters: [
+        {
+            property: 'deployDate',
+            direction: 'DESC'
+        }
+    ],
     proxy: {
         type: 'ajax',
         url: 'processDefController.do?method=getProcessDefinitions',

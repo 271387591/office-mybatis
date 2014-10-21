@@ -1,5 +1,6 @@
 package com.ozstrategy.service.flows.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ozstrategy.Constants;
 import com.ozstrategy.dao.flows.ProcessDefInstanceDao;
 import com.ozstrategy.dao.flows.ProcessElementDao;
@@ -8,7 +9,6 @@ import com.ozstrategy.dao.flows.TaskInstanceDao;
 import com.ozstrategy.dao.userrole.UserDao;
 import com.ozstrategy.exception.OzException;
 import com.ozstrategy.model.flows.ProcessDefInstance;
-import com.ozstrategy.model.flows.ProcessDefInstanceDraft;
 import com.ozstrategy.model.flows.ProcessElement;
 import com.ozstrategy.model.flows.Task;
 import com.ozstrategy.model.flows.TaskInstance;
@@ -33,11 +33,14 @@ import org.activiti.engine.impl.task.TaskDefinition;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -69,6 +72,15 @@ public class TaskManagerImpl implements TaskManager{
     public List<Task> listAssigneeTasks(Map<String, Object> map) {
         return taskDao.listAssigneeTasks(map);
     }
+
+    public List<Task> listReplevyTasks(Map<String, Object> map,Integer start,Integer limit) {
+        return taskDao.listReplevyTasks(map,new RowBounds(start,limit));
+    }
+
+    public Integer listReplevyTasksCount(Map<String, Object> map) {
+        return taskDao.listReplevyTasksCount(map);
+    }
+
     @Transactional(rollbackFor = Throwable.class)
     public void claim(String taskId, String username) {
         if(StringUtils.isNotEmpty(taskId) && StringUtils.isNotEmpty(username)){
@@ -107,6 +119,37 @@ public class TaskManagerImpl implements TaskManager{
             throw new OzException(Constants.MESSAGE_RETURN_TASK_FAIL);
         }
     }
+    @Transactional(rollbackFor = Throwable.class)
+    public void replevyTask(String taskId, String taskKey, User creator, Map<String, Object> map) throws Exception {
+        try{
+            ReturnTaskCmd returnTaskCmd=new ReturnTaskCmd(taskId,taskKey,1);
+            TaskServiceImpl taskServiceImpl=(TaskServiceImpl)taskService;
+            taskServiceImpl.getCommandExecutor().execute(returnTaskCmd);
+            taskServiceImpl.claim(taskId,creator.getUsername());//先签收该任务
+            HistoricTaskInstance historicTaskInstance=historyService.createHistoricTaskInstanceQuery().taskId(taskId).singleResult();
+            saveTaskInstance(creator, historicTaskInstance, map, TaskInstanceStatus.Replevy.name());
+        }catch (Exception e){
+            throw new OzException(Constants.MESSAGE_RETURN_TASK_FAIL);
+        }
+    }
+
+    @Transactional(rollbackFor = Throwable.class)
+    public void complete(User user,String taskId, Map<String, Object> map) throws Exception {
+        String formData= ObjectUtils.toString(map.get("formData"));
+        Map<String,Object> variables=new HashMap<String, Object>();
+        if(StringUtils.isNotEmpty(formData)){
+            try {
+                variables=new ObjectMapper().readValue(formData,Map.class);
+            }catch (IOException e){
+            }
+        }
+        if(StringUtils.isNotEmpty(taskId)){
+            taskService.complete(taskId,variables);
+            HistoricTaskInstance historicTaskInstance=historyService.createHistoricTaskInstanceQuery().taskId(taskId).singleResult();
+            saveTaskInstance(user,historicTaskInstance,map,TaskInstanceStatus.Complete.name());
+        }
+    }
+
     private void saveTaskInstance(User user,HistoricTaskInstance task,Map<String,Object> map,String status){
         TaskInstance instance=new TaskInstance();
         instance.setCreateDate(new Date());

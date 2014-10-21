@@ -10,7 +10,6 @@ Ext.define('FlexCenter.flows.view.ModelerPreviewWindow',{
     title: '流程预览',
 //    maximized: true,
     maximizable:true,
-    iconCls: 'workflow-manager-16',
     animCollapse : true,
     layout: 'fit',
     width:1000,

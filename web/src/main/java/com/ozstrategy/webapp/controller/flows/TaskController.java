@@ -1,7 +1,6 @@
 package com.ozstrategy.webapp.controller.flows;
 
 import com.ozstrategy.model.flows.ProcessDef;
-import com.ozstrategy.model.flows.ProcessDefInstance;
 import com.ozstrategy.model.flows.ProcessFileAttach;
 import com.ozstrategy.model.flows.Task;
 import com.ozstrategy.model.userrole.User;
@@ -62,6 +61,20 @@ public class TaskController extends BaseController{
         items.addAll(items2);
         return new JsonReaderResponse<Task>(items);
     }
+    @RequestMapping(params = "method=listReplevyTasks")
+    @ResponseBody
+    public JsonReaderResponse<Task> listReplevyTasks(HttpServletRequest request) {
+        String username=request.getRemoteUser();
+        if(StringUtils.isEmpty(username)){
+            return new JsonReaderResponse<Task>(Collections.<Task>emptyList(),0);
+        }
+        Map<String,Object> map=requestMap(request);
+        map.put("userId",username);
+        List<Task> tasks= taskManager.listReplevyTasks(map,parseInteger(request.getParameter("start")),parseInteger(request.getParameter("limit")));
+        Integer count=taskManager.listReplevyTasksCount(map);
+        return new JsonReaderResponse<Task>(tasks,count);
+    }
+    
     @RequestMapping(params = "method=claim")
     @ResponseBody
     public BaseResultCommand claim(HttpServletRequest request){
@@ -117,8 +130,49 @@ public class TaskController extends BaseController{
         }
         return new BaseResultCommand("",Boolean.TRUE); 
     }
+    @RequestMapping(params = "method=replevyTask")
+    @ResponseBody
+    public BaseResultCommand replevyTask(HttpServletRequest request){
+        String taskId=request.getParameter("taskId");
+        String taskKey=request.getParameter("taskKey");
+        Map<String,Object> map=requestMap(request);
+        try {
+            String username=request.getRemoteUser();
+            User creator=null;
+            if(StringUtils.isNotEmpty(username)){
+                creator=userManager.getUserByUsername(username);
+            }
+            taskManager.replevyTask(taskId,taskKey,creator,map);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("任务追回失败",e);
+            return new BaseResultCommand("任务追回失败",Boolean.FALSE);
+        }
+        return new BaseResultCommand("",Boolean.TRUE); 
+    }
     
-    
+    @RequestMapping(params = "method=completeTask")
+    @ResponseBody
+    public BaseResultCommand completeTask(HttpServletRequest request){
+        String taskId=request.getParameter("taskId");
+        if(StringUtils.isEmpty(taskId)){
+            return new BaseResultCommand("任务ID为空",Boolean.FALSE);
+        }
+        Map<String,Object> map=requestMap(request);
+        try {
+            String username=request.getRemoteUser();
+            User creator=null;
+            if(StringUtils.isNotEmpty(username)){
+                creator=userManager.getUserByUsername(username);
+            }
+            taskManager.complete(creator,taskId,map);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("任务完成失败",e);
+            return new BaseResultCommand("任务完成失败",Boolean.FALSE);
+        }
+        return new BaseResultCommand("",Boolean.TRUE); 
+    }
     @RequestMapping(params = "method=assignee")
     @ResponseBody
     public BaseResultCommand assignee(HttpServletRequest request){

@@ -70,16 +70,16 @@ Ext.define('FlexCenter.flows.view.TaskInstanceView', {
                 renderer: function (v) {
                     if(v == 'Starter'){
                         return '发起申请';
-                    }else if(v == 'Passed'){
-                        return '审核通过';
+                    }else if(v == 'Complete'){
+                        return '任务通过';
                     }else if(v == 'ProxyTask'){
                         return '转办';
                     }else if(v == 'ReturnTaskToStarter'){
                         return '<font color = "red">回退到发起人</font>';
                     }else if(v == 'ReturnTask'){
                         return '<font color = "red">回退</font>';
-                    }else if(v == 5){
-                        return '会签任务';
+                    }else if(v == 'Replevy'){
+                        return '<font color = "red">追回</font>';
                     }else if(v=='End'){
                         return '结束'
                     }

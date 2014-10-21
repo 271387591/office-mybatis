@@ -14,7 +14,6 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
     alias: 'widget.processListView',
     itemId: 'processListView',
     title: '流程列表',
-    iconCls: 'workflow-manager-16',
     autoScroll: true,
     layout:'border',
     margin:1,

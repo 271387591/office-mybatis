@@ -16,6 +16,7 @@ import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.ExtensionAttribute;
 import org.activiti.editor.language.json.converter.BpmnJsonConverter;
 import org.activiti.engine.RepositoryService;
+import org.activiti.engine.repository.Deployment;
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.junit.Test;
@@ -80,12 +81,13 @@ public class ProcessDefManagerTest extends BaseManagerTestCase  {
         int i=0;
     }
     @Test
+    @Rollback(value = true)
     public void testCreateBpmnModel() throws Exception{
         String path=ProcessDefManagerTest.class.getClassLoader().getResource("graph.xml").getPath();
         String value= FileUtils.readFileToString(new File(path));
         mxGraphModel graphModel=getMxGraphModel(value);
-        ProcessDef def=processDefManager.getProcessDefById(2L);
-        BpmnModel model = ActivityJsonConverUtil.createBpmnModel(graphModel,def);
+        ProcessDef processDef=processDefManager.getProcessDefById(2L);
+        BpmnModel model = ActivityJsonConverUtil.createBpmnModel(graphModel,processDef);
         BpmnJsonConverter jsonConverter=new BpmnJsonConverter();
         System.out.println(jsonConverter.convertToJson(model).toString());
 
@@ -93,6 +95,14 @@ public class ProcessDefManagerTest extends BaseManagerTestCase  {
         byte[] data=bpmnXMLConverter.convertToXML(model,"UTF-8");
         String xml=new String(data);
         System.out.println(xml);
+
+        Deployment deployment = repositoryService
+                .createDeployment()
+                .addBpmnModel(processDef.getActRes(), model)
+                .category(processDef.getCategory())
+                .name(processDef.getName())
+                .deploy();
+        int i=0;
         
     }
     

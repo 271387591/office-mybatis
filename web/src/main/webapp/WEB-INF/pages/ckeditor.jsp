@@ -14,7 +14,9 @@
     
     <%--<link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ozstrategy/css/ExecDashboard-all.css'/>"/>--%>
     <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ozstrategy/css/flexcenter.css'/>"/>
+    <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ozstrategy/css/app-88de2e4b4aaefeb72bd4003a88ad5c26.css'/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ozstrategy/css/BoxSelect.css'/>"/>
+    <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ext/resources/css/ext-all.css'/>"/>
     
     
 
@@ -29,7 +31,7 @@
     <%--<script type="text/javascript" src="<c:url value='/ext/ext-core.js'/>"></script>--%>
     <%--<script type="text/javascript" src="<c:url value='/scripts/ext5.0/ext-all.js'/>"></script>--%>
     <%--<script type="text/javascript" src="<c:url value='/scripts/ext5.0/bootstrap.js'/>"></script>--%>
-    <%--<script type="text/javascript" src="<c:url value='/scripts/ext/ext-all.js'/>"></script>--%>
+    <script type="text/javascript" src="<c:url value='/scripts/ext/ext-all.js'/>"></script>
     <%--<script type="text/javascript" src="<c:url value='/scripts/ext/locale/ext-lang-zh_CN.js'/>"></script>--%>
     <%--<script type="text/javascript" src="<c:url value='/scripts/json2.js'/>"></script>--%>
     <%--<script type="text/javascript" src="<c:url value='/scripts/ux/Ext/ux/growl/ext-growl.js'/>"></script>--%>
@@ -41,6 +43,7 @@
 
     <script type="text/javascript" src="<c:url value='/scripts/lib/jquery-1.7.1.min.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/scripts/lib/ajax-pushlet-client.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/scripts/app/data-c7b46cb25323d76425ecdce8528ce475.js'/>"></script>
 
     <script type="text/javascript">
         <%--extTheme = '<c:url value="/scripts/ext/resources/css/ext-all"/>';--%>
@@ -67,24 +70,50 @@
         <%--disableCaching: true--%>
         <%--}--%>
         <%--);--%>
-        <%--Ext.Loader.setPath({--%>
-            <%--&lt;%&ndash;'Ext.ux.desktop': '<c:url value="/scripts/desktop/js"/>',&ndash;%&gt;--%>
+        Ext.Loader.setPath({
+            'Docs':'<c:url value="/scripts/app"/>',
+            <%--'Ext.ux.desktop': '<c:url value="/scripts/desktop/js"/>',--%>
             <%--'Ext.ux': '<c:url value="/scripts/ux/Ext5/ux"/>',--%>
             <%--FlexCenter: '<c:url value="/scripts/ozstrategy"/>',--%>
-            <%--&lt;%&ndash;Oz: '<c:url value="/scripts/ux/Oz"/>'&ndash;%&gt;--%>
-        <%--});--%>
+            <%--Oz: '<c:url value="/scripts/ux/Oz"/>'--%>
+        });
     </script>
 
 </head>
 
 <body>
-<div id="content"></div>
+<div id="loading"><span class="title">Ext JS 4.2.0 - Sencha Docs</span><span class="logo"></span></div>
+<div id="header-content"><strong>Ext JS 4.2.0 </strong>Sencha Docs</div>
+<div id="notice-text">Sencha Docs</div>
+<div id="welcome-content"><strong>wolecome </strong>Sencha Docs</div>
+
+<div id='footer-content' style='display: none'>Ext JS 4.2.0 Docs - Generated with <a href='https://github.com/senchalabs/jsduck'>JSDuck</a> 4.6.1. <a href='http://www.sencha.com/legal/terms-of-use/'>Terms of Use</a></div>
 <script type="text/javascript">
-    PL._init();
-    PL.joinListen('/system/pushlet');
-    function onData(event) {
-        console.log(event.get("publisher"));
-    }
+//    PL._init();
+//    PL.joinListen('/system/pushlet');
+//    function onData(event) {
+//        console.log(event.get("publisher"));
+//    }
+Ext.require('Docs.Application');
+//Ext.require([
+//    'FlexCenter.UserViewport',
+//]);
+Ext.onReady(function() {
+    
+    Ext.create('Docs.Application');
+    
+//    Ext.create('Ext.app.Application',{
+//        name: "FlexCenter",
+//        controllers: [
+//        ],
+//        launch: function(){
+//            Ext.create('FlexCenter.UserViewport');
+//            Ext.get("loading").remove();
+//        }
+//        
+//    })
+});
+  
 
 
 

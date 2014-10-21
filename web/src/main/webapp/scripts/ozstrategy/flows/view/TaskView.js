@@ -3,16 +3,16 @@
  */
 Ext.define('FlexCenter.flows.view.TaskView',{
     requires:[
-        'FlexCenter.flows.store.Task'
+        'FlexCenter.flows.store.Task',
+        'FlexCenter.flows.view.TaskAssigneeView'
     ],
     extend: 'Ext.panel.Panel',
     alias: 'widget.taskView',
     itemId:'taskView',
     title:'待办事项',
-    iconCls: 'icon-flowWait',
+    text:'待办事项',
     layout:'border',
     autoScroll:true,
-    closable:true,
     getStore:function(){
         var me=this;
         var store=Ext.create('FlexCenter.flows.store.Task',{
@@ -144,11 +144,15 @@ Ext.define('FlexCenter.flows.view.TaskView',{
                                                 ret.actInstanceId=rec.get('actInstanceId');
                                                 ret.title=rec.get('title');
                                                 ret.taskType=rec.get('taskType');
+                                                var itemId='taskAssigneeView_'+rec.get('id');
                                                 var config={
                                                     record:ret,
+                                                    itemId:itemId,
+                                                    text:rec.get('title'),
                                                     title:rec.get('title')
                                                 }
-                                                Ext.ComponentQuery.query('#centerPanel')[0].addPanel('taskAssigneeView','taskAssigneeView'+rec.get('id'),config);
+                                                var apptabs = Ext.ComponentQuery.query('#apptabs')[0];
+                                                apptabs.addTab('taskAssigneeView',itemId,'#taskView',config);
                                             }else{
                                                 Ext.MessageBox.show({
                                                     title:'执行失败',

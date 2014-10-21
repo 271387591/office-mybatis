@@ -15,7 +15,6 @@ Ext.define('FlexCenter.flows.view.ProcessDefinitionHeader',{
     initComponent:function(){
         var me=this;
         var record=me.record?me.record:{};
-        console.log(record);
         me.items=[
             {
                 xtype: 'buttongroup',

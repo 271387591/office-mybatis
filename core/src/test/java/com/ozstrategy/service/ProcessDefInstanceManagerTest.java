@@ -15,6 +15,7 @@ import org.activiti.engine.impl.RepositoryServiceImpl;
 import org.activiti.engine.impl.cmd.GetDeploymentProcessDefinitionCmd;
 import org.activiti.engine.impl.interceptor.CommandExecutor;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
+import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
@@ -101,7 +102,7 @@ public class ProcessDefInstanceManagerTest extends BaseManagerTestCase  {
         RepositoryServiceImpl repositoryService1=(RepositoryServiceImpl)repositoryService;
         CommandExecutor executor = repositoryService1.getCommandExecutor();
         ProcessDefinitionEntity entity = executor.execute(new GetDeploymentProcessDefinitionCmd("process_1:1:125010"));
-        
+        ActivityImpl activity = entity.getInitial();
 
         int i=0;
     }

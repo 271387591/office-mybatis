@@ -30,6 +30,7 @@ public class Task {
     private String graphResId;
     private Long instanceId;
     private String title;
+    private String taskType;
 
     public String getId() {
         return id;
@@ -221,5 +222,13 @@ public class Task {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getTaskType() {
+        return taskType;
+    }
+
+    public void setTaskType(String taskType) {
+        this.taskType = taskType;
     }
 }

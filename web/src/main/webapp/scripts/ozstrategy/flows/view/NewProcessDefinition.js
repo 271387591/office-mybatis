@@ -10,7 +10,7 @@ Ext.define('FlexCenter.flows.view.NewProcessDefinition',{
     extend: 'Ext.panel.Panel',
     alias: 'widget.newProcessDefinition',
     autoScroll:true,
-    closable:true,
+//    closable:true,
     initComponent:function(){
         var me=this;
         me.dockedItems=[
@@ -19,59 +19,44 @@ Ext.define('FlexCenter.flows.view.NewProcessDefinition',{
                 dock:'top',
                 items:[
                     {
-                        xtype: 'buttongroup',
-                        items:[
-                            {
-                                xtype:'button',
-                                frame:true,
-                                text:'存为草稿',
-                                iconCls:'save',
-                                scope:this,
-                                handler:function(){
-                                    me.saveDraft();
-                                }
-                            },
-                            {
-                                xtype:'button',
-                                frame:true,
-                                text:'启动流程',
-                                iconCls:'btn-flow-ok',
-                                scope:this,
-                                handler:function(){
-                                    me.runProcess();
-                                }
-                            }
-                        ]
+                        xtype:'button',
+                        frame:true,
+                        text:'存为草稿',
+                        iconCls:'save',
+                        scope:this,
+                        handler:function(){
+                            me.saveDraft();
+                        }
+                    },
+                    {
+                        xtype:'button',
+                        frame:true,
+                        text:'启动流程',
+                        iconCls:'btn-flow-ok',
+                        scope:this,
+                        handler:function(){
+                            me.runProcess();
+                        }
                     },
 
                     { xtype: 'tbspacer', width: 50 },
                     {
-                        xtype: 'buttongroup',
-                        items:[
-                            {
-                                xtype:'checkboxfield',
-                                boxLabel:'邮件通知',
-                                name:'mailNotice',
-                                itemId:'sendEmail',
-                                inputValue:'1'
-                            }
-                        ]
+                        xtype:'checkboxfield',
+                        boxLabel:'邮件通知',
+                        name:'mailNotice',
+                        itemId:'sendEmail',
+                        inputValue:'1'
                     },
                     '->',
                     {
-                        xtype: 'buttongroup',
-                        items:[
-                            {
-                                xtype:'button',
-                                frame:true,
-                                text:'查看流程图',
-                                iconCls:'btn-readdocument',
-                                scope:this,
-                                handler:function(){
-                                    me.preview(me.record);
-                                }
-                            }
-                        ]
+                        xtype:'button',
+                        frame:true,
+                        text:'查看流程图',
+                        iconCls:'btn-readdocument',
+                        scope:this,
+                        handler:function(){
+                            me.preview(me.record);
+                        }
                     }
                 ]
             }

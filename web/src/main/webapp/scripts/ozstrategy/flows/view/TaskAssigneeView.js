@@ -10,7 +10,6 @@ Ext.define('FlexCenter.flows.view.TaskAssigneeView',{
     extend: 'Ext.panel.Panel',
     alias: 'widget.taskAssigneeView',
     autoScroll:true,
-    closable:true,
     initComponent:function(){
         var me=this;
         me.dockedItems=[
@@ -19,100 +18,94 @@ Ext.define('FlexCenter.flows.view.TaskAssigneeView',{
                 dock:'top',
                 items:[
                     {
-                        xtype: 'buttongroup',
-                        items:[
-                            {
-                                xtype:'button',
-                                frame:true,
-                                text:'执行下一步',
-                                iconCls:'btn-flow-ok',
-                                scope:this,
-                                handler:function(){
-                                    me.runProcess();
-                                }
-                            },
-                            {
-                                xtype:'button',
-                                frame:true,
-                                text:'任务转办',
-                                iconCls:'delivered-assignee',
-                                scope:this,
-                                handler:function(){
-                                    Ext.widget('userSelector',{
-                                        resultBack:function(ids,values,usernames){
-                                            var data=me.getDefinitionValue();
-                                            data.taskId=me.record.taskId;
-                                            data.username=usernames;
-                                            data.instanceId=me.record.instanceId;
-                                            ajaxPostRequest('taskController.do?method=proxyTask',data,function(result){
-                                                if(result.success){
-                                                }else{
-                                                    Ext.MessageBox.alert({
-                                                        title:'警告',
-                                                        icon: Ext.MessageBox.ERROR,
-                                                        msg:result.message,
-                                                        buttons:Ext.MessageBox.OK
-                                                    });
-                                                }
+                        xtype:'button',
+                        frame:true,
+                        text:'执行下一步',
+                        iconCls:'btn-flow-ok',
+                        scope:this,
+                        handler:function(){
+                            me.completeTask();
+                        }
+                    },
+                    {
+                        xtype:'button',
+                        frame:true,
+                        text:'任务转办',
+                        iconCls:'delivered-assignee',
+                        scope:this,
+                        handler:function(){
+                            Ext.widget('userSelector',{
+                                resultBack:function(ids,values,usernames){
+                                    var data=me.getTaskValue();
+                                    data.taskId=me.record.taskId;
+                                    data.username=usernames;
+                                    data.instanceId=me.record.instanceId;
+                                    ajaxPostRequest('taskController.do?method=proxyTask',data,function(result){
+                                        if(result.success){
+                                        }else{
+                                            Ext.MessageBox.alert({
+                                                title:'警告',
+                                                icon: Ext.MessageBox.ERROR,
+                                                msg:result.message,
+                                                buttons:Ext.MessageBox.OK
                                             });
-                                        },
-                                        type:'SINGLE'
-                                    }).show();
-                                }
-                            },
-                            {
-                                xtype:'button',
-                                frame:true,
-                                text:'回退',
-                                iconCls:'btn-turn-back',
-                                hidden:me.record.taskType=='Starter',
-                                scope:this,
-                                handler:function(){
+                                        }
+                                    });
+                                },
+                                type:'SINGLE'
+                            }).show();
+                        }
+                    },
+                    {
+                        xtype:'button',
+                        frame:true,
+                        text:'回退',
+                        iconCls:'btn-turn-back',
+                        hidden:me.record.taskType=='Starter',
+                        scope:this,
+                        handler:function(){
+                            Ext.Msg.confirm('回退','该功能将会回到上一任务节点，你确定要回退？',function(btn){
+                                if(btn=='yes'){
                                     me.returnTask(1);
                                 }
-                            },
-                            {
-                                xtype:'button',
-                                frame:true,
-                                text:'回退到发起人',
-                                hidden:me.record.taskType=='Starter',
-                                iconCls:'btn-turn-back-assignee',
-                                scope:this,
-                                handler:function(){
+                            });
+                            
+                        }
+                    },
+                    {
+                        xtype:'button',
+                        frame:true,
+                        text:'回退到发起人',
+                        hidden:me.record.taskType=='Starter',
+                        iconCls:'btn-turn-back-assignee',
+                        scope:this,
+                        handler:function(){
+                            Ext.Msg.confirm('回退到发起人','该功能将会回到流程发起人任务节点，你确定要回退？',function(btn){
+                                if(btn=='yes'){
                                     me.returnTask(2);
                                 }
-                            }
-                        ]
+                            });
+                        }
                     },
 
                     { xtype: 'tbspacer', width: 50 },
                     {
-                        xtype: 'buttongroup',
-                        items:[
-                            {
-                                xtype:'checkboxfield',
-                                boxLabel:'邮件通知',
-                                name:'mailNotice',
-                                itemId:'sendEmail',
-                                inputValue:'1'
-                            }
-                        ]
+                        xtype:'checkboxfield',
+                        boxLabel:'邮件通知',
+                        name:'mailNotice',
+                        itemId:'sendEmail',
+                        inputValue:'1'
                     },
                     '->',
                     {
-                        xtype: 'buttongroup',
-                        items:[
-                            {
-                                xtype:'button',
-                                frame:true,
-                                text:'查看流程图',
-                                iconCls:'btn-readdocument',
-                                scope:this,
-                                handler:function(){
-                                    me.preview(me.record);
-                                }
-                            }
-                        ]
+                        xtype:'button',
+                        frame:true,
+                        text:'查看流程图',
+                        iconCls:'btn-readdocument',
+                        scope:this,
+                        handler:function(){
+                            me.preview(me.record);
+                        }
                     }
                 ]
             }
@@ -137,38 +130,46 @@ Ext.define('FlexCenter.flows.view.TaskAssigneeView',{
         ];
         this.callParent();
     },
-    runProcess:function(){
+    completeTask:function(){
         var me=this;
-        var value=me.getDefinitionValue();
-        ajaxPostRequest('processDefInstanceController.do?method=runStartNoneEvent',value,function(result){
+        var value=me.getTaskValue();
+        value.taskId=me.record.taskId;
+        value.instanceId=me.record.instanceId;
+        ajaxPostRequest('taskController.do?method=completeTask',value,function(result){
             if(result.success){
                 Ext.MessageBox.alert({
                     title:'提示',
                     icon: Ext.MessageBox.INFO,
-                    msg:'流程启动成功。',
+                    msg:'任务完成。',
                     buttons:Ext.MessageBox.OK
                 });
-                me.close();
+                me.flushTask();
             }else{
                 Ext.MessageBox.alert({
-                    title:'警告',
+                    title:'审核失败',
                     icon: Ext.MessageBox.ERROR,
                     msg:result.message,
                     buttons:Ext.MessageBox.OK
                 });
             }
         });
-
     },
     returnTask:function(type){
         var me=this;
-        var data=me.getDefinitionValue();
+        var data=me.getTaskValue();
         data.taskId=me.record.taskId;
         data.taskKey=me.record.taskKey;
-        data.instanceId=me.record.actInstanceId;
+        data.instanceId=me.record.instanceId;
         data.turnType=type;
         ajaxPostRequest('taskController.do?method=returnTask',data,function(result){
             if(result.success){
+                Ext.MessageBox.alert({
+                    title:'提示',
+                    icon: Ext.MessageBox.INFO,
+                    msg:'回退成功。',
+                    buttons:Ext.MessageBox.OK
+                });
+                me.flushTask();
             }else{
                 Ext.MessageBox.alert({
                     title:'警告',
@@ -179,7 +180,15 @@ Ext.define('FlexCenter.flows.view.TaskAssigneeView',{
             }
         });
     },
-    getDefinitionValue:function(){
+    flushTask:function(){
+        var me=this;
+        var taskView=Ext.ComponentQuery.query('#taskView')[0];
+        if(taskView){
+            taskView.down('grid').getStore().load();
+        }
+        me.close();
+    },
+    getTaskValue:function(){
         var me=this;
         var headerValue= me.down('processDefinitionHeader').getHeaderValue();
         var formData= me.down('formPreview').getFormValue();

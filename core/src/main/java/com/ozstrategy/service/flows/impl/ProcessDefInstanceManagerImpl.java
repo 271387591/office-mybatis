@@ -21,7 +21,6 @@ import org.activiti.engine.IdentityService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
-import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
@@ -76,8 +75,13 @@ public class ProcessDefInstanceManagerImpl implements ProcessDefInstanceManager 
             }catch (IOException e){
             }
         }
-        identityService.setAuthenticatedUserId(username);
-        ProcessInstance instance = runtimeService.startProcessInstanceById(actDefId, new HashMap<String, Object>());
+        ProcessInstance instance=null;
+        try{
+            identityService.setAuthenticatedUserId(username);
+            instance = runtimeService.startProcessInstanceById(actDefId, new HashMap<String, Object>());
+        }finally {
+            identityService.setAuthenticatedUserId(null);
+        }
         if(instance==null){
             throw new OzException(Constants.MESSAGE_START_PROCESS_FAIL);
         }

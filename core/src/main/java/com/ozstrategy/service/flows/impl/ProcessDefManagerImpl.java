@@ -18,13 +18,13 @@ import com.ozstrategy.model.flows.ProcessDefVersion;
 import com.ozstrategy.model.flows.ProcessElement;
 import com.ozstrategy.model.flows.ProcessElementForm;
 import com.ozstrategy.model.flows.ProcessElementType;
+import com.ozstrategy.model.flows.TaskType;
 import com.ozstrategy.model.userrole.Role;
 import com.ozstrategy.model.userrole.User;
 import com.ozstrategy.service.flows.ProcessDefManager;
 import com.ozstrategy.util.ActivityJsonConverUtil;
 import org.activiti.bpmn.converter.BpmnXMLConverter;
 import org.activiti.bpmn.model.BpmnModel;
-import org.activiti.bpmn.model.ExtensionAttribute;
 import org.activiti.bpmn.model.FlowElement;
 import org.activiti.bpmn.model.FormProperty;
 import org.activiti.bpmn.model.Process;
@@ -140,15 +140,6 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
                         processElement.setActClass(type);
                         processElement.setProcessDef(processDef);
                         processElement.setType(ProcessElementType.get(type));
-                        Map<String,List<ExtensionAttribute>> attrMap = element.getAttributes();
-                        if(attrMap!=null && attrMap.size()>0){
-                            List<ExtensionAttribute> extensionAttributes=attrMap.get(ActivityJsonConverUtil.TASK_ATTR);
-                            if(extensionAttributes!=null && extensionAttributes.size()>0){
-                                ExtensionAttribute extensionAttribute=extensionAttributes.get(0);
-                                String value = extensionAttribute.getValue();
-                                processElement.setTaskType(value);
-                            }
-                        }
 //                        try{
 //                            mxCell cell = (mxCell)graphModel.getCell(id.substring(2));
 //                            if(cell!=null){
@@ -170,7 +161,10 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
                             insertProcessElementForm(processDef, processElement, properties);
                             List<String> usernames=userTask.getCandidateUsers();
                             saveElementUser(usernames,processElement);
-//                            mxCell cell = (mxCell)graphModel.getCell(id.substring(2));
+                            mxCell cell = (mxCell)graphModel.getCell(id.substring(2));
+                            String taskType=StringUtils.defaultIfEmpty(cell.getAttribute(ActivityJsonConverUtil.TASK_TYPE), TaskType.Commons.name());
+                            processElement.setTaskType(taskType);
+                            processElementDao.updateProcessElement(processElement);
 //                            if(cell!=null){
 //                                try{
 //                                    Set<String> users=saveElementRole(processElement,cell);

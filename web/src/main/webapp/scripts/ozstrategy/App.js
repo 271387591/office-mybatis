@@ -83,7 +83,7 @@ Ext.define('FlexCenter.App', {
 //        { name:'账号管理', iconCls:'manageOldUser-shortcut', module:'unitOldUserView' },
         { name:userRoleRes.title, iconCls:'manageUser-shortcut', module:'unitUserView' }, 
         { name:systemBaseDataRes.title, iconCls:'globalType-shortcut', module:'systemBaseDataView' }, 
-        { name:'表单管理', iconCls:'manageUser-shortcut', module:'flowFormManager' }, 
+        { name:'表单管理', iconCls:'form-manager', module:'flowFormManager' }, 
           { name:workFlowRes.flowDefineManagerTitle,iconCls:'workflow-manager',module:'flowManagerView'}
 //          { name:'携程',iconCls:'look-up-shortcut',module:'xcView'},
 //          { name:'酒店基本信息管理',iconCls:'look-up-shortcut',module:'hotelView'}

@@ -1,74 +1,77 @@
-<?xml version='1.0' encoding='UTF-8'?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
-    <process id="P_3" name="test3" isExecutable="true">
-        <endEvent id="T_9" name="结束"/>
-        <sequenceFlow id="T_8" sourceRef="T_4" targetRef="T_5"/>
-        <sequenceFlow id="T_7" sourceRef="T_3" targetRef="T_4"/>
-        <sequenceFlow id="T_6" sourceRef="T_2" targetRef="T_3"/>
-        <userTask id="T_5" name="人事审核" activiti:candidateUsers="hr" activiti:tasktype="">
+    <process id="P_2" name="test2" isExecutable="true">
+        <documentation>sadf</documentation>
+        <userTask id="T_9" name="人事审核" activiti:candidateUsers="hr,user,dep" tasktype="Commons">
+            <documentation>阿斯达飞</documentation>
             <extensionElements>
                 <activiti:formProperty id="1" name="ss" type="string" variable="sss" readable="false"/>
                 <activiti:formProperty id="2" name="d" type="string" variable="d" readable="false"/>
                 <activiti:formProperty id="7" name="sdf" type="string" variable="fds" readable="false"/>
             </extensionElements>
         </userTask>
-        <userTask id="T_4" name="部门审核" activiti:candidateUsers="dep" tasktype="">
+        <userTask id="T_8" name="部门审核" activiti:candidateUsers="dep" tasktype="Commons">
+            <documentation>阿斯达飞</documentation>
             <extensionElements>
                 <activiti:formProperty id="1" name="ss" type="string" variable="sss" readable="false"/>
                 <activiti:formProperty id="2" name="d" type="string" variable="d" readable="false"/>
                 <activiti:formProperty id="7" name="sdf" type="string" variable="fds" readable="false"/>
             </extensionElements>
         </userTask>
-        <userTask id="T_3" name="填写表单" tasktype="Starter">
+        <userTask id="T_7" name="填写表单" activiti:candidateUsers="dep" tasktype="Commons">
+            <documentation>阿斯达飞</documentation>
             <extensionElements>
                 <activiti:formProperty id="1" name="ss" type="string" variable="sss" readable="false"/>
                 <activiti:formProperty id="2" name="d" type="string" variable="d" readable="false"/>
                 <activiti:formProperty id="7" name="sdf" type="string" variable="fds" readable="false"/>
             </extensionElements>
         </userTask>
-        <startEvent id="T_2" name="开始" activiti:initiator="starter"/>
-        <sequenceFlow id="T_10" sourceRef="T_5" targetRef="T_9"/>
+        <startEvent id="T_6" name="开始" activiti:initiator="starter"/>
+        <sequenceFlow id="T_14" sourceRef="T_9" targetRef="T_10"/>
+        <sequenceFlow id="T_13" sourceRef="T_8" targetRef="T_9"/>
+        <sequenceFlow id="T_12" sourceRef="T_7" targetRef="T_8"/>
+        <sequenceFlow id="T_11" sourceRef="T_6" targetRef="T_7"/>
+        <endEvent id="T_10" name="结束"/>
     </process>
-    <bpmndi:BPMNDiagram id="BPMNDiagram_P_3">
-        <bpmndi:BPMNPlane bpmnElement="P_3" id="BPMNPlane_P_3">
-            <bpmndi:BPMNShape bpmnElement="T_5" id="BPMNShape_T_5">
-                <omgdc:Bounds height="60.0" width="100.0" x="380.0" y="0.0"/>
-            </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="T_4" id="BPMNShape_T_4">
-                <omgdc:Bounds height="60.0" width="100.0" x="230.0" y="0.0"/>
-            </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="T_3" id="BPMNShape_T_3">
-                <omgdc:Bounds height="60.0" width="100.0" x="80.0" y="0.0"/>
-            </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="T_9" id="BPMNShape_T_9">
-                <omgdc:Bounds height="30.0" width="30.0" x="530.0" y="15.0"/>
-            </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="T_2" id="BPMNShape_T_2">
+    <bpmndi:BPMNDiagram id="BPMNDiagram_P_2">
+        <bpmndi:BPMNPlane bpmnElement="P_2" id="BPMNPlane_P_2">
+            <bpmndi:BPMNShape bpmnElement="T_6" id="BPMNShape_T_6">
                 <omgdc:Bounds height="30.0" width="30.0" x="0.0" y="15.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge bpmnElement="T_6" id="BPMNEdge_T_6">
-                <omgdi:waypoint x="30.0" y="30.0"/>
-                <omgdi:waypoint x="42.0" y="30.0"/>
-                <omgdi:waypoint x="42.0" y="30.000000000000007"/>
-                <omgdi:waypoint x="80.0" y="30.000000000000007"/>
-            </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="T_8" id="BPMNEdge_T_8">
+            <bpmndi:BPMNShape bpmnElement="T_9" id="BPMNShape_T_9">
+                <omgdc:Bounds height="60.0" width="100.0" x="380.0" y="0.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="T_8" id="BPMNShape_T_8">
+                <omgdc:Bounds height="60.0" width="100.0" x="230.0" y="0.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="T_7" id="BPMNShape_T_7">
+                <omgdc:Bounds height="60.0" width="100.0" x="80.0" y="0.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="T_10" id="BPMNShape_T_10">
+                <omgdc:Bounds height="30.0" width="30.0" x="530.0" y="15.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="T_13" id="BPMNEdge_T_13">
                 <omgdi:waypoint x="330.0" y="30.0"/>
                 <omgdi:waypoint x="342.0" y="30.0"/>
                 <omgdi:waypoint x="342.0" y="30.000000000000007"/>
                 <omgdi:waypoint x="380.0" y="30.000000000000007"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="T_7" id="BPMNEdge_T_7">
+            <bpmndi:BPMNEdge bpmnElement="T_12" id="BPMNEdge_T_12">
                 <omgdi:waypoint x="180.0" y="30.0"/>
                 <omgdi:waypoint x="192.0" y="30.0"/>
                 <omgdi:waypoint x="192.0" y="30.000000000000007"/>
                 <omgdi:waypoint x="230.0" y="30.000000000000007"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="T_10" id="BPMNEdge_T_10">
+            <bpmndi:BPMNEdge bpmnElement="T_14" id="BPMNEdge_T_14">
                 <omgdi:waypoint x="480.0" y="30.0"/>
                 <omgdi:waypoint x="492.0" y="30.0"/>
                 <omgdi:waypoint x="492.0" y="30.000000000000004"/>
                 <omgdi:waypoint x="530.0" y="30.000000000000004"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="T_11" id="BPMNEdge_T_11">
+                <omgdi:waypoint x="30.0" y="30.0"/>
+                <omgdi:waypoint x="42.0" y="30.0"/>
+                <omgdi:waypoint x="42.0" y="30.000000000000007"/>
+                <omgdi:waypoint x="80.0" y="30.000000000000007"/>
             </bpmndi:BPMNEdge>
         </bpmndi:BPMNPlane>
     </bpmndi:BPMNDiagram>

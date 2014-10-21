@@ -8,6 +8,7 @@
 Ext.define('FlexCenter.system.view.GlobalTypeTree', {
   extend: 'Ext.tree.Panel',
   requires: [
+      'FlexCenter.system.store.GlobalTypeTree'
   ],
   alias: 'widget.globalTypeTree',
   itemId: 'globalTypeTree',

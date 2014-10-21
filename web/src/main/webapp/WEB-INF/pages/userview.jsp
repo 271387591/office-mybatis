@@ -19,6 +19,7 @@
     <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ext/resources/css/ext-all.css'/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ozstrategy/css/flexcenter.css'/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ozstrategy/css/BoxSelect.css'/>"/>
+    <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ozstrategy/css/app.css'/>"/>
     <%--<link rel="stylesheet" type="text/css" href="<c:url value='/mxgraph/css/common.css'/>"/>--%>
     <%--<link rel="stylesheet" type="text/css" href="<c:url value='/mxgraph/css/explorer.css'/>"/>--%>
     <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/shared/icons.css'/>"/>
@@ -136,7 +137,7 @@
     <script type="text/javascript">
         var apps = {};
         Ext.require([
-            'FlexCenter.Viewport',
+            'FlexCenter.UserViewport',
             'Ext.data.ArrayStore',
             'Ext.util.CSS'
         ]);
@@ -160,7 +161,7 @@
             if (!ozSOA) {
                 ozSOA = new Ext.util.MixedCollection();
             }
-            ozSOAViewport = new FlexCenter.Viewport();
+            ozSOAViewport = new FlexCenter.UserViewport();
             var oDiv = document.getElementById('loading');
             oDiv.style.display = "none";
             for (var i = 0; i < oDiv.childNodes.length; i++)

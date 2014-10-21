@@ -47,5 +47,6 @@
 		<mapper resource="com/ozstrategy/dao/flows/ProcessDefInstanceMapper.xml"/>
 		<mapper resource="com/ozstrategy/dao/flows/TaskInstanceMapper.xml"/>
 		<mapper resource="com/ozstrategy/dao/flows/TaskMapper.xml"/>
+		<mapper resource="com/ozstrategy/dao/flows/ProcessInstanceHistoryMapper.xml"/>
 	</mappers>
 </configuration>

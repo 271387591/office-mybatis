@@ -23,113 +23,107 @@ Ext.define('FlexCenter.UserToolbar', {
 		Ext.apply(this, {
 			border: false,
 			items: [
-                
+
                 {
-                    xtype: 'buttongroup',
-//                    margin: '0 0 0 300',
-                    items:[
-                        {
-                            text: '协同办公',
-                            scale: 'small',
-                            iconCls: 'office_auto',
-                            iconAlign: 'top',
+                    text: '协同办公',
+                    scale: 'small',
+                    iconCls: 'office_auto',
+                    iconAlign: 'top',
 //					margin: '0 8 0 10',
-                            itemId:'officeAutoBtn',
-                            tooltip: '协同办公',
+                    itemId:'officeAutoBtn',
+                    tooltip: '协同办公',
 //          plugins: Ext.create('Oz.access.RoleAccess', {featureName:'_officeAuto',mode:'hide'}),
-                            handler: function () {
-                                me.changeMenuMode(this.itemId);
-                                var treeNav = me.ownerCt.ownerCt.down("#treeNav");
-                                treeNav.loadMenuItem(FlexCenter.Constants.USER_OA_MENU, this.tooltip);
-                            }
-                        },
-                        {
-                            text: '我的流程',
-                            scale: 'small',
-                            iconCls: 'workflow-manager-16',
-                            itemId:'workflowManagerBtn',
-                            tooltip: '我的流程',
-                            iconAlign: 'top',
+                    handler: function () {
+                        me.changeMenuMode(this.itemId);
+                        var treeNav = me.ownerCt.ownerCt.down("#treeNav");
+                        treeNav.loadMenuItem(FlexCenter.Constants.USER_OA_MENU, this.tooltip);
+                    }
+                },
+                {
+                    text: '我的流程',
+                    scale: 'small',
+                    iconCls: 'workflow-manager-16',
+                    itemId:'workflowManagerBtn',
+                    tooltip: '我的流程',
+                    iconAlign: 'top',
 //					margin: '0 0 0 10',
 //          plugins: Ext.create('Oz.access.RoleAccess', {featureName:'_myWorkflow',mode:'hide'}),
-                            handler: function () {
+                    handler: function () {
 //                        this.addCls('office_auto');
-                                me.changeMenuMode(this.itemId);
+                        me.changeMenuMode(this.itemId);
 //                        this.setText('<font color="red">'+this.getText()+'</font>')
-                                var treeNav = me.ownerCt.ownerCt.down("#treeNav");
-                                treeNav.loadMenuItem(FlexCenter.Constants.USER_WORKFLOW_MENU, this.tooltip);
-                            }
-                        },
-                        {
-                            text: '我的首页',
-                            scale: 'small',
-                            iconCls: 'index-page',
-                            iconAlign: 'top',
-                            itemId:'indexPageBtn',
+                        var treeNav = me.ownerCt.ownerCt.down("#treeNav");
+                        treeNav.loadMenuItem(FlexCenter.Constants.USER_WORKFLOW_MENU, this.tooltip);
+                    }
+                },
+                {
+                    text: '我的首页',
+                    scale: 'small',
+                    iconCls: 'index-page',
+                    iconAlign: 'top',
+                    itemId:'indexPageBtn',
 //					margin: '0 0 0 10',
-                            tooltip: '我的首页',
+                    tooltip: '我的首页',
 //          plugins: Ext.create('Oz.access.RoleAccess', {featureName:'_myIndex',mode:'disable'}),
-                            handler: function () {
+                    handler: function () {
 //						var centerTabPanel = me.ownerCt.ownerCt.down('#centerPanel');
 //						centerTabPanel.addPanel('indexView', 'indexPage');
-                            }
-                        },
-                        {
-                            text: '公司主页',
-                            scale: 'small',
-                            tooltip: '公司主页',
-                            iconCls: 'company-home',
-                            itemId:'companyHomeBtn',
-                            iconAlign: 'top',
+                    }
+                },
+                {
+                    text: '公司主页',
+                    scale: 'small',
+                    tooltip: '公司主页',
+                    iconCls: 'company-home',
+                    itemId:'companyHomeBtn',
+                    iconAlign: 'top',
 //					margin: '0 0 0 10',
 //          plugins: Ext.create('Oz.access.RoleAccess', {featureName:'_companyHome',mode:'disable'}),
-                            handler: function () {
+                    handler: function () {
 //						var centerTabPanel = me.ownerCt.ownerCt.down('#centerPanel');
 //						centerTabPanel.addPanel('companyHomeView', 'companyHome');
-                            }
-                        },
-                        {
-                            text: '修改个人资料',
-                            scale: 'small',
-                            tooltip: '修改个人资料',
-                            iconCls: 'edit_profile',
-                            itemId:'editProfileBtn',
-                            iconAlign: 'top',
+                    }
+                },
+                {
+                    text: '修改个人资料',
+                    scale: 'small',
+                    tooltip: '修改个人资料',
+                    iconCls: 'edit_profile',
+                    itemId:'editProfileBtn',
+                    iconAlign: 'top',
 //					margin: '0 0 0 10',
 //          plugins: Ext.create('Oz.access.RoleAccess', {featureName:'_editProfile',mode:'disable'}),
-                            handler: function () {
+                    handler: function () {
 //						var centerTabPanel = me.ownerCt.ownerCt.down('#centerPanel');
 //						centerTabPanel.addPanel('profileForm', 'profileForm');
-                            }
-                        },
-                        {
-                            text: '便 签',
-                            scale: 'small',
-                            tooltip: '便 签',
-                            iconAlign: 'top',
-                            itemId:'iconNoteBtn',
+                    }
+                },
+                {
+                    text: '便 签',
+                    scale: 'small',
+                    tooltip: '便 签',
+                    iconAlign: 'top',
+                    itemId:'iconNoteBtn',
 //					margins: '0 0 0 10',
-                            iconCls: 'icon-note',
+                    iconCls: 'icon-note',
 //          plugins: Ext.create('Oz.access.RoleAccess', {featureName:'_userNote',mode:'disable'}),
-                            handler: function () {
+                    handler: function () {
 //						var centerTabPanel = me.ownerCt.ownerCt.down('#centerPanel');
 //						centerTabPanel.addPanel('personalTipsView', 'personalTipsView');
-                            }
-                        },
-                        {
-                            text: '在线人员',
-                            scale: 'small',
-                            tooltip: '在线人员',
-                            iconAlign: 'top',
+                    }
+                },
+                {
+                    text: '在线人员',
+                    scale: 'small',
+                    tooltip: '在线人员',
+                    iconAlign: 'top',
 //                    margins: '0 0 0 10',
-                            itemId:'onlineBtn',
-                            iconCls: 'icon-online',
+                    itemId:'onlineBtn',
+                    iconCls: 'icon-online',
 //          plugins: Ext.create('Oz.access.RoleAccess', {featureName:'_online',mode:'disable'}),
-                            handler: function () {
+                    handler: function () {
 //                        Ext.widget('onlineUser').show();
-                            }
-                        }
-                    ]
+                    }
                 },
                 {
                     xtype:'button',

@@ -13,12 +13,10 @@ import com.mxgraph.util.mxXmlUtils;
 import com.ozstrategy.Constants;
 import com.ozstrategy.exception.OzException;
 import com.ozstrategy.model.flows.ProcessDef;
-import com.ozstrategy.model.flows.TaskType;
 import com.sun.org.apache.xerces.internal.dom.ParentNode;
 import org.activiti.bpmn.BpmnAutoLayout;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.EndEvent;
-import org.activiti.bpmn.model.ExtensionAttribute;
 import org.activiti.bpmn.model.FlowElement;
 import org.activiti.bpmn.model.FormProperty;
 import org.activiti.bpmn.model.SequenceFlow;
@@ -36,7 +34,6 @@ import org.w3c.dom.Node;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -136,15 +133,6 @@ public class ActivityJsonConverUtil implements EditorJsonConstants, StencilConst
         userTask.setId(EDITOR_SHAPE_ID_PREFIX + cell.getId());
         userTask.setDocumentation(cell.getAttribute(PROPERTY_DOCUMENTATION,""));
         userTask.setAsynchronous(BooleanUtils.toBooleanObject(StringUtils.defaultIfEmpty(cell.getAttribute(PROPERTY_ASYNCHRONOUS),"No")));
-        ExtensionAttribute attribute=new ExtensionAttribute(TASK_TYPE);
-        attribute.setValue(StringUtils.defaultIfEmpty(cell.getAttribute(TASK_TYPE), TaskType.Commons.name()));
-        List<ExtensionAttribute> extensionAttributes=new ArrayList<ExtensionAttribute>();
-        extensionAttributes.add(attribute);
-        Map<String,List<ExtensionAttribute>> attrMap=new HashMap<String, List<ExtensionAttribute>>();
-        attrMap.put(TASK_ATTR,extensionAttributes);
-        userTask.setAttributes(attrMap);
-
-        
         String assignee= cell.getAttribute(PROPERTY_USERTASK_ASSIGNEE,"");
         if(StringUtils.isNotEmpty(assignee)){
             try {
@@ -236,6 +224,13 @@ public class ActivityJsonConverUtil implements EditorJsonConstants, StencilConst
         }
         return flow;
     }
+    
+    
+    
+    
+    
+    
+    
     
     
     

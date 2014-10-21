@@ -18,12 +18,14 @@
         <property name="transactionManager" ref="transactionManager"/>
         <property name="databaseSchemaUpdate" value="true"/>
         <property name="jobExecutorActivate" value="true"/>
+        <property name="enableSafeBpmnXml" value="true"/>
         <property name="history" value="full"/>
         <property name="processDefinitionCacheLimit" value="10"/>
 
         <!-- 生成流程图的字体 -->
         <property name="activityFontName" value="宋体"/>
         <property name="labelFontName" value="宋体"/>
+
 
         <!-- 缓存支持
         <property name="processDefinitionCache">
@@ -49,8 +51,7 @@
         <property name="processEngineConfiguration" ref="processEngineConfiguration"/>
     </bean>
 
-    <bean id="repositoryService" factory-bean="processEngine" factory-method="getRepositoryService">
-    </bean>
+    <bean id="repositoryService" factory-bean="processEngine" factory-method="getRepositoryService"/>
     <bean id="runtimeService" factory-bean="processEngine" factory-method="getRuntimeService"/>
     <bean id="formService" factory-bean="processEngine" factory-method="getFormService"/>
     <bean id="identityService" factory-bean="processEngine" factory-method="getIdentityService"/>

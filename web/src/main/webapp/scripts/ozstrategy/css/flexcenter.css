@@ -250,6 +250,12 @@ html{
     height: 48px;
     background-image: url(icons/workflowManager.png);
 }
+.form-manager {
+    width: 48px;
+    height: 48px;
+    background-image: url(icons/table_manager.png);
+}
+
 .icon-globalType {
     background-image: url(icons/type-16.png) !important;
     width: 16px;

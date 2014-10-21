@@ -9,10 +9,11 @@ Ext.define('FlexCenter.flows.view.ProcessDefInstanceDraftView', {
     alias: 'widget.processDefInstanceDraftView',
     itemId: 'processDefInstanceDraftView',
     title: '流程草稿列表',
+    text: '流程草稿列表',
     autoScroll: true,
     layout:'border',
-    margin:1,
-    closable:true,
+//    margin:1,
+//    closable:true,
     getStore:function(){
         var store=Ext.StoreManager.lookup("processDefInstanceDraftViewStore");
         if(!store){
@@ -36,21 +37,17 @@ Ext.define('FlexCenter.flows.view.ProcessDefInstanceDraftView', {
                 itemId:'processDefInstanceDraftViewGrid',
                 store:store,
                 autoScroll: true,
+                border:false,
                 tbar:[
                     {
-                        xtype: 'buttongroup',
-                        items:[
-                            {
-                                xtype: 'button',
-                                frame: true,
-                                text: '删除',
-                                iconCls: 'table-delete',
-                                scope: this,
-                                handler: function(){
-                                    me.onDeleteClick();
-                                }
-                            }
-                        ]
+                        xtype: 'button',
+                        frame: true,
+                        text: '删除',
+                        iconCls: 'table-delete',
+                        scope: this,
+                        handler: function(){
+                            me.onDeleteClick();
+                        }
                     },
                     '->',
                     {

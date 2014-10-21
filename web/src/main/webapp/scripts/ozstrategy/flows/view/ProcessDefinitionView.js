@@ -16,10 +16,11 @@ Ext.define('FlexCenter.flows.view.ProcessDefinitionView',{
     extend: 'Ext.panel.Panel',
     alias: 'widget.processDefinitionView',
     itemId:'processDefinitionView',
+    text:'流程列表',
     title:'流程列表',
-    iconCls:'workflow-manager-16',
     layout:'border',
     role:null,
+//    border:false,
     autoScroll:true,
     getStore:function(){
         var me=this;
@@ -29,7 +30,7 @@ Ext.define('FlexCenter.flows.view.ProcessDefinitionView',{
         store.load();
         return store;
     },
-    margin: 1,
+//    margin: 1,
     initComponent:function(){
         var me=this;
         var store = me.getStore();
@@ -46,12 +47,12 @@ Ext.define('FlexCenter.flows.view.ProcessDefinitionView',{
                     var formHtml=rec.get('formHtml');
                     var config={
                         formHtml:formHtml,
-                        title:'启动流程-'+rec.get('name'),
+                        text:'启动流程-'+rec.get('name'),
                         record:rec,
                         itemId:itemId
                     };
-                    Ext.ComponentQuery.query('userCenterPanel')[0].addPanel('newProcessDefinition',itemId,config);
-                    
+                    var apptabs = Ext.ComponentQuery.query('#apptabs')[0];
+                    apptabs.addTab('newProcessDefinition',itemId,'#processDefinitionView',config);
                 }
             }
         ];
@@ -87,33 +88,23 @@ Ext.define('FlexCenter.flows.view.ProcessDefinitionView',{
                         dock:'top',
                         items:[
                             {
-                                xtype: 'buttongroup',
-                                items:[
-                                    {
-                                        xtype:'button',
-                                        frame:true,
-                                        text:'刷新',
-                                        iconCls:'refresh',
-                                        scope:this,
-                                        handler:function(){
-                                            me.down('grid').getStore().load();
-                                        }
-                                    }
-                                ]
+                                xtype:'button',
+                                frame:true,
+                                text:'刷新',
+                                iconCls:'refresh',
+                                scope:this,
+                                handler:function(){
+                                    me.down('grid').getStore().load();
+                                }
                             },{
-                                xtype: 'buttongroup',
-                                items:[
-                                    {
-                                        xtype:'button',
-                                        frame:true,
-                                        text:'查看流程图',
-                                        iconCls:'btn-readdocument',
-                                        scope:this,
-                                        handler:function(){
-                                            me.preview();
-                                        }
-                                    }
-                                ]
+                                xtype:'button',
+                                frame:true,
+                                text:'查看流程图',
+                                iconCls:'btn-readdocument',
+                                scope:this,
+                                handler:function(){
+                                    me.preview();
+                                }
                             },
                             '->',
                             {
@@ -127,7 +118,7 @@ Ext.define('FlexCenter.flows.view.ProcessDefinitionView',{
                                 text : '查询',
                                 iconCls : 'search',
                                 handler : function() {
-                                    var data = Ext.ComponentQuery.query('#processDefinitionView_search')[0].getValue();
+                                    var data = me.down('#processDefinitionView_search').getValue();
                                     me.down('grid').getStore().load({
                                         params:{
                                             keyword:data
@@ -141,7 +132,8 @@ Ext.define('FlexCenter.flows.view.ProcessDefinitionView',{
                                 margins:'0 0 0 5',
                                 iconCls : 'clear',
                                 handler : function() {
-                                    Ext.ComponentQuery.query('#processDefinitionView_search')[0].setValue('');
+                                    me.down('#processDefinitionView_search').setValue('');
+                                    me.down('grid').getStore().load();
                                 }
                             }
 
