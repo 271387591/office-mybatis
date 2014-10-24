@@ -23,7 +23,10 @@
 			<!--</dataSource>-->
 		<!--</environment>-->
 	<!--</environments>-->
-    
+    <!--<typeHandlers>-->
+        <!--<typeHandler  javaType="java.util.Map" jdbcType="varchar" handler="com.ozstrategy.handler.StringToMapHandler" />-->
+    <!--</typeHandlers>-->
+
     <settings>
         <setting name="cacheEnabled" value="false"/>
         <setting name="lazyLoadingEnabled" value="true"/>

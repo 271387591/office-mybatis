@@ -32,6 +32,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -43,25 +44,25 @@ import java.util.Map;
 @Service("processDefInstanceManager")
 public class ProcessDefInstanceManagerImpl implements ProcessDefInstanceManager {
     @Autowired
-    ProcessDefDao processDefDao;
+    private ProcessDefDao processDefDao;
     @Autowired
-    RuntimeService runtimeService;
+    private RuntimeService runtimeService;
     @Autowired
-    RepositoryService repositoryService;
+    private RepositoryService repositoryService;
     @Autowired
-    TaskService taskService;
+    private TaskService taskService;
     @Autowired
-    IdentityService identityService;
+    private IdentityService identityService;
     @Autowired
-    HistoryService historyService;
+    private HistoryService historyService;
     @Autowired
-    ProcessDefInstanceDao processDefInstanceDao;
+    private ProcessDefInstanceDao processDefInstanceDao;
     @Autowired
-    ProcessElementDao processElementDao;
+    private ProcessElementDao processElementDao;
     @Autowired
-    TaskInstanceDao taskInstanceDao;
+    private TaskInstanceDao taskInstanceDao;
     @Autowired
-    ProcessFileAttachDao processFileAttachDao;
+    private ProcessFileAttachDao processFileAttachDao;
     
     @Transactional(rollbackFor = Throwable.class)
     public void runStartNoneEventPro(User user, ProcessDef def,Map<String,Object> map) throws OzException,Exception{
@@ -95,6 +96,27 @@ public class ProcessDefInstanceManagerImpl implements ProcessDefInstanceManager 
         }else{
             task.setAssignee(username);
         }
+        List<ProcessElement> signTasks=new ArrayList<ProcessElement>();
+        ProcessElement processElement=processElementDao.getProcessElementByTaskKeyAndDefId(def.getId(),task.getTaskDefinitionKey());
+        if(processElement==null){
+            throw new OzException(Constants.MESSAGE_START_PROCESS_NOT_FOUND_START_TASK);
+        }
+        String nextTask=processElement.getNextTaskKeys();
+        if(StringUtils.isNotEmpty(nextTask)){
+            String[] nextTasks=nextTask.split(",");
+            for(String nextKey:nextTasks){
+                ProcessElement next=processElementDao.getSignProcessElementByTaskKeyAndDefId(def.getId(),nextKey);
+                if(next!=null){
+                    signTasks.add(next);
+                }
+            }
+        }
+        if(signTasks.size()>0){
+            for(ProcessElement element : signTasks){
+                variables.putAll(element.getCountersignMap());
+            }
+        }
+        
         taskService.complete(task.getId(),variables);
         ProcessDefInstance defInstance=new ProcessDefInstance();
         defInstance.setActInstanceId(instance.getProcessInstanceId());
@@ -141,7 +163,7 @@ public class ProcessDefInstanceManagerImpl implements ProcessDefInstanceManager 
                 taskInstance.setLastUpdater(user);
                 taskInstance.setCreateDate(new Date());
                 taskInstance.setLastUpdateDate(new Date());
-                taskInstance.setStatus(TaskInstanceStatus.Starter.name());
+                taskInstance.setStatus(TaskInstanceStatus.Starter);
                 taskInstanceDao.saveTaskInstance(taskInstance);
             }
         }

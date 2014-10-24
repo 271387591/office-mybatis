@@ -1,6 +1,8 @@
 package com.ozstrategy.model.flows;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by lihao on 10/22/14.
@@ -16,7 +18,7 @@ public class ProcessInstanceHistory {
     private Date startTime;
     private Date endTime;
     private String startUserId;
-    private String currentTaskKey;
+    private Set<Task> runTasks=new HashSet<Task>();
 
     public String getId() {
         return id;
@@ -98,11 +100,11 @@ public class ProcessInstanceHistory {
         this.startUserId = startUserId;
     }
 
-    public String getCurrentTaskKey() {
-        return currentTaskKey;
+    public Set<Task> getRunTasks() {
+        return runTasks;
     }
 
-    public void setCurrentTaskKey(String currentTaskKey) {
-        this.currentTaskKey = currentTaskKey;
+    public void setRunTasks(Set<Task> runTasks) {
+        this.runTasks = runTasks;
     }
 }

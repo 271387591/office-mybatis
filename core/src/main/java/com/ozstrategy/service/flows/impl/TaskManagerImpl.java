@@ -8,6 +8,7 @@ import com.ozstrategy.dao.flows.TaskDao;
 import com.ozstrategy.dao.flows.TaskInstanceDao;
 import com.ozstrategy.dao.userrole.UserDao;
 import com.ozstrategy.exception.OzException;
+import com.ozstrategy.model.flows.ProcessDef;
 import com.ozstrategy.model.flows.ProcessDefInstance;
 import com.ozstrategy.model.flows.ProcessElement;
 import com.ozstrategy.model.flows.Task;
@@ -16,12 +17,13 @@ import com.ozstrategy.model.flows.TaskInstanceStatus;
 import com.ozstrategy.model.userrole.User;
 import com.ozstrategy.service.flows.TaskManager;
 import org.activiti.engine.HistoryService;
+import org.activiti.engine.ManagementService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricTaskInstance;
-import org.activiti.engine.impl.TaskServiceImpl;
 import org.activiti.engine.impl.cmd.NeedsActiveTaskCmd;
 import org.activiti.engine.impl.context.Context;
+import org.activiti.engine.impl.interceptor.Command;
 import org.activiti.engine.impl.interceptor.CommandContext;
 import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
 import org.activiti.engine.impl.persistence.entity.HistoricActivityInstanceEntity;
@@ -39,6 +41,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -50,21 +54,23 @@ import java.util.Map;
 @Service("taskManager")
 public class TaskManagerImpl implements TaskManager{
     @Autowired
-    TaskDao taskDao;
+    private TaskDao taskDao;
     @Autowired
-    TaskInstanceDao taskInstanceDao;
+    private TaskInstanceDao taskInstanceDao;
     @Autowired
-    ProcessDefInstanceDao processDefInstanceDao;
+    private ProcessDefInstanceDao processDefInstanceDao;
     @Autowired
-    ProcessElementDao processElementDao;
+    private ProcessElementDao processElementDao;
     @Autowired
-    UserDao userDao;
+    private UserDao userDao;
     @Autowired
-    TaskService taskService;
+    private TaskService taskService;
     @Autowired
-    RuntimeService runtimeService;
+    private RuntimeService runtimeService;
     @Autowired
-    HistoryService historyService;
+    private HistoryService historyService;
+    @Autowired
+    private ManagementService managementService;
     public List<Task> listCandidateTasks(Map<String, Object> map) {
         return taskDao.listCandidateTasks(map);
     }
@@ -93,7 +99,7 @@ public class TaskManagerImpl implements TaskManager{
         if(StringUtils.isNotEmpty(taskId) && StringUtils.isNotEmpty(username)){
             taskService.setAssignee(taskId,username);
             HistoricTaskInstance historicTaskInstance=historyService.createHistoricTaskInstanceQuery().taskId(taskId).singleResult();
-            saveTaskInstance(creator, historicTaskInstance, map, TaskInstanceStatus.ProxyTask.name());
+            saveTaskInstance(creator, historicTaskInstance, map, TaskInstanceStatus.ProxyTask);
         }
     }
     @Transactional(rollbackFor = Throwable.class)
@@ -108,33 +114,31 @@ public class TaskManagerImpl implements TaskManager{
     }
 
     @Transactional(rollbackFor = Throwable.class)
-    public void returnTask(String taskId, String taskKey, int turnType,User creator,Map<String,Object> map) throws Exception {
+    public void returnTask(String taskId, String taskKey, String sourceActivity,User creator,Map<String,Object> map) throws Exception {
         try{
-            ReturnTaskCmd returnTaskCmd=new ReturnTaskCmd(taskId,taskKey,turnType);
-            TaskServiceImpl taskServiceImpl=(TaskServiceImpl)taskService;
-            taskServiceImpl.getCommandExecutor().execute(returnTaskCmd);
+            JumpActivityCmd jumpActivityCmd=new JumpActivityCmd(taskId,taskKey,sourceActivity);
+            managementService.executeCommand(jumpActivityCmd);
             HistoricTaskInstance historicTaskInstance=historyService.createHistoricTaskInstanceQuery().taskId(taskId).singleResult();
-            saveTaskInstance(creator, historicTaskInstance, map, turnType == 0 ? TaskInstanceStatus.ReturnTaskToStarter.name() : TaskInstanceStatus.ReturnTask.name());
+            saveTaskInstance(creator, historicTaskInstance, map, StringUtils.isEmpty(sourceActivity) ? TaskInstanceStatus.ReturnTaskToStarter : TaskInstanceStatus.ReturnTask);
         }catch (Exception e){
             throw new OzException(Constants.MESSAGE_RETURN_TASK_FAIL);
         }
     }
     @Transactional(rollbackFor = Throwable.class)
-    public void replevyTask(String taskId, String taskKey, User creator, Map<String, Object> map) throws Exception {
+    public void replevyTask(String taskId, String taskKey,String sourceActivity, User creator, Map<String, Object> map) throws Exception {
         try{
-            ReturnTaskCmd returnTaskCmd=new ReturnTaskCmd(taskId,taskKey,1);
-            TaskServiceImpl taskServiceImpl=(TaskServiceImpl)taskService;
-            taskServiceImpl.getCommandExecutor().execute(returnTaskCmd);
-            taskServiceImpl.claim(taskId,creator.getUsername());//先签收该任务
+            taskService.claim(taskId,creator.getUsername());
+            JumpActivityCmd jumpActivityCmd=new JumpActivityCmd(taskId,taskKey,sourceActivity);
+            managementService.executeCommand(jumpActivityCmd);
             HistoricTaskInstance historicTaskInstance=historyService.createHistoricTaskInstanceQuery().taskId(taskId).singleResult();
-            saveTaskInstance(creator, historicTaskInstance, map, TaskInstanceStatus.Replevy.name());
+            saveTaskInstance(creator, historicTaskInstance, map, TaskInstanceStatus.Replevy);
         }catch (Exception e){
-            throw new OzException(Constants.MESSAGE_RETURN_TASK_FAIL);
+            throw new OzException(Constants.MESSAGE_REPLEVY_TASK_FAIL);
         }
     }
 
     @Transactional(rollbackFor = Throwable.class)
-    public void complete(User user,String taskId, Map<String, Object> map) throws Exception {
+    public void complete(User user,ProcessDef def,String taskId, Map<String, Object> map) throws Exception {
         String formData= ObjectUtils.toString(map.get("formData"));
         Map<String,Object> variables=new HashMap<String, Object>();
         if(StringUtils.isNotEmpty(formData)){
@@ -144,13 +148,40 @@ public class TaskManagerImpl implements TaskManager{
             }
         }
         if(StringUtils.isNotEmpty(taskId)){
+            org.activiti.engine.task.Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+            if(task==null){
+                throw new OzException(Constants.MESSAGE_START_PROCESS_NOT_FOUND_START_TASK);
+            }
+            checkSignTask(def,task,variables);
             taskService.complete(taskId,variables);
             HistoricTaskInstance historicTaskInstance=historyService.createHistoricTaskInstanceQuery().taskId(taskId).singleResult();
-            saveTaskInstance(user,historicTaskInstance,map,TaskInstanceStatus.Complete.name());
+            saveTaskInstance(user,historicTaskInstance,map,TaskInstanceStatus.Complete);
+        }
+    }
+    private void checkSignTask(ProcessDef def, org.activiti.engine.task.Task task,Map<String,Object> variables)  throws OzException{
+        List<ProcessElement> signTasks=new ArrayList<ProcessElement>();
+        ProcessElement processElement=processElementDao.getProcessElementByTaskKeyAndDefId(def.getId(),task.getTaskDefinitionKey());
+        if(processElement==null){
+            throw new OzException(Constants.MESSAGE_START_PROCESS_NOT_FOUND_START_TASK);
+        }
+        String nextTask=processElement.getNextTaskKeys();
+        if(StringUtils.isNotEmpty(nextTask)){
+            String[] nextTasks=nextTask.split(",");
+            for(String nextKey:nextTasks){
+                ProcessElement next=processElementDao.getSignProcessElementByTaskKeyAndDefId(def.getId(),nextKey);
+                if(next!=null){
+                    signTasks.add(next);
+                }
+            }
+        }
+        if(signTasks.size()>0){
+            for(ProcessElement element : signTasks){
+                variables.putAll(element.getCountersignMap());
+            }
         }
     }
 
-    private void saveTaskInstance(User user,HistoricTaskInstance task,Map<String,Object> map,String status){
+    private void saveTaskInstance(User user,HistoricTaskInstance task,Map<String,Object> map,TaskInstanceStatus status){
         TaskInstance instance=new TaskInstance();
         instance.setCreateDate(new Date());
         instance.setLastUpdateDate(new Date());
@@ -181,6 +212,48 @@ public class TaskManagerImpl implements TaskManager{
         instance.setRemarks(ObjectUtils.toString(map.get("remarks")));
         instance.setStatus(status);
         taskInstanceDao.saveTaskInstance(instance);
+    }
+    private static class JumpActivityCmd implements Command<Object> {
+        private String jumpOrigin="jump";
+        private String taskKey;
+        private String taskId;
+        private String sourceActivity;//逐级回退时的目标，多个目标用“,”隔开，
+        public JumpActivityCmd(String taskId,String taskKey){
+            this.taskId=taskId;
+            this.taskKey=taskKey;
+        }
+        public JumpActivityCmd(String taskId,String taskKey,String sourceActivity){
+            this(taskId,taskKey);
+            this.sourceActivity=sourceActivity;
+        }
+        
+        public Object execute(CommandContext commandContext) {
+            TaskEntity task = commandContext.getTaskEntityManager().findTaskById(taskId);
+            ExecutionEntity execution = task.getExecution();
+            ProcessDefinitionEntity entity = (ProcessDefinitionEntity)execution.getProcessDefinition();
+            ActivityImpl currentAct = entity.findActivity(taskKey);
+            if(StringUtils.isNotEmpty(sourceActivity)){
+                String[] sourceActivities=sourceActivity.split(",");
+                List<String> sourceList=Arrays.asList(sourceActivities);
+                List<PvmTransition> transitions = currentAct.getIncomingTransitions();
+                if(transitions!=null && transitions.size()>0){
+                    for(PvmTransition transition : transitions){
+                        ActivityImpl source = (ActivityImpl)transition.getSource();
+                        String id = source.getId();
+                        if(sourceList.contains(id)){
+                            execution.destroyScope(jumpOrigin);
+                            execution.executeActivity(source);
+                        }
+                    }
+                }
+            }else{
+                ActivityImpl initial=entity.getInitial();
+                ActivityImpl startTask = (ActivityImpl)initial.getOutgoingTransitions().get(0).getDestination();
+                execution.destroyScope(jumpOrigin);
+                execution.executeActivity(startTask);
+            }
+            return execution;
+        }
     }
 
     public static class ReturnTaskCmd extends NeedsActiveTaskCmd<Void> {

@@ -158,11 +158,12 @@ Ext.define('FlexCenter.flows.view.ProcessUserSetter', {
                             }
                         }
                     });
-                    assignee=Ext.encode(assignee);
-                    candidateUsers=Ext.encode(candidateUsers);
-                    candidateRoles=Ext.encode(candidateRoles);
+                    var array=[];
+                    array.push(assignee);
+                    array.push(candidateUsers);
+                    array.push(candidateRoles);
                     if(me.callBack){
-                        me.callBack(assignee,candidateUsers,candidateRoles);
+                        me.callBack(Ext.encode(array));
                     }
                     me.close();
                 }

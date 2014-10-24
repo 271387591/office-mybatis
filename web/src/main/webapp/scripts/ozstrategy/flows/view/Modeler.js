@@ -5,7 +5,8 @@ Ext.define('FlexCenter.flows.view.Modeler', {
     requires: [
         'FlexCenter.flows.view.FormFieldSetter',
         'Ext.ux.form.field.DateTimeField',
-        'FlexCenter.flows.view.ProcessUserSetter'
+        'FlexCenter.flows.view.ProcessUserSetter',
+        'FlexCenter.flows.view.CountersignTaskWindow'
     ],
     extend: 'Ext.panel.Panel',
     alias: 'widget.modeler',
@@ -1252,19 +1253,29 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                         }
                     }
                 },{
-                    fieldLabel: '人员设置',
+                    fieldLabel: '审核人员',
                     xtype:'trigger',
                     name: 'usertaskassignment',
-                    value:(cell.value.getAttribute('assignee')+cell.value.getAttribute('candidateUsers')+cell.value.getAttribute('candidateRoles')),
+                    value:Ext.decode(),
                     editble:false,
+                    value:cell.value.getAttribute('usertaskassignment'),
+                    listeners:{
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            try{
+                                var data = Ext.decode(newValue);
+                                cell.value.setAttribute('usertaskassignment',newValue);
+                            }catch(e){
+                                cell.value.setAttribute('usertaskassignment','');
+                                form.down('trigger[name=usertaskassignment]').setValue('');
+                            }
+                        }
+                    },
                     onTriggerClick:function(){
                         var value = form.down('trigger[name=usertaskassignment]').getValue();
                         var win=Ext.widget('processUserSetter',{
-                            callBack:function(assignee,candidateUsers,candidateRoles){
-                                form.down('trigger[name=usertaskassignment]').setValue(assignee+candidateUsers+candidateRoles);
-                                cell.value.setAttribute('assignee',assignee);
-                                cell.value.setAttribute('candidateUsers',candidateUsers);
-                                cell.value.setAttribute('candidateRoles',candidateRoles);
+                            callBack:function(data){
+                                form.down('trigger[name=usertaskassignment]').setValue(data);
+                                cell.value.setAttribute('usertaskassignment',data);
                             }
                         });
                         if(win){
@@ -1278,7 +1289,14 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     value:cell.value.getAttribute('formproperties'),
                     listeners:{
                         change:function(combo, newValue, oldValue,eOpts ){
-                            cell.value.setAttribute('formproperties',newValue);
+                            try{
+                                var str = Ext.decode(newValue);
+                                cell.value.setAttribute('formproperties',newValue);
+                            }catch(e){
+                                cell.value.setAttribute('formproperties','');
+                                form.down('trigger[name=formproperties]').setValue('');
+                            }
+                            
                         }
                     },
                     onTriggerClick:function(){
@@ -1289,6 +1307,35 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                             callBack:function(data){
                                 form.down('trigger[name=formproperties]').setValue(data);
                                 cell.value.setAttribute('formproperties',data);
+                            }
+                        });
+                        if(win){
+                            win.show();
+                        }
+                    }
+                },{
+                    fieldLabel: '会签设置',
+                    xtype:'trigger',
+                    name: 'countersign',
+                    value:cell.value.getAttribute('countersign'),
+                    listeners:{
+                        change:function(combo, newValue, oldValue,eOpts ){
+                            try{
+                                var str = Ext.decode(newValue);
+                                cell.value.setAttribute('tasktype','Countersign');
+                            }catch(e){
+                                cell.value.setAttribute('tasktype','');
+                                form.down('trigger[name=countersign]').setValue('');
+                            }
+                        }
+                    },
+                    onTriggerClick:function(){
+                        var value = form.down('trigger[name=countersign]').getValue();
+                        var win=Ext.widget('countersignTaskWindow',{
+                            data:value,
+                            callBack:function(data){
+                                form.down('trigger[name=countersign]').setValue(data);
+                                cell.value.setAttribute('countersign',data);
                             }
                         });
                         if(win){
@@ -3553,7 +3600,7 @@ Ext.define('FlexCenter.flows.view.Modeler', {
         var me=this,form,title;
         if(cell){
             if(mxUtils.isNode(cell.value)){
-                var nodeName=cell.value.nodeName,title='节点属性（'+cell.value.getAttribute('name')+')';
+                var nodeName=cell.value.nodeName,name=cell.value.getAttribute('name'),title=name?'节点属性（'+name+')':'节点属性';
                 if('StartNoneEvent'==nodeName){
                     form=me.StartNoneEvent(cell);
                 }else if('StartTimerEvent'==nodeName){

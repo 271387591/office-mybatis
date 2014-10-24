@@ -30,10 +30,16 @@ Ext.define('FlexCenter.flows.model.Task',{
         'title',
         'taskType',
         {name:'createDate',convert:function(v){
-            return Ext.util.Format.date(new Date(v), 'Y-m-d H:i:s');
+            if(v){
+                return Ext.util.Format.date(new Date(v), 'Y-m-d H:i:s');
+            }
+            return null;
         }},
         {name:'dueDate',convert:function(v){
-            return Ext.util.Format.date(new Date(v), 'Y-m-d H:i:s');
+            if(v){
+                return Ext.util.Format.date(new Date(v), 'Y-m-d H:i:s');
+            }
+            return null;
         }},
         'graphResId',
         'formKey'

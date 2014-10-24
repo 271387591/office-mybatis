@@ -20,7 +20,6 @@ Ext.define('FlexCenter.user.view.RoleSelector', {
         Ext.apply(this, {
             border: false,
             title: '角色选择器',
-            iconCls: 'user-icon',
             width: 560,
             modal: true,
             height: 350,

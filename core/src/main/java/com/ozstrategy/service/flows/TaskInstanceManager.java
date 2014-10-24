@@ -10,4 +10,7 @@ import java.util.Map;
  */
 public interface TaskInstanceManager {
     List<TaskInstance> listTaskInstances(Map<String,Object> map);
+    List<TaskInstance> listTaskInstanceRecord(Map<String,Object> map,Integer start,Integer limit);
+    Integer listTaskInstanceRecordCount(Map<String,Object> map);
+    
 }

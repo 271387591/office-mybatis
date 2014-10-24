@@ -7,7 +7,6 @@ import com.ozstrategy.webapp.command.BaseObjectCommand;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -20,8 +19,6 @@ public class ProcessDefCommand extends BaseObjectCommand {
     private String actDefId;
     private String actResId;
     private String graphResId;
-    private String modelId;
-    private String depId;
     private String documentation;
     private String category;
     private Long flowFormId;
@@ -42,8 +39,6 @@ public class ProcessDefCommand extends BaseObjectCommand {
         this.actDefId= processDef.getActDefId();
         this.actResId= processDef.getActResId();
         this.graphResId= processDef.getGraphResId();
-        this.modelId= processDef.getModelId();
-        this.depId= processDef.getDepId();
         this.documentation= processDef.getDocumentation();
         this.category=processDef.getCategory();
         this.flowFormId= processDef.getFlowForm()!=null? processDef.getFlowForm().getId():null;
@@ -120,22 +115,6 @@ public class ProcessDefCommand extends BaseObjectCommand {
 
     public void setGraphResId(String graphResId) {
         this.graphResId = graphResId;
-    }
-
-    public String getModelId() {
-        return modelId;
-    }
-
-    public void setModelId(String modelId) {
-        this.modelId = modelId;
-    }
-
-    public String getDepId() {
-        return depId;
-    }
-
-    public void setDepId(String depId) {
-        this.depId = depId;
     }
 
     public String getCategory() {

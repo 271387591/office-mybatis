@@ -1,26 +1,32 @@
 /**
- * Created by lihao on 10/21/14.
+ * Created by lihao on 10/22/14.
  */
-Ext.define('FlexCenter.flows.view.ReplevyTaskView',{
+Ext.define('FlexCenter.flows.view.TaskRecordView',{
     requires:[
-        'FlexCenter.flows.store.Task'
+        'FlexCenter.flows.store.ProcessInstanceHistory'
     ],
     extend: 'Ext.panel.Panel',
-    alias: 'widget.replevyTaskView',
-    itemId:'replevyTaskView',
-    title:'任务追回',
-    text:'任务追回',
+    alias: 'widget.taskRecordView',
+    itemId:'taskRecordView',
+    title:'任务执行记录',
+    text:'任务执行记录',
     layout:'border',
     autoScroll:true,
     getStore:function(){
         var me=this;
-        var store=Ext.create('FlexCenter.flows.store.Task',{
-            storeId:'replevyTaskViewStore',
-            proxy:{
+        var store=Ext.create('FlexCenter.flows.store.TaskInstance',{
+            storeId:'taskRecordViewStore',
+            groupField:'groupBy',
+            sorters: [
+                {
+                    property: 'instanceId',
+                    direction: 'DESC'
+                }
+            ],
+            proxy: {
                 type: 'ajax',
-                url:'taskController.do?method=listReplevyTasks',
+                url: 'taskInstanceController.do?method=listTaskInstanceRecords',
                 reader: {
-                    type: 'json',
                     root : 'data',
                     totalProperty  : 'total',
                     messageProperty: 'message'
@@ -44,6 +50,20 @@ Ext.define('FlexCenter.flows.view.ReplevyTaskView',{
     initComponent:function(){
         var me=this;
         var store = me.getStore();
+        var groupingFeature = Ext.create('Ext.grid.feature.Grouping', {
+                groupHeaderTpl: [
+                    '{name:this.formatName}({rows.length}条任务)',
+                    {
+                        formatName: function(name) {
+                            var last=name.lastIndexOf(":");
+                            return name.substr(0,last);
+                        }
+                    }
+                ],
+                hideGroupedHeader: true,
+                startCollapsed: true,
+                id: 'restaurantGrouping'
+            });
         me.items=[
             {
                 xtype:'form',
@@ -65,11 +85,16 @@ Ext.define('FlexCenter.flows.view.ReplevyTaskView',{
                             {
                                 fieldLabel:'流程名称',
                                 xtype : 'textfield',
-                                name : 'processDefinitionName'
-                            },{
-                                fieldLabel:'申请标题',
-                                xtype : 'textfield',
-                                name : 'title'
+                                name : 'processName'
+                            },
+                            {
+                                fieldLabel:'流程状态',
+                                name: 'pstatus',
+                                xtype : 'combo',
+                                mode : 'local',
+                                editable : false,
+                                triggerAction : 'all',
+                                store :[['0','正在运行'],['1','已结束']]
                             }
                         ]
                     },
@@ -81,8 +106,8 @@ Ext.define('FlexCenter.flows.view.ReplevyTaskView',{
                             {
                                 fieldLabel:'开始日期',
                                 xtype : 'datefield',
-                                editable:false,
                                 format : 'Y-m-d',
+                                editable:false,
                                 name : 'startTime'
                             },
                             {
@@ -128,10 +153,10 @@ Ext.define('FlexCenter.flows.view.ReplevyTaskView',{
                 xtype:'grid',
                 region:'center',
                 store:store,
-                title:'可追回的任务',
                 forceFit: true,
                 autoScroll: true,
                 border:true,
+                features: [groupingFeature],
                 dockedItems:[
                     {
                         xtype: 'pagingtoolbar',
@@ -142,118 +167,56 @@ Ext.define('FlexCenter.flows.view.ReplevyTaskView',{
                 ],
                 columns:[
                     {
-                        xtype:'rownumberer'
-                    },
-                    {
-                        header: '申请标题',
-                        dataIndex:'title'
+                        header: '任务名称',
+                        dataIndex:'name'
                     },
                     {
                         header: '流程名称',
-                        dataIndex: 'processDefinitionName'
+                        dataIndex: 'processName'
                     },
                     {
-                        header: '日期',
-                        dataIndex: 'createDate'
+                        header: '流程版本',
+                        dataIndex: 'processVersion'
                     },
                     {
-                        header: '任务名称',
-                        dataIndex: 'name'
+                        header: '任务开始时间',
+                        flex:1,
+                        dataIndex: 'startDate'
+                    },{
+                        header: '任务结束时间',
+                        flex:1,
+                        dataIndex: 'endDate'
                     },
                     {
                         header: '状态',
-                        dataIndex: 'name',
+                        flex:1,
+                        dataIndex: 'status',
                         renderer: function (v) {
-                            return '未签收';
+                            if(v == 'Starter'){
+                                return '发起申请';
+                            }else if(v == 'Complete'){
+                                return '任务通过';
+                            }else if(v == 'ProxyTask'){
+                                return '转办';
+                            }else if(v == 'ReturnTaskToStarter'){
+                                return '<font color = "red">回退到发起人</font>';
+                            }else if(v == 'ReturnTask'){
+                                return '<font color = "red">回退</font>';
+                            }else if(v == 'Replevy'){
+                                return '<font color = "red">追回</font>';
+                            }else if(v=='End'){
+                                return '结束'
+                            }
                         }
                     },
-                    
                     {
-                        xtype:'actioncolumn',
-                        header:'管理',
-                        items:[
-                            {
-                                iconCls:'btn-readdocument',
-                                tooltip:'查看流程图',
-                                handler:function(grid, rowIndex, colIndex){
-                                    var rec = grid.getStore().getAt(rowIndex);
-                                    var data={};
-                                    data.id=rec.get('processDefId');
-                                    data.taskKey=rec.get('taskDefinitionKey');
-                                    me.preview(data);
-                                }
-                            },'-',
-                            {
-                                iconCls:'btn-claw-back',
-                                tooltip:'追回',
-                                handler:function(grid, rowIndex, colIndex){
-                                    var rec = grid.getStore().getAt(rowIndex);
-                                    var data={};
-                                    data.taskId=rec.get('id');
-                                    data.taskKey=rec.get('taskDefinitionKey');
-                                    Ext.Msg.confirm('任务追回','任务追回将会反回到您刚所操作的任务节点，你确定要追回？',function(btn){
-                                        if(btn=='yes'){
-                                            me.replevy(data);
-                                        }
-                                    });
-                                }
-                            }
-                        ]
+                        header: '备注',
+                        flex:1,
+                        dataIndex: 'remarks'
                     }
-                ],
-                listeners:{
-                    itemdblclick:function(grid, record, item, index, e, eOpts){
-                        me.showDetail(record);
-                    }
-                }
+                ]
             }
         ];
         this.callParent();
-    },
-    replevy:function(record){
-        var me=this;
-        ajaxPostRequest('taskController.do?method=replevyTask',record,function(result){
-            if(result.success){
-                Ext.MessageBox.alert({
-                    title:'提示',
-                    icon: Ext.MessageBox.INFO,
-                    msg:'追回成功。',
-                    buttons:Ext.MessageBox.OK
-                });
-                me.flushTask();
-            }else{
-                Ext.MessageBox.alert({
-                    title:'警告',
-                    icon: Ext.MessageBox.ERROR,
-                    msg:'追回失败',
-                    buttons:Ext.MessageBox.OK
-                });
-            }
-        });
-        
-    },
-    preview:function(record){
-        var me=this;
-        ajaxPostRequest('processDefController.do?method=getRes',record,function(result){
-            if(result.success){
-                var data=result.data,actRes,graRes;
-                if(data){
-                    graRes=data.graRes;
-                }
-                var moder = Ext.widget('modelerPreviewWindow',{
-                    graRes:graRes,
-                    taskKey:record.taskKey,
-                    animateTarget:me.getEl()
-                });
-                moder.show();
-            }else{
-                Ext.MessageBox.alert({
-                    title:'警告',
-                    icon: Ext.MessageBox.ERROR,
-                    msg:result.message,
-                    buttons:Ext.MessageBox.OK
-                });
-            }
-        });
     }
 });

@@ -18,6 +18,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
@@ -29,51 +30,46 @@ import java.util.Set;
  * Created by lihao on 9/9/14.
  */
 @Entity
+@Table(name = "PROCESSDEF")
 public class ProcessDef extends BaseObject {
     public static final String ACT_RES="ACT_RES_"; 
     public static final String GRA_RES="GRA_RES_"; 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column
+    @Column(length = 128,nullable = true)
     private String name;
     @Transient
     private GlobalType globalType;
-    @Column
+    @Column(nullable = true)
     private Long globalTypeId;
-    @Transient
+    @Column(length = 128,nullable = true)
     private String category;
-    @Column
+    @Column(nullable = true,length = 4)
     private Integer version;
-    @Column
+    @Column(nullable = true,length = 64)
     private String actDefId;
-    @Column
+    @Column(nullable = true,length = 64)
     private String actResId;
-    @Column
+    @Column(nullable = true,length = 64)
     private String graphResId;
-    @Column
-    private String modelId;
-    @Column
-    private String depId;
-
     @Column
     @Temporal(TemporalType.TIMESTAMP)
     private Date deployDate;
-    @Column
+    @Column(columnDefinition = "char",length = 1)
     private Boolean suspended;
-    
     @ManyToOne
-    @JoinColumn(name = "flowFormId")
+    @JoinColumn(name = "flowFormId",nullable = true)
     private FlowForm flowForm;
     @Column(columnDefinition = "TEXT")
     private String documentation;
-    @Column
+    @Column(columnDefinition = "char",length = 1)
     private Boolean enabled=Boolean.TRUE;
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "processDef")
     private Set<ProcessElement> elements=new HashSet<ProcessElement>();
 
     @JoinTable(
-            name               = "ProcessDefUser",
+            name               = "PROCESSDEF_USER",
             joinColumns        = { @JoinColumn(name = "userId",referencedColumnName = "id") },
             inverseJoinColumns = @JoinColumn(name = "processDefId",referencedColumnName = "id")
     )
@@ -84,7 +80,7 @@ public class ProcessDef extends BaseObject {
     private Set<User> users=new HashSet<User>();
 
     @JoinTable(
-            name               = "ProcessDefRole",
+            name               = "PROCESSDEF_ROLE",
             joinColumns        = { @JoinColumn(name = "roleId",referencedColumnName = "id") },
             inverseJoinColumns = @JoinColumn(name = "processDefId",referencedColumnName = "id")
     )
@@ -93,7 +89,6 @@ public class ProcessDef extends BaseObject {
             cascade = {CascadeType.REFRESH}
     )
     private Set<Role> roles=new HashSet<Role>();
-    
 
     public Long getId() {
         return id;
@@ -117,6 +112,22 @@ public class ProcessDef extends BaseObject {
 
     public void setGlobalType(GlobalType globalType) {
         this.globalType = globalType;
+    }
+
+    public Long getGlobalTypeId() {
+        return globalTypeId;
+    }
+
+    public void setGlobalTypeId(Long globalTypeId) {
+        this.globalTypeId = globalTypeId;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public Integer getVersion() {
@@ -151,36 +162,28 @@ public class ProcessDef extends BaseObject {
         this.graphResId = graphResId;
     }
 
-    public String getModelId() {
-        return modelId;
+    public Date getDeployDate() {
+        return deployDate;
     }
 
-    public void setModelId(String modelId) {
-        this.modelId = modelId;
+    public void setDeployDate(Date deployDate) {
+        this.deployDate = deployDate;
     }
 
-    public Set<ProcessElement> getElements() {
-        return elements;
+    public Boolean getSuspended() {
+        return suspended;
     }
 
-    public void setElements(Set<ProcessElement> elements) {
-        this.elements = elements;
+    public void setSuspended(Boolean suspended) {
+        this.suspended = suspended;
     }
 
-    public Boolean getEnabled() {
-        return enabled;
+    public FlowForm getFlowForm() {
+        return flowForm;
     }
 
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public String getDepId() {
-        return depId;
-    }
-
-    public void setDepId(String depId) {
-        this.depId = depId;
+    public void setFlowForm(FlowForm flowForm) {
+        this.flowForm = flowForm;
     }
 
     public String getDocumentation() {
@@ -191,28 +194,20 @@ public class ProcessDef extends BaseObject {
         this.documentation = documentation;
     }
 
-    public Long getGlobalTypeId() {
-        return globalTypeId;
+    public Boolean getEnabled() {
+        return enabled;
     }
 
-    public void setGlobalTypeId(Long globalTypeId) {
-        this.globalTypeId = globalTypeId;
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 
-    public String getCategory() {
-        return category;
+    public Set<ProcessElement> getElements() {
+        return elements;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public FlowForm getFlowForm() {
-        return flowForm;
-    }
-
-    public void setFlowForm(FlowForm flowForm) {
-        this.flowForm = flowForm;
+    public void setElements(Set<ProcessElement> elements) {
+        this.elements = elements;
     }
 
     public Set<User> getUsers() {
@@ -229,22 +224,6 @@ public class ProcessDef extends BaseObject {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
-    }
-
-    public Date getDeployDate() {
-        return deployDate;
-    }
-
-    public void setDeployDate(Date deployDate) {
-        this.deployDate = deployDate;
-    }
-
-    public Boolean getSuspended() {
-        return suspended;
-    }
-
-    public void setSuspended(Boolean suspended) {
-        this.suspended = suspended;
     }
 
     public String getActRes(){

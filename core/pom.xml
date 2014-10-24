@@ -208,8 +208,8 @@
             <!--</exclusions>-->
         <!--</dependency>-->
         <dependency>
-            <groupId>org.hibernate.java-persistence</groupId>
-            <artifactId>jpa-api</artifactId>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.1-api</artifactId>
             <version>${jpa.version}</version>
         </dependency>
         

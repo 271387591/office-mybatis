@@ -98,11 +98,10 @@ Ext.define('FlexCenter.flows.view.ProcessListForm',{
                         blankText:globalRes.tooltip.notEmpty,
                         name: 'name'
                     },{
-                        fieldLabel: '引用表单<font color="red">*</font>',
+                        fieldLabel: '引用表单',
                         name:'flowFormName',
-                        allowBlank:false,
+                        allowBlank:true,
                         readOnly:true,
-                        blankText:globalRes.tooltip.notEmpty,
                         listeners:{
                             focus:function(){
                                 if(!me.buttonSave){

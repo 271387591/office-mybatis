@@ -61,19 +61,21 @@ Ext.define('FlexCenter.flows.view.NewProcessDefinition',{
                 ]
             }
         ];
-        me.items=[
+        var items=[
             {
-                region:'north',
                 drawType:'new',
                 xtype:'processDefinitionHeader'
-            },
-            {
+            }
+        ];
+        if(me.formHtml){
+            items.push({
 
                 xtype:'formPreview',
                 title:'填写表单',
                 formHtml:me.formHtml
-            }
-        ];
+            });
+        }
+        me.items=items;
         this.callParent();
     },
     saveDraft:function(){
@@ -145,9 +147,12 @@ Ext.define('FlexCenter.flows.view.NewProcessDefinition',{
     getDefinitionValue:function(){
         var me=this;
         var headerValue= me.down('processDefinitionHeader').getHeaderValue();
-        var formData= me.down('formPreview').getFormValue();
+        var formPreview=me.down('formPreview');
+        if(formPreview){
+            var formData= formPreview.getFormValue();
+            headerValue.formData=Ext.encode(formData,true);
+        }
         var sendEmail= me.down('#sendEmail').getValue();
-        headerValue.formData=Ext.encode(formData,true);
         headerValue.sendEmail=sendEmail;
         headerValue.processDefId=me.record.get('id');
         return headerValue;

@@ -25,6 +25,10 @@ public class TaskInstanceCommand extends CreatorObjcetCommand{
     private Boolean sendEmail;
     private String status;
     private Long durationIn;
+    private String title;
+    private Long processDefId;
+    private String processName;
+    private Integer processVersion;
     public TaskInstanceCommand(TaskInstance instance) {
         super(instance);
         this.id= instance.getId();
@@ -38,11 +42,15 @@ public class TaskInstanceCommand extends CreatorObjcetCommand{
         this.assigneeFullName= instance.getAssignee()!=null? instance.getAssignee().getFullName():null;
         this.assigneeUsername= instance.getAssignee()!=null? instance.getAssignee().getUsername():null;
         this.instanceId= instance.getInstance()!=null?instance.getInstance().getId():null;
+        this.title= instance.getInstance()!=null?instance.getInstance().getTitle():null;
         this.remarks=instance.getRemarks();
         this.actTaskId= instance.getActTaskId();
         this.sendEmail= instance.getSendEmail();
-        this.status= instance.getStatus();
+        this.status= instance.getStatus().name();
         this.durationIn=endDate.getTime()-startDate.getTime();
+        this.processDefId=instance.getProcessDef()!=null?instance.getProcessDef().getId():null;
+        this.processName=instance.getProcessDef()!=null?instance.getProcessDef().getName():null;
+        this.processVersion=instance.getProcessDef()!=null?instance.getProcessDef().getVersion():null;
     }
 
     public Long getId() {
@@ -171,5 +179,37 @@ public class TaskInstanceCommand extends CreatorObjcetCommand{
 
     public void setDurationIn(Long durationIn) {
         this.durationIn = durationIn;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Long getProcessDefId() {
+        return processDefId;
+    }
+
+    public void setProcessDefId(Long processDefId) {
+        this.processDefId = processDefId;
+    }
+
+    public String getProcessName() {
+        return processName;
+    }
+
+    public void setProcessName(String processName) {
+        this.processName = processName;
+    }
+
+    public Integer getProcessVersion() {
+        return processVersion;
+    }
+
+    public void setProcessVersion(Integer processVersion) {
+        this.processVersion = processVersion;
     }
 }

@@ -28,9 +28,9 @@ import java.util.Map;
 @RequestMapping("processDefInstanceDraftController.do")
 public class ProcessDefInstanceDraftController extends BaseController {
     @Autowired
-    UserManager userManager;
+    private UserManager userManager;
     @Autowired
-    ProcessDefInstanceDraftManager processDefInstanceDraftManager;
+    private ProcessDefInstanceDraftManager processDefInstanceDraftManager;
     
     @RequestMapping(params = "method=listProcessDefInstanceDraft")
     @ResponseBody

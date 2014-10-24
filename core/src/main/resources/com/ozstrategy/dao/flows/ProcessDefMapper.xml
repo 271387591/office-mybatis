@@ -18,19 +18,19 @@
     
     
     <select id="listProcessDefs" resultMap="processDefResult" parameterType="Map">
-        select g.typeName,p.* from ProcessDef p left join GlobalType g on g.typeId=p.globalTypeId where p.enabled=1
+        select g.typeName,p.* from PROCESSDEF p left join GlobalType g on g.typeId=p.globalTypeId where p.enabled=1
         <if test="keyword!=null and keyword!=''">and p.name like CONCAT(CONCAT('%', #{keyword}), '%')</if>
         <if test="typeId!=null and typeId!=''">and p.globalTypeId=#{typeId}</if>
         order by p.createDate desc
     </select>
     <select id="listProcessDefsCount" resultType="java.lang.Integer" parameterType="Map">
-        select count(*) from ProcessDef p left join GlobalType g on g.typeId=p.globalTypeId where p.enabled=1
+        select count(*) from PROCESSDEF p left join GlobalType g on g.typeId=p.globalTypeId where p.enabled=1
         <if test="keyword!=null and keyword!=''">and p.name like CONCAT(CONCAT('%', #{keyword}), '%')</if>
         <if test="typeId!=null and typeId!=''">and p.globalTypeId=#{typeId}</if>
     </select>
     
     <select id="getProcessDefinition" resultMap="processDefinitionResult" parameterType="Map">
-        select g.typeName,p.* from ProcessDef p left join GlobalType g on g.typeId=p.globalTypeId 
+        select g.typeName,p.* from PROCESSDEF p left join GlobalType g on g.typeId=p.globalTypeId 
         where p.enabled=1
         <if test="keyword!=null and keyword!=''">and p.name like CONCAT(CONCAT('%', #{keyword}), '%') </if>
         <if test="typeId!=null and typeId!=''">and p.globalTypeId=#{typeId} </if>
@@ -40,7 +40,7 @@
             p.id in (select pr.processDefId from ProcessDefRole pr where pr.roleId in (#{roleIds})))
     </select>
     <select id="getProcessDefinitionCount" resultType="java.lang.Integer" parameterType="Map">
-        select count(*) from ProcessDef p left join GlobalType g on g.typeId=p.globalTypeId 
+        select count(*) from PROCESSDEF p left join GlobalType g on g.typeId=p.globalTypeId 
         where p.enabled=1
         <if test="keyword!=null and keyword!=''">and p.name like CONCAT(CONCAT('%', #{keyword}), '%') </if>
         <if test="typeId!=null and typeId!=''">and p.globalTypeId=#{typeId} </if>
@@ -56,58 +56,56 @@
     
     
     <select id="getProcessDefById" resultMap="processDefResult" parameterType="long" flushCache="true">
-        select f.* from ProcessDef f where f.enabled=1 and f.id=#{id} 
+        select f.* from PROCESSDEF f where f.enabled=1 and f.id=#{id} 
     </select>
     <select id="getProcessDefByActId" resultMap="processDefResult" parameterType="string">
-        select f.* from ProcessDef f where f.actId=#{actId} and f.enabled=1 
+        select f.* from PROCESSDEF f where f.actId=#{actId} and f.enabled=1 
     </select>
     <select id="getProcessDefByModelId" resultMap="processDefResult" parameterType="string">
-        select f.* from ProcessDef f where f.modelId=#{modelId} and f.enabled=1 
+        select f.* from PROCESSDEF f where f.modelId=#{modelId} and f.enabled=1 
     </select>
     <select id="getProcessDefByDepId" resultMap="processDefResult" parameterType="string">
-        select f.* from ProcessDef f where f.depId=#{depId} and f.enabled=1 
+        select f.* from PROCESSDEF f where f.depId=#{depId} and f.enabled=1 
     </select>
     <select id="getNoCascadeProcessDefById" resultType="com.ozstrategy.model.flows.ProcessDef" parameterType="long">
-        select f.* from ProcessDef f where f.id=#{id} and f.enabled=1
+        select f.* from PROCESSDEF f where f.id=#{id} and f.enabled=1
     </select>
     <select id="getProcessDefByName" resultMap="processDefResult" parameterType="Map">
-        select f.* from ProcessDef f where f.name=#{name} and f.enabled=1 and f.globalTypeId=#{typeId}
+        select f.* from PROCESSDEF f where f.name=#{name} and f.enabled=1 and f.globalTypeId=#{typeId}
     </select>
     <select id="checkNameExist" resultType="long" parameterType="Map">
-        select f.id from ProcessDef f where f.name=#{name} and f.enabled=1 and f.globalTypeId=#{typeId}
+        select f.id from PROCESSDEF f where f.name=#{name} and f.enabled=1 and f.globalTypeId=#{typeId}
     </select>
     <select id="getProcessDefUser" resultType="com.ozstrategy.model.userrole.User" parameterType="long">
-        select u.* from User u join ProcessDefUser p on u.id=p.userId where p.processDefId=#{id}
+        select u.* from User u join PROCESSDEF_USER p on u.id=p.userId where p.processDefId=#{id}
     </select>
     <select id="getProcessDefRole" resultType="com.ozstrategy.model.userrole.Role" parameterType="long">
-        select r.* from Role r join ProcessDefRole p on r.id=p.roleId where p.processDefId=#{id}
+        select r.* from Role r join PROCESSDEF_ROLE p on r.id=p.roleId where p.processDefId=#{id}
     </select>
     
     <insert id="saveProcessDefUser" parameterType="Map" flushCache="true">
-        insert into ProcessDefUser(userId,processDefId) values (#{userId},#{id})
+        insert into PROCESSDEF_USER(userId,processDefId) values (#{userId},#{id})
     </insert>
     <insert id="saveProcessDefRole" parameterType="Map" flushCache="true">
-        insert into ProcessDefRole(roleId,processDefId) values (#{roleId},#{id})
+        insert into PROCESSDEF_ROLE(roleId,processDefId) values (#{roleId},#{id})
     </insert>
     <delete id="deleteProcessDefUser" parameterType="long" flushCache="true">
-        delete from ProcessDefUser where processDefId=#{id}
+        delete from PROCESSDEF_USER where processDefId=#{id}
     </delete>
     <delete id="deleteProcessDefRole" parameterType="long" flushCache="true">
-        delete from ProcessDefRole where processDefId=#{id}
+        delete from PROCESSDEF_ROLE where processDefId=#{id}
     </delete>
     
     
     
     <update id="updateProcessDef" parameterType="com.ozstrategy.model.flows.ProcessDef" flushCache="true">
-        update ProcessDef f set 
+        update PROCESSDEF f set 
         f.name=#{name} , 
         f.globalTypeId=#{globalTypeId} , 
         f.version=#{version} , 
         f.actDefId=#{actDefId} , 
         f.actResId=#{actResId} , 
         f.graphResId=#{graphResId} , 
-        f.modelId=#{modelId} , 
-        f.depId=#{depId} , 
         f.documentation=#{documentation} , 
         f.enabled=#{enabled} , 
         f.flowFormId=#{flowForm.id} , 
@@ -123,7 +121,7 @@
         <selectKey keyColumn="id" keyProperty="id" resultType="java.lang.Long">
             select LAST_INSERT_ID()
         </selectKey>
-        insert into ProcessDef(id,name,flowFormId,globalTypeId,documentation,version,actDefId,actResId,graphResId,modelId,depId,enabled,createDate,lastUpdateDate,deployDate,suspended) 
-        values (#{id},#{name},#{flowForm.id},#{globalTypeId},#{documentation},#{version},#{actDefId},#{actResId},#{graphResId},#{modelId},#{depId},#{enabled},#{createDate},#{lastUpdateDate},#{deployDate},#{suspended})
+        insert into PROCESSDEF(id,name,flowFormId,globalTypeId,documentation,version,actDefId,actResId,graphResId,enabled,createDate,lastUpdateDate,deployDate,suspended) 
+        values (#{id},#{name},#{flowForm.id},#{globalTypeId},#{documentation},#{version},#{actDefId},#{actResId},#{graphResId},#{enabled},#{createDate},#{lastUpdateDate},#{deployDate},#{suspended})
     </insert>
 </mapper>

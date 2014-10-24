@@ -24,20 +24,43 @@ Ext.define('FlexCenter.flows.model.TaskInstance',{
         'lastUpdaterId',
         'lastUpdaterFullName',
         'durationIn',
-        {name:'startDate',convert:function(v){
-            return Ext.util.Format.date(new Date(v), 'Y-m-d H:i:s');
+        'title',
+        'processDefId',
+        'processName',
+        'processVersion',
+        {name:'groupBy',convert:function(v,record){
+            return (record.get('processName')+":"+record.get('title')+":"+record.get('instanceId'))
         }},
+        {name:'startDate',convert:function(v){
+            if(v){
+                return Ext.util.Format.date(new Date(v), 'Y-m-d H:i:s');
+            }
+            return null;
+        }},
+        
         {name:'endDate',convert:function(v){
-            return Ext.util.Format.date(new Date(v), 'Y-m-d H:i:s');
+            if(v){
+                return Ext.util.Format.date(new Date(v), 'Y-m-d H:i:s');
+            }
+            return null;
         }},
         {name:'overdueDate',convert:function(v){
-            return Ext.util.Format.date(new Date(v), 'Y-m-d H:i:s');
+            if(v){
+                return Ext.util.Format.date(new Date(v), 'Y-m-d H:i:s');
+            }
+            return null;
         }},
         {name:'createDate',convert:function(v){
-            return Ext.util.Format.date(new Date(v), 'Y-m-d H:i:s');
+            if(v){
+                return Ext.util.Format.date(new Date(v), 'Y-m-d H:i:s');
+            }
+            return null;
         }},
         {name:'lastUpdateDate',convert:function(v){
-            return Ext.util.Format.date(new Date(v), 'Y-m-d H:i:s');
+            if(v){
+                return Ext.util.Format.date(new Date(v), 'Y-m-d H:i:s');
+            }
+            return null;
         }}
     ]
 });

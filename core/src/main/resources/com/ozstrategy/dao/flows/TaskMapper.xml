@@ -32,12 +32,15 @@
         pd.actDefId as deploymentId,
         pi.title as title,
         pe.taskType as taskType,
-        pi.id as instanceId
+        pi.id as instanceId,
+        pe.preTaskKeys as preTaskKeys,
+        pe.nextTaskKeys as nextTaskKeys,
+        pe.parentId as parentId
         from ACT_RU_TASK art
-        left join ProcessDef pd on art.PROC_DEF_ID_=pd.actDefId
+        left join PROCESSDEF pd on art.PROC_DEF_ID_=pd.actDefId
         left join ACT_RU_IDENTITYLINK ari on art.ID_=ari.TASK_ID_
         left join ProcessDefInstance pi on art.PROC_INST_ID_=pi.actInstanceId
-        left join ProcessElement pe on art.TASK_DEF_KEY_=pe.taskKey 
+        left join PROCESSELEMENT pe on art.TASK_DEF_KEY_=pe.taskKey 
         where pe.processDefId=pd.id and ari.USER_ID_=#{userId} and art.ASSIGNEE_ is null 
         <if test="keyword!=null and keyword!=''"> and (pd.name like CONCAT(CONCAT('%', #{keyword}), '%') or art.NAME_ like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
          order by art.CREATE_TIME_ desc
@@ -69,11 +72,14 @@
         pd.actDefId as deploymentId,
         pi.title as title,
         pe.taskType as taskType,
-        pi.id as instanceId
+        pi.id as instanceId,
+        pe.preTaskKeys as preTaskKeys,
+        pe.nextTaskKeys as nextTaskKeys,
+        pe.parentId as parentId
         from ACT_RU_TASK art 
-        left join ProcessDef pd on art.PROC_DEF_ID_=pd.actDefId
-        left join ProcessDefInstance pi on art.PROC_INST_ID_=pi.actInstanceId
-        left join ProcessElement pe on art.TASK_DEF_KEY_=pe.taskKey 
+        left join PROCESSDEF pd on art.PROC_DEF_ID_=pd.actDefId
+        left join PROCESSDEFINSTANCE pi on art.PROC_INST_ID_=pi.actInstanceId
+        left join PROCESSELEMENT pe on art.TASK_DEF_KEY_=pe.taskKey 
         where pe.processDefId=pd.id and art.ASSIGNEE_=#{userId}
         <if test="keyword!=null and keyword!=''"> and (pd.name like CONCAT(CONCAT('%', #{keyword}), '%') or art.NAME_ like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
          order by art.CREATE_TIME_ desc
@@ -104,13 +110,16 @@
         pd.id as processDefId,
         pd.actDefId as deploymentId,
         pi.title as title,
+        pi.id as instanceId,
         pe.taskType as taskType,
-        pi.id as instanceId
+        pe.preTaskKeys as preTaskKeys,
+        pe.nextTaskKeys as nextTaskKeys,
+        pe.parentId as parentId
         from ACT_RU_TASK art
         left join ACT_HI_TASKINST aht on aht.PROC_INST_ID_=art.PROC_INST_ID_
-        left join ProcessDef pd on art.PROC_DEF_ID_=pd.actDefId
-        left join ProcessDefInstance pi on art.PROC_INST_ID_=pi.actInstanceId
-        left join ProcessElement pe on art.TASK_DEF_KEY_=pe.taskKey
+        left join PROCESSDEF pd on art.PROC_DEF_ID_=pd.actDefId
+        left join PROCESSDEFINSTANCE pi on art.PROC_INST_ID_=pi.actInstanceId
+        left join PROCESSELEMENT pe on art.TASK_DEF_KEY_=pe.taskKey
         where pe.processDefId=pd.id and art.ASSIGNEE_ is null and aht.ASSIGNEE_=#{userId} and pe.type!='Countersign'
         <if test="title!=null and title!=''"> and pi.title like CONCAT(CONCAT('%', #{title}), '%')</if>
         <if test="processDefinitionName!=null and processDefinitionName!=''"> and pd.name like CONCAT(CONCAT('%', #{processDefinitionName}), '%')</if>
@@ -123,13 +132,37 @@
         count(*)  
         from ACT_RU_TASK art
         left join ACT_HI_TASKINST aht on aht.PROC_INST_ID_=art.PROC_INST_ID_
-        left join ProcessDef pd on art.PROC_DEF_ID_=pd.actDefId
-        left join ProcessDefInstance pi on art.PROC_INST_ID_=pi.actInstanceId
-        left join ProcessElement pe on art.TASK_DEF_KEY_=pe.taskKey
-        where pe.processDefId=pd.id and art.ASSIGNEE_ is null and aht.ASSIGNEE_=#{userId} and pe.type!='Countersign'
+        left join PROCESSDEF pd on art.PROC_DEF_ID_=pd.actDefId
+        left join PROCESSDEFINSTANCE pi on art.PROC_INST_ID_=pi.actInstanceId
+        left join PROCESSELEMENT pe on art.TASK_DEF_KEY_=pe.taskKey
+        where pe.processDefId=pd.id and art.ASSIGNEE_ is null and aht.ASSIGNEE_=#{userId} and pe.taskType!='Countersign'
         <if test="title!=null and title!=''"> and pi.title like CONCAT(CONCAT('%', #{title}), '%')</if>
         <if test="processDefinitionName!=null and processDefinitionName!=''"> and pd.name like CONCAT(CONCAT('%', #{processDefinitionName}), '%')</if>
         <if test="startTime!=null and startTime!=''"> and art.CREATE_TIME_ &gt; #{startTime}</if>
         <if test="endTime!=null and endTime!=''"> and art.CREATE_TIME_ &lt; #{endTime}</if>
+    </select>
+    <select id="selectActRunTaskByInstanceId" resultMap="TaskResult" parameterType="string">
+        select
+        art.ID_ as id,
+        art.REV_ as version,
+        art.EXECUTION_ID_ as executionId,
+        art.PROC_INST_ID_ as actInstanceId,
+        art.PROC_DEF_ID_ as processDefinitionId,
+        art.NAME_ as name,
+        art.PARENT_TASK_ID_ as parentTaskId,
+        art.DESCRIPTION_ as description,
+        art.TASK_DEF_KEY_ as taskDefinitionKey,
+        art.OWNER_ as owner,
+        art.ASSIGNEE_ as assignee,
+        art.DELEGATION_ as delegationState,
+        art.PRIORITY_ as priority,
+        art.CREATE_TIME_ as createDate,
+        art.DUE_DATE_ as dueDate,
+        art.CATEGORY_ as category,
+        art.SUSPENSION_STATE_ as suspended,
+        art.TENANT_ID_ as tenantId,
+        art.FORM_KEY_ as formKey
+        from ACT_RU_TASK art
+        where art.PROC_INST_ID_=#{instanceId}
     </select>
 </mapper>

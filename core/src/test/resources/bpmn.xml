@@ -1,73 +1,56 @@
-<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
-    <process id="P_2" name="test2" isExecutable="true">
-        <documentation>sadf</documentation>
-        <userTask id="T_9" name="人事审核" activiti:candidateUsers="hr,user,dep" tasktype="Commons">
-            <documentation>阿斯达飞</documentation>
-            <extensionElements>
-                <activiti:formProperty id="1" name="ss" type="string" variable="sss" readable="false"/>
-                <activiti:formProperty id="2" name="d" type="string" variable="d" readable="false"/>
-                <activiti:formProperty id="7" name="sdf" type="string" variable="fds" readable="false"/>
-            </extensionElements>
+<?xml version='1.0' encoding='UTF-8'?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+    <process id="my-processaaaa" name="会签流程" isExecutable="true">
+        <startEvent id="Start_0" activiti:initiator="userId"/>
+        <userTask id="Task_1" name="填写表单" activiti:assignee="${userId}"/>
+        <userTask id="Sign_2" name="领导会签" activiti:assignee="${signAssignee}" activiti:candidateUsers="hr,dep,user">
+            <multiInstanceLoopCharacteristics isSequential="false" activiti:collection="${signAssignee}" activiti:elementVariable="signAssignee">
+                <completionCondition>${multiInstanceLoopService.canComplete(execution, nrOfInstances, nrOfActiveInstances, nrOfCompletedInstances, loopCounter)}</completionCondition>
+            </multiInstanceLoopCharacteristics>
         </userTask>
-        <userTask id="T_8" name="部门审核" activiti:candidateUsers="dep" tasktype="Commons">
-            <documentation>阿斯达飞</documentation>
-            <extensionElements>
-                <activiti:formProperty id="1" name="ss" type="string" variable="sss" readable="false"/>
-                <activiti:formProperty id="2" name="d" type="string" variable="d" readable="false"/>
-                <activiti:formProperty id="7" name="sdf" type="string" variable="fds" readable="false"/>
-            </extensionElements>
-        </userTask>
-        <userTask id="T_7" name="填写表单" activiti:candidateUsers="dep" tasktype="Commons">
-            <documentation>阿斯达飞</documentation>
-            <extensionElements>
-                <activiti:formProperty id="1" name="ss" type="string" variable="sss" readable="false"/>
-                <activiti:formProperty id="2" name="d" type="string" variable="d" readable="false"/>
-                <activiti:formProperty id="7" name="sdf" type="string" variable="fds" readable="false"/>
-            </extensionElements>
-        </userTask>
-        <startEvent id="T_6" name="开始" activiti:initiator="starter"/>
-        <sequenceFlow id="T_14" sourceRef="T_9" targetRef="T_10"/>
-        <sequenceFlow id="T_13" sourceRef="T_8" targetRef="T_9"/>
-        <sequenceFlow id="T_12" sourceRef="T_7" targetRef="T_8"/>
-        <sequenceFlow id="T_11" sourceRef="T_6" targetRef="T_7"/>
-        <endEvent id="T_10" name="结束"/>
+        <userTask id="Task_3" name="总经理审批" activiti:candidateUsers="hr,dep,user"/>
+        <endEvent id="End_4"/>
+        <sequenceFlow id="sequenceFlow-748f7b50-4f24-4693-a115-8ddedb47fdfa" sourceRef="Start_0" targetRef="Task_1"/>
+        <sequenceFlow id="sequenceFlow-6ae1ebdb-6ce5-42fe-8b62-478ac631bb2c" sourceRef="Task_1" targetRef="Sign_2"/>
+        <sequenceFlow id="sequenceFlow-c9b67721-9f33-4a97-932b-5ab637a9eb81" sourceRef="Sign_2" targetRef="Task_3"/>
+        <sequenceFlow id="sequenceFlow-ad7cc347-543a-45e8-9265-f9197c2ca01f" sourceRef="Task_3" targetRef="End_4"/>
     </process>
-    <bpmndi:BPMNDiagram id="BPMNDiagram_P_2">
-        <bpmndi:BPMNPlane bpmnElement="P_2" id="BPMNPlane_P_2">
-            <bpmndi:BPMNShape bpmnElement="T_6" id="BPMNShape_T_6">
-                <omgdc:Bounds height="30.0" width="30.0" x="0.0" y="15.0"/>
-            </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="T_9" id="BPMNShape_T_9">
+    <bpmndi:BPMNDiagram id="BPMNDiagram_my-processaaaa">
+        <bpmndi:BPMNPlane bpmnElement="my-processaaaa" id="BPMNPlane_my-processaaaa">
+            <bpmndi:BPMNShape bpmnElement="Task_3" id="BPMNShape_Task_3">
                 <omgdc:Bounds height="60.0" width="100.0" x="380.0" y="0.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="T_8" id="BPMNShape_T_8">
+            <bpmndi:BPMNShape bpmnElement="Sign_2" id="BPMNShape_Sign_2">
                 <omgdc:Bounds height="60.0" width="100.0" x="230.0" y="0.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="T_7" id="BPMNShape_T_7">
-                <omgdc:Bounds height="60.0" width="100.0" x="80.0" y="0.0"/>
-            </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="T_10" id="BPMNShape_T_10">
+            <bpmndi:BPMNShape bpmnElement="End_4" id="BPMNShape_End_4">
                 <omgdc:Bounds height="30.0" width="30.0" x="530.0" y="15.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge bpmnElement="T_13" id="BPMNEdge_T_13">
+            <bpmndi:BPMNShape bpmnElement="Start_0" id="BPMNShape_Start_0">
+                <omgdc:Bounds height="30.0" width="30.0" x="0.0" y="15.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="Task_1" id="BPMNShape_Task_1">
+                <omgdc:Bounds height="60.0" width="100.0" x="80.0" y="0.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="sequenceFlow-c9b67721-9f33-4a97-932b-5ab637a9eb81" id="BPMNEdge_sequenceFlow-c9b67721-9f33-4a97-932b-5ab637a9eb81">
                 <omgdi:waypoint x="330.0" y="30.0"/>
                 <omgdi:waypoint x="342.0" y="30.0"/>
                 <omgdi:waypoint x="342.0" y="30.000000000000007"/>
                 <omgdi:waypoint x="380.0" y="30.000000000000007"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="T_12" id="BPMNEdge_T_12">
+            <bpmndi:BPMNEdge bpmnElement="sequenceFlow-6ae1ebdb-6ce5-42fe-8b62-478ac631bb2c" id="BPMNEdge_sequenceFlow-6ae1ebdb-6ce5-42fe-8b62-478ac631bb2c">
                 <omgdi:waypoint x="180.0" y="30.0"/>
                 <omgdi:waypoint x="192.0" y="30.0"/>
                 <omgdi:waypoint x="192.0" y="30.000000000000007"/>
                 <omgdi:waypoint x="230.0" y="30.000000000000007"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="T_14" id="BPMNEdge_T_14">
+            <bpmndi:BPMNEdge bpmnElement="sequenceFlow-ad7cc347-543a-45e8-9265-f9197c2ca01f" id="BPMNEdge_sequenceFlow-ad7cc347-543a-45e8-9265-f9197c2ca01f">
                 <omgdi:waypoint x="480.0" y="30.0"/>
                 <omgdi:waypoint x="492.0" y="30.0"/>
                 <omgdi:waypoint x="492.0" y="30.000000000000004"/>
                 <omgdi:waypoint x="530.0" y="30.000000000000004"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="T_11" id="BPMNEdge_T_11">
+            <bpmndi:BPMNEdge bpmnElement="sequenceFlow-748f7b50-4f24-4693-a115-8ddedb47fdfa" id="BPMNEdge_sequenceFlow-748f7b50-4f24-4693-a115-8ddedb47fdfa">
                 <omgdi:waypoint x="30.0" y="30.0"/>
                 <omgdi:waypoint x="42.0" y="30.0"/>
                 <omgdi:waypoint x="42.0" y="30.000000000000007"/>

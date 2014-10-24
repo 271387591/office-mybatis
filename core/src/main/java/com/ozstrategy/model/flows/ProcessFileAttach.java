@@ -9,27 +9,29 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 /**
  * Created by lihao on 9/27/14.
  */
 @Entity
+@Table(name="PROCESSFILEATTACH")
 public class ProcessFileAttach extends CreatorObject{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;             
-    @Column
+    @Column(length = 128,nullable = false)
     private String fileName;
-    @Column
+    @Column(length = 128,nullable = true)
     private String filePath;
     @Column
     private Long fileSize;
     @ManyToOne
     @JoinColumn(name = "instanceId")
     private ProcessDefInstance instance;
-    @Column
+    @Column(length = 2,nullable = false)
     private Integer fileIndex;
-    @Column
+    @Column(length = 64,nullable = true)
     private String actInstanceId;
 
     public Long getId() {

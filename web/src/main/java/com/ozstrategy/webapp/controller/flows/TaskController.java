@@ -113,8 +113,7 @@ public class TaskController extends BaseController{
     public BaseResultCommand returnTask(HttpServletRequest request){
         String taskId=request.getParameter("taskId");
         String taskKey=request.getParameter("taskKey");
-        String instanceId=request.getParameter("instanceId");
-        Integer turnType=parseInteger(request.getParameter("turnType"));
+        String sourceTask=request.getParameter("sourceTask");
         Map<String,Object> map=requestMap(request);
         try {
             String username=request.getRemoteUser();
@@ -122,7 +121,7 @@ public class TaskController extends BaseController{
             if(StringUtils.isNotEmpty(username)){
                 creator=userManager.getUserByUsername(username);
             }
-            taskManager.returnTask(taskId,taskKey,turnType,creator,map);
+            taskManager.returnTask(taskId,taskKey,sourceTask,creator,map);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("任务回退失败",e);
@@ -135,6 +134,7 @@ public class TaskController extends BaseController{
     public BaseResultCommand replevyTask(HttpServletRequest request){
         String taskId=request.getParameter("taskId");
         String taskKey=request.getParameter("taskKey");
+        String sourceTask=request.getParameter("sourceTask");
         Map<String,Object> map=requestMap(request);
         try {
             String username=request.getRemoteUser();
@@ -142,7 +142,7 @@ public class TaskController extends BaseController{
             if(StringUtils.isNotEmpty(username)){
                 creator=userManager.getUserByUsername(username);
             }
-            taskManager.replevyTask(taskId,taskKey,creator,map);
+            taskManager.replevyTask(taskId,taskKey,sourceTask,creator,map);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("任务追回失败",e);
@@ -155,8 +155,13 @@ public class TaskController extends BaseController{
     @ResponseBody
     public BaseResultCommand completeTask(HttpServletRequest request){
         String taskId=request.getParameter("taskId");
+        String processDefId=request.getParameter("processDefId");
         if(StringUtils.isEmpty(taskId)){
             return new BaseResultCommand("任务ID为空",Boolean.FALSE);
+        }
+        ProcessDef def=processDefManager.getProcessDefById(parseLong(processDefId));
+        if(def==null){
+            return new BaseResultCommand("流程不存在",Boolean.FALSE);
         }
         Map<String,Object> map=requestMap(request);
         try {
@@ -165,7 +170,7 @@ public class TaskController extends BaseController{
             if(StringUtils.isNotEmpty(username)){
                 creator=userManager.getUserByUsername(username);
             }
-            taskManager.complete(creator,taskId,map);
+            taskManager.complete(creator,def,taskId,map);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("任务完成失败",e);

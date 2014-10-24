@@ -210,12 +210,6 @@ CREATE TABLE `ACT_HI_TASKINST` (
   PRIMARY KEY (`ID_`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
--- ----------------------------
---  Records of `ACT_HI_TASKINST`
--- ----------------------------
-BEGIN;
-INSERT INTO `ACT_HI_TASKINST` VALUES ('112509', 'process_1:1:100006', 'T_3', '112501', '112501', '������1', null, null, null, null, '2014-10-08 17:22:59', null, null, null, null, '50', null, null, null, ''), ('120014', 'process_1:1:115004', 'T_3', '120001', '120001', '任务1', null, null, null, null, '2014-10-09 17:08:51', null, null, null, null, '50', null, null, null, '');
-COMMIT;
 
 -- ----------------------------
 --  Table structure for `ACT_HI_VARINST`

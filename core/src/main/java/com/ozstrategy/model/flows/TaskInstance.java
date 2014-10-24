@@ -6,6 +6,8 @@ import com.ozstrategy.model.userrole.User;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.util.Date;
@@ -23,13 +26,14 @@ import java.util.Set;
  * Created by lihao on 9/27/14.
  */
 @Entity
+@Table(name="TASKINSTANCE")
 public class TaskInstance extends CreatorObject{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column
+    @Column(length = 8,nullable = false)
     private String taskKey;
-    @Column
+    @Column(length = 128,nullable = true)
     private String name;
     @Column
     @Temporal(TemporalType.TIMESTAMP)
@@ -51,14 +55,18 @@ public class TaskInstance extends CreatorObject{
     private ProcessDefInstance instance;
     @Column(columnDefinition = "TEXT")
     private String remarks;
-    @Column
+    @Column(length = 32,nullable = true)
     private String actTaskId;
     @OneToMany(mappedBy = "instance",fetch = FetchType.LAZY)
     private Set<ProcessFileAttach> fileAttaches=new HashSet<ProcessFileAttach>();
-    @Column
+    @Column(columnDefinition = "char",length = 1)
     private Boolean sendEmail;
-    @Column
-    private String status;
+    @Column(length = 16,nullable = false)
+    @Enumerated(EnumType.STRING)
+    private TaskInstanceStatus status;
+    @ManyToOne
+    @JoinColumn(name = "processDefId")
+    private ProcessDef processDef;
 
     public Long getId() {
         return id;
@@ -164,11 +172,19 @@ public class TaskInstance extends CreatorObject{
         this.sendEmail = sendEmail;
     }
 
-    public String getStatus() {
+    public ProcessDef getProcessDef() {
+        return processDef;
+    }
+
+    public void setProcessDef(ProcessDef processDef) {
+        this.processDef = processDef;
+    }
+
+    public TaskInstanceStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(TaskInstanceStatus status) {
         this.status = status;
     }
 }

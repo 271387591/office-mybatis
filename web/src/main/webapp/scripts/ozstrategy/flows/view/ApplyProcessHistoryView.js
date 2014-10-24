@@ -1,32 +1,21 @@
 /**
  * Created by lihao on 10/22/14.
  */
-Ext.define('FlexCenter.flows.view.ApplyProcessView',{
+Ext.define('FlexCenter.flows.view.ApplyProcessHistoryView',{
     requires:[
-        'FlexCenter.activiti.store.ProcessHistory',
-        'FlexCenter.activiti.view.ApplyProcessDetailView'
+        'FlexCenter.flows.store.ProcessInstanceHistory'
     ],
     extend: 'Ext.panel.Panel',
-    alias: 'widget.applyProcessView',
-    itemId:'applyProcessView',
-    title:'我的申请流程',
-    text:'我的申请流程',
+    alias: 'widget.applyProcessHistoryView',
+    itemId:'applyProcessHistoryView',
+    title:'流程申请记录',
+    text:'流程申请记录',
     layout:'border',
     autoScroll:true,
     getStore:function(){
         var me=this;
-        var store=Ext.create('FlexCenter.activiti.store.ProcessHistory',{
-            storeId:'applyProcessViewStore',
-            proxy:{
-                type: 'ajax',
-                url:'processesController/getApplyProcess',
-                reader: {
-                    type: 'json',
-                    root : 'data',
-                    totalProperty  : 'total',
-                    messageProperty: 'message'
-                }
-            }
+        var store=Ext.create('FlexCenter.flows.store.ProcessInstanceHistory',{
+            storeId:'processInstanceHistoryViewStore'
         });
         store.load();
         return store;
@@ -34,7 +23,6 @@ Ext.define('FlexCenter.flows.view.ApplyProcessView',{
     initComponent:function(){
         var me=this;
         var store = me.getStore();
-        var sm = Ext.create('Ext.selection.CheckboxModel');
         me.items=[
             {
                 xtype:'form',
@@ -56,11 +44,11 @@ Ext.define('FlexCenter.flows.view.ApplyProcessView',{
                             {
                                 fieldLabel:'流程名称',
                                 xtype : 'textfield',
-                                name : 'name'
+                                name : 'processName'
                             },
                             {
                                 fieldLabel:'流程状态',
-                                name: 'status',
+                                name: 'pstatus',
                                 xtype : 'combo',
                                 mode : 'local',
                                 editable : false,
@@ -78,12 +66,14 @@ Ext.define('FlexCenter.flows.view.ApplyProcessView',{
                                 fieldLabel:'开始日期',
                                 xtype : 'datefield',
                                 format : 'Y-m-d',
+                                editable:false,
                                 name : 'startTime'
                             },
                             {
                                 fieldLabel:'结束日期',
                                 xtype : 'datefield',
-                                format : 'Y-m-d',
+                                editable:false,
+                                format : 'Y-m-d 23:59:59',
                                 name : 'endTime'
                             }
                         ]
@@ -111,6 +101,7 @@ Ext.define('FlexCenter.flows.view.ApplyProcessView',{
                                 iconCls : 'clear',
                                 handler : function() {
                                     me.down('form').getForm().reset();
+                                    me.down('grid').getStore().load();
                                 }
                             }
                         ]
@@ -120,7 +111,6 @@ Ext.define('FlexCenter.flows.view.ApplyProcessView',{
             {
                 xtype:'grid',
                 region:'center',
-                selModel:sm,
                 store:store,
                 forceFit: true,
                 autoScroll: true,
@@ -135,15 +125,19 @@ Ext.define('FlexCenter.flows.view.ApplyProcessView',{
                 ],
                 columns:[
                     {
-                        header: '流程名称',
-                        dataIndex: 'name'
+                        xtype:'rownumberer'
                     },
                     {
-                        header: '日期',
-                        dataIndex: 'startTime',
-                        renderer: function (v) {
-                            return Ext.util.Format.date(new Date(v), 'Y-m-d H:i:s');
-                        }
+                        header: '申请标题',
+                        dataIndex:'title'
+                    },
+                    {
+                        header: '流程名称',
+                        dataIndex: 'processName'
+                    },
+                    {
+                        header: '申请日期',
+                        dataIndex: 'startTime'
                     },
                     {
                         header: '流程状态',
@@ -152,7 +146,7 @@ Ext.define('FlexCenter.flows.view.ApplyProcessView',{
                             if(v){
                                 return "已结束"
                             }else{
-                                return '正在运行'
+                                return '<font color="red">正在运行</font>'
                             }
                         }
                     },
@@ -161,20 +155,13 @@ Ext.define('FlexCenter.flows.view.ApplyProcessView',{
                         header:'管理',
                         items:[
                             {
-                                iconCls:'btn-flowView',
-                                tooltip:'执行情况',
+                                iconCls:'btn-readdocument',
+                                tooltip:'查看流程图',
                                 handler:function(grid, rowIndex, colIndex){
                                     var rec = grid.getStore().getAt(rowIndex);
-                                    var itemId= 'applyProcessDetailView'+rec.get('id');
-                                    var config={
-                                        diagramHtml:rec.get('diagramHtml'),
-                                        title:rec.get('name')+"-流程详细",
-                                        itemId: itemId,
-                                        processInstanceId:rec.get('id')
-                                    };
-                                    Ext.ComponentQuery.query('userCenterPanel')[0].addPanel('applyProcessDetailView',itemId,config);
+                                    me.preview(rec);
                                 }
-                            },'-','-','-','-','-','-','-','-','-','-','-',
+                            },'-',
                             {
                                 iconCls:'btn-print',
                                 tooltip:'打印流程执行情况',
@@ -182,7 +169,7 @@ Ext.define('FlexCenter.flows.view.ApplyProcessView',{
                                     var rec = grid.getStore().getAt(rowIndex);
                                     window.open('processesController/printFlowDetail?processInstanceId='+rec.get('id')+'&definitionId='+rec.get('definitionId'),'','');
                                 }
-                            },'-','-','-','-','-','-','-','-','-','-','-',
+                            },'-',
                             {
                                 iconCls:'btn-print',
                                 tooltip:'打印表单数据',
@@ -197,6 +184,7 @@ Ext.define('FlexCenter.flows.view.ApplyProcessView',{
                 ],
                 listeners:{
                     itemdblclick:function(grid, record, item, index, e, eOpts){
+                        me.preview(record);
                     }
 
                 }
@@ -204,7 +192,32 @@ Ext.define('FlexCenter.flows.view.ApplyProcessView',{
         ];
         this.callParent();
     },
-    showDetail:function(rec){
-
+    preview:function(record){
+        var me=this;
+        var data={};
+        data.id=record.get('processDefId');
+        var tasks= record.get('runTasks');
+        data.taskKey=tasks.length>0?tasks[0].taskDefinitionKey:'';
+        ajaxPostRequest('processDefController.do?method=getRes',data,function(result){
+            if(result.success){
+                var data=result.data,actRes,graRes;
+                if(data){
+                    graRes=data.graRes;
+                }
+                var moder = Ext.widget('modelerPreviewWindow',{
+                    graRes:graRes,
+                    taskKey:record.taskKey,
+                    animateTarget:me.getEl()
+                });
+                moder.show();
+            }else{
+                Ext.MessageBox.alert({
+                    title:'警告',
+                    icon: Ext.MessageBox.ERROR,
+                    msg:result.message,
+                    buttons:Ext.MessageBox.OK
+                });
+            }
+        });
     }
 });

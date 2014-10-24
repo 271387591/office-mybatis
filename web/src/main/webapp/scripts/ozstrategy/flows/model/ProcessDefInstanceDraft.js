@@ -23,10 +23,16 @@ Ext.define('FlexCenter.flows.model.ProcessDefInstanceDraft',{
         'lastUpdaterId',
         'lastUpdaterFullName',
         {name:'createDate',convert:function(v){
-            return Ext.util.Format.date(new Date(v), 'Y-m-d H:i:s');
+            if(v){
+                return Ext.util.Format.date(new Date(v), 'Y-m-d H:i:s');
+            }
+            return null;
         }},
         {name:'lastUpdateDate',convert:function(v){
-            return Ext.util.Format.date(new Date(v), 'Y-m-d H:i:s');
+            if(v){
+                return Ext.util.Format.date(new Date(v), 'Y-m-d H:i:s');
+            }
+            return null;
         }}
     ]
 });

@@ -1,5 +1,6 @@
 package com.ozstrategy.service.flows;
 
+import com.ozstrategy.model.flows.ProcessDef;
 import com.ozstrategy.model.flows.Task;
 import com.ozstrategy.model.userrole.User;
 
@@ -18,7 +19,7 @@ public interface TaskManager {
     void proxyTask(String taskId, String username,User creator,Map<String,Object> map);
     void unclaim(String taskId);
     Map<String,Object> getVariables(String executionId)throws Exception;
-    void returnTask(String taskId, String taskKey, int turnType,User creator,Map<String,Object> map) throws Exception;
-    void replevyTask(String taskId, String taskKey,User creator,Map<String,Object> map) throws Exception;
-    void complete(User user,String taskId, Map<String, Object> map) throws Exception;
+    void returnTask(String taskId, String taskKey, String sourceActivity, User creator,Map<String,Object> map) throws Exception;
+    void replevyTask(String taskId, String taskKey,String sourceActivity, User creator,Map<String,Object> map) throws Exception;
+    void complete(User user,ProcessDef def,String taskId, Map<String, Object> map) throws Exception;
 }

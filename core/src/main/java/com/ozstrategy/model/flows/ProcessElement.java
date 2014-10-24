@@ -1,11 +1,16 @@
 package com.ozstrategy.model.flows;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ozstrategy.model.userrole.Role;
 import com.ozstrategy.model.userrole.User;
+import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,59 +21,63 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
  * Created by lihao on 9/9/14.
  */
 @Entity
+@Table(name = "PROCESSELEMENT")
 public class ProcessElement implements Serializable {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column
-    private String type;
-    @Column
+    @Column(length = 16,nullable = false)
+    private String graphType;
+    @Column(length = 16,nullable = true)
+    @Enumerated(EnumType.STRING)
+    private TaskType taskType;
+    @Column(length = 16,nullable = false)
     private String actClass;
-    @Column
+    @Column(length = 128,nullable = true)
     private String label;
-    @Column
+    @Column(length = 8,nullable = false)
     private String taskKey;
+    @Column(length = 400,nullable = true)
+    private String preTaskKeys;
+    @Column(length = 400,nullable = true)
+    private String nextTaskKeys;
+    @Column(nullable = true)
+    private Long parentId;
+    @Column(nullable = true,length = 255)
+    private String countersign;
+    @Transient
+    private Map<String,Object> countersignMap=new HashMap<String, Object>();
+    @OneToMany(fetch = FetchType.LAZY)
+    private Set<ProcessElement> children=new HashSet<ProcessElement>();
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "processElement")
-    private Set<ProcessElementForm> instances=new HashSet<ProcessElementForm>();
+    private Set<ProcessElementForm> elementForms=new HashSet<ProcessElementForm>();
     @JoinTable(
-            name               = "ProcessElementUser",
-            joinColumns        = { @JoinColumn(name = "userId") },
-            inverseJoinColumns = @JoinColumn(name = "elementId")
+            name               = "PROCESSELEMENT_USER",
+            joinColumns        = { @JoinColumn(name = "userId",referencedColumnName = "id",nullable = false) },
+            inverseJoinColumns = @JoinColumn(name = "elementId",referencedColumnName = "id",nullable = false)
     )
     @ManyToMany(
             fetch   = FetchType.LAZY,
-            cascade = {CascadeType.REFRESH}
+            cascade = {CascadeType.ALL}
     )
     private Set<User> users=new HashSet<User>();
-    @JoinTable(
-            name               = "ProcessElementRole",
-            joinColumns        = { @JoinColumn(name = "roleId") },
-            inverseJoinColumns = @JoinColumn(name = "elementId")
-    )
-    @ManyToMany(
-            fetch   = FetchType.LAZY,
-            cascade = {CascadeType.REFRESH}
-    )
-    private Set<User> roles=new HashSet<User>();
-    
     @ManyToOne
-    @JoinColumn(name = "processDefId")
+    @JoinColumn(name = "processDefId",nullable = true,referencedColumnName = "id")
     private ProcessDef processDef;
-    @Column(length = 32)
-    private String taskType;
-    
-    @Column
-    @Lob
-    @Basic(fetch=FetchType.LAZY)
-    private byte[] actResource;
 
     public Long getId() {
         return id;
@@ -78,12 +87,28 @@ public class ProcessElement implements Serializable {
         this.id = id;
     }
 
-    public String getType() {
-        return type;
+    public String getGraphType() {
+        return graphType;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setGraphType(String graphType) {
+        this.graphType = graphType;
+    }
+
+    public TaskType getTaskType() {
+        return taskType;
+    }
+
+    public void setTaskType(TaskType taskType) {
+        this.taskType = taskType;
+    }
+
+    public String getActClass() {
+        return actClass;
+    }
+
+    public void setActClass(String actClass) {
+        this.actClass = actClass;
     }
 
     public String getLabel() {
@@ -94,12 +119,52 @@ public class ProcessElement implements Serializable {
         this.label = label;
     }
 
-    public Set<ProcessElementForm> getInstances() {
-        return instances;
+    public String getTaskKey() {
+        return taskKey;
     }
 
-    public void setInstances(Set<ProcessElementForm> instances) {
-        this.instances = instances;
+    public void setTaskKey(String taskKey) {
+        this.taskKey = taskKey;
+    }
+
+    public String getPreTaskKeys() {
+        return preTaskKeys;
+    }
+
+    public void setPreTaskKeys(String preTaskKeys) {
+        this.preTaskKeys = preTaskKeys;
+    }
+
+    public String getNextTaskKeys() {
+        return nextTaskKeys;
+    }
+
+    public void setNextTaskKeys(String nextTaskKeys) {
+        this.nextTaskKeys = nextTaskKeys;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+
+    public Set<ProcessElement> getChildren() {
+        return children;
+    }
+
+    public void setChildren(Set<ProcessElement> children) {
+        this.children = children;
+    }
+
+    public Set<ProcessElementForm> getElementForms() {
+        return elementForms;
+    }
+
+    public void setElementForms(Set<ProcessElementForm> elementForms) {
+        this.elementForms = elementForms;
     }
 
     public Set<User> getUsers() {
@@ -118,43 +183,25 @@ public class ProcessElement implements Serializable {
         this.processDef = processDef;
     }
 
-    public String getTaskKey() {
-        return taskKey;
+    public String getCountersign() {
+        return countersign;
     }
 
-    public void setTaskKey(String taskKey) {
-        this.taskKey = taskKey;
+    public void setCountersign(String countersign) {
+        this.countersign = countersign;
     }
 
-    public String getActClass() {
-        return actClass;
+    public Map<String, Object> getCountersignMap() {
+        if(StringUtils.isNotEmpty(countersign)){
+            try {
+                countersignMap=(Map<String, Object>)new ObjectMapper().readValue(countersign,Map.class);
+            } catch (IOException e) {
+            }
+        }
+        return countersignMap;
     }
 
-    public void setActClass(String actClass) {
-        this.actClass = actClass;
-    }
-
-    public byte[] getActResource() {
-        return actResource;
-    }
-
-    public void setActResource(byte[] actResource) {
-        this.actResource = actResource;
-    }
-
-    public Set<User> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<User> roles) {
-        this.roles = roles;
-    }
-
-    public String getTaskType() {
-        return taskType;
-    }
-
-    public void setTaskType(String taskType) {
-        this.taskType = taskType;
+    public void setCountersignMap(Map<String, Object> countersignMap) {
+        this.countersignMap = countersignMap;
     }
 }

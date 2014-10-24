@@ -21,7 +21,6 @@ Ext.define('FlexCenter.user.view.UserSelector', {
         Ext.apply(this, {
             border: false,
             title: '人员选择器',
-            iconCls: 'user-icon',
             width: 560,
             modal: true,
             height: 350,

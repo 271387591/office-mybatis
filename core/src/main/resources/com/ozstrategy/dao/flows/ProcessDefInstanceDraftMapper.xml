@@ -8,13 +8,13 @@
     </resultMap>
     
     <select id="listProcessDefInstanceDrafts" resultMap="processDefInstanceDraftResult" parameterType="Map">
-        select p.* from ProcessDefInstanceDraft p where p.creatorId=#{creatorId}
+        select p.* from PROCESSDEFINSTANCEDRAFT p where p.creatorId=#{creatorId}
         <if test="keyword!=null and keyword!=''">and p.name like CONCAT(CONCAT('%', #{keyword}), '%')</if>
         <if test="keyword!=null and keyword!=''">and p.description like CONCAT(CONCAT('%', #{keyword}), '%')</if>
         order by p.createDate desc
     </select>
     <select id="listProcessDefInstanceDraftsCount" resultType="java.lang.Integer" parameterType="Map">
-        select count(*) from ProcessDefInstanceDraft p where p.creatorId=#{creatorId}
+        select count(*) from PROCESSDEFINSTANCEDRAFT p where p.creatorId=#{creatorId}
         <if test="keyword!=null and keyword!=''">and p.name like CONCAT(CONCAT('%', #{keyword}), '%')</if>
         <if test="keyword!=null and keyword!=''">and p.description like CONCAT(CONCAT('%', #{keyword}), '%')</if>
     </select>
@@ -24,7 +24,7 @@
     </select>
     
     <update id="updateProcessDefInstanceDraft" parameterType="com.ozstrategy.model.flows.ProcessDefInstanceDraft" flushCache="true">
-        update ProcessDefInstanceDraft f set 
+        update PROCESSDEFINSTANCEDRAFT f set 
         f.name=#{name} , 
         f.description=#{description} , 
         f.processDefId=#{processDefId} , 
@@ -42,13 +42,13 @@
         where f.id=#{id}
     </update>
     <delete id="deleteProcessDefInstanceDraft" parameterType="long" flushCache="true">
-        delete from ProcessDefInstanceDraft where id=#{id}
+        delete from PROCESSDEFINSTANCEDRAFT where id=#{id}
     </delete>
     <insert id="saveProcessDefInstanceDraft" parameterType="com.ozstrategy.model.flows.ProcessDefInstanceDraft" flushCache="true">
         <selectKey keyColumn="id" keyProperty="id" resultType="java.lang.Long">
             select LAST_INSERT_ID()
         </selectKey>
-        insert into ProcessDefInstanceDraft(id,name,description,processDefId,processDefName,version,sendEmail,fileAttachOne,fileAttachOneName,fileAttachTwo,fileAttachTwoName,fileAttachThree,fileAttachThreeName,formData,createDate,lastUpdateDate,creatorId,lastUpdaterId) 
+        insert into PROCESSDEFINSTANCEDRAFT(id,name,description,processDefId,processDefName,version,sendEmail,fileAttachOne,fileAttachOneName,fileAttachTwo,fileAttachTwoName,fileAttachThree,fileAttachThreeName,formData,createDate,lastUpdateDate,creatorId,lastUpdaterId) 
         values (#{id},#{name},#{description},#{processDefId},#{processDefName},#{version},#{sendEmail},#{fileAttachOne},#{fileAttachOneName},#{fileAttachTwo},#{fileAttachTwoName},#{fileAttachThree},#{fileAttachThreeName},#{formData},#{createDate},#{lastUpdateDate},#{creator.id},#{lastUpdater.id})
     </insert>
 </mapper>

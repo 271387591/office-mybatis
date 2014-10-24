@@ -74,6 +74,7 @@ public interface Constants {
     public static final String MESSAGE_START_PROCESS_FAIL = "message.start.process.fail";
     public static final String MESSAGE_START_PROCESS_NOT_FOUND_START_TASK = "message.start.process.not.found.start.task";
     public static final String MESSAGE_RETURN_TASK_FAIL = "message.return.task.fail";
+    public static final String MESSAGE_REPLEVY_TASK_FAIL = "message.replevy.task.fail";
 
     public static final String TASK_SIGN_NAME = "Sign_";
     public static final String TASK_SIGN_subType = "subType";

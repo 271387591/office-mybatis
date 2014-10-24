@@ -31,6 +31,9 @@ public class Task {
     private Long instanceId;
     private String title;
     private String taskType;
+    private String preTaskKeys;
+    private String nextTaskKeys;
+    private Long parentId;
 
     public String getId() {
         return id;
@@ -230,5 +233,29 @@ public class Task {
 
     public void setTaskType(String taskType) {
         this.taskType = taskType;
+    }
+
+    public String getPreTaskKeys() {
+        return preTaskKeys;
+    }
+
+    public void setPreTaskKeys(String preTaskKeys) {
+        this.preTaskKeys = preTaskKeys;
+    }
+
+    public String getNextTaskKeys() {
+        return nextTaskKeys;
+    }
+
+    public void setNextTaskKeys(String nextTaskKeys) {
+        this.nextTaskKeys = nextTaskKeys;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
 }

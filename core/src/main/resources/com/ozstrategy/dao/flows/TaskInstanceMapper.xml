@@ -9,26 +9,31 @@
         <association property="element" column="elementId" select="com.ozstrategy.dao.flows.ProcessElementDao.getNoCascadeProcessElementById"/>
         <association property="assignee" column="assigneeId" select="com.ozstrategy.dao.userrole.UserDao.getNoCascadeUserById"/>
         <association property="instance" column="instanceId" select="com.ozstrategy.dao.flows.ProcessDefInstanceDao.getNoCascadeProcessDefInstanceById"/>
+        <association property="processDef" column="processDefId" select="com.ozstrategy.dao.flows.ProcessDefDao.getNoCascadeProcessDefById"/>
     </resultMap>
     
     <select id="listTaskInstances" resultMap="TaskInstanceResult" parameterType="Map">
-        select p.* from TaskInstance p where p.instanceId=#{instanceId}
+        select p.* from TASKINSTANCE p where 1=1
         <if test="keyword!=null and keyword!=''">and p.name like CONCAT(CONCAT('%', #{keyword}), '%')</if>
+        <if test="userId!=null and userId!=''">and p.assigneeId = #{userId}</if>
+        <if test="instanceId!=null and instanceId!=''">and p.instanceId = #{instanceId}</if>
         order by p.createDate asc 
     </select>
     <select id="listTaskInstancesCount" resultType="java.lang.Integer" parameterType="Map">
-        select count(*) from TaskInstance p where p.instanceId=#{instanceId}
+        select count(*) from TASKINSTANCE p where 1=1
         <if test="keyword!=null and keyword!=''">and p.name like CONCAT(CONCAT('%', #{keyword}), '%')</if>
+        <if test="userId!=null and userId!=''">and p.assigneeId = #{userId}</if>
+        <if test="instanceId!=null and instanceId!=''">and p.instanceId = #{instanceId}</if>
     </select>
    
     <delete id="deleteTaskInstance" parameterType="long" flushCache="true">
-        delete from TaskInstance where id=#{id}
+        delete from TASKINSTANCE where id=#{id}
     </delete>
     <insert id="saveTaskInstance" parameterType="com.ozstrategy.model.flows.TaskInstance" flushCache="true">
         <selectKey keyColumn="id" keyProperty="id" resultType="java.lang.Long">
             select LAST_INSERT_ID()
         </selectKey>
-        insert into TaskInstance(id,taskKey,name,startDate,endDate,overdueDate,elementId,assigneeId,instanceId,remarks,actTaskId,sendEmail,status,createDate,lastUpdateDate,creatorId,lastUpdaterId) 
-        values (#{id},#{taskKey},#{name},#{startDate},#{endDate},#{overdueDate},#{element.id},#{assignee.id},#{instance.id},#{remarks},#{actTaskId},#{sendEmail},#{status},#{createDate},#{lastUpdateDate},#{creator.id},#{lastUpdater.id})
+        insert into TASKINSTANCE(id,taskKey,name,startDate,endDate,overdueDate,elementId,assigneeId,instanceId,remarks,actTaskId,sendEmail,status,processDefId,createDate,lastUpdateDate,creatorId,lastUpdaterId) 
+        values (#{id},#{taskKey},#{name},#{startDate},#{endDate},#{overdueDate},#{element.id},#{assignee.id},#{instance.id},#{remarks},#{actTaskId},#{sendEmail},#{status,typeHandler=org.apache.ibatis.type.EnumTypeHandler},#{processDef.id},#{createDate},#{lastUpdateDate},#{creator.id},#{lastUpdater.id})
     </insert>
 </mapper>

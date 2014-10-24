@@ -7,14 +7,13 @@
     </resultMap>
     
     <update id="updateProcessDef" parameterType="com.ozstrategy.model.flows.ProcessDefVersion" flushCache="true">
-        update ProcessDefVersion f set 
+        update PROECESSDEFVERSION f set 
         f.name=#{name} , 
         f.globalTypeId=#{globalTypeId} , 
         f.version=#{version} , 
         f.actDefId=#{actDefId} , 
         f.actResId=#{actResId} , 
         f.graphResId=#{graphResId} , 
-        f.modelId=#{modelId} , 
         f.documentation=#{documentation} , 
         f.enabled=#{enabled} , 
         f.flowFormId=#{flowFormId} , 
@@ -23,13 +22,13 @@
         where f.id=#{id}
     </update>
     <update id="deleteProcessDefVersion" parameterType="long" flushCache="true">
-        update ProcessDefVersion u set u.enabled=0 where u.id=#{id}
+        update PROECESSDEFVERSION u set u.enabled=0 where u.id=#{id}
     </update>
     <insert id="saveProcessDefVersion" parameterType="com.ozstrategy.model.flows.ProcessDefVersion" flushCache="true">
         <selectKey keyColumn="id" keyProperty="id" resultType="java.lang.Long">
             select LAST_INSERT_ID()
         </selectKey>
-        insert into ProcessDefVersion(id,name,processDefId,flowFormId,globalTypeId,documentation,version,actDefId,actResId,graphResId,modelId,enabled,createDate,lastUpdateDate) 
-        values (#{id},#{name},#{processDefId},#{flowFormId},#{globalTypeId},#{documentation},#{version},#{actDefId},#{actResId},#{graphResId},#{modelId},#{enabled},#{createDate},#{lastUpdateDate})
+        insert into PROECESSDEFVERSION(id,name,processDefId,flowFormId,globalTypeId,documentation,version,actDefId,actResId,graphResId,enabled,createDate,lastUpdateDate) 
+        values (#{id},#{name},#{processDefId},#{flowFormId},#{globalTypeId},#{documentation},#{version},#{actDefId},#{actResId},#{graphResId},#{enabled},#{createDate},#{lastUpdateDate})
     </insert>
 </mapper>

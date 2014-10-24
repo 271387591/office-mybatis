@@ -11,7 +11,9 @@ Ext.define('FlexCenter.FlowIndex', {
         'FlexCenter.flows.view.ProcessDefinitionView',
         'FlexCenter.flows.view.TaskView',
         'FlexCenter.flows.view.ProcessDefInstanceDraftView',
-        'FlexCenter.flows.view.ReplevyTaskView'
+        'FlexCenter.flows.view.ReplevyTaskView',
+        'FlexCenter.flows.view.ApplyProcessHistoryView',
+        'FlexCenter.flows.view.TaskRecordView'
     ],
     initComponent: function() {
         var me=this;
@@ -22,7 +24,8 @@ Ext.define('FlexCenter.FlowIndex', {
                 {"thumb": basePath+"images/task_recurring.png",url:'#taskView',widget:'taskView', "description": "显示当前需要您处理的任务。</br>您目前有<font color='red'>"+taskCount+"</font>条任务需要处理。", "title": "代办事项 ",comments:taskCount},
                 {"thumb": basePath+"images/draft.png",url:'#processDefInstanceDraftView',widget:'processDefInstanceDraftView', "description": "将填写好的流程申请单存为草稿，需要时可直接发起流程。", "title": "草稿箱"},
                 {"thumb": basePath+"images/replay.png",url:'#replevyTaskView',widget:'replevyTaskView', "description": "可以追回当前还未签收的任务，如当前任务为会签状态则不能追回。", "title": "任务追回"},
-                {"thumb": basePath+"images/replay.png",url:'#replevyTaskView',widget:'replevyTaskView', "description": "这里将显示您所申请的流程列表。", "title": "我的申请流程"},
+                {"thumb": basePath+"images/presentation.png",url:'#applyProcessHistoryView',widget:'applyProcessHistoryView', "description": "显示您所申请的流程列表。", "title": "流程申请记录"},
+                {"thumb": basePath+"images/scheduled_tasks.png",url:'#taskRecordView',widget:'taskRecordView', "description": "显示您所有执行过得任务。", "title": "任务执行记录"},
 //                {"thumb": "http://b.vimeocdn.com/ts/166/239/166239450_200.jpg", "description": "33333", "title": "What's New in Ext JS 4 Webinar", "id": "25264626", "name": "25264626"}
             ]}
         ];

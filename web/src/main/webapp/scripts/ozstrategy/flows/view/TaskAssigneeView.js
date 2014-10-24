@@ -82,7 +82,7 @@ Ext.define('FlexCenter.flows.view.TaskAssigneeView',{
                         handler:function(){
                             Ext.Msg.confirm('回退到发起人','该功能将会回到流程发起人任务节点，你确定要回退？',function(btn){
                                 if(btn=='yes'){
-                                    me.returnTask(2);
+                                    me.returnTask();
                                 }
                             });
                         }
@@ -110,7 +110,7 @@ Ext.define('FlexCenter.flows.view.TaskAssigneeView',{
                 ]
             }
         ];
-        me.items=[
+        var items=[
             {
                 xtype:'processDefinitionHeader',
                 record:me.record
@@ -119,15 +119,18 @@ Ext.define('FlexCenter.flows.view.TaskAssigneeView',{
                 xtype:'taskInstanceView',
                 record:me.record,
                 height:250
-            },
-            {
+            }
+        ];
+        if(me.record.formHtml){
+            items.push({
 
                 xtype:'formPreview',
                 title:'填写表单',
                 formValue:me.record.formValue,
                 formHtml:me.record.formHtml
-            }
-        ];
+            });
+        }
+        me.items=items;
         this.callParent();
     },
     completeTask:function(){
@@ -135,6 +138,7 @@ Ext.define('FlexCenter.flows.view.TaskAssigneeView',{
         var value=me.getTaskValue();
         value.taskId=me.record.taskId;
         value.instanceId=me.record.instanceId;
+        value.processDefId=me.record.processDefId;
         ajaxPostRequest('taskController.do?method=completeTask',value,function(result){
             if(result.success){
                 Ext.MessageBox.alert({
@@ -160,7 +164,9 @@ Ext.define('FlexCenter.flows.view.TaskAssigneeView',{
         data.taskId=me.record.taskId;
         data.taskKey=me.record.taskKey;
         data.instanceId=me.record.instanceId;
-        data.turnType=type;
+        if(type==1){
+            data.sourceTask=type;
+        }
         ajaxPostRequest('taskController.do?method=returnTask',data,function(result){
             if(result.success){
                 Ext.MessageBox.alert({
@@ -191,9 +197,12 @@ Ext.define('FlexCenter.flows.view.TaskAssigneeView',{
     getTaskValue:function(){
         var me=this;
         var headerValue= me.down('processDefinitionHeader').getHeaderValue();
-        var formData= me.down('formPreview').getFormValue();
+        var formPreview=me.down('formPreview');
+        if(formPreview){
+            var formData= formPreview.getFormValue();
+            headerValue.formData=Ext.encode(formData,true);
+        }
         var sendEmail= me.down('#sendEmail').getValue();
-        headerValue.formData=Ext.encode(formData,true);
         headerValue.sendEmail=sendEmail;
         headerValue.processDefId=me.record.processDefId;
         return headerValue;

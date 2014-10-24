@@ -20,4 +20,12 @@ public class TaskInstanceManagerImpl implements TaskInstanceManager {
     public List<TaskInstance> listTaskInstances(Map<String, Object> map) {
         return taskInstanceDao.listTaskInstances(map, RowBounds.DEFAULT);
     }
+
+    public List<TaskInstance> listTaskInstanceRecord(Map<String, Object> map, Integer start, Integer limit) {
+        return taskInstanceDao.listTaskInstances(map,new RowBounds(start,limit));
+    }
+
+    public Integer listTaskInstanceRecordCount(Map<String, Object> map) {
+        return taskInstanceDao.listTaskInstancesCount(map);
+    }
 }

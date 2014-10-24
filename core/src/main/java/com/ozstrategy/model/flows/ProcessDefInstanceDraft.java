@@ -7,40 +7,42 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * Created by lihao on 9/27/14.
  */
 @Entity
+@Table(name = "PROCESSDEFINSTANCEDRAFT")
 public class ProcessDefInstanceDraft extends CreatorObject{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column
+    @Column(length = 128,nullable = true)
     private String name;
-    @Column
+    @Column(length = 4000,nullable = true)
     private String description;
-    @Column
+    @Column(nullable = true)
     private Long processDefId;
-    @Column
+    @Column(nullable = true,length = 128)
     private String processDefName;
-    @Column
+    @Column(nullable = false,length = 4)
     private Integer version;
-    @Column
+    @Column(columnDefinition = "char",length = 1)
     private Boolean sendEmail;
-    @Column
+    @Column(nullable = true)
     private Long fileAttachOne;
-    @Column
+    @Column(length = 128,nullable = true)
     private String fileAttachOneName;
-    @Column
+    @Column(nullable = true)
     private Long fileAttachTwo;
-    @Column
+    @Column(length = 128,nullable = true)
     private String fileAttachTwoName;
-    @Column
+    @Column(nullable = true)
     private Long fileAttachThree;
-    @Column
+    @Column(length = 128,nullable = true)
     private String fileAttachThreeName;
-    @Column
+    @Column(nullable = true,length = 2000)
     private String formData;
 
     public Long getId() {

@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.util.Date;
@@ -17,6 +18,7 @@ import java.util.Date;
  * Created by lihao on 9/21/14.
  */
 @Entity
+@Table(name="PROCESSDEFINSTANCE")
 public class ProcessDefInstance extends CreatorObject{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,11 +26,11 @@ public class ProcessDefInstance extends CreatorObject{
     @ManyToOne
     @JoinColumn(name = "processDefId")
     private ProcessDef processDef;
-    @Column
+    @Column(length = 5)
     private Integer version;
-    @Column
+    @Column(length = 32,nullable = true)
     private String actInstanceId;
-    @Column
+    @Column(length = 1,columnDefinition = "char")
     private Boolean suspended;
     @Column
     @Temporal(TemporalType.TIMESTAMP)
@@ -36,9 +38,9 @@ public class ProcessDefInstance extends CreatorObject{
     @Column
     @Temporal(TemporalType.TIMESTAMP)
     private Date endDate;
-    @Column
+    @Column(length = 128,nullable = true)
     private String name;
-    @Column
+    @Column(length = 255,nullable = false)
     private String title;
 
     public Long getId() {

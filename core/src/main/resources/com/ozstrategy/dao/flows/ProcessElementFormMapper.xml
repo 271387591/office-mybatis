@@ -8,39 +8,39 @@
         <association property="processDef" column="processDefId" select="com.ozstrategy.dao.flows.ProcessDefDao.getNoCascadeProcessDefById"/>
     </resultMap>
     <select id="listProcessElementForms" resultMap="processFormFiledInstanceResult" parameterType="Map">
-        select f.* from ProcessElementForm f where 1=1
+        select f.* from PROCESSELEMENTFORM f where 1=1
     </select>
     <select id="listProcessElementFormsCount" resultType="java.lang.Integer" parameterType="Map">
-        select count(*) from ProcessElementForm f where 1=1
+        select count(*) from PROCESSELEMENTFORM f where 1=1
     </select>
     
     <select id="getProcessElementFormById" resultMap="processFormFiledInstanceResult" parameterType="long">
-        select f.* from ProcessElementForm f where f.id=#{id} 
+        select f.* from PROCESSELEMENTFORM f where f.id=#{id} 
     </select>
     <select id="getProcessElementFormsByEid" resultMap="processFormFiledInstanceResult" parameterType="long">
-        select f.* from ProcessElementForm f where f.processElementId=#{id} 
+        select f.* from PROCESSELEMENTFORM f where f.processElementId=#{id} 
     </select>
     <select id="getDefFormFieldByFormId" resultMap="processFormFiledInstanceResult" parameterType="Map">
         select fdf.*,pf.chmod,pf.expression,pf.formFieldId,pf.processDefId,pf.id as pfId,pf.processElementId from(
         select fd.* from FormField fd join (
         select * from FlowForm ff where ff.parentId=#{formId} or ff.id=#{formId}
         )fl on fd.flowFormId=fl.id where fd.xtype!='detailGrid'
-        )fdf left join ProcessElementForm pf on fdf.id=pf.formFieldId 
+        )fdf left join PROCESSELEMENTFORM pf on fdf.id=pf.formFieldId 
         <where>
             <if test="processElementId!=null">pf.processElementId=#{processElementId}</if>
         </where>
     </select>
     <delete id="deleteProcessElementForm" parameterType="long" flushCache="true">
-        delete from ProcessElementForm where id=#{id}
+        delete from PROCESSELEMENTFORM where id=#{id}
     </delete>
     <delete id="deleteProcessElementFormByElementId" parameterType="long" flushCache="true">
-        delete from ProcessElementForm where processElementId=#{processElementId}
+        delete from PROCESSELEMENTFORM where processElementId=#{processElementId}
     </delete>
     <delete id="deleteProcessElementFormByDefId" parameterType="long" flushCache="true">
-        delete from ProcessElementForm where processDefId=#{processElementId}
+        delete from PROCESSELEMENTFORM where processDefId=#{processElementId}
     </delete>
     <update id="updateProcessElementForm" parameterType="com.ozstrategy.model.flows.ProcessElementForm" flushCache="true">
-        update ProcessElementForm f set 
+        update PROCESSELEMENTFORM f set 
         f.chmod=#{chmod} , 
         f.processElementId=#{processElement.id}, 
         f.processDefId=#{processDef.id}, 
@@ -54,7 +54,7 @@
         <selectKey keyColumn="id" keyProperty="id" resultType="java.lang.Long">
             select LAST_INSERT_ID()
         </selectKey>
-        insert into ProcessElementForm(id,name,type,variable,chmod,processElementId,processDefId,expression) 
+        insert into PROCESSELEMENTFORM(id,name,type,variable,chmod,processElementId,processDefId,expression) 
         values (#{id},#{name},#{type},#{variable},#{chmod},#{processElement.id},#{processDef.id},#{expression})
     </insert>
 </mapper>

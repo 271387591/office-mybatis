@@ -7,38 +7,38 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * Created by lihao on 9/20/14.
  */
 @Entity
+@Table(name = "PROECESSDEFVERSION")
 public class ProcessDefVersion extends BaseObject{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column
+    @Column(length = 128,nullable = true)
     private String name;
-    @Column
+    @Column(nullable = true)
     private Long globalTypeId;
-    @Column
+    @Column(nullable = true,length = 128)
     private String category;
-    @Column
+    @Column(nullable = true,length = 4)
     private Integer version;
-    @Column
+    @Column(nullable = true,length = 64)
     private String actDefId;
-    @Column
+    @Column(nullable = true,length = 64)
     private String actResId;
-    @Column
+    @Column(nullable = true,length = 64)
     private String graphResId;
-    @Column
-    private String modelId;
-    @Column
+    @Column(nullable = true)
     private Long flowFormId;
     @Column(columnDefinition = "TEXT")
     private String documentation;
-    @Column
+    @Column(columnDefinition = "char",length = 1)
     private Boolean enabled=Boolean.TRUE;
-    @Column
+    @Column(nullable = true)
     private Long processDefId;
 
     public ProcessDefVersion() {
@@ -52,7 +52,6 @@ public class ProcessDefVersion extends BaseObject{
         this.actResId= def.getActResId();
         this.actDefId= def.getActDefId();
         this.graphResId= def.getGraphResId();
-        this.modelId= def.getModelId();
         this.flowFormId= def.getFlowForm().getId();
         this.documentation= def.getDocumentation();
         this.enabled=def.getEnabled();
@@ -122,14 +121,6 @@ public class ProcessDefVersion extends BaseObject{
 
     public void setGraphResId(String graphResId) {
         this.graphResId = graphResId;
-    }
-
-    public String getModelId() {
-        return modelId;
-    }
-
-    public void setModelId(String modelId) {
-        this.modelId = modelId;
     }
 
     public Long getFlowFormId() {

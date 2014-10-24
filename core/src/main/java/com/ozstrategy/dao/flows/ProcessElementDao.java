@@ -18,19 +18,16 @@ public interface ProcessElementDao {
     List<User> getProcessElementUsers(Long id);
     ProcessElement getProcessElementById(Long id);
     ProcessElement getProcessElementByTaskKeyAndDefId(@Param("defId")Long defId,@Param("taskKey")String taskKey);
+    ProcessElement getSignProcessElementByTaskKeyAndDefId(@Param("defId")Long defId,@Param("taskKey")String taskKey);
+    ProcessElement getProcessElementByTaskKeyAndActDefId(@Param("actDefId")String actDefId,@Param("taskKey")String taskKey);
     Integer listProcessElementsCount(Map<String,Object> map);
     void saveProcessElement(ProcessElement ProcessElement);
     void updateProcessElement(ProcessElement ProcessElement);
     void deleteProcessElement(Long id);
     void deleteProcessElementByDefId(Long defId);
 
-    void saveProcessElementRole(@Param("roleId")Long roleId,@Param("id")Long id);
-    void deleteProcessElementRoleById(@Param("id")Long id);
-
     void saveProcessElementUser(@Param("userId")Long userId,@Param("id")Long id);
     void deleteProcessElementUserById(@Param("id")Long id);
-    
-    void updateActResource(ProcessElement ProcessElement);
 
     ProcessElement loadElementActResource(Long id);
 }
