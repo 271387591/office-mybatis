@@ -89,12 +89,12 @@ public class ProcessDefManagerTest extends BaseManagerTestCase  {
     @Test
     @Rollback(value = false)
     public void testDeploy() throws Exception {
-        String path=ProcessDefManagerTest.class.getClassLoader().getResource("bpmn.xml").getPath();
+        String path=ProcessDefManagerTest.class.getClassLoader().getResource("bpmnsign.xml").getPath();
         String value= FileUtils.readFileToString(new File(path));
         
         
         Deployment deployment = repositoryService.createDeployment()
-                .addString("huiqian-model.bpmn", value).name("会签流程").category("行政").enableDuplicateFiltering()
+                .addString("listener-model.bpmn", value).name("流程会签").category("行政").enableDuplicateFiltering()
                 .deploy();
 //
 //        // 4. Start a process instance

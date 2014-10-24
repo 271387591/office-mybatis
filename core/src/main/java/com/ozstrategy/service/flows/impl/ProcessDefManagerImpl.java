@@ -109,6 +109,10 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
         return processDefDao.getProcessDefById(id);
     }
 
+    public ProcessDef getProcessDefByActDefId(String actDefId) {
+        return processDefDao.getProcessDefByActId(actDefId);
+    }
+
     @Transactional(rollbackFor = {Throwable.class})
     public void save(ProcessDef processDef) {
         processDefDao.saveProcessDef(processDef);

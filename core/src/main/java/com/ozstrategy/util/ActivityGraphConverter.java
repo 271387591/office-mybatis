@@ -16,10 +16,12 @@ import com.ozstrategy.model.flows.ProcessDef;
 import com.ozstrategy.model.flows.TaskType;
 import com.sun.org.apache.xerces.internal.dom.ParentNode;
 import org.activiti.bpmn.BpmnAutoLayout;
+import org.activiti.bpmn.model.ActivitiListener;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.EndEvent;
 import org.activiti.bpmn.model.FlowElement;
 import org.activiti.bpmn.model.FormProperty;
+import org.activiti.bpmn.model.ImplementationType;
 import org.activiti.bpmn.model.MultiInstanceLoopCharacteristics;
 import org.activiti.bpmn.model.SequenceFlow;
 import org.activiti.bpmn.model.StartEvent;
@@ -62,6 +64,13 @@ public class ActivityGraphConverter implements EditorJsonConstants, StencilConst
     public final static String GRAPH_GATEWAY="gateway";
     public final static String TASK_COUNTERSIGN="countersign";
     public final static String TASK_COUNTERSIGN_CONDITION="${multiInstanceLoopService.canComplete(execution,nrOfInstances, nrOfActiveInstances, nrOfCompletedInstances, loopCounter)}";
+
+    public final static String LISTENER_EVENTNAME_CREATE = "create";
+    public final static String LISTENER_EVENTNAME_ASSIGNMENT = "assignment";
+    public final static String LISTENER_EVENTNAME_COMPLETE = "complete";
+    public final static String LISTENER_EVENTNAME_DELETE = "delete";
+    public final static String LISTENER_CREATE_DELEGATEEXPRESSION = "${taskCreateService}";
+    public final static String LISTENER_COMPLETE_DELEGATEEXPRESSION = "${taskCompleteService}";
     
     
     public static BpmnModel createBpmnModel(mxGraphModel graphModel,ProcessDef def) throws Exception{
@@ -140,6 +149,16 @@ public class ActivityGraphConverter implements EditorJsonConstants, StencilConst
         userTask.setId(EDITOR_SHAPE_ID_PREFIX + cell.getId());
         userTask.setDocumentation(cell.getAttribute(PROPERTY_DOCUMENTATION,""));
         userTask.setAsynchronous(BooleanUtils.toBooleanObject(StringUtils.defaultIfEmpty(cell.getAttribute(PROPERTY_ASYNCHRONOUS),"No")));
+
+
+        List<ActivitiListener> listeners=new ArrayList<ActivitiListener>();
+        //add complete listener
+        ActivitiListener activitiListener=new ActivitiListener();
+        activitiListener.setEvent(LISTENER_EVENTNAME_COMPLETE);
+        activitiListener.setImplementationType(ImplementationType.IMPLEMENTATION_TYPE_DELEGATEEXPRESSION);
+        activitiListener.setImplementation(LISTENER_COMPLETE_DELEGATEEXPRESSION);
+        listeners.add(activitiListener);
+        userTask.setTaskListeners(listeners);
         
         String usertaskassignment=cell.getAttribute(PROPERTY_USERTASK_ASSIGNMENT);
         Set<String> userSet=new HashSet<String>();
@@ -166,50 +185,6 @@ public class ActivityGraphConverter implements EditorJsonConstants, StencilConst
         userList.addAll(userSet);
         userTask.setCandidateUsers(userList);
         
-        
-//        String assignee= cell.getAttribute(PROPERTY_USERTASK_ASSIGNEE,"");
-//        if(StringUtils.isNotEmpty(assignee)){
-//            try {
-//                JsonNode assigneeNode = objectMapper.readTree(assignee);
-//                if(assigneeNode.size()>0){
-//                    String assignees = assigneeNode.get("resourceassignmentexpr").asText();
-//                    userTask.setAssignee(assignees);
-//                }
-//            } catch (IOException e) {
-//            }
-//        }
-//        Set<String> userSet=new HashSet<String>();
-//        String candidateUsers= cell.getAttribute(PROPERTY_USERTASK_CANDIDATE_USERS,"");
-//        if(StringUtils.isNotEmpty(candidateUsers)){
-//            try {
-//                JsonNode candidateUsersNode = objectMapper.readTree(candidateUsers);
-//                if(candidateUsersNode!=null && candidateUsersNode.size()>0){
-//                    String candidateUser=candidateUsersNode.get("resourceassignmentexpr").asText();
-//                    String[] strings=candidateUser.split(",");
-//                    List<String> users = Arrays.asList(strings);
-//                    userSet.addAll(users);
-//                }
-//            } catch (IOException e) {
-//            }
-//        }
-//        String candidateRoles= cell.getAttribute(CANDIDATE_ROLES);
-//        if(StringUtils.isNotEmpty(candidateRoles)){
-//            try {
-//                JsonNode candidateRolesNode = objectMapper.readTree(candidateRoles);
-//                if(candidateRolesNode!=null && candidateRolesNode.size()>0){
-//                    String candidateUser=candidateRolesNode.get("resourceassignmentexpr").asText();
-//                    String[] strings=candidateUser.split(",");
-//                    List<String> users = Arrays.asList(strings);
-//                    userSet.addAll(users);
-//                    
-//                }
-//            } catch (IOException e) {
-//            }
-//        }
-//        List<String> userList=new ArrayList<String>();
-//        userList.addAll(userSet);
-//        userTask.setCandidateUsers(userList);
-
         String countersign=cell.getAttribute(TASK_TYPE);
         if(StringUtils.isNotEmpty(countersign) && StringUtils.equals(countersign, TaskType.Countersign.name())){
             MultiInstanceLoopCharacteristics multiInstanceLoopCharacteristics=new MultiInstanceLoopCharacteristics();

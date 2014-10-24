@@ -20,6 +20,8 @@ public interface ProcessDefManager {
     ProcessDef getProcessDefByName(String name,Long typeId);
     Long checkNameExist(String name,Long typeId);
     ProcessDef getProcessDefById(Long id);
+    ProcessDef getProcessDefByActDefId(String actDefId);
+    
     void save(ProcessDef processDef);
     void update(ProcessDef processDef,String graRes) throws IOException,Exception;
     String getRes(String resId,String resName,String taskKey)throws IOException,ActivitiObjectNotFoundException;

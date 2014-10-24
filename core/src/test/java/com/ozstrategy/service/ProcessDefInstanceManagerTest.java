@@ -98,10 +98,10 @@ public class ProcessDefInstanceManagerTest extends BaseManagerTestCase  {
 //        taskServiceImpl.getCommandExecutor().execute(jumpActivityCmd);
 //        
 //        
-        List<Task> tasks = taskService.createTaskQuery().taskAssignee("dynamic").processInstanceId("130005").list();
+        List<Task> tasks = taskService.createTaskQuery().taskAssignee("dynamic").processInstanceId("220005").list();
         for(Task task : tasks){
             Map<String,Object> map=new HashMap<String, Object>();
-            map.put("signAssignee", Arrays.asList("user"));
+//            map.put("signAssignee", Arrays.asList("user","dep","hr"));
             taskService.complete(task.getId(), map);
         }
         

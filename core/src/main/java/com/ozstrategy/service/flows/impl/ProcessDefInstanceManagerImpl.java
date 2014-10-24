@@ -96,26 +96,26 @@ public class ProcessDefInstanceManagerImpl implements ProcessDefInstanceManager 
         }else{
             task.setAssignee(username);
         }
-        List<ProcessElement> signTasks=new ArrayList<ProcessElement>();
-        ProcessElement processElement=processElementDao.getProcessElementByTaskKeyAndDefId(def.getId(),task.getTaskDefinitionKey());
-        if(processElement==null){
-            throw new OzException(Constants.MESSAGE_START_PROCESS_NOT_FOUND_START_TASK);
-        }
-        String nextTask=processElement.getNextTaskKeys();
-        if(StringUtils.isNotEmpty(nextTask)){
-            String[] nextTasks=nextTask.split(",");
-            for(String nextKey:nextTasks){
-                ProcessElement next=processElementDao.getSignProcessElementByTaskKeyAndDefId(def.getId(),nextKey);
-                if(next!=null){
-                    signTasks.add(next);
-                }
-            }
-        }
-        if(signTasks.size()>0){
-            for(ProcessElement element : signTasks){
-                variables.putAll(element.getCountersignMap());
-            }
-        }
+//        List<ProcessElement> signTasks=new ArrayList<ProcessElement>();
+//        ProcessElement processElement=processElementDao.getProcessElementByTaskKeyAndDefId(def.getId(),task.getTaskDefinitionKey());
+//        if(processElement==null){
+//            throw new OzException(Constants.MESSAGE_START_PROCESS_NOT_FOUND_START_TASK);
+//        }
+//        String nextTask=processElement.getNextTaskKeys();
+//        if(StringUtils.isNotEmpty(nextTask)){
+//            String[] nextTasks=nextTask.split(",");
+//            for(String nextKey:nextTasks){
+//                ProcessElement next=processElementDao.getSignProcessElementByTaskKeyAndDefId(def.getId(),nextKey);
+//                if(next!=null){
+//                    signTasks.add(next);
+//                }
+//            }
+//        }
+//        if(signTasks.size()>0){
+//            for(ProcessElement element : signTasks){
+//                variables.putAll(element.getCountersignMap());
+//            }
+//        }
         
         taskService.complete(task.getId(),variables);
         ProcessDefInstance defInstance=new ProcessDefInstance();

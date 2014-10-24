@@ -150,36 +150,14 @@ public class TaskManagerImpl implements TaskManager{
         if(StringUtils.isNotEmpty(taskId)){
             org.activiti.engine.task.Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
             if(task==null){
-                throw new OzException(Constants.MESSAGE_START_PROCESS_NOT_FOUND_START_TASK);
+                throw new OzException(Constants.MESSAGE_COMPLETE_TASK_NOT_FOUND_TASK);
             }
-            checkSignTask(def,task,variables);
             taskService.complete(taskId,variables);
             HistoricTaskInstance historicTaskInstance=historyService.createHistoricTaskInstanceQuery().taskId(taskId).singleResult();
             saveTaskInstance(user,historicTaskInstance,map,TaskInstanceStatus.Complete);
         }
     }
-    private void checkSignTask(ProcessDef def, org.activiti.engine.task.Task task,Map<String,Object> variables)  throws OzException{
-        List<ProcessElement> signTasks=new ArrayList<ProcessElement>();
-        ProcessElement processElement=processElementDao.getProcessElementByTaskKeyAndDefId(def.getId(),task.getTaskDefinitionKey());
-        if(processElement==null){
-            throw new OzException(Constants.MESSAGE_START_PROCESS_NOT_FOUND_START_TASK);
-        }
-        String nextTask=processElement.getNextTaskKeys();
-        if(StringUtils.isNotEmpty(nextTask)){
-            String[] nextTasks=nextTask.split(",");
-            for(String nextKey:nextTasks){
-                ProcessElement next=processElementDao.getSignProcessElementByTaskKeyAndDefId(def.getId(),nextKey);
-                if(next!=null){
-                    signTasks.add(next);
-                }
-            }
-        }
-        if(signTasks.size()>0){
-            for(ProcessElement element : signTasks){
-                variables.putAll(element.getCountersignMap());
-            }
-        }
-    }
+    
 
     private void saveTaskInstance(User user,HistoricTaskInstance task,Map<String,Object> map,TaskInstanceStatus status){
         TaskInstance instance=new TaskInstance();

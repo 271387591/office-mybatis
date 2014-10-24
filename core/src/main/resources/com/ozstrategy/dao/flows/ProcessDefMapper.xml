@@ -59,14 +59,9 @@
         select f.* from PROCESSDEF f where f.enabled=1 and f.id=#{id} 
     </select>
     <select id="getProcessDefByActId" resultMap="processDefResult" parameterType="string">
-        select f.* from PROCESSDEF f where f.actId=#{actId} and f.enabled=1 
+        select f.* from PROCESSDEF f where f.actDefId=#{actDefId} and f.enabled=1 
     </select>
-    <select id="getProcessDefByModelId" resultMap="processDefResult" parameterType="string">
-        select f.* from PROCESSDEF f where f.modelId=#{modelId} and f.enabled=1 
-    </select>
-    <select id="getProcessDefByDepId" resultMap="processDefResult" parameterType="string">
-        select f.* from PROCESSDEF f where f.depId=#{depId} and f.enabled=1 
-    </select>
+    
     <select id="getNoCascadeProcessDefById" resultType="com.ozstrategy.model.flows.ProcessDef" parameterType="long">
         select f.* from PROCESSDEF f where f.id=#{id} and f.enabled=1
     </select>
