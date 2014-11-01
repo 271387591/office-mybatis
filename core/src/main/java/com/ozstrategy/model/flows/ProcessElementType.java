@@ -6,6 +6,7 @@ package com.ozstrategy.model.flows;
 public enum  ProcessElementType {
     SequenceFlow("SequenceFlow"),
     StartNoneEvent("StartEvent"),
+    SubProcess("SubProcess"),
     UserTask("UserTask"),
     EndNoneEvent("EndEvent");
     private String name;

@@ -7,13 +7,17 @@ import com.ozstrategy.dao.flows.ProcessDefInstanceDao;
 import com.ozstrategy.dao.flows.ProcessElementDao;
 import com.ozstrategy.dao.flows.ProcessFileAttachDao;
 import com.ozstrategy.dao.flows.TaskInstanceDao;
+import com.ozstrategy.dao.flows.TaskLinkTaskDao;
 import com.ozstrategy.exception.OzException;
 import com.ozstrategy.model.flows.ProcessDef;
+import com.ozstrategy.model.flows.ProcessDefHasType;
 import com.ozstrategy.model.flows.ProcessDefInstance;
 import com.ozstrategy.model.flows.ProcessElement;
 import com.ozstrategy.model.flows.ProcessFileAttach;
 import com.ozstrategy.model.flows.TaskInstance;
 import com.ozstrategy.model.flows.TaskInstanceStatus;
+import com.ozstrategy.model.flows.TaskLinkTask;
+import com.ozstrategy.model.flows.TaskType;
 import com.ozstrategy.model.userrole.User;
 import com.ozstrategy.service.flows.ProcessDefInstanceManager;
 import org.activiti.engine.HistoryService;
@@ -32,11 +36,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by lihao on 9/27/14.
@@ -63,6 +67,8 @@ public class ProcessDefInstanceManagerImpl implements ProcessDefInstanceManager 
     private TaskInstanceDao taskInstanceDao;
     @Autowired
     private ProcessFileAttachDao processFileAttachDao;
+    @Autowired
+    private TaskLinkTaskDao taskLinkTaskDao;
     
     @Transactional(rollbackFor = Throwable.class)
     public void runStartNoneEventPro(User user, ProcessDef def,Map<String,Object> map) throws OzException,Exception{
@@ -96,6 +102,29 @@ public class ProcessDefInstanceManagerImpl implements ProcessDefInstanceManager 
         }else{
             task.setAssignee(username);
         }
+        if(def.getHasType()== ProcessDefHasType.HasSign){
+            Set<ProcessElement> elements=def.getElements();
+            if(elements!=null && elements.size()>0){
+                for (ProcessElement element : elements){
+                    if(element.getTaskType()== TaskType.Countersign){
+                        Map<String,Object> signMap=element.getCountersignMap();
+                        for(String key:signMap.keySet()){
+                            if(key.contains("signAssignee_")){
+                                List<String> list=(List<String>)signMap.get(key);
+                                for(int i=0;i<list.size();i++){
+                                    String item=list.get(i);
+                                    if(item.contains("${")){
+                                        list.set(i,username);
+                                        break;
+                                    }
+                                }
+                                variables.put(key,list);
+                            }
+                        }
+                    }
+                }
+            }
+        }
 //        List<ProcessElement> signTasks=new ArrayList<ProcessElement>();
 //        ProcessElement processElement=processElementDao.getProcessElementByTaskKeyAndDefId(def.getId(),task.getTaskDefinitionKey());
 //        if(processElement==null){
@@ -118,6 +147,24 @@ public class ProcessDefInstanceManagerImpl implements ProcessDefInstanceManager 
 //        }
         
         taskService.complete(task.getId(),variables);
+        //save TaskLinkTask
+        List<Task> currentTasks=taskService.createTaskQuery().processDefinitionId(instance.getProcessDefinitionId()).processInstanceId(instance.getProcessInstanceId()).list();
+        if(currentTasks!=null && currentTasks.size()>0){
+            for(Task currentTask : currentTasks){
+                TaskLinkTask taskLinkTask=new TaskLinkTask();
+                taskLinkTask.setCreateDate(new Date());
+                taskLinkTask.setLastUpdateDate(new Date());
+                taskLinkTask.setFromTaskAssignee(username);
+                taskLinkTask.setFromTaskKey(task.getTaskDefinitionKey());
+                taskLinkTask.setActInstanceId(instance.getProcessInstanceId());
+                taskLinkTask.setCurrentTaskId(currentTask.getId());
+                taskLinkTask.setCurrentTaskKey(currentTask.getTaskDefinitionKey());
+                taskLinkTask.setFromTaskType(TaskType.Starter);
+                taskLinkTask.setFromTaskId(task.getId());
+                taskLinkTaskDao.insert(taskLinkTask);
+            }
+        }
+        //save ProcessDefInstance
         ProcessDefInstance defInstance=new ProcessDefInstance();
         defInstance.setActInstanceId(instance.getProcessInstanceId());
         defInstance.setProcessDef(def);
@@ -144,6 +191,7 @@ public class ProcessDefInstanceManagerImpl implements ProcessDefInstanceManager 
                 }
             }
         }
+        //save TaskInstance
         List<HistoricTaskInstance> taskInstances=historyService.createHistoricTaskInstanceQuery().processInstanceId(instance.getProcessInstanceId()).finished().list();
         if(taskInstances!=null && taskInstances.size()>0){
             for(HistoricTaskInstance historicTaskInstance:taskInstances){

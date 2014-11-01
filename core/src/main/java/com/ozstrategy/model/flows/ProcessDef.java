@@ -9,10 +9,13 @@ import com.ozstrategy.model.userrole.User;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -30,7 +33,12 @@ import java.util.Set;
  * Created by lihao on 9/9/14.
  */
 @Entity
-@Table(name = "PROCESSDEF")
+@Table(name = "PROCESSDEF",indexes = {
+        @Index(columnList = "actDefId"),
+        @Index(columnList = "actResId"),
+        @Index(columnList = "graphResId"),
+        @Index(columnList = "globalTypeId")
+})
 public class ProcessDef extends BaseObject {
     public static final String ACT_RES="ACT_RES_"; 
     public static final String GRA_RES="GRA_RES_"; 
@@ -53,6 +61,9 @@ public class ProcessDef extends BaseObject {
     private String actResId;
     @Column(nullable = true,length = 64)
     private String graphResId;
+    @Column(name = "hasType",length = 16)
+    @Enumerated(EnumType.STRING)
+    private ProcessDefHasType hasType;
     @Column
     @Temporal(TemporalType.TIMESTAMP)
     private Date deployDate;
@@ -224,6 +235,14 @@ public class ProcessDef extends BaseObject {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public ProcessDefHasType getHasType() {
+        return hasType;
+    }
+
+    public void setHasType(ProcessDefHasType hasType) {
+        this.hasType = hasType;
     }
 
     public String getActRes(){

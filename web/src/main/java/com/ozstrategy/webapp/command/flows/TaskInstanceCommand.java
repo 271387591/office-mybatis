@@ -47,7 +47,9 @@ public class TaskInstanceCommand extends CreatorObjcetCommand{
         this.actTaskId= instance.getActTaskId();
         this.sendEmail= instance.getSendEmail();
         this.status= instance.getStatus().name();
-        this.durationIn=endDate.getTime()-startDate.getTime();
+        if(endDate!=null && startDate!=null){
+            this.durationIn=endDate.getTime()-startDate.getTime();
+        }
         this.processDefId=instance.getProcessDef()!=null?instance.getProcessDef().getId():null;
         this.processName=instance.getProcessDef()!=null?instance.getProcessDef().getName():null;
         this.processVersion=instance.getProcessDef()!=null?instance.getProcessDef().getVersion():null;

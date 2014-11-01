@@ -22,4 +22,5 @@ public interface TaskManager {
     void returnTask(String taskId, String taskKey, String sourceActivity, User creator,Map<String,Object> map) throws Exception;
     void replevyTask(String taskId, String taskKey,String sourceActivity, User creator,Map<String,Object> map) throws Exception;
     void complete(User user,ProcessDef def,String taskId, Map<String, Object> map) throws Exception;
+    void sign(User user,ProcessDef def,String taskId, Map<String, Object> map) throws Exception;
 }

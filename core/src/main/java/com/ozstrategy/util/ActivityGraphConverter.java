@@ -25,6 +25,7 @@ import org.activiti.bpmn.model.ImplementationType;
 import org.activiti.bpmn.model.MultiInstanceLoopCharacteristics;
 import org.activiti.bpmn.model.SequenceFlow;
 import org.activiti.bpmn.model.StartEvent;
+import org.activiti.bpmn.model.SubProcess;
 import org.activiti.bpmn.model.UserTask;
 import org.activiti.editor.constants.EditorJsonConstants;
 import org.activiti.editor.constants.StencilConstants;
@@ -57,11 +58,14 @@ public class ActivityGraphConverter implements EditorJsonConstants, StencilConst
     public static final String CANDIDATE_ROLES ="candidateRoles";
     public final static String INITIATOR_EXPRESSION="starter";
     public final static String EDITOR_SHAPE_ID_PREFIX="T_";
+    public final static String EDITOR_SHAPE_SUB_ID_PREFIX="SUP_";
     public final static String PROCESS_PREFIX="P_";
     public final static String TASK_TYPE="tasktype";
     public final static String TASK_ATTR="taskAttr";
     public final static String GRAPH_TYPE="type";
     public final static String GRAPH_GATEWAY="gateway";
+    public final static String GRAPH_SUBPROCESS="subProcess";
+    public final static String GRAPH_END="endEvent";
     public final static String TASK_COUNTERSIGN="countersign";
     public final static String TASK_COUNTERSIGN_CONDITION="${multiInstanceLoopService.canComplete(execution,nrOfInstances, nrOfActiveInstances, nrOfCompletedInstances, loopCounter)}";
 
@@ -71,14 +75,23 @@ public class ActivityGraphConverter implements EditorJsonConstants, StencilConst
     public final static String LISTENER_EVENTNAME_DELETE = "delete";
     public final static String LISTENER_CREATE_DELEGATEEXPRESSION = "${taskCreateService}";
     public final static String LISTENER_COMPLETE_DELEGATEEXPRESSION = "${taskCompleteService}";
+    public final static String LISTENER_ENDEVENT_DELEGATEEXPRESSION = "${endEventEndService}";
+    public final static String LISTENER_ENDEVENT_START = "start";
+    public final static String LISTENER_ENDEVENT_END = "end";
+    public final static String LISTENER_ENDEVENT_TAKE = "take";
     
     
-    public static BpmnModel createBpmnModel(mxGraphModel graphModel,ProcessDef def) throws Exception{
+    
+    
+    
+    public static BpmnModel createBpmnModel(mxGraphModel graphModel) throws Exception{
         BpmnModel model = new BpmnModel();
         org.activiti.bpmn.model.Process process = new org.activiti.bpmn.model.Process();
-        process.setDocumentation(def.getDocumentation());
-        process.setName(def.getName());
-        process.setId(PROCESS_PREFIX+def.getId());
+        mxCell root=(mxCell)graphModel.getRoot();
+        if(root==null) return null;
+        process.setDocumentation(root.getAttribute("documentation"));
+        process.setName(root.getAttribute("name"));
+        process.setId(PROCESS_PREFIX+System.currentTimeMillis());
         Map<String,Object> map = graphModel.getCells();
         if(map!=null && map.size()>0){
             for(String key : map.keySet()){
@@ -91,6 +104,10 @@ public class ActivityGraphConverter implements EditorJsonConstants, StencilConst
                     int edgeCount=cell.getEdgeCount();
                     if(StringUtils.equals(STENCIL_EVENT_START_NONE,stencil) && edgeCount>1){
                         throw new OzException(Constants.MESSAGE_PROCESS_DEPLOYED_PROCESS_START_NODE_HAS_ONE_MORE_TASK);
+                    }
+                    mxCell parent=(mxCell)cell.getParent();
+                    if(parent!=null && StringUtils.equals(parent.getAttribute(GRAPH_TYPE),GRAPH_SUBPROCESS)){
+                        continue;
                     }
                     FlowElement element=createFlowElement(cell,stencil);
                     if(element!=null){
@@ -119,7 +136,9 @@ public class ActivityGraphConverter implements EditorJsonConstants, StencilConst
         }else if(StringUtils.equals(stencil,STENCIL_GATEWAY_INCLUSIVE)){
         }else if(StringUtils.equals(stencil,STENCIL_GATEWAY_EVENT)){
         }else if(StringUtils.equals(stencil,STENCIL_SUB_PROCESS)){
+            element=createSubProcess(cell);
         }else if(StringUtils.equals(stencil,STENCIL_EVENT_SUB_PROCESS)){
+            element=createSubProcess(cell);
         }else if(StringUtils.equals(stencil,STENCIL_SEQUENCE_FLOW)){
             element=createSequenceFlow(cell);
         }
@@ -141,6 +160,16 @@ public class ActivityGraphConverter implements EditorJsonConstants, StencilConst
         endEvent.setId(EDITOR_SHAPE_ID_PREFIX + cell.getId());
         endEvent.setName(cell.getAttribute(PROPERTY_NAME));
         endEvent.setDocumentation(cell.getAttribute(PROPERTY_DOCUMENTATION,""));
+        mxCell parent=(mxCell)cell.getParent();
+        if(!StringUtils.equals(parent.getAttribute(GRAPH_TYPE),GRAPH_SUBPROCESS)){
+            List<ActivitiListener> listeners=new ArrayList<ActivitiListener>();
+            ActivitiListener activitiListener=new ActivitiListener();
+            activitiListener.setEvent(LISTENER_ENDEVENT_END);
+            activitiListener.setImplementationType(ImplementationType.IMPLEMENTATION_TYPE_DELEGATEEXPRESSION);
+            activitiListener.setImplementation(LISTENER_ENDEVENT_DELEGATEEXPRESSION);
+            listeners.add(activitiListener);
+            endEvent.setExecutionListeners(listeners);
+        }
         return endEvent;
     }
     public static UserTask createUserTask(mxCell cell){
@@ -151,14 +180,14 @@ public class ActivityGraphConverter implements EditorJsonConstants, StencilConst
         userTask.setAsynchronous(BooleanUtils.toBooleanObject(StringUtils.defaultIfEmpty(cell.getAttribute(PROPERTY_ASYNCHRONOUS),"No")));
 
 
-        List<ActivitiListener> listeners=new ArrayList<ActivitiListener>();
+//        List<ActivitiListener> listeners=new ArrayList<ActivitiListener>();
         //add complete listener
-        ActivitiListener activitiListener=new ActivitiListener();
-        activitiListener.setEvent(LISTENER_EVENTNAME_COMPLETE);
-        activitiListener.setImplementationType(ImplementationType.IMPLEMENTATION_TYPE_DELEGATEEXPRESSION);
-        activitiListener.setImplementation(LISTENER_COMPLETE_DELEGATEEXPRESSION);
-        listeners.add(activitiListener);
-        userTask.setTaskListeners(listeners);
+//        ActivitiListener activitiListener=new ActivitiListener();
+//        activitiListener.setEvent(LISTENER_EVENTNAME_COMPLETE);
+//        activitiListener.setImplementationType(ImplementationType.IMPLEMENTATION_TYPE_DELEGATEEXPRESSION);
+//        activitiListener.setImplementation(LISTENER_COMPLETE_DELEGATEEXPRESSION);
+//        listeners.add(activitiListener);
+//        userTask.setTaskListeners(listeners);
         
         String usertaskassignment=cell.getAttribute(PROPERTY_USERTASK_ASSIGNMENT);
         Set<String> userSet=new HashSet<String>();
@@ -168,14 +197,16 @@ public class ActivityGraphConverter implements EditorJsonConstants, StencilConst
                 Iterator<JsonNode> iterator=jsonNode.iterator();
                 while (iterator.hasNext()){
                     JsonNode next=iterator.next();
-                    String assignment_type = next.get(PROPERTY_USERTASK_ASSIGNMENT_TYPE).asText();
-                    String resourceassignmentexpr=next.get(PROPERTY_USERTASK_ASSIGNMENT_EXPRESSION).asText();
-                    if(StringUtils.equals(assignment_type,PROPERTY_USERTASK_ASSIGNEE)){
-                        userTask.setAssignee(resourceassignmentexpr);
-                    }else if(StringUtils.equals(assignment_type,PROPERTY_USERTASK_CANDIDATE_USERS) || StringUtils.equals(assignment_type,CANDIDATE_ROLES)){
-                        String[] strings=resourceassignmentexpr.split(",");
-                        List<String> users = Arrays.asList(strings);
-                        userSet.addAll(users);
+                    if(next.size()>0){
+                        String assignment_type = next.get(PROPERTY_USERTASK_ASSIGNMENT_TYPE).asText();
+                        String resourceassignmentexpr=next.get(PROPERTY_USERTASK_ASSIGNMENT_EXPRESSION).asText();
+                        if(StringUtils.equals(assignment_type,PROPERTY_USERTASK_ASSIGNEE)){
+                            userTask.setAssignee(resourceassignmentexpr);
+                        }else if(StringUtils.equals(assignment_type,PROPERTY_USERTASK_CANDIDATE_USERS) || StringUtils.equals(assignment_type,CANDIDATE_ROLES)){
+                            String[] strings=resourceassignmentexpr.split(",");
+                            List<String> users = Arrays.asList(strings);
+                            userSet.addAll(users);
+                        }
                     }
                 }
             } catch (IOException e) {
@@ -237,15 +268,44 @@ public class ActivityGraphConverter implements EditorJsonConstants, StencilConst
         flow.setId(EDITOR_SHAPE_ID_PREFIX + cell.getId());
         flow.setDocumentation(cell.getAttribute(PROPERTY_DOCUMENTATION,""));
         flow.setConditionExpression(cell.getAttribute(PROPERTY_SEQUENCEFLOW_CONDITION, ""));
-        mxICell source = cell.getSource();
+        mxCell source = (mxCell)cell.getSource();
         if(source!=null){
-            flow.setSourceRef(EDITOR_SHAPE_ID_PREFIX+source.getId());
+            if(StringUtils.equals(source.getAttribute(GRAPH_TYPE),GRAPH_SUBPROCESS)){
+                flow.setSourceRef(EDITOR_SHAPE_SUB_ID_PREFIX+source.getId());
+            }else{
+                flow.setSourceRef(EDITOR_SHAPE_ID_PREFIX+source.getId());
+            }
+            
         }
-        mxICell target=cell.getTarget();
+        mxCell target=(mxCell)cell.getTarget();
         if(target!=null){
-            flow.setTargetRef(EDITOR_SHAPE_ID_PREFIX+target.getId());
+            if(StringUtils.equals(target.getAttribute(GRAPH_TYPE),GRAPH_SUBPROCESS)){
+                flow.setTargetRef(EDITOR_SHAPE_SUB_ID_PREFIX+target.getId());
+            }else{
+                flow.setTargetRef(EDITOR_SHAPE_ID_PREFIX+target.getId());
+            }
         }
         return flow;
+    }
+    public static SubProcess createSubProcess(mxCell cell){
+        SubProcess subProcess=new SubProcess();
+        subProcess.setName(cell.getAttribute(PROPERTY_NAME));
+        subProcess.setDocumentation(cell.getAttribute(PROPERTY_DOCUMENTATION));
+        subProcess.setId(EDITOR_SHAPE_SUB_ID_PREFIX+cell.getId());
+        int count=cell.getChildCount();
+        for(int i=0;i<count;i++){
+            mxCell child=(mxCell)cell.getChildAt(i);
+            Object value=child.getValue();
+            if(value instanceof ParentNode) {
+                ParentNode parentNode = (ParentNode) value;
+                String stencil=parentNode.getNodeName();
+                FlowElement element=createFlowElement(child,stencil);
+                if(element!=null){
+                    subProcess.addFlowElement(element);
+                }
+            }
+        }
+        return subProcess;
     }
     
     

@@ -47,6 +47,7 @@ Ext.define('FlexCenter.forms.view.FlowFormView',{
                 tbar:[
                     {
                         xtype: 'buttongroup',
+                        hidden: me.selector,
                         items:[
                             {
                                 xtype:'button',

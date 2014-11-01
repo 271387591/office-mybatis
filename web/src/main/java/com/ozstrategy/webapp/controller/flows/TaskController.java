@@ -32,18 +32,15 @@ import java.util.Map;
 @RequestMapping("taskController.do")
 public class TaskController extends BaseController{
     @Autowired
-    TaskManager taskManager;
+    private TaskManager taskManager;
     @Autowired
-    ProcessFileAttachManager processFileAttachManager;
+    private ProcessFileAttachManager processFileAttachManager;
     @Autowired
-    ProcessDefManager processDefManager;
+    private ProcessDefManager processDefManager;
     @Autowired
-    ProcessDefInstanceManager processDefInstanceManager;
+    private ProcessDefInstanceManager processDefInstanceManager;
     @Autowired
-    UserManager userManager;
-    
-    
-    
+    private UserManager userManager;
     
     @RequestMapping(params = "method=listTasks")
     @ResponseBody
@@ -156,6 +153,7 @@ public class TaskController extends BaseController{
     public BaseResultCommand completeTask(HttpServletRequest request){
         String taskId=request.getParameter("taskId");
         String processDefId=request.getParameter("processDefId");
+        String completeType=request.getParameter("completeType");
         if(StringUtils.isEmpty(taskId)){
             return new BaseResultCommand("任务ID为空",Boolean.FALSE);
         }
@@ -170,7 +168,11 @@ public class TaskController extends BaseController{
             if(StringUtils.isNotEmpty(username)){
                 creator=userManager.getUserByUsername(username);
             }
-            taskManager.complete(creator,def,taskId,map);
+            if(StringUtils.isNotEmpty(completeType)){
+                taskManager.sign(creator,def,taskId,map);
+            }else{
+                taskManager.complete(creator,def,taskId,map);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("任务完成失败",e);
@@ -201,7 +203,8 @@ public class TaskController extends BaseController{
             if(pId!=null){
                 ProcessDef processDef=processDefManager.getProcessDefById(pId);
                 if(processDef!=null){
-                    command.setFormHtml(processDef.getFlowForm().getContent());
+                    String content=processDef.getFlowForm()!=null?processDef.getFlowForm().getContent():null;
+                    command.setFormHtml(content);
                 }
             }
             return new BaseResultCommand(command);

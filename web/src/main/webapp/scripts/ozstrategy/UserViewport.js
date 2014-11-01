@@ -4,6 +4,7 @@
 Ext.define('FlexCenter.UserViewport', {
     extend: 'Ext.container.Viewport',
     requires: [
+        'FlexCenter.UserHeader',
         'FlexCenter.WelcomeIndex',
         'FlexCenter.FlowIndex',
         'Oz.app.Tabs'
@@ -23,15 +24,10 @@ Ext.define('FlexCenter.UserViewport', {
                 items: [
                     {
                         height: 37,
-                        xtype: 'container',
-                        layout: 'hbox',
-//                        items: [
-//                            {
-//                                xtype: 'docheader'
-//                            }
-//                        ]
+                        xtype: 'userHeader'
                     },
                     {
+                        border:false,
                         xtype: 'apptabs',
                         itemId:'apptabs',
                         cardPanel:'card-panel',
@@ -64,7 +60,6 @@ Ext.define('FlexCenter.UserViewport', {
                         itemId:'center-panel',
                         resizeTabs: true,
                         enableTabScroll: true,
-//                        border:false,
                         hideCollapseTool:true,
                             defaults: {
                             autoScroll: true
@@ -82,7 +77,6 @@ Ext.define('FlexCenter.UserViewport', {
                 region: 'south',
                 id: 'footer',
                 height: 20
-//                contentEl: 'footer-content'
             }
         ];
 

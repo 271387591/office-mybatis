@@ -304,6 +304,7 @@ Ext.define('FlexCenter.App', {
       },
       fn: function(btn){
         if(btn == 'yes'){
+            isLogout=true;
           document.location.replace(globalRes.logoutUrl);
         }
       }

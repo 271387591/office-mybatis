@@ -14,6 +14,7 @@ import com.ozstrategy.dao.userrole.UserDao;
 import com.ozstrategy.exception.OzException;
 import com.ozstrategy.model.flows.GraphType;
 import com.ozstrategy.model.flows.ProcessDef;
+import com.ozstrategy.model.flows.ProcessDefHasType;
 import com.ozstrategy.model.flows.ProcessDefVersion;
 import com.ozstrategy.model.flows.ProcessElement;
 import com.ozstrategy.model.flows.ProcessElementForm;
@@ -30,6 +31,7 @@ import org.activiti.bpmn.model.FormProperty;
 import org.activiti.bpmn.model.MultiInstanceLoopCharacteristics;
 import org.activiti.bpmn.model.Process;
 import org.activiti.bpmn.model.StartEvent;
+import org.activiti.bpmn.model.SubProcess;
 import org.activiti.bpmn.model.UserTask;
 import org.activiti.engine.ActivitiObjectNotFoundException;
 import org.activiti.engine.RepositoryService;
@@ -122,7 +124,7 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
     public void update(ProcessDef processDef,String graRes) throws IOException,Exception {
         if(StringUtils.isNotEmpty(graRes)){
             mxGraphModel graphModel= ActivityGraphConverter.getMxGraphModel(graRes);
-            BpmnModel model = ActivityGraphConverter.createBpmnModel(graphModel, processDef);
+            BpmnModel model = ActivityGraphConverter.createBpmnModel(graphModel);
             List<Process> processes=model.getProcesses();
             if(processes!=null && processes.size()>0){
                 Process process = processes.get(0);
@@ -134,56 +136,11 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
                     }
                 }
                 processElementDao.deleteProcessElementByDefId(processDef.getId());
+                processDef.setHasType(ProcessDefHasType.Common);
                 Collection<FlowElement> elements = process.getFlowElements();
                 if(elements!=null && elements.size()>0){
                     for(FlowElement element : elements){
-                        String name=element.getName();
-                        String id=element.getId();
-                        String type=element.getClass().getSimpleName();
-                        ProcessElement processElement=new ProcessElement();
-                        processElement.setLabel(name);
-                        processElement.setTaskKey(id);
-                        processElement.setActClass(type);
-                        processElement.setProcessDef(processDef);
-                        processElement.setGraphType(GraphType.get(type));
-                        mxCell cell = (mxCell)graphModel.getCell(id.substring(2));
-                        processElement.setPreTaskKeys(getPreNextTask(cell,false));
-                        processElement.setNextTaskKeys(getPreNextTask(cell,true));
-                        processElementDao.saveProcessElement(processElement);
-                        if(StringUtils.equals(ProcessElementType.StartNoneEvent.getName(),type)){
-                            StartEvent startEvent=(StartEvent)element;
-                            List<FormProperty> properties = startEvent.getFormProperties();
-                            insertProcessElementForm(processDef, processElement, properties);
-                        }else if(StringUtils.equals(ProcessElementType.UserTask.getName(),type)){
-                            UserTask userTask=(UserTask)element;
-                            List<FormProperty> properties = userTask.getFormProperties();
-                            insertProcessElementForm(processDef, processElement, properties);
-                            List<String> usernames=userTask.getCandidateUsers();
-                            saveElementUser(usernames,processElement);
-                            String taskType=StringUtils.defaultIfEmpty(cell.getAttribute(ActivityGraphConverter.TASK_TYPE), TaskType.CommonUser.name());
-                            if(StringUtils.equals(taskType,TaskType.Countersign.name())){
-                                String countersign=cell.getAttribute(ActivityGraphConverter.TASK_COUNTERSIGN);
-                                try{
-                                    Map<String,Object> newMap=new HashMap<String, Object>();
-                                    Map<String,Object> map = objectMapper.readValue(countersign,Map.class);
-                                    for(String key:map.keySet()){
-                                        String newKey=key+"_"+userTask.getId();
-                                        newMap.put(newKey,map.get(key));
-                                    }
-                                    MultiInstanceLoopCharacteristics characteristics = userTask.getLoopCharacteristics();
-                                    if(characteristics!=null){
-                                        String elementVariable = characteristics.getElementVariable();
-                                        List<String> candidateUsers=userTask.getCandidateUsers();
-                                        newMap.put(elementVariable,candidateUsers);
-                                    }
-                                    String str=objectMapper.writeValueAsString(newMap);
-                                    processElement.setCountersign(str);
-                                }catch (Exception e){
-                                }
-                            }
-                            processElement.setTaskType(TaskType.valueOf(taskType));
-                            processElementDao.updateProcessElement(processElement);
-                        }
+                        parseElements(processDef,graphModel,element);
                     }
                 }
             }
@@ -196,6 +153,77 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
         processDef.setActResId(null);
         processDef.setActDefId(null);
         processDefDao.updateProcessDef(processDef);
+    }
+    private void parseElements(ProcessDef processDef,mxGraphModel graphModel,FlowElement element) throws Exception{
+        String name=element.getName();
+        String id=element.getId();
+        String type=element.getClass().getSimpleName();
+        ProcessElement processElement=new ProcessElement();
+        processElement.setLabel(name);
+        processElement.setTaskKey(id);
+        processElement.setActClass(type);
+        processElement.setProcessDef(processDef);
+        processElement.setGraphType(GraphType.get(type));
+        mxCell cell = (mxCell)graphModel.getCell(id.substring(2));
+//        processElement.setPreTaskKeys(getPreNextTask(cell,false));
+//        processElement.setNextTaskKeys(getPreNextTask(cell,true));
+        processElementDao.saveProcessElement(processElement);
+        if(StringUtils.equals(ProcessElementType.StartNoneEvent.getName(),type)){
+            StartEvent startEvent=(StartEvent)element;
+            List<FormProperty> properties = startEvent.getFormProperties();
+            insertProcessElementForm(processDef, processElement, properties);
+        }else if(StringUtils.equals(ProcessElementType.SubProcess.getName(),type)){
+            SubProcess subProcess=(SubProcess)element;
+            Collection<FlowElement> flowElements=subProcess.getFlowElements();
+            processDef.setHasType(ProcessDefHasType.HasSub);
+            if(flowElements!=null && flowElements.size()>0){
+                for(FlowElement flowElement : flowElements){
+                    parseElements(processDef,graphModel,flowElement);
+                }
+            }
+        }else if(StringUtils.equals(ProcessElementType.UserTask.getName(),type)){
+            UserTask userTask=(UserTask)element;
+            List<FormProperty> properties = userTask.getFormProperties();
+            insertProcessElementForm(processDef, processElement, properties);
+            List<String> usernames=userTask.getCandidateUsers();
+            saveElementUser(usernames,processElement);
+            String taskType=StringUtils.defaultIfEmpty(cell.getAttribute(ActivityGraphConverter.TASK_TYPE), TaskType.CommonUser.name());
+            if(StringUtils.equals(taskType,TaskType.Countersign.name())){
+                String countersign=cell.getAttribute(ActivityGraphConverter.TASK_COUNTERSIGN);
+                try{
+                    Map<String,Object> newMap=new HashMap<String, Object>();
+                    Map<String,Object> map = objectMapper.readValue(countersign,Map.class);
+                    for(String key:map.keySet()){
+                        String newKey=key+"_"+userTask.getId();
+                        newMap.put(newKey,map.get(key));
+                    }
+                    MultiInstanceLoopCharacteristics characteristics = userTask.getLoopCharacteristics();
+                    if(characteristics!=null){
+                        String elementVariable = characteristics.getElementVariable();
+                        List<String> candidateUsers=userTask.getCandidateUsers();
+                        newMap.put(elementVariable,candidateUsers);
+                    }
+                    String str=objectMapper.writeValueAsString(newMap);
+                    processElement.setCountersign(str);
+                }catch (Exception e){
+                }
+                processDef.setHasType(ProcessDefHasType.HasSign);
+            }
+            processElement.setTaskType(TaskType.valueOf(taskType));
+            
+            int count=cell.getEdgeCount();
+            for(int i=0;i<count;i++){
+                mxCell edge=(mxCell)cell.getEdgeAt(i);
+                mxCell source=(mxCell)edge.getSource();
+                mxCell target=(mxCell)edge.getTarget();
+                mxCell parent=(mxCell)edge.getParent();
+                if(source.getId().equals(cell.getId()) && StringUtils.equals(target.getAttribute(ActivityGraphConverter.GRAPH_TYPE),ActivityGraphConverter.GRAPH_END) && !StringUtils.equals(parent.getAttribute(ActivityGraphConverter.GRAPH_TYPE,""),ActivityGraphConverter.GRAPH_SUBPROCESS)){
+                    processElement.setEndTask(Boolean.TRUE);
+                }
+            }
+            processElementDao.updateProcessElement(processElement);
+        }
+        
     }
     private void saveElementUser(List<String> usernames,ProcessElement processElement){
         if(usernames!=null && usernames.size()>0){
@@ -233,7 +261,17 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
                 preNext=source;
             }
             if(preNext==null)return;
-            if(StringUtils.equals(preNext.getAttribute(ActivityGraphConverter.GRAPH_TYPE),ActivityGraphConverter.GRAPH_GATEWAY)){
+            
+//            if(StringUtils.equals(preNext.getAttribute(ActivityGraphConverter.GRAPH_TYPE),ActivityGraphConverter.GRAPH_SUBPROCESS)){
+//                int childCount=cell.getChildCount();
+//                for(int j=0;j<childCount;j++){
+//                    mxCell child=(mxCell)cell.getChildAt(j);
+//                    getPreNextTask(child,task,next);
+//                }
+//            }
+            
+            if(StringUtils.equals(preNext.getAttribute(ActivityGraphConverter.GRAPH_TYPE),ActivityGraphConverter.GRAPH_GATEWAY) 
+                    || StringUtils.equals(preNext.getAttribute(ActivityGraphConverter.GRAPH_TYPE),ActivityGraphConverter.GRAPH_SUBPROCESS)){
                 getPreNextTask(preNext, task, next);
             }else{
                 task.add(ActivityGraphConverter.EDITOR_SHAPE_ID_PREFIX+preNext.getId());
@@ -321,7 +359,7 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
         }
         mxGraphModel graphModel= ActivityGraphConverter.getMxGraphModel(str);
         
-        BpmnModel model = ActivityGraphConverter.createBpmnModel(graphModel, processDef);
+        BpmnModel model = ActivityGraphConverter.createBpmnModel(graphModel);
         
         BpmnXMLConverter bpmnXMLConverter=new BpmnXMLConverter();
         byte[] xml=bpmnXMLConverter.convertToXML(model);

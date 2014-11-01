@@ -7,13 +7,16 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.Table;
 
 /**
  * Created by lihao on 9/27/14.
  */
 @Entity
-@Table(name = "PROCESSDEFINSTANCEDRAFT")
+@Table(name = "PROCESSDEFINSTANCEDRAFT",indexes = {
+        @Index(columnList = "processDefId")
+})
 public class ProcessDefInstanceDraft extends CreatorObject{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

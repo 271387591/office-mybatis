@@ -144,6 +144,12 @@ Ext.define('FlexCenter.flows.view.TaskView',{
                                                 ret.actInstanceId=rec.get('actInstanceId');
                                                 ret.title=rec.get('title');
                                                 ret.taskType=rec.get('taskType');
+                                                ret.fromTaskAssignee=rec.get('fromTaskAssignee');
+                                                ret.fromTaskType=rec.get('fromTaskType');
+                                                ret.fromTaskKey=rec.get('fromTaskKey');
+                                                ret.fromTaskId=rec.get('fromTaskId');
+                                                ret.parentId=rec.get('parentId');
+                                                ret.endTask=rec.get('endTask');
                                                 var itemId='taskAssigneeView_'+rec.get('id');
                                                 var config={
                                                     record:ret,

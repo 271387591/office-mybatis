@@ -320,14 +320,27 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
         var selection = grid.getSelectionModel().getSelection();
         if(selection.length<1){
             Ext.MessageBox.show({
-                title: userRoleRes.editUser,
+                title: '删除',
                 width: 300,
-                msg: userRoleRes.msg.editUser,
+                msg: '请选择要删除的流程',
                 buttons: Ext.MessageBox.OK,
                 icon: Ext.MessageBox.INFO
             });
             return;
         }
+        var rec=selection[0];
+        ajaxPostRequest('processDefController.do?method=delete',{id:rec.get('id')},function(result){
+            if(result.success){
+                me.down('grid').getStore().load();
+            }else{
+                Ext.MessageBox.alert({
+                    title:'警告',
+                    icon: Ext.MessageBox.ERROR,
+                    msg:result.message,
+                    buttons:Ext.MessageBox.OK
+                });
+            }
+        });
     },
     onUpdateClick:function(rec){
         var me=this;

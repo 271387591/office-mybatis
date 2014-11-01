@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -18,7 +19,9 @@ import java.util.Date;
  * Created by lihao on 9/21/14.
  */
 @Entity
-@Table(name="PROCESSDEFINSTANCE")
+@Table(name="PROCESSDEFINSTANCE",indexes = {
+        @Index(columnList = "actInstanceId")
+})
 public class ProcessDefInstance extends CreatorObject{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

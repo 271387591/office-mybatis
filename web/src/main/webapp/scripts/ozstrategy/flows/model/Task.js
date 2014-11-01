@@ -29,6 +29,12 @@ Ext.define('FlexCenter.flows.model.Task',{
         'processDefId',
         'title',
         'taskType',
+        'fromTaskId',
+        'fromTaskKey',
+        'fromTaskType',
+        'fromTaskAssignee',
+        'parentId',
+        'endTask',
         {name:'createDate',convert:function(v){
             if(v){
                 return Ext.util.Format.date(new Date(v), 'Y-m-d H:i:s');

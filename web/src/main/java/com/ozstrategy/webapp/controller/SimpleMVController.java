@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -57,13 +58,14 @@ import java.util.List;
   @RequestMapping("/dispatcherPage.action")
   public ModelAndView dispatcherPage(HttpServletRequest request, HttpServletResponse response) {
       User user = userManager.getUserByUsername(request.getRemoteUser());
-      if(user==null) 
-          return new ModelAndView("error");
+      if(user==null){
+          return new ModelAndView("redirect:login");
+      }
       String url = user.getDefaultRole().getSystemView().getUrl();
       if(StringUtils.isNotEmpty(url)){
           return new ModelAndView("redirect:"+url);
       }
-      return new ModelAndView("error"); 
+      return new ModelAndView("redirect:login"); 
   }
 
   //~ ------------------------------------------------------------------------------------------------------------------

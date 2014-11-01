@@ -2,23 +2,21 @@ package com.ozstrategy.service;
 
 import com.ozstrategy.dao.flows.ProcessDefDao;
 import com.ozstrategy.dao.flows.TaskInstanceDao;
+import com.ozstrategy.dao.userrole.UserDao;
+import com.ozstrategy.model.flows.ProcessDef;
 import com.ozstrategy.model.flows.TaskInstance;
+import com.ozstrategy.model.userrole.User;
 import com.ozstrategy.service.flows.MultiInstanceLoopService;
+import com.ozstrategy.service.flows.ProcessDefInstanceManager;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.ManagementService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
-import org.activiti.engine.history.HistoricActivityInstance;
-import org.activiti.engine.history.HistoricTaskInstance;
-import org.activiti.engine.impl.RepositoryServiceImpl;
-import org.activiti.engine.impl.cmd.GetDeploymentProcessDefinitionCmd;
 import org.activiti.engine.impl.interceptor.Command;
 import org.activiti.engine.impl.interceptor.CommandContext;
-import org.activiti.engine.impl.interceptor.CommandExecutor;
 import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
-import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.activiti.engine.impl.pvm.process.ProcessDefinitionImpl;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -29,7 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
 import java.text.MessageFormat;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +39,12 @@ public class ProcessDefInstanceManagerTest extends BaseManagerTestCase  {
     ProcessDefDao processDefDao;
     @Autowired
     TaskInstanceDao taskInstanceDao;
+    @Autowired
+    UserDao userDao;
+    @Autowired
+    ProcessDefInstanceManager processDefInstanceManager;
+    
+    
     
     @Autowired
     RuntimeService runtimeService;
@@ -64,15 +67,20 @@ public class ProcessDefInstanceManagerTest extends BaseManagerTestCase  {
     @Test
     @Rollback(value = false)
     public void testRun() throws Exception{
-        ProcessInstance processInstance = runtimeService.startProcessInstanceById("my-processaaaa:1:187504");
+//        ProcessInstance processInstance = runtimeService.startProcessInstanceById("my-processaaaa:1:187504");
         
         
-//        ProcessDef def=processDefDao.getProcessDefById(1L);
-//        String actDefId=def.getActDefId();
-//        String actResId=def.getActResId();
-//        Map<String,Object> map=new HashMap<String, Object>();
-//        map.put("name","name1");
-//        map.put("age",1);
+        ProcessDef def=processDefDao.getProcessDefById(2L);
+        String actDefId=def.getActDefId();
+        String actResId=def.getActResId();
+        Map<String,Object> map=new HashMap<String, Object>();
+        map.put("name","name1");
+        map.put("age",1);
+        User user=userDao.getUserByUsername("admin");
+        processDefInstanceManager.runStartNoneEventPro(user,def,map);
+        
+        
+        
 //        identityService.setAuthenticatedUserId("admin");
 //        ProcessInstance instance = runtimeService.startProcessInstanceById(actDefId, map);
 //        System.out.println(instance.getId());
@@ -98,7 +106,7 @@ public class ProcessDefInstanceManagerTest extends BaseManagerTestCase  {
 //        taskServiceImpl.getCommandExecutor().execute(jumpActivityCmd);
 //        
 //        
-        List<Task> tasks = taskService.createTaskQuery().taskAssignee("dynamic").processInstanceId("220005").list();
+        List<Task> tasks = taskService.createTaskQuery().taskAssignee("dep").processInstanceId("230005").list();
         for(Task task : tasks){
             Map<String,Object> map=new HashMap<String, Object>();
 //            map.put("signAssignee", Arrays.asList("user","dep","hr"));

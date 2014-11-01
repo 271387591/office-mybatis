@@ -6,18 +6,19 @@ var globalRes = {
   userId: '${command.id}',
   isAdmin : '${command.admin}',
   features: '${command.features}',
+  webname: '<fmt:message key="webapp.name" />',
   title:{
     resetLocale: '<fmt:message key="globalRes.title.resetLocale" />',
     logout: '<fmt:message key="globalRes.title.logout" />',
     prompt: '<fmt:message key="globalRes.title.prompt" />',
-success: '<fmt:message key="globalRes.title.success" />',
-warning: '<fmt:message key="globalRes.title.warning" />',
+    success: '<fmt:message key="globalRes.title.success" />',
+    warning: '<fmt:message key="globalRes.title.warning" />',
     fail: '<fmt:message key="globalRes.title.fail" />'
   },
   header:{
     createDate: '<fmt:message key="globalRes.header.createDate" />',
-man: '<fmt:message key="globalRes.header.man" />',
-woman: '<fmt:message key="globalRes.header.woman" />',
+    man: '<fmt:message key="globalRes.header.man" />',
+    woman: '<fmt:message key="globalRes.header.woman" />',
     lastUpdateDate: '<fmt:message key="globalRes.header.lastUpdateDate" />'
   },
 

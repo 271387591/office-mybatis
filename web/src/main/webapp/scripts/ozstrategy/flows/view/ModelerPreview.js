@@ -72,34 +72,42 @@ Ext.define('FlexCenter.flows.view.ModelerPreview', {
 //        modeler.setConnectImagePath('mxgraph/images/connector.gif');
         me.graph=modeler.getGraph();
         me.editor= modeler.getEditor();
-        
         mxEvent.disableContextMenu(document.body);
-        me.tooltip = Ext.create('Ext.tip.ToolTip', {
-            target: me.graph.container,
-            html: '',
-            listeners: {
-                scope: me,
-                beforeshow: function () {
-                    return (!me.self.isDisableTooltip()) && me.enableShowTip === true;
-                },
-                hide: function () {
-                    me.enableShowTip = false;
-                }
-            }
-        });
-        me.graph.tooltipHandler.show = function (tip, x, y) {
-            if (tip != null && tip.length > 0) {
-                me.enableShowTip = true;
-                me.tooltip.update(tip);
-                me.tooltip.showAt([x, y + mxConstants.TOOLTIP_VERTICAL_OFFSET]);
-            }
-        };
-
-        me.graph.tooltipHandler.hide = function () {
-            me.tooltip.hide();
-        };
+//        me.tooltip = Ext.create('Ext.tip.ToolTip', {
+//            target: me.graph.container,
+//            html: '',
+//            listeners: {
+//                scope: me,
+//                beforeshow: function () {
+//                    return (!me.self.isDisableTooltip()) && me.enableShowTip === true;
+//                },
+//                hide: function () {
+//                    me.enableShowTip = false;
+//                }
+//            }
+//        });
+//        me.graph.tooltipHandler.show = function (tip, x, y) {
+//            if (tip != null && tip.length > 0) {
+//                me.enableShowTip = true;
+//                me.tooltip.update(tip);
+//                me.tooltip.showAt([x, y + mxConstants.TOOLTIP_VERTICAL_OFFSET]);
+//            }
+//        };
+//
+//        me.graph.tooltipHandler.hide = function () {
+//            me.tooltip.hide();
+//        };
         me.graph.setCellsLocked(true);
         me.graph.setConnectable(false);
         me.graRes?modeler.reloadGraph(me.graRes):'';
+        if(me.taskType=='Countersign'){
+            var overlay = new mxCellOverlay(
+                new mxImage('mxgraph/images/overlays/check.png', 16, 16),
+                null,mxConstants.ALIGN_CENTER,mxConstants.ALIGN_TOP);
+            var cell=me.graph.getModel().getCell(me.taskKey.substr(2));
+            if(cell!=null){
+                me.graph.addCellOverlay(cell,overlay);
+            }
+        }
     }
 });

@@ -7,14 +7,11 @@ import com.ozstrategy.model.flows.ProcessElement;
 import com.ozstrategy.model.flows.TaskType;
 import com.ozstrategy.service.flows.TaskCreateService;
 import org.activiti.engine.delegate.DelegateTask;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**

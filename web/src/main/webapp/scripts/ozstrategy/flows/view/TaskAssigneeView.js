@@ -20,11 +20,15 @@ Ext.define('FlexCenter.flows.view.TaskAssigneeView',{
                     {
                         xtype:'button',
                         frame:true,
-                        text:'执行下一步',
+                        text:me.record.taskType=='Countersign'?'完成会签':'执行下一步',
                         iconCls:'btn-flow-ok',
                         scope:this,
                         handler:function(){
-                            me.completeTask();
+                            if(me.record.taskType=='Countersign'){
+                                me.completeTask('Countersign');
+                            }else{
+                                me.completeTask();
+                            }
                         }
                     },
                     {
@@ -61,11 +65,12 @@ Ext.define('FlexCenter.flows.view.TaskAssigneeView',{
                         frame:true,
                         text:'回退',
                         iconCls:'btn-turn-back',
-                        hidden:me.record.taskType=='Starter',
+                        hidden:(me.record.taskType=='Starter' || me.record.taskType=='Countersign' || me.record.fromTaskType=='Countersign'),
                         scope:this,
                         handler:function(){
                             Ext.Msg.confirm('回退','该功能将会回到上一任务节点，你确定要回退？',function(btn){
                                 if(btn=='yes'){
+                                    
                                     me.returnTask(1);
                                 }
                             });
@@ -76,7 +81,7 @@ Ext.define('FlexCenter.flows.view.TaskAssigneeView',{
                         xtype:'button',
                         frame:true,
                         text:'回退到发起人',
-                        hidden:me.record.taskType=='Starter',
+                        hidden:(me.record.taskType=='Starter' || me.record.taskType=='Countersign' || me.record.fromTaskType=='Countersign'),
                         iconCls:'btn-turn-back-assignee',
                         scope:this,
                         handler:function(){
@@ -92,6 +97,7 @@ Ext.define('FlexCenter.flows.view.TaskAssigneeView',{
                     {
                         xtype:'checkboxfield',
                         boxLabel:'邮件通知',
+                        hidden:(me.record.taskType=='Countersign' || me.record.endTask),
                         name:'mailNotice',
                         itemId:'sendEmail',
                         inputValue:'1'
@@ -117,8 +123,7 @@ Ext.define('FlexCenter.flows.view.TaskAssigneeView',{
             },
             {
                 xtype:'taskInstanceView',
-                record:me.record,
-                height:250
+                record:me.record
             }
         ];
         if(me.record.formHtml){
@@ -133,12 +138,15 @@ Ext.define('FlexCenter.flows.view.TaskAssigneeView',{
         me.items=items;
         this.callParent();
     },
-    completeTask:function(){
+    completeTask:function(type){
         var me=this;
         var value=me.getTaskValue();
         value.taskId=me.record.taskId;
         value.instanceId=me.record.instanceId;
         value.processDefId=me.record.processDefId;
+        if(type=='Countersign'){
+            value.completeType='Countersign';
+        }
         ajaxPostRequest('taskController.do?method=completeTask',value,function(result){
             if(result.success){
                 Ext.MessageBox.alert({
@@ -165,7 +173,7 @@ Ext.define('FlexCenter.flows.view.TaskAssigneeView',{
         data.taskKey=me.record.taskKey;
         data.instanceId=me.record.instanceId;
         if(type==1){
-            data.sourceTask=type;
+            data.sourceTask=me.record.fromTaskId;
         }
         ajaxPostRequest('taskController.do?method=returnTask',data,function(result){
             if(result.success){
@@ -218,6 +226,7 @@ Ext.define('FlexCenter.flows.view.TaskAssigneeView',{
                 var moder = Ext.widget('modelerPreviewWindow',{
                     graRes:graRes,
                     taskKey:me.record.taskKey,
+                    taskType:me.record.taskType,
                     animateTarget:me.getEl()
                 });
                 moder.show();

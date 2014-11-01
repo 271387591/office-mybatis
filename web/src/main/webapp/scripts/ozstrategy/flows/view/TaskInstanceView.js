@@ -9,7 +9,7 @@ Ext.define('FlexCenter.flows.view.TaskInstanceView', {
     alias: 'widget.taskInstanceView',
     itemId: 'taskInstanceView',
     title: '流程执行情况',
-    autoScroll: true,
+//    autoScroll: true,
     margin:1,
     getTaskInstanceStore:function(){
         var me=this;
@@ -71,7 +71,9 @@ Ext.define('FlexCenter.flows.view.TaskInstanceView', {
                     if(v == 'Starter'){
                         return '发起申请';
                     }else if(v == 'Complete'){
-                        return '任务通过';
+                        return '任务完成';
+                    }else if(v == 'Sign'){
+                        return '会签完成';
                     }else if(v == 'ProxyTask'){
                         return '转办';
                     }else if(v == 'ReturnTaskToStarter'){

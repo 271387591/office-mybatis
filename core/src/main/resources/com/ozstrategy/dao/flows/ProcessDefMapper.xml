@@ -35,9 +35,9 @@
         <if test="keyword!=null and keyword!=''">and p.name like CONCAT(CONCAT('%', #{keyword}), '%') </if>
         <if test="typeId!=null and typeId!=''">and p.globalTypeId=#{typeId} </if>
         and p.actDefId is not null 
-        and (p.id in (select pu.processDefId from ProcessDefUser pu where pu.userId=#{userId})
+        and (p.id in (select pu.processDefId from PROCESSDEF_USER pu where pu.userId=#{userId})
             or
-            p.id in (select pr.processDefId from ProcessDefRole pr where pr.roleId in (#{roleIds})))
+            p.id in (select pr.processDefId from PROCESSDEF_ROLE pr where pr.roleId in (#{roleIds})))
     </select>
     <select id="getProcessDefinitionCount" resultType="java.lang.Integer" parameterType="Map">
         select count(*) from PROCESSDEF p left join GlobalType g on g.typeId=p.globalTypeId 
@@ -45,9 +45,9 @@
         <if test="keyword!=null and keyword!=''">and p.name like CONCAT(CONCAT('%', #{keyword}), '%') </if>
         <if test="typeId!=null and typeId!=''">and p.globalTypeId=#{typeId} </if>
         and p.actDefId is not null 
-        and (p.id in (select pu.processDefId from ProcessDefUser pu where pu.userId=#{userId})
+        and (p.id in (select pu.processDefId from PROCESSDEF_USER pu where pu.userId=#{userId})
             or
-            p.id in (select pr.processDefId from ProcessDefRole pr where pr.roleId in (#{roleIds})))
+            p.id in (select pr.processDefId from PROCESSDEF_ROLE pr where pr.roleId in (#{roleIds})))
     </select>
     
     
@@ -106,17 +106,18 @@
         f.flowFormId=#{flowForm.id} , 
         f.deployDate=#{deployDate} , 
         f.suspended=#{suspended} , 
+        f.hasType=#{hasType,typeHandler=org.apache.ibatis.type.EnumTypeHandler} , 
         f.lastUpdateDate=#{lastUpdateDate} 
         where f.id=#{id}
     </update>
     <update id="deleteProcessDef" parameterType="long" flushCache="true">
-        update ProcessDef u set u.enabled=0 where u.id=#{id}
+        update PROCESSDEF u set u.enabled=0 where u.id=#{id}
     </update>
     <insert id="saveProcessDef" parameterType="Map" flushCache="true">
         <selectKey keyColumn="id" keyProperty="id" resultType="java.lang.Long">
             select LAST_INSERT_ID()
         </selectKey>
-        insert into PROCESSDEF(id,name,flowFormId,globalTypeId,documentation,version,actDefId,actResId,graphResId,enabled,createDate,lastUpdateDate,deployDate,suspended) 
-        values (#{id},#{name},#{flowForm.id},#{globalTypeId},#{documentation},#{version},#{actDefId},#{actResId},#{graphResId},#{enabled},#{createDate},#{lastUpdateDate},#{deployDate},#{suspended})
+        insert into PROCESSDEF(id,name,hasType,flowFormId,globalTypeId,documentation,version,actDefId,actResId,graphResId,enabled,createDate,lastUpdateDate,deployDate,suspended) 
+        values (#{id},#{name},#{hasType,typeHandler=org.apache.ibatis.type.EnumTypeHandler},#{flowForm.id},#{globalTypeId},#{documentation},#{version},#{actDefId},#{actResId},#{graphResId},#{enabled},#{createDate},#{lastUpdateDate},#{deployDate},#{suspended})
     </insert>
 </mapper>

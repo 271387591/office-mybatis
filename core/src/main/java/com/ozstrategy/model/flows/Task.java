@@ -31,9 +31,12 @@ public class Task {
     private Long instanceId;
     private String title;
     private String taskType;
-    private String preTaskKeys;
-    private String nextTaskKeys;
     private Long parentId;
+    private String fromTaskKey;
+    private String fromTaskType;
+    private String fromTaskAssignee;
+    private String fromTaskId;
+    private Boolean endTask;
 
     public String getId() {
         return id;
@@ -235,27 +238,51 @@ public class Task {
         this.taskType = taskType;
     }
 
-    public String getPreTaskKeys() {
-        return preTaskKeys;
-    }
-
-    public void setPreTaskKeys(String preTaskKeys) {
-        this.preTaskKeys = preTaskKeys;
-    }
-
-    public String getNextTaskKeys() {
-        return nextTaskKeys;
-    }
-
-    public void setNextTaskKeys(String nextTaskKeys) {
-        this.nextTaskKeys = nextTaskKeys;
-    }
-
     public Long getParentId() {
         return parentId;
     }
 
     public void setParentId(Long parentId) {
         this.parentId = parentId;
+    }
+
+    public String getFromTaskKey() {
+        return fromTaskKey;
+    }
+
+    public void setFromTaskKey(String fromTaskKey) {
+        this.fromTaskKey = fromTaskKey;
+    }
+
+    public String getFromTaskType() {
+        return fromTaskType;
+    }
+
+    public void setFromTaskType(String fromTaskType) {
+        this.fromTaskType = fromTaskType;
+    }
+
+    public String getFromTaskAssignee() {
+        return fromTaskAssignee;
+    }
+
+    public void setFromTaskAssignee(String fromTaskAssignee) {
+        this.fromTaskAssignee = fromTaskAssignee;
+    }
+
+    public String getFromTaskId() {
+        return fromTaskId;
+    }
+
+    public void setFromTaskId(String fromTaskId) {
+        this.fromTaskId = fromTaskId;
+    }
+
+    public Boolean getEndTask() {
+        return endTask;
+    }
+
+    public void setEndTask(Boolean endTask) {
+        this.endTask = endTask;
     }
 }

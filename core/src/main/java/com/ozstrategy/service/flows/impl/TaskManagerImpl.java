@@ -6,6 +6,7 @@ import com.ozstrategy.dao.flows.ProcessDefInstanceDao;
 import com.ozstrategy.dao.flows.ProcessElementDao;
 import com.ozstrategy.dao.flows.TaskDao;
 import com.ozstrategy.dao.flows.TaskInstanceDao;
+import com.ozstrategy.dao.flows.TaskLinkTaskDao;
 import com.ozstrategy.dao.userrole.UserDao;
 import com.ozstrategy.exception.OzException;
 import com.ozstrategy.model.flows.ProcessDef;
@@ -14,6 +15,8 @@ import com.ozstrategy.model.flows.ProcessElement;
 import com.ozstrategy.model.flows.Task;
 import com.ozstrategy.model.flows.TaskInstance;
 import com.ozstrategy.model.flows.TaskInstanceStatus;
+import com.ozstrategy.model.flows.TaskLinkTask;
+import com.ozstrategy.model.flows.TaskType;
 import com.ozstrategy.model.userrole.User;
 import com.ozstrategy.service.flows.TaskManager;
 import org.activiti.engine.HistoryService;
@@ -41,8 +44,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -64,6 +65,8 @@ public class TaskManagerImpl implements TaskManager{
     @Autowired
     private UserDao userDao;
     @Autowired
+    private TaskLinkTaskDao taskLinkTaskDao;
+    @Autowired
     private TaskService taskService;
     @Autowired
     private RuntimeService runtimeService;
@@ -71,6 +74,7 @@ public class TaskManagerImpl implements TaskManager{
     private HistoryService historyService;
     @Autowired
     private ManagementService managementService;
+    
     public List<Task> listCandidateTasks(Map<String, Object> map) {
         return taskDao.listCandidateTasks(map);
     }
@@ -117,10 +121,16 @@ public class TaskManagerImpl implements TaskManager{
     public void returnTask(String taskId, String taskKey, String sourceActivity,User creator,Map<String,Object> map) throws Exception {
         try{
             JumpActivityCmd jumpActivityCmd=new JumpActivityCmd(taskId,taskKey,sourceActivity);
-            managementService.executeCommand(jumpActivityCmd);
+            Object o = managementService.executeCommand(jumpActivityCmd);
             HistoricTaskInstance historicTaskInstance=historyService.createHistoricTaskInstanceQuery().taskId(taskId).singleResult();
             saveTaskInstance(creator, historicTaskInstance, map, StringUtils.isEmpty(sourceActivity) ? TaskInstanceStatus.ReturnTaskToStarter : TaskInstanceStatus.ReturnTask);
+            TaskLinkTask taskLinkTask=taskLinkTaskDao.getTaskLinkTaskByCurrentId(historicTaskInstance.getId());
+            if(taskLinkTask!=null && o!=null){
+                TaskEntity taskEntity=(TaskEntity)o;
+                taskLinkTaskDao.updateCurrentId(taskEntity.getId(),taskLinkTask.getId());
+            }
         }catch (Exception e){
+            e.printStackTrace();
             throw new OzException(Constants.MESSAGE_RETURN_TASK_FAIL);
         }
     }
@@ -130,6 +140,7 @@ public class TaskManagerImpl implements TaskManager{
             taskService.claim(taskId,creator.getUsername());
             JumpActivityCmd jumpActivityCmd=new JumpActivityCmd(taskId,taskKey,sourceActivity);
             managementService.executeCommand(jumpActivityCmd);
+            
             HistoricTaskInstance historicTaskInstance=historyService.createHistoricTaskInstanceQuery().taskId(taskId).singleResult();
             saveTaskInstance(creator, historicTaskInstance, map, TaskInstanceStatus.Replevy);
         }catch (Exception e){
@@ -139,6 +150,14 @@ public class TaskManagerImpl implements TaskManager{
 
     @Transactional(rollbackFor = Throwable.class)
     public void complete(User user,ProcessDef def,String taskId, Map<String, Object> map) throws Exception {
+        completeTask(user,def,taskId,map,false);
+    }
+    @Transactional(rollbackFor = Throwable.class)
+    public void sign(User user, ProcessDef def, String taskId, Map<String, Object> map) throws Exception {
+        completeTask(user,def,taskId,map,true);
+    }
+
+    private void completeTask(User user,ProcessDef def,String taskId, Map<String, Object> map,boolean sign)throws Exception {
         String formData= ObjectUtils.toString(map.get("formData"));
         Map<String,Object> variables=new HashMap<String, Object>();
         if(StringUtils.isNotEmpty(formData)){
@@ -153,11 +172,34 @@ public class TaskManagerImpl implements TaskManager{
                 throw new OzException(Constants.MESSAGE_COMPLETE_TASK_NOT_FOUND_TASK);
             }
             taskService.complete(taskId,variables);
+            //save TaskLinkTask
+            saveTaskLinkTask(task,user.getUsername(),sign);
+
             HistoricTaskInstance historicTaskInstance=historyService.createHistoricTaskInstanceQuery().taskId(taskId).singleResult();
-            saveTaskInstance(user,historicTaskInstance,map,TaskInstanceStatus.Complete);
+            saveTaskInstance(user,historicTaskInstance,map,sign?TaskInstanceStatus.Sign:TaskInstanceStatus.Complete);
         }
     }
-    
+    private void saveTaskLinkTask(org.activiti.engine.task.Task task,String username,boolean sign){
+        
+        List<org.activiti.engine.task.Task> nextTasks=taskService.createTaskQuery().processDefinitionId(task.getProcessDefinitionId()).processInstanceId(task.getProcessInstanceId()).list();
+        if(nextTasks!=null && nextTasks.size()>0){
+            for(org.activiti.engine.task.Task nextTask : nextTasks){
+                TaskLinkTask taskLinkTask=new TaskLinkTask();
+                taskLinkTask.setCreateDate(new Date());
+                taskLinkTask.setLastUpdateDate(new Date());
+                taskLinkTask.setFromTaskAssignee(username);
+                taskLinkTask.setFromTaskKey(task.getTaskDefinitionKey());
+                taskLinkTask.setActInstanceId(task.getProcessInstanceId());
+                taskLinkTask.setCurrentTaskId(nextTask.getId());
+                taskLinkTask.setCurrentTaskKey(nextTask.getTaskDefinitionKey());
+                taskLinkTask.setFromTaskId(task.getId());
+                if(sign){
+                    taskLinkTask.setFromTaskType(TaskType.Countersign);
+                }
+                taskLinkTaskDao.insert(taskLinkTask);
+            }
+        }
+    }
 
     private void saveTaskInstance(User user,HistoricTaskInstance task,Map<String,Object> map,TaskInstanceStatus status){
         TaskInstance instance=new TaskInstance();
@@ -195,32 +237,43 @@ public class TaskManagerImpl implements TaskManager{
         private String jumpOrigin="jump";
         private String taskKey;
         private String taskId;
-        private String sourceActivity;//逐级回退时的目标，多个目标用“,”隔开，
+        private String sourceTaskId;//逐级回退时的目标，
         public JumpActivityCmd(String taskId,String taskKey){
             this.taskId=taskId;
             this.taskKey=taskKey;
         }
-        public JumpActivityCmd(String taskId,String taskKey,String sourceActivity){
+        public JumpActivityCmd(String taskId,String taskKey,String sourceTaskId){
             this(taskId,taskKey);
-            this.sourceActivity=sourceActivity;
+            this.sourceTaskId=sourceTaskId;
         }
         
         public Object execute(CommandContext commandContext) {
+            TaskEntity currentTask=null;
             TaskEntity task = commandContext.getTaskEntityManager().findTaskById(taskId);
             ExecutionEntity execution = task.getExecution();
             ProcessDefinitionEntity entity = (ProcessDefinitionEntity)execution.getProcessDefinition();
             ActivityImpl currentAct = entity.findActivity(taskKey);
-            if(StringUtils.isNotEmpty(sourceActivity)){
-                String[] sourceActivities=sourceActivity.split(",");
-                List<String> sourceList=Arrays.asList(sourceActivities);
+            if(StringUtils.isNotEmpty(sourceTaskId)){
                 List<PvmTransition> transitions = currentAct.getIncomingTransitions();
                 if(transitions!=null && transitions.size()>0){
                     for(PvmTransition transition : transitions){
                         ActivityImpl source = (ActivityImpl)transition.getSource();
                         String id = source.getId();
-                        if(sourceList.contains(id)){
+                        HistoricTaskInstance historicTaskInstance =Context.getProcessEngineConfiguration().getHistoryService()
+                                .createHistoricTaskInstanceQuery().processInstanceId(execution.getProcessInstanceId()).taskId(sourceTaskId).singleResult();
+                        if(StringUtils.equals(id,historicTaskInstance.getTaskDefinitionKey())){
                             execution.destroyScope(jumpOrigin);
                             execution.executeActivity(source);
+                            List<TaskEntity> taskEntities=execution.getTasks();
+                            if(taskEntities!=null && taskEntities.size()>0){
+                                for(TaskEntity taskEntity : taskEntities){
+                                    if(taskEntity.getAssignee()!=null){
+                                        continue;
+                                    }
+                                    taskEntity.setAssignee(historicTaskInstance.getAssignee());
+                                    currentTask=taskEntity;
+                                }
+                            }
                         }
                     }
                 }
@@ -229,8 +282,19 @@ public class TaskManagerImpl implements TaskManager{
                 ActivityImpl startTask = (ActivityImpl)initial.getOutgoingTransitions().get(0).getDestination();
                 execution.destroyScope(jumpOrigin);
                 execution.executeActivity(startTask);
+                String starter = ObjectUtils.toString(execution.getVariable("starter"));
+                List<TaskEntity> taskEntities=execution.getTasks();
+                if(taskEntities!=null && taskEntities.size()>0){
+                    for(TaskEntity taskEntity : taskEntities){
+                        if(taskEntity.getAssignee()!=null){
+                            continue;
+                        }
+                        taskEntity.setAssignee(starter);
+                        currentTask=taskEntity;
+                    }
+                }
             }
-            return execution;
+            return currentTask;
         }
     }
 

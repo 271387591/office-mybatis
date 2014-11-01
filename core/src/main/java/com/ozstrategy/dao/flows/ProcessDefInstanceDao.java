@@ -15,4 +15,5 @@ public interface ProcessDefInstanceDao {
     void saveProcessDefInstance(ProcessDefInstance instance);
     void deleteProcessDefInstance(Long id);
     ProcessDefInstance getProcessDefInstanceById(Long id);
+    ProcessDefInstance getProcessDefInstanceByActId(String actId);
 }

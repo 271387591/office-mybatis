@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
@@ -17,7 +18,9 @@ import java.io.Serializable;
  * Created by lihao on 9/9/14.
  */
 @Entity
-@Table(name = "PROCESSELEMENTFORM")
+@Table(name = "PROCESSELEMENTFORM",indexes = {
+        @Index(columnList = "variable")
+})
 public class ProcessElementForm implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -3,26 +3,17 @@
     <process id="my-processaaaa" name="aaaaa11111" isExecutable="true">
         <startEvent id="Start_0" activiti:initiator="userId"/>
         <userTask id="Task_1" name="填写表单" activiti:assignee="${userId}">
-            <extensionElements>
-                <activiti:taskListener event="complete" delegateExpression="${taskCompleteService}"/>
-                <activiti:taskListener event="create" delegateExpression="${taskCreateService}"/>
-            </extensionElements>
+            
         </userTask>
         <userTask id="Sign_2" name="领导会签" activiti:assignee="${signAssignee}">
-            <extensionElements>
-                <activiti:taskListener event="complete" delegateExpression="${taskCompleteService}"/>
-                <activiti:taskListener event="create" delegateExpression="${taskCreateService}"/>
-            </extensionElements>
+            
             <multiInstanceLoopCharacteristics isSequential="false" activiti:collection="${signAssignee}" activiti:elementVariable="signAssignee">
                 <completionCondition>${multiInstanceLoopService.canComplete(execution, nrOfInstances, nrOfActiveInstances, nrOfCompletedInstances, loopCounter)}</completionCondition>
             </multiInstanceLoopCharacteristics>
             
         </userTask>
         <userTask id="Task_3" name="总经理审批" activiti:candidateUsers="hr,dep,user">
-            <extensionElements>
-                <activiti:taskListener event="complete" delegateExpression="${taskCompleteService}"/>
-                <activiti:taskListener event="create" delegateExpression="${taskCreateService}"/>
-            </extensionElements>
+            
         </userTask>
         <endEvent id="End_4"/>
         <sequenceFlow id="sequenceFlow-0dc2c774-6434-40c2-a78a-b180bd1b038d" sourceRef="Start_0" targetRef="Task_1"/>

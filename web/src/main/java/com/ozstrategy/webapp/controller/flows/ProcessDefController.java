@@ -123,18 +123,33 @@ public class ProcessDefController extends BaseController {
         }
         return new JsonReaderResponse<ProcessElementFormCommand>(commands);
     }
+    @RequestMapping(params = "method=delete")
+    @ResponseBody
+    public BaseResultCommand delete(HttpServletRequest request){
+        try {
+
+            Long id=parseLong(request.getParameter("id"));
+            if(id==null){
+                return new BaseResultCommand("ID不能为空",Boolean.FALSE);
+            }
+            ProcessDef def=processDefManager.getProcessDefById(id);
+            if(def==null){
+                return new BaseResultCommand("流程不存在",Boolean.FALSE);
+            }
+            def.setEnabled(false);
+            processDefManager.delete(def.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("删除流程失败，详细异常:",e);
+            return new BaseResultCommand(getMessage("message.error.saveuser.fail",request),Boolean.FALSE);
+        }
+        return new BaseResultCommand(getMessage("message.error.saveuser.fail",request),Boolean.TRUE);
+    }
     @RequestMapping(params = "method=save")
     @ResponseBody
     public BaseResultCommand save(HttpServletRequest request){
         try {
             Map<String,Object> map=requestMap(request);
-            String name=request.getParameter("name");
-            Long globalTypeId=parseLong(request.getParameter("globalTypeId"));
-            if(StringUtils.isNotEmpty(name) && globalTypeId!=null){
-                if(processDefManager.checkNameExist(name,globalTypeId)!=null){
-                    return new BaseResultCommand("流程名称已经存在",Boolean.FALSE);
-                }
-            }
             ProcessDef def=new ProcessDef();
             BeanUtils.populate(def, map);
             def.setCreateDate(new Date());
@@ -150,18 +165,19 @@ public class ProcessDefController extends BaseController {
         } catch (InvocationTargetException e) {
             e.printStackTrace();
             logger.error("保存流程失败，详细异常:",e);
-            return new BaseResultCommand(getMessage("message.error.saveuser.fail",request),Boolean.FALSE);
+            return new BaseResultCommand(getMessage("保存流程失败",request),Boolean.FALSE);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
             logger.error("保存流程失败，详细异常:",e);
-            return new BaseResultCommand(getMessage("message.error.saveuser.fail",request),Boolean.FALSE);
+            return new BaseResultCommand(getMessage("保存流程失败",request),Boolean.FALSE);
         }catch (Exception e) {
             e.printStackTrace();
             logger.error("保存流程失败，详细异常:",e);
-            return new BaseResultCommand(getMessage("message.error.saveuser.fail",request),Boolean.FALSE);
+            return new BaseResultCommand(getMessage("保存流程失败",request),Boolean.FALSE);
         }
-        return new BaseResultCommand(getMessage("message.error.saveuser.fail",request),Boolean.TRUE);
+        return new BaseResultCommand(getMessage("保存流程失败",request),Boolean.TRUE);
     }
+    
     @RequestMapping(params = "method=update")
     @ResponseBody
     public BaseResultCommand update(HttpServletRequest request){

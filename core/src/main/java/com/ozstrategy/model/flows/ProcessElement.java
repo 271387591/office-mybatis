@@ -15,6 +15,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.Lob;
@@ -34,7 +35,10 @@ import java.util.Set;
  * Created by lihao on 9/9/14.
  */
 @Entity
-@Table(name = "PROCESSELEMENT")
+@Table(name = "PROCESSELEMENT",indexes = {
+        @Index(columnList = "taskType"),
+        @Index(columnList = "taskKey")
+})
 public class ProcessElement implements Serializable {
     
     @Id
@@ -45,6 +49,8 @@ public class ProcessElement implements Serializable {
     @Column(length = 16,nullable = true)
     @Enumerated(EnumType.STRING)
     private TaskType taskType;
+    @Column(length = 1,nullable = false,columnDefinition = "char")
+    private Boolean endTask=Boolean.FALSE;
     @Column(length = 16,nullable = false)
     private String actClass;
     @Column(length = 128,nullable = true)
@@ -189,6 +195,14 @@ public class ProcessElement implements Serializable {
 
     public void setCountersign(String countersign) {
         this.countersign = countersign;
+    }
+
+    public Boolean getEndTask() {
+        return endTask;
+    }
+
+    public void setEndTask(Boolean endTask) {
+        this.endTask = endTask;
     }
 
     public Map<String, Object> getCountersignMap() {

@@ -58,7 +58,7 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     ] },
                     { text: "子流程",expanded: false, children:[
                         { text: "普通子流程", leaf: true,iconCls:'structural-expanded-subprocess',stencil:'SubProcess'},
-                        { text: "时间子流程", leaf: true,iconCls:'structural-event-subprocess',stencil:'EventSubProcess' },
+                        { text: "事件子流程", leaf: true,iconCls:'structural-event-subprocess',stencil:'EventSubProcess' },
                         { text: "Call activity", leaf: true,iconCls:'structural-task',stencil:'CallActivity' }
                     ] },
                     { text: "网关",expanded: false, children:[
@@ -162,7 +162,7 @@ Ext.define('FlexCenter.flows.view.Modeler', {
         me.items=[
             {
                 region: 'west',
-                title: 'Westsdf水电费',
+                title: '流程元素',
                 split: true,
                 width: me.navCellWidth,
                 itemId:'navGraphTree',
@@ -316,6 +316,13 @@ Ext.define('FlexCenter.flows.view.Modeler', {
         if(me.graph){
             var encoder = new mxCodec();
             var model=me.graph.getModel();
+            var root = model.getRoot();
+            var doc = mxUtils.createXmlDocument();
+            var process = doc.createElement('Process');
+            process.setAttribute('name', me.processRecord.name?me.processRecord.name:'');
+            process.setAttribute('category', me.processRecord.category?me.processRecord.category:'');
+            process.setAttribute('documentation', me.processRecord.documentation?me.processRecord.documentation:'');
+            root.setValue(process);
             var node = encoder.encode(model);
             graRes= mxUtils.getPrettyXml(node);
             console.log(graRes);
@@ -1166,6 +1173,21 @@ Ext.define('FlexCenter.flows.view.Modeler', {
         activity(form);
         return form;
     },
+    
+    checkFirstTask:function(cell){
+        var edges = cell.edges;
+        if(edges && edges.length>0){
+            for(var i=0;i<edges.length;i++){
+                var target=edges[i].target;
+                var source=edges[i].source;
+                var parent=source.getParent();
+                if(parent && !parent.value&& source && (source.value.getAttribute('type')=='startEvent')&&target && target.id==cell.id){
+                    return true;
+                }
+            }
+        }
+        return false;
+    },
     UserTask:function(cell){
         var me=this;
         var form=Ext.widget('form',{
@@ -1271,6 +1293,10 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                         }
                     },
                     onTriggerClick:function(){
+                        if(me.checkFirstTask(cell)){
+                            Ext.Msg.alert('人员设置','系统自动分配主流程第一个任务点为发起人执行，无需设置人员。');
+                            return;
+                        }
                         var value = form.down('trigger[name=usertaskassignment]').getValue();
                         var win=Ext.widget('processUserSetter',{
                             callBack:function(data){
@@ -1326,10 +1352,15 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                             }catch(e){
                                 cell.value.setAttribute('tasktype','');
                                 form.down('trigger[name=countersign]').setValue('');
+                                cell.value.setAttribute('countersign','');
                             }
                         }
                     },
                     onTriggerClick:function(){
+                        if(me.checkFirstTask(cell)){
+                            Ext.Msg.alert('会签设置','主流程第一个任务点不能设置为会签任务');
+                            return;
+                        }
                         var value = form.down('trigger[name=countersign]').getValue();
                         var win=Ext.widget('countersignTaskWindow',{
                             data:value,
@@ -1398,70 +1429,6 @@ Ext.define('FlexCenter.flows.view.Modeler', {
                     listeners:{
                         change:function(combo, newValue, oldValue,eOpts ){
                             cell.value.setAttribute('exclusivedefinition',newValue);
-                        }
-                    }
-                },{
-                    xtype: 'combo',
-                    triggerAction: 'all',
-                    editable: false,
-                    model: 'local',
-//                    width: 100,
-                    fieldLabel: '是否连续(多实例)',
-                    hidden:!me.developer,
-                    valueField: 'type',
-                    displayField: 'displayText',
-                    name:'multiinstance_sequential',
-                    store: Ext.create('Ext.data.ArrayStore', {
-                        fields: ['type', 'displayText'],
-                        data: [
-                            ['Yes', '是'],
-                            ['No', '否']
-                        ]
-                    }),
-                    value:cell.value.getAttribute('multiinstance_sequential'),
-                    listeners:{
-                        change:function(combo, newValue, oldValue,eOpts ){
-                            cell.value.setAttribute('multiinstance_sequential',newValue);
-                        }
-                    }
-                },{
-                    fieldLabel: '基数(多实例)',
-                    name: 'multiinstance_cardinality',
-                    hidden:!me.developer,
-                    value:cell.value.getAttribute('multiinstance_cardinality'),
-                    listeners:{
-                        change:function(combo, newValue, oldValue,eOpts ){
-                            cell.value.setAttribute('multiinstance_cardinality',newValue);
-                        }
-                    }
-                },{
-                    fieldLabel: '集合(多实例)',
-                    name: 'multiinstance_collection',
-                    hidden:!me.developer,
-                    value:cell.value.getAttribute('multiinstance_collection'),
-                    listeners:{
-                        change:function(combo, newValue, oldValue,eOpts ){
-                            cell.value.setAttribute('multiinstance_collection',newValue);
-                        }
-                    }
-                },{
-                    fieldLabel: '元素变量(多实例)',
-                    name: 'multiinstance_variable',
-                    hidden:!me.developer,
-                    value:cell.value.getAttribute('multiinstance_variable'),
-                    listeners:{
-                        change:function(combo, newValue, oldValue,eOpts ){
-                            cell.value.setAttribute('multiinstance_variable',newValue);
-                        }
-                    }
-                },{
-                    fieldLabel: '完成条件(多实例)',
-                    name: 'multiinstance_condition',
-                    hidden:!me.developer,
-                    value:cell.value.getAttribute('multiinstance_condition'),
-                    listeners:{
-                        change:function(combo, newValue, oldValue,eOpts ){
-                            cell.value.setAttribute('multiinstance_condition',newValue);
                         }
                     }
                 },{

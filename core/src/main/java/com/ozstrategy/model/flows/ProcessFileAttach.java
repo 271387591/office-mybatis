@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -15,7 +16,9 @@ import javax.persistence.Table;
  * Created by lihao on 9/27/14.
  */
 @Entity
-@Table(name="PROCESSFILEATTACH")
+@Table(name="PROCESSFILEATTACH",indexes = {
+        @Index(columnList = "actInstanceId")
+})
 public class ProcessFileAttach extends CreatorObject{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

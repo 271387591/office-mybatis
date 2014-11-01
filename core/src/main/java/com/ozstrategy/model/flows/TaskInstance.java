@@ -1,6 +1,5 @@
 package com.ozstrategy.model.flows;
 
-import com.ozstrategy.model.BaseObject;
 import com.ozstrategy.model.CreatorObject;
 import com.ozstrategy.model.userrole.User;
 
@@ -12,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -26,7 +26,10 @@ import java.util.Set;
  * Created by lihao on 9/27/14.
  */
 @Entity
-@Table(name="TASKINSTANCE")
+@Table(name="TASKINSTANCE",indexes = {
+        @Index(columnList = "taskKey"),
+        @Index(columnList = "actTaskId")
+})
 public class TaskInstance extends CreatorObject{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -61,7 +64,7 @@ public class TaskInstance extends CreatorObject{
     private Set<ProcessFileAttach> fileAttaches=new HashSet<ProcessFileAttach>();
     @Column(columnDefinition = "char",length = 1)
     private Boolean sendEmail;
-    @Column(length = 16,nullable = false)
+    @Column(length = 32,nullable = false)
     @Enumerated(EnumType.STRING)
     private TaskInstanceStatus status;
     @ManyToOne

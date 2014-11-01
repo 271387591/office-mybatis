@@ -7,13 +7,17 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.Table;
 
 /**
  * Created by lihao on 9/20/14.
  */
 @Entity
-@Table(name = "PROECESSDEFVERSION")
+@Table(name = "PROECESSDEFVERSION",indexes = {
+        @Index(columnList = "globalTypeId"),
+        @Index(columnList = "processDefId")
+})
 public class ProcessDefVersion extends BaseObject{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -52,7 +56,7 @@ public class ProcessDefVersion extends BaseObject{
         this.actResId= def.getActResId();
         this.actDefId= def.getActDefId();
         this.graphResId= def.getGraphResId();
-        this.flowFormId= def.getFlowForm().getId();
+        this.flowFormId= def.getFlowForm()!=null?def.getFlowForm().getId():null;
         this.documentation= def.getDocumentation();
         this.enabled=def.getEnabled();
         this.processDefId=def.getId();

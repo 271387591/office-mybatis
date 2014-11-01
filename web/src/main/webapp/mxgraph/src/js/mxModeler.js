@@ -263,9 +263,18 @@ mxModeler.prototype.overrideGraph = function(graph,editor)
     };
     var  validateConnection=mxConnectionHandler.prototype.validateConnection;
     mxConnectionHandler.prototype.validateConnection=function(source, target){
-        if(source && (source.value.getAttribute('type')=='startEvent') && (source.edges!=null) && source.edges.length>0){
+        if(parent && !parent.value && source && (source.value.getAttribute('type')=='startEvent') && (source.edges!=null) && source.edges.length>0){
+            Ext.Msg.alert('验证','主流程开始节点后只能存在一个任务节点。');
             return source;
         }
+        if(parent && !parent.value && source && (source.value.getAttribute('type')=='startEvent') && (target && target.value.getAttribute('tasktype')=='Countersign')){
+            Ext.Msg.alert('验证','主流程第一个任务点不能设置为会签任务。');
+            return source;
+        }
+        if(parent && !parent.value && source && (source.value.getAttribute('type')=='startEvent') && (target && target.value.getAttribute('usertaskassignment'))){
+            target.value.setAttribute('usertaskassignment','');
+        }
+        
         if(source && target && target.edges){
             var sid=source.id;
             for(var i=0;i<target.edges.length;i++){

@@ -40183,7 +40183,7 @@ mxCell.prototype.setConnectable = function(connectable)
 {
 	this.connectable = connectable;
 };
-
+                                     
 /**
  * Function: isVisible
  *
