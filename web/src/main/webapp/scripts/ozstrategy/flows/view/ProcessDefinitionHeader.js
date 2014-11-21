@@ -26,7 +26,7 @@ Ext.define('FlexCenter.flows.view.ProcessDefinitionHeader',{
                         value:record.title,
                         itemId:'title',
                         width:500,
-                        fieldLabel:me.drawType?'标题<font color="red">*</font>':'标题'
+                        fieldLabel:me.drawType?(workFlowRes.processDefinitionHeader.title+'<font color="red">*</font>'):workFlowRes.processDefinitionHeader.title
                     }
                 ]
             },
@@ -49,7 +49,7 @@ Ext.define('FlexCenter.flows.view.ProcessDefinitionHeader',{
                                 value:record.remarks,
                                 width:400,
                                 itemId:'remarks',
-                                fieldLabel:'备注'
+                                fieldLabel:workFlowRes.processDefinitionHeader.remarks
                             }
                         ]
                     },
@@ -73,14 +73,14 @@ Ext.define('FlexCenter.flows.view.ProcessDefinitionHeader',{
                                         itemId:'fileAttachOneName',
                                         name: 'fileAttachOneName',
                                         value:record.fileAttachOneName,
-                                        fieldLabel:'附件一'
+                                        fieldLabel:workFlowRes.processDefinitionHeader.fileAttachOneName
                                     },
                                     {
                                         xtype:'button',
                                         frame:true,
                                         iconCls:'upload-file',
-                                        tooltip:'上传',
-                                        text:'上传',
+                                        tooltip:workFlowRes.processDefinitionHeader.uploadFile,
+                                        text:workFlowRes.processDefinitionHeader.uploadFile,
                                         itemId:'fileAttachOneUploadBtn',
                                         scope:me,
                                         margin:'0 0 0 10',
@@ -93,9 +93,9 @@ Ext.define('FlexCenter.flows.view.ProcessDefinitionHeader',{
                                         frame:true,
                                         iconCls:'close',
                                         scope:me,
-                                        tooltip:'删除',
+                                        tooltip:globalRes.buttons.remove,
                                         disabled:true,
-                                        text:'删除',
+                                        text:globalRes.buttons.remove,
                                         itemId:'fileAttachOneDeleteBtn',
                                         margin:'0 0 0 5',
                                         handler:function(){
@@ -107,8 +107,8 @@ Ext.define('FlexCenter.flows.view.ProcessDefinitionHeader',{
                                         frame:true,
                                         iconCls:'file-download',
                                         scope:me,
-                                        text:'下载',
-                                        tooltip:'下载',
+                                        text:workFlowRes.processDefinitionHeader.download,
+                                        tooltip:workFlowRes.processDefinitionHeader.download,
                                         disabled:true,
                                         itemId:'fileAttachOneDownloadBtn',
                                         margin:'0 0 0 5',
@@ -135,14 +135,14 @@ Ext.define('FlexCenter.flows.view.ProcessDefinitionHeader',{
                                         name: 'fileAttachTwoName',
                                         value:record.fileAttachTwoName,
                                         itemId:'fileAttachTwoName',
-                                        fieldLabel:'附件二'
+                                        fieldLabel:workFlowRes.processDefinitionHeader.fileAttachTwoName
                                     },
                                     {
                                         xtype:'button',
                                         frame:true,
                                         iconCls:'upload-file',
-                                        tooltip:'上传',
-                                        text:'上传',
+                                        tooltip:workFlowRes.processDefinitionHeader.uploadFile,
+                                        text:workFlowRes.processDefinitionHeader.uploadFile,
                                         itemId:'fileAttachTwoUploadBtn',
                                         scope:me,
                                         margin:'0 0 0 10',
@@ -155,8 +155,8 @@ Ext.define('FlexCenter.flows.view.ProcessDefinitionHeader',{
                                         frame:true,
                                         iconCls:'close',
                                         scope:me,
-                                        tooltip:'删除',
-                                        text:'删除',
+                                        tooltip:globalRes.buttons.remove,
+                                        text:globalRes.buttons.remove,
                                         disabled:true,
                                         itemId:'fileAttachTwoDeleteBtn',
                                         margin:'0 0 0 5',
@@ -169,8 +169,8 @@ Ext.define('FlexCenter.flows.view.ProcessDefinitionHeader',{
                                         frame:true,
                                         iconCls:'file-download',
                                         scope:me,
-                                        tooltip:'下载',
-                                        text:'下载',
+                                        tooltip:workFlowRes.processDefinitionHeader.download,
+                                        text:workFlowRes.processDefinitionHeader.download,
                                         disabled:true,
                                         itemId:'fileAttachTwoDownloadBtn',
                                         margin:'0 0 0 5',
@@ -195,14 +195,14 @@ Ext.define('FlexCenter.flows.view.ProcessDefinitionHeader',{
                                         itemId:'fileAttachThreeName',
                                         value:record.fileAttachThreeName,
                                         name: 'fileAttachThreeName',
-                                        fieldLabel:'附件三'
+                                        fieldLabel:workFlowRes.processDefinitionHeader.fileAttachThreeName
                                     },
                                     {
                                         xtype:'button',
                                         frame:true,
                                         iconCls:'upload-file',
-                                        tooltip:'上传',
-                                        text:'上传',
+                                        tooltip:workFlowRes.processDefinitionHeader.uploadFile,
+                                        text:workFlowRes.processDefinitionHeader.uploadFile,
                                         itemId:'fileAttachThreeUploadBtn',
                                         scope:me,
                                         margin:'0 0 0 10',
@@ -215,8 +215,8 @@ Ext.define('FlexCenter.flows.view.ProcessDefinitionHeader',{
                                         frame:true,
                                         iconCls:'close',
                                         scope:me,
-                                        tooltip:'删除',
-                                        text:'删除',
+                                        tooltip:globalRes.buttons.remove,
+                                        text:globalRes.buttons.remove,
                                         disabled:true,
                                         itemId:'fileAttachThreeDeleteBtn',
                                         margin:'0 0 0 5',
@@ -229,8 +229,8 @@ Ext.define('FlexCenter.flows.view.ProcessDefinitionHeader',{
                                         frame:true,
                                         iconCls:'file-download',
                                         scope:me,
-                                        tooltip:'下载',
-                                        text:'下载',
+                                        tooltip:workFlowRes.processDefinitionHeader.download,
+                                        text:workFlowRes.processDefinitionHeader.download,
                                         disabled:true,
                                         itemId:'fileAttachThreeDownloadBtn',
                                         margin:'0 0 0 5',
@@ -320,7 +320,7 @@ Ext.define('FlexCenter.flows.view.ProcessDefinitionHeader',{
                 me.down('#'+downBtnItemId).setDisabled(true);
             }else{
                 Ext.MessageBox.alert({
-                    title:'警告',
+                    title:globalRes.title.warning,
                     icon: Ext.MessageBox.ERROR,
                     msg:result.message,
                     buttons:Ext.MessageBox.OK
@@ -336,7 +336,7 @@ Ext.define('FlexCenter.flows.view.ProcessDefinitionHeader',{
             animCollapse : true,
             layout: 'fit',
             modal:true,
-            title:'上传文件',
+            title:workFlowRes.processDefinitionHeader.uploadFileTitle,
             border:false,
             items:[
                 {
@@ -351,12 +351,12 @@ Ext.define('FlexCenter.flows.view.ProcessDefinitionHeader',{
                         {
                             xtype: 'filefield',
                             name: 'fileName',
-                            fieldLabel: '文件名称',
+                            fieldLabel: workFlowRes.processDefinitionHeader.fileName,
                             labelWidth: 70,
                             msgTarget: 'side',
                             allowBlank: false,
                             anchor: '100%',
-                            buttonText: '选择文件'
+                            buttonText: workFlowRes.processDefinitionHeader.buttonText
                         }
                         
                     ],
@@ -365,13 +365,13 @@ Ext.define('FlexCenter.flows.view.ProcessDefinitionHeader',{
                             xtype:'button',
                             formBind: true,
                             scope: me,
-                            text:'上传',
+                            text:workFlowRes.processDefinitionHeader.uploadFile,
                             handler:function(){
                                 var form = win.down('form').getForm();
                                 if(form.isValid()){
                                     form.submit({
                                         url: 'processFileAttachController.do?method=upload',
-                                        waitMsg: '正在上传........',
+                                        waitMsg: workFlowRes.processDefinitionHeader.waitMsg,
                                         success: function(fp, action) {
                                             var result=action.result;
                                             if(result.success){
@@ -384,16 +384,16 @@ Ext.define('FlexCenter.flows.view.ProcessDefinitionHeader',{
                                                 me.down('#'+downBtnItemId).setDisabled(false);
                                                 win.close();
                                             }else{
-                                                Ext.MessageBox.alert('失败', result.msg);
+                                                Ext.MessageBox.alert(globalRes.title.fail, result.msg);
                                             }
                                         },
                                         failure: function(form, action) {
                                             var text=action.response.responseText;
                                             if(text.indexOf('MaxUploadSizeExceededException')!=-1){
-                                                Ext.MessageBox.alert('失败', '文件过大，请重新选择文件，最大支持50M文件。');
+                                                Ext.MessageBox.alert(globalRes.title.fail, workFlowRes.processDefinitionHeader.fileLarge);
                                                 return;
                                             }
-                                            Ext.MessageBox.alert('失败', '请求超时或网络故障,错误编号：' + action.failureType);
+                                            Ext.MessageBox.alert(Ext.String.format(globalRes.title.fail, globalRes.remoteTimeout,action.failureType));
                                         }
                                     });
                                 }

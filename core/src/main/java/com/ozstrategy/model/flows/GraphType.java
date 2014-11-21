@@ -7,7 +7,8 @@ public enum GraphType {
     SequenceFlow("SequenceFlow"),
     StartNoneEvent("StartEvent"),
     UserTask("UserTask"),
-    EndNoneEvent("EndEvent");
+    EndNoneEvent("EndEvent"),
+    SubProcess("SubProcess");
     private String name;
     private GraphType(String name){
         this.name=name;

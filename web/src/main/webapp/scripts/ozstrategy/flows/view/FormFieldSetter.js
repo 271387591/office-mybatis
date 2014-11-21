@@ -6,7 +6,7 @@ Ext.define('FlexCenter.flows.view.FormFieldSetter', {
     ],
     extend: 'Ext.Window',
     alias: 'widget.formFieldSetter',
-    title: '字段设置',
+    title: workFlowRes.formFieldSetter.title,
     shim: false,
     modal: true,
     layout: 'fit',
@@ -102,7 +102,7 @@ Ext.define('FlexCenter.flows.view.FormFieldSetter', {
                     {
                         xtype:'button',
                         frame:true,
-                        text:'标为只读',
+                        text:workFlowRes.formFieldSetter.readable,
                         scope:this,
                         handler:function(){
                             var selects = me.down('grid').getSelectionModel().getSelection();
@@ -116,7 +116,7 @@ Ext.define('FlexCenter.flows.view.FormFieldSetter', {
                     {
                         xtype:'button',
                         frame:true,
-                        text:'标为可写',
+                        text:workFlowRes.formFieldSetter.writeble,
                         scope:this,
                         handler:function(){
                             var selects = me.down('grid').getSelectionModel().getSelection();
@@ -129,7 +129,7 @@ Ext.define('FlexCenter.flows.view.FormFieldSetter', {
                     {
                         xtype:'button',
                         frame:true,
-                        text:'标为隐藏',
+                        text:workFlowRes.formFieldSetter.hiddenable,
                         scope:this,
                         handler:function(){
                             var selects = me.down('grid').getSelectionModel().getSelection();
@@ -143,39 +143,39 @@ Ext.define('FlexCenter.flows.view.FormFieldSetter', {
                 columns:[
 //                    {xtype: 'rownumberer'},
                     {
-                        header: '字段名称',
+                        header: workFlowRes.formFieldSetter.headerVariable,
                         width:120,
                         dataIndex: 'variable'
                     },{
-                        header: '字段标题',
+                        header: workFlowRes.formFieldSetter.headerName,
                         width:120,
                         dataIndex: 'name'
                     },{
-                        header: '数据类型',
+                        header: workFlowRes.formFieldSetter.headerType,
                         width:80,
                         dataIndex: 'type'
                     },{
-                        header: '权限',
+                        header: workFlowRes.formFieldSetter.headerChmod,
                         width:80,
                         dataIndex: 'chmod',
                         renderer:function(v,rec){
                             if(v==0){
-                                return '<font color="#00bfff">只读</font>';
+                                return '<font color="#00bfff">'+workFlowRes.formFieldSetter.read+'</font>';
                             }else if(v==1){
-                                return '<font color="red">可写</font>';
+                                return '<font color="red">'+workFlowRes.formFieldSetter.write+'</font>';
                             }else if(v==2){
-                                return '<font color="#808080">隐藏</font>';
+                                return '<font color="#808080">'+workFlowRes.formFieldSetter.hidden+'</font>';
                             }
-                            return '<font color="red">可写</font>';
+                            return '<font color="red">'+workFlowRes.formFieldSetter.write+'</font>';
                         },
                         editor: new Ext.form.field.ComboBox({
                             typeAhead: true,
                             triggerAction: 'all',
                             selectOnTab: true,
                             store: [
-                                ['0','只读'],
-                                ['1','可写'],
-                                ['2','隐藏']
+                                ['0',workFlowRes.formFieldSetter.read],
+                                ['1',workFlowRes.formFieldSetter.write],
+                                ['2',workFlowRes.formFieldSetter.hidden]
                             ],
                             lazyRender: true,
                             listClass: 'x-combo-list-small',
@@ -187,7 +187,7 @@ Ext.define('FlexCenter.flows.view.FormFieldSetter', {
                             }
                         })
                     },{
-                        header: '表达式',
+                        header: workFlowRes.formFieldSetter.headerExpression,
                         dataIndex: 'expression',
                         flex: 1,
                         editor: {

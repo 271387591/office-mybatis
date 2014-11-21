@@ -11,6 +11,7 @@
             </list>
         </property>
     </bean>
+    <bean id="jmsMessageListener" class="com.ozstrategy.jms.JmsMessageListener"/>
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="${jdbc.driverClassName}"/>

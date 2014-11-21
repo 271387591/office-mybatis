@@ -29,7 +29,8 @@
     <%--<script type="text/javascript" src="<c:url value='/scripts/ux/Ext/ux/growl/ext-growl.js'/>"></script>--%>
     <script type="text/javascript" src="<c:url value="/jscripts/desktopRes.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/jscripts/jscriptRes.js"/>"></script>
-    <%--<script type="text/javascript" src="<c:url value='/desktop/classes.js'/>"></script>--%>
+    <script type="text/javascript" src="<c:url value="/scripts/lib/modeler.min.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/scripts/lib/jquery-1.7.1.min.js"/>"></script>
 
 
     <script type="text/javascript">

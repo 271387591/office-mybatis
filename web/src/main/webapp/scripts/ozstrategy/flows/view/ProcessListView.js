@@ -13,7 +13,7 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.processListView',
     itemId: 'processListView',
-    title: '流程列表',
+    title: workFlowRes.processDefinitionView.title,
     autoScroll: true,
     layout:'border',
     margin:1,
@@ -34,7 +34,7 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
         });
         me.items=[
             {
-                title: '流程分类',
+                title: workFlowRes.modeler.processCategory,
                 xtype: 'globalTypeTree',
                 region: 'west',
                 autoScroll:true,
@@ -63,7 +63,7 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
                             {
                                 xtype:'button',
                                 frame:true,
-                                text:'新建',
+                                text:workFlowRes.processDefinitionView.newProcess,
                                 iconCls:'table-add',
                                 scope:this,
                                 handler:me.onAddClick
@@ -71,7 +71,7 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
                             {
                                 xtype: 'button',
                                 frame: true,
-                                text: '删除',
+                                text: globalRes.buttons.remove,
                                 iconCls: 'table-add',
                                 scope: this,
                                 handler: function(){
@@ -86,44 +86,23 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
                             {
                                 xtype:'button',
                                 frame:true,
-                                text:'授权',
+                                text:workFlowRes.processListView.authorization,
                                 iconCls:'btn-shared',
                                 scope:me,
                                 handler:me.authorization
                             }
                         ]
-                    },
-                    
-                    '->',
-                    {
-                        xtype: 'textfield',
-                        name: 'name',
-                        itemId:'aModelFormSearch'
-                    },
-                    {
-                        xtype:'button',
-                        text:'搜索',
-                        iconCls:'search',
-                        handler:function(){
-                            var value = me.down('#aModelFormSearch').getValue();
-                            var grid=me.down('grid');
-                            grid.getStore().load({
-                                params:{
-                                    keyword:value
-                                }
-                            });
-                        }
-                    },
-                    {
-                        xtype:'button',
-                        text:'清空',
-                        iconCls:'clear',
-                        handler:function(){
-                            me.down('#aModelFormSearch').setValue('');
-                            me.down('grid').getStore().load();
-                        }
                     }
                 ],
+                features:[{
+                    ftype: 'search',
+                    disableIndexes : ['id','documentation','flowFormName','createDate','actDefId','version'],
+                    paramNames: {
+                        fields: 'fields',
+                        query: 'keyword'
+                    },
+                    searchMode : 'remote'
+                }],
                 dockedItems:[
                     {
                         xtype: 'pagingtoolbar',
@@ -137,61 +116,61 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
 //                        xtype:'rownumber'
 //                    },
                     {
-                        header: '流程名称',
+                        header: workFlowRes.header.flowName,
                         flex:1,
                         dataIndex: 'name'
                     },
                     {
-                        header: '流程分类',
+                        header: workFlowRes.modeler.processCategory,
                         flex:1,
                         dataIndex: 'category',
                         renderer:function(v){
                             if(!v){
-                                return '所有';
+                                return workFlowRes.processDefinitionView.allThe;
                             }
                             return v;
                         }
                     },
                     {
-                        header: '流程表单',
+                        header: workFlowRes.processListView.flowFormName,
                         flex:1,
                         dataIndex: 'flowFormName'
                     },
                     {
-                        header: '描述',
+                        header: userRoleRes.header.description,
                         flex:1,
                         dataIndex: 'documentation'
                     },
                     {
-                        header: '创建时间',
+                        header: globalRes.header.createDate,
                         flex:1,
                         dataIndex: 'createDate'
                     },
                     {
-                        header: '是否部署',
+                        header: workFlowRes.header.deployment,
                         flex:1,
                         dataIndex: 'actDefId',
                         renderer: function (v,m,rec) {
                             if(v){
-                                return '<font color="red">已部署</font>'
+                                return '<font color="red">'+workFlowRes.hasDeployment+'</font>'
                             }
-                            return '未部署';
+                            return workFlowRes.hasNotDeployment;
                         }
                     },
                     {
-                        header: '版本号',
+                        header: workFlowRes.processDefinitionView.version,
                         flex:1,
                         dataIndex: 'version'
                     },
                     {
                         xtype:'actioncolumn',
-                        header:'管理',
+                        header:globalRes.buttons.managerBtn,
                         flex:1,
 //                        width:'200',
                         items:[
                             {
                                 iconCls:'btn-flow-design',
-                                tooltip:'设计流程',
+                                tooltip:workFlowRes.processListView.design,
                                 handler:function(grid, rowIndex, colIndex){
                                     var rec = grid.getStore().getAt(rowIndex);
                                     me.onUpdateClick(rec);
@@ -199,7 +178,7 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
                             },'-',
                             {
                                 iconCls:'deploy',
-                                tooltip:'部署',
+                                tooltip:workFlowRes.flowDeploymentBtn,
                                 handler:function(grid, rowIndex, colIndex){
                                     var rec = grid.getStore().getAt(rowIndex);
                                     me.deployed(rec);
@@ -207,7 +186,7 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
                             },'-',
                             {
                                 iconCls:'btn-preview',
-                                tooltip:'查看流程图',
+                                tooltip:workFlowRes.readdocument,
                                 handler:function(grid, rowIndex, colIndex){
                                     var rec = grid.getStore().getAt(rowIndex);
                                     me.preViewFlow(rec);
@@ -233,9 +212,9 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
         var record=(selects.length>0?store.getById(selects[0].get('id')):null);
         if(record==null){
             Ext.MessageBox.show({
-                title: '流程授权',
+                title: workFlowRes.processListView.authorizationTitle,
                 width: 300,
-                msg: '请选择要授权的流程。',
+                msg: workFlowRes.processListView.authorizationMsg,
                 buttons: Ext.MessageBox.OK,
                 icon: Ext.MessageBox.INFO
             });
@@ -254,7 +233,7 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
                     win.close();
                 }else{
                     Ext.MessageBox.alert({
-                        title:'警告',
+                        title:globalRes.title.warning,
                         icon: Ext.MessageBox.ERROR,
                         msg:result.message,
                         buttons:Ext.MessageBox.OK
@@ -268,12 +247,12 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
         ajaxPostRequest('processDefController.do?method=deploy',{id:rec.get('id')},function(result){
             var msg;
             if(result.success){
-                msg='部署成功！';
+                msg=workFlowRes.processListView.depSuc;
             }
             me.down('grid').getStore().load();
             me.down('grid').getSelectionModel().deselectAll();
             Ext.MessageBox.alert({
-                title:'提示',
+                title:globalRes.title.prompt,
                 icon: Ext.MessageBox.INFO,
                 msg:msg?msg:result.message,
                 buttons:Ext.MessageBox.OK
@@ -296,7 +275,7 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
                 moder.show();
             }else{
                 Ext.MessageBox.alert({
-                    title:'警告',
+                    title:globalRes.title.warning,
                     icon: Ext.MessageBox.ERROR,
                     msg:result.message,
                     buttons:Ext.MessageBox.OK
@@ -320,9 +299,9 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
         var selection = grid.getSelectionModel().getSelection();
         if(selection.length<1){
             Ext.MessageBox.show({
-                title: '删除',
+                title: globalRes.buttons.remove,
                 width: 300,
-                msg: '请选择要删除的流程',
+                msg: workFlowRes.changeDeleteFlow,
                 buttons: Ext.MessageBox.OK,
                 icon: Ext.MessageBox.INFO
             });
@@ -334,7 +313,7 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
                 me.down('grid').getStore().load();
             }else{
                 Ext.MessageBox.alert({
-                    title:'警告',
+                    title:globalRes.title.warning,
                     icon: Ext.MessageBox.ERROR,
                     msg:result.message,
                     buttons:Ext.MessageBox.OK
@@ -373,7 +352,7 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
                 moder.show();
             }else{
                 Ext.MessageBox.alert({
-                    title:'警告',
+                    title:globalRes.title.warning,
                     icon: Ext.MessageBox.ERROR,
                     msg:result.message,
                     buttons:Ext.MessageBox.OK
@@ -390,7 +369,7 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
                 win.close();
             }else{
                 Ext.MessageBox.alert({
-                    title:'警告',
+                    title:globalRes.title.warning,
                     icon: Ext.MessageBox.ERROR,
                     msg:result.message,
                     buttons:Ext.MessageBox.OK

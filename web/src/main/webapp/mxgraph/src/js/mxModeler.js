@@ -232,7 +232,10 @@ mxModeler.prototype.addGraphListeners = function(graph,showProperties)
             var source=cell.source;
             var target=cell.target;
             if(source && target && (source.value.getAttribute('type')=='startEvent')){
-                target.value.setAttribute('tasktype','Starter');
+                var targetParent=target.getParent();
+                if(!mxUtils.isNode(targetParent.value)){
+                    target.value.setAttribute('tasktype','Starter');
+                }
             }
         }
         if(showProperties){

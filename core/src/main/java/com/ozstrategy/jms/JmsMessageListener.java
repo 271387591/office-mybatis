@@ -1,7 +1,6 @@
 package com.ozstrategy.jms;
 
-import com.ozstrategy.service.MailEngine;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang.ObjectUtils;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,11 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
  * Time: 2:28 PM
  * To change this template use File | Settings | File Templates.
  */
-public class MailMessageListener {
-    static final int TRY=3;
-    @Autowired
-    private MailEngine mailEngine;
+public class JmsMessageListener {
     public void onMessage(Object message) {
+        System.out.println("message==="+ ObjectUtils.toString(message));
+//        Event event = Event.createDataEvent("/guoguo/myevent1");
+
+//        event.setField("key1", "Unicast msg");
+
+//        Dispatcher.getInstance().unicast(event, "piero"); // 向ID为piero的用户推送
 //        try {
 //            if(message instanceof MailBody){
 //                MailBody body=(MailBody)message;

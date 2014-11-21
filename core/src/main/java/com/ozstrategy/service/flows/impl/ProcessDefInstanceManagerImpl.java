@@ -2,7 +2,6 @@ package com.ozstrategy.service.flows.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ozstrategy.Constants;
-import com.ozstrategy.dao.flows.ProcessDefDao;
 import com.ozstrategy.dao.flows.ProcessDefInstanceDao;
 import com.ozstrategy.dao.flows.ProcessElementDao;
 import com.ozstrategy.dao.flows.ProcessFileAttachDao;
@@ -22,7 +21,6 @@ import com.ozstrategy.model.userrole.User;
 import com.ozstrategy.service.flows.ProcessDefInstanceManager;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.IdentityService;
-import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricTaskInstance;
@@ -48,11 +46,7 @@ import java.util.Set;
 @Service("processDefInstanceManager")
 public class ProcessDefInstanceManagerImpl implements ProcessDefInstanceManager {
     @Autowired
-    private ProcessDefDao processDefDao;
-    @Autowired
     private RuntimeService runtimeService;
-    @Autowired
-    private RepositoryService repositoryService;
     @Autowired
     private TaskService taskService;
     @Autowired
@@ -125,6 +119,33 @@ public class ProcessDefInstanceManagerImpl implements ProcessDefInstanceManager 
                 }
             }
         }
+        //save ProcessDefInstance
+        ProcessDefInstance defInstance=new ProcessDefInstance();
+        defInstance.setActInstanceId(instance.getProcessInstanceId());
+        defInstance.setProcessDef(def);
+        defInstance.setStartDate(new Date());
+        defInstance.setCreateDate(new Date());
+        defInstance.setCreator(user);
+        defInstance.setLastUpdateDate(new Date());
+        defInstance.setLastUpdater(user);
+        defInstance.setVersion(def.getVersion());
+        defInstance.setName(def.getName());
+        defInstance.setTitle(ObjectUtils.toString(map.get("title")));
+        processDefInstanceDao.saveProcessDefInstance(defInstance);
+        String fileAttaches=ObjectUtils.toString(map.get("fileAttaches"));
+        if(StringUtils.isNotEmpty(fileAttaches)){
+            String[] fileAttacheIds=fileAttaches.split(",");
+            for(String fileAttacheId:fileAttacheIds){
+                ProcessFileAttach processFileAttach = processFileAttachDao.getProcessFileAttachById(Long.parseLong(fileAttacheId));
+                if(processFileAttach!=null){
+                    processFileAttach.setInstance(defInstance);
+                    processFileAttach.setLastUpdateDate(new Date());
+                    processFileAttach.setLastUpdater(user);
+                    processFileAttach.setActInstanceId(instance.getProcessInstanceId());
+                    processFileAttachDao.updateProcessFileAttach(processFileAttach);
+                }
+            }
+        }
 //        List<ProcessElement> signTasks=new ArrayList<ProcessElement>();
 //        ProcessElement processElement=processElementDao.getProcessElementByTaskKeyAndDefId(def.getId(),task.getTaskDefinitionKey());
 //        if(processElement==null){
@@ -164,33 +185,7 @@ public class ProcessDefInstanceManagerImpl implements ProcessDefInstanceManager 
                 taskLinkTaskDao.insert(taskLinkTask);
             }
         }
-        //save ProcessDefInstance
-        ProcessDefInstance defInstance=new ProcessDefInstance();
-        defInstance.setActInstanceId(instance.getProcessInstanceId());
-        defInstance.setProcessDef(def);
-        defInstance.setStartDate(new Date());
-        defInstance.setCreateDate(new Date());
-        defInstance.setCreator(user);
-        defInstance.setLastUpdateDate(new Date());
-        defInstance.setLastUpdater(user);
-        defInstance.setVersion(def.getVersion());
-        defInstance.setName(def.getName());
-        defInstance.setTitle(ObjectUtils.toString(map.get("title")));
-        processDefInstanceDao.saveProcessDefInstance(defInstance);
-        String fileAttaches=ObjectUtils.toString(map.get("fileAttaches"));
-        if(StringUtils.isNotEmpty(fileAttaches)){
-            String[] fileAttacheIds=fileAttaches.split(",");
-            for(String fileAttacheId:fileAttacheIds){
-                ProcessFileAttach processFileAttach = processFileAttachDao.getProcessFileAttachById(Long.parseLong(fileAttacheId));
-                if(processFileAttach!=null){
-                    processFileAttach.setInstance(defInstance);
-                    processFileAttach.setLastUpdateDate(new Date());
-                    processFileAttach.setLastUpdater(user);
-                    processFileAttach.setActInstanceId(instance.getProcessInstanceId());
-                    processFileAttachDao.updateProcessFileAttach(processFileAttach);
-                }
-            }
-        }
+        
         //save TaskInstance
         List<HistoricTaskInstance> taskInstances=historyService.createHistoricTaskInstanceQuery().processInstanceId(instance.getProcessInstanceId()).finished().list();
         if(taskInstances!=null && taskInstances.size()>0){
@@ -205,6 +200,7 @@ public class ProcessDefInstanceManagerImpl implements ProcessDefInstanceManager 
                 taskInstance.setInstance(defInstance);
                 taskInstance.setTaskKey(historicTaskInstance.getTaskDefinitionKey());
                 taskInstance.setActTaskId(historicTaskInstance.getId());
+                taskInstance.setProcessDef(def);
                 ProcessElement element=processElementDao.getProcessElementByTaskKeyAndDefId(def.getId(),historicTaskInstance.getTaskDefinitionKey());
                 taskInstance.setElement(element);
                 taskInstance.setCreator(user);

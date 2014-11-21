@@ -27,7 +27,7 @@ Ext.define('FlexCenter.UserHeader', {
               id: 'head-lb-1',
               cls: 'welcome',
               style: 'font-size:12px',
-              text: '欢迎您, '
+              text: globalRes.welcome
             },
               {
                   text:globalRes.userFullName,
@@ -47,14 +47,14 @@ Ext.define('FlexCenter.UserHeader', {
                               {
                                   colspan: 2,
                                   iconCls:'user-edit',
-                                  text: '修改资料',
+                                  text: userRoleRes.editUserProfile,
                                   scale: 'small',
                                   width: 130
                               },
                               {
                                   colspan: 2,
                                   iconCls:'logout',
-                                  text: '安全退出',
+                                  text: globalRes.buttons.logout,
                                   scale: 'small',
                                   width: 130,
                                   handler:me.onLogout
@@ -70,7 +70,7 @@ Ext.define('FlexCenter.UserHeader', {
               id: 'head-lb-3',
               cls: 'welcome',
               style: 'font-size:12px',
-              text: '今天是：' +this.getToday()
+              text: globalRes.welcomeToday +this.getToday()
             }
           ]
         }

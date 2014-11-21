@@ -625,17 +625,18 @@ Ext.define('Oz.app.Tabs', {
 
     addToolTips: function() {
         Ext.Array.each(this.staticTabs, function(tab) {
-            var clses=Ext.query('.doctab.' + tab.cls);
-            Ext.Array.each(clses,function(cls){
-                var el = Ext.get(cls);
-                if (el) {
-                    Ext.create('Ext.tip.ToolTip', {
-                        target: el,
-                        html: tab.tooltip
-                    });
-                }
-            });
-
+            if(tab && (tab.cls!=undefined || tab.cls!=null)){
+                var clses=Ext.query('.doctab.' + tab.cls);
+                Ext.Array.each(clses,function(cls){
+                    var el = Ext.get(cls);
+                    if (el) {
+                        Ext.create('Ext.tip.ToolTip', {
+                            target: el,
+                            html: tab.tooltip
+                        });
+                    }
+                });
+            }
         });
 
         Ext.Array.each(this.tabsInBar, function(url) {

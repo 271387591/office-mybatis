@@ -7,7 +7,7 @@ Ext.define('FlexCenter.flows.view.ModelerPreviewWindow',{
     ],
     extend:'Ext.Window',
     alias: 'widget.modelerPreviewWindow',
-    title: '流程预览',
+    title: workFlowRes.modeler.processPreview,
 //    maximized: true,
     maximizable:true,
     animCollapse : true,

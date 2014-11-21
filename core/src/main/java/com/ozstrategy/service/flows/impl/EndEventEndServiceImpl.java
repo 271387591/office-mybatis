@@ -6,10 +6,9 @@ import com.ozstrategy.dao.flows.TaskInstanceDao;
 import com.ozstrategy.model.flows.ProcessDefInstance;
 import com.ozstrategy.model.flows.ProcessElement;
 import com.ozstrategy.model.flows.TaskInstance;
+import com.ozstrategy.model.flows.TaskInstanceStatus;
 import com.ozstrategy.service.flows.EndEventEndService;
 import org.activiti.engine.delegate.DelegateExecution;
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +40,7 @@ public class EndEventEndServiceImpl implements EndEventEndService {
         instance.setInstance(defInstance);
         ProcessElement element=processElementDao.getProcessElementByTaskKeyAndActDefId(execution.getProcessDefinitionId(),execution.getCurrentActivityId());
         instance.setElement(element);
+        instance.setStatus(TaskInstanceStatus.End);
         taskInstanceDao.saveTaskInstance(instance);
     }
 }

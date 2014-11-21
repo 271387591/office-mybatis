@@ -214,12 +214,11 @@ Ext.define('Oz.app.ThumbList', {
                 title: group.title,
                 parentUrl:group.parentUrl,
                 items: Ext.Array.map(group.items, function(item) {
-                    if (item.items) {
+                    if (item && item.items) {
                         var groupItem = Ext.apply({}, expand(item)[0]);
                         groupItem.title = item.title;
                         return groupItem;
-                    }
-                    else {
+                    }else {
                         return item;
                     }
                 })

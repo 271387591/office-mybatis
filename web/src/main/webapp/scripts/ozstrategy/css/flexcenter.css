@@ -509,6 +509,10 @@ html{
 .save {
     background-image: url(icons/save.gif) !important;
 }
+.messageTip {
+    background-image: url(icons/newpm.gif) !important;
+}
+
 
 
 

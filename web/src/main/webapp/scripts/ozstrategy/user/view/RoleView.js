@@ -57,31 +57,32 @@ Ext.define('FlexCenter.user.view.RoleView',{
         plugins: Ext.create('Oz.access.RoleAccess', {featureName:'deleteRole',mode:'hide'}),
       scope:me,
       handler:me.onDeleteClick
-    },'->','-',
-    {
-      xtype:'textfield',
-      itemId:'searchRoleName',
-      listeners:{
-        change: function(self,newValue){
-          if(!newValue){
-            me.onSearchClick();
-          }
-        }
-      }
-    },
-      {
-        text:globalRes.buttons.search,
-        iconCls:'search',
-        scope:me,
-        handler: me.onSearchClick
-      },{
-        text:globalRes.buttons.clear,
-        iconCls:'clear',
-        handler: function(){
-          me.down('textfield#searchRoleName').setValue("");
-          me.onSearchClick();
-        }
-      }
+    }
+    //    ,'->','-',
+    //{
+    //  xtype:'textfield',
+    //  itemId:'searchRoleName',
+    //  listeners:{
+    //    change: function(self,newValue){
+    //      if(!newValue){
+    //        me.onSearchClick();
+    //      }
+    //    }
+    //  }
+    //},
+    //  {
+    //    text:globalRes.buttons.search,
+    //    iconCls:'search',
+    //    scope:me,
+    //    handler: me.onSearchClick
+    //  },{
+    //    text:globalRes.buttons.clear,
+    //    iconCls:'clear',
+    //    handler: function(){
+    //      me.down('textfield#searchRoleName').setValue("");
+    //      me.onSearchClick();
+    //    }
+    //  }
     ];
       me.plugins = Ext.create('Oz.access.RoleAccess', {featureName:'updateRole',mode:'hide'});
 
@@ -102,7 +103,7 @@ Ext.define('FlexCenter.user.view.RoleView',{
       dataIndex: 'createDate',
       flex:1
     }];
-      me.features={
+      me.features=[{
           id: 'detail',
               ftype: 'detail',
               tplDetail:[
@@ -113,7 +114,15 @@ Ext.define('FlexCenter.user.view.RoleView',{
                   globalRes.header.createDate + ' : <b>{createDate}</b><br/>',
               '</tpl>'
           ]
-      };
+      },{
+          ftype: 'search',
+          disableIndexes : ['id','description','createDate'],
+          paramNames: {
+              fields: 'fields',
+              query: 'keyword'
+          },
+          searchMode : 'remote'
+      }];
 
     me.dockedItems = [{
       xtype: 'pagingtoolbar',

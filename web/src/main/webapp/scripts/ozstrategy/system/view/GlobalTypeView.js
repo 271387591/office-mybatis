@@ -38,56 +38,39 @@ Ext.define('FlexCenter.system.view.GlobalTypeView', {
     });
     Ext.apply(this, {
       layout: 'fit',
-      tbar: [
-        {
-          frame: true,
-          iconCls: 'add',
-          xtype: 'button',
-          text: '添加',
-          scope: this,
-          handler: this.onAddClick
-        },
-        '-',
-        {
-          frame: true,
-          iconCls: 'update',
-          xtype: 'button',
-          text: '编辑',
-          scope: this,
-          handler: this.onUpdateClick
-        },
-        {
-          frame: true,
-          iconCls: 'delete',
-          xtype: 'button',
-          text: '删除',
-          scope: this,
-          handler: this.onDeleteClick
-        },'->','-',
-        {
-          xtype:'textfield',
-          itemId:'searchKeyword'
-        },
-        {
-          text: '查询',
-          iconCls: 'search',
-          scope: this,
-          handler: this.onSearchClick
-        },
-        {
-          text: '清空',
-          iconCls: 'clear',
-          handler: function () {
-            me.down('textfield#searchKeyword').setValue("");
-            me.onSearchClick();
-          }
-        }
-      ],
+      
       items: {
         xtype: 'grid',
         border: false,
         forceFit: true,
         autoScroll: true,
+        tbar: [
+          {
+            frame: true,
+            iconCls: 'add',
+            xtype: 'button',
+            text: '添加',
+            scope: this,
+            handler: this.onAddClick
+          },
+          '-',
+          {
+            frame: true,
+            iconCls: 'update',
+            xtype: 'button',
+            text: '编辑',
+            scope: this,
+            handler: this.onUpdateClick
+          },
+          {
+            frame: true,
+            iconCls: 'delete',
+            xtype: 'button',
+            text: '删除',
+            scope: this,
+            handler: this.onDeleteClick
+          }
+        ],
         dockedItems: [
           {
             xtype: 'pagingtoolbar',
@@ -96,6 +79,15 @@ Ext.define('FlexCenter.system.view.GlobalTypeView', {
             displayInfo: true
           }
         ],
+          features:[{
+            ftype: 'search',
+            disableIndexes : ['id','typeKey','catKey','parentName','createDate'],
+            paramNames: {
+              fields: 'fields',
+              query: 'keyword'
+            },
+            searchMode : 'remote'
+          }],
         columns: [
           {
             header: '名称',

@@ -6,7 +6,7 @@ Ext.define('FlexCenter.flows.view.CountersignTaskWindow',{
     ],
     extend:'Ext.Window',
     alias: 'widget.countersignTaskWindow',
-    title: '会签设置',
+    title: workFlowRes.countersignTaskWindow.title,
     animCollapse : true,
     layout: 'fit',
     width:400,
@@ -24,7 +24,7 @@ Ext.define('FlexCenter.flows.view.CountersignTaskWindow',{
                 },
                 buttons:[
                     {
-                        text:'确定',
+                        text:globalRes.buttons.ok,
                         formBind: true,
                         handler:function(){
                             var data=me.down('form').getForm().getValues();
@@ -36,7 +36,7 @@ Ext.define('FlexCenter.flows.view.CountersignTaskWindow',{
                         }
                     },
                     {
-                        text:'取消',
+                        text:globalRes.buttons.cancel,
                         handler:function(){
                             me.close();
                         }
@@ -45,7 +45,7 @@ Ext.define('FlexCenter.flows.view.CountersignTaskWindow',{
                 items:[
                     {
                         xtype      : 'fieldcontainer',
-                        fieldLabel : '会签模式',
+                        fieldLabel : workFlowRes.countersignTaskWindow.signType,
                         defaultType: 'radiofield',
                         defaults: {
                             flex: 1
@@ -53,7 +53,7 @@ Ext.define('FlexCenter.flows.view.CountersignTaskWindow',{
                         layout: 'hbox',
                         items:[
                             {
-                                boxLabel  : '按人数',
+                                boxLabel  : workFlowRes.countersignTaskWindow.signTypePerson,
                                 name      : 'signType',
                                 inputValue: '1',
                                 checked:data.signType==1 || !me.data,
@@ -61,13 +61,13 @@ Ext.define('FlexCenter.flows.view.CountersignTaskWindow',{
                                     change : function(checkbox, newValue, oldValue){
                                         var numberfield=me.down('form').down('numberfield');
                                         numberfield.reset();
-                                        numberfield.setFieldLabel('会签通过率(%)');
+                                        numberfield.setFieldLabel(workFlowRes.countersignTaskWindow.signTypeCenTitle);
                                         numberfield.setMaxValue(100);
                                     }
                                 }
                             },
                             {
-                                boxLabel  : '按百分比',
+                                boxLabel  : workFlowRes.countersignTaskWindow.signTypePercent,
                                 name      : 'signType',
                                 inputValue: '2',
                                 checked:data.signType==2,
@@ -75,7 +75,7 @@ Ext.define('FlexCenter.flows.view.CountersignTaskWindow',{
                                     change : function(checkbox, newValue, oldValue){
                                         var numberfield=me.down('form').down('numberfield');
                                         numberfield.reset();
-                                        numberfield.setFieldLabel('会签通过人数');
+                                        numberfield.setFieldLabel(workFlowRes.countersignTaskWindow.signTypeSonTitle);
                                         numberfield.setMaxValue(9999999999);
                                     }
                                 }
@@ -90,7 +90,7 @@ Ext.define('FlexCenter.flows.view.CountersignTaskWindow',{
                                 name: 'num',
                                 allowBlank:false,
                                 value:data.num,
-                                fieldLabel: '会签通过人数',
+                                fieldLabel: workFlowRes.countersignTaskWindow.signTypeSonTitle,
                                 minValue: 0,
                                 maxValue:9999999999,
                                 hideTrigger: true,

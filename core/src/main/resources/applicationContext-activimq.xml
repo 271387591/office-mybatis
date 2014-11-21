@@ -33,9 +33,14 @@
         <!-- Set the Queue Name -->
         <constructor-arg index="0" value="HelloWorldQueue"/>
     </bean>
+    <bean id="systemMessageDestination" class="org.apache.activemq.command.ActiveMQQueue">
+        <!-- Set the Queue Name -->
+        <constructor-arg index="0" value="HelloWorldQueue"/>
+    </bean>
+    
     <bean id="messageListener" class="org.springframework.jms.listener.adapter.MessageListenerAdapter" >
         <constructor-arg>
-            <bean class="com.ozstrategy.jms.MailMessageListener"></bean>
+            <ref bean="jmsMessageListener"/>
         </constructor-arg>
         <property name="defaultListenerMethod" value="onMessage" />
     </bean>

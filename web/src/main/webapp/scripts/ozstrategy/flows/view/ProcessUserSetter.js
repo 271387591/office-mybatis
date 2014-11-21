@@ -8,7 +8,7 @@ Ext.define('FlexCenter.flows.view.ProcessUserSetter', {
     ],
     extend: 'Ext.Window',
     alias: 'widget.processUserSetter',
-    title: '人员设置',
+    title: workFlowRes.modeler.usertaskassignmentTitle,
     shim: false,
     modal: true,
     layout: 'fit',
@@ -60,21 +60,21 @@ Ext.define('FlexCenter.flows.view.ProcessUserSetter', {
                 columns:[
                     {xtype: 'rownumberer'},
                     {
-                        header: '类型',
+                        header: workFlowRes.processUserSetter.assignment_type,
                         width:120,
                         dataIndex: 'assignment_type',
                         renderer:function(v,rec){
                             if(v=='assignee'){
-                                return '执行者';
+                                return workFlowRes.processUserSetter.assignee;
                             }else if(v=='candidateUsers'){
-                                return '候选人分配';
+                                return workFlowRes.processUserSetter.candidateUsers;
                             }else if(v=='candidateRoles'){
-                                return '按角色分配';
+                                return workFlowRes.processUserSetter.candidateRoles;
                             }
                             return '';
                         }
                     },{
-                        header: '值',
+                        header: workFlowRes.processUserSetter.assValue,
                         flex:1,
                         dataIndex: 'resourceassignmentexprDisplay',
                         editor: {
@@ -113,12 +113,12 @@ Ext.define('FlexCenter.flows.view.ProcessUserSetter', {
                         }
                     },{
                         xtype:'actioncolumn',
-                        header:'清空',
+                        header:globalRes.buttons.clear,
                         width:50,
                         items:[
                             {
                                 iconCls:'delete',
-                                tooltip:'清空',
+                                tooltip:globalRes.buttons.clear,
                                 handler:function(grid, rowIndex, colIndex){
                                     var rec = grid.getStore().getAt(rowIndex);
                                     rec.set('resourceassignmentexprDisplay','');

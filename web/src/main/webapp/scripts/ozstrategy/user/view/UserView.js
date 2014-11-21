@@ -40,91 +40,93 @@ Ext.define('FlexCenter.user.view.UserView', {
     Ext.apply(this, {
       layout: 'fit',
       border: false,
-      tbar: [
-        {
-          frame:true,
-          iconCls:'user-add',
-          xtype:'button',
-          text:globalRes.buttons.add,
-          scope: this,
-            plugins: Ext.create('Oz.access.RoleAccess', {featureName:'addUser',mode:'hide'}),
-          handler: this.onAddClick
-        },
-        {
-          frame:true,
-          iconCls:'user-edit',
-          xtype:'button',
-          text:globalRes.buttons.edit,
-            itemId:'userEditBtn',
-          plugins: Ext.create('Oz.access.RoleAccess', {featureName:'updateUser',mode:'hide'}),
-          scope: this,
-          handler: this.onEditClick
-        },
-        {
-          iconCls:'user-edit',
-          text:userRoleRes.passwordTilte,
-          scope:this,
-            itemId:'userPasswordTilteBtn',
-            plugins: Ext.create('Oz.access.RoleAccess', {featureName:'updateUserPassword',mode:'hide'}),
-          handler:this.onChangePasswordClick
-        },
-        {
-          iconCls:'user-delete',
-          itemId:'lockUserBtn',
-          text:userRoleRes.lockUser,
-          scope:this,
-            itemId:'userLockUserBtn',
-            plugins: Ext.create('Oz.access.RoleAccess', {featureName:'lockUser',mode:'hide'}),
-          handler: this.onLockUserClick
-        },
-        {
-          iconCls:'user-delete',
-          itemId:'enableUserBtn',
-          text:userRoleRes.disableUser,
-          scope:this,
-            plugins: Ext.create('Oz.access.RoleAccess', {featureName:'disableUser',mode:'hide'}),
-          handler: this.onDisableUserClick
-        },{
-          iconCls:'user-edit',
-          itemId:'unLockUserBtn',
-          text:userRoleRes.unLockUser,
-              plugins: Ext.create('Oz.access.RoleAccess', {featureName:'unLockUser',mode:'hide'}),
-          scope:this,
-          handler: this.onUnLockUserClick
-        },{
-          iconCls:'user-edit',
-          itemId:'unDisableUserBtn',
-          text:userRoleRes.unDisableUser,
-              plugins: Ext.create('Oz.access.RoleAccess', {featureName:'enableUser',mode:'hide'}),
-          scope:this,
-          handler: this.onUnDisableUserClick
-        },'->','-',
-        {
-          xtype:'textfield',
-          itemId:'searchKeyword',
-          listeners:{
-            change: function(self,newValue){
-              if(!newValue){
-                me.onSearchClick();
-              }
-            }
-          }
-        },
-        {
-          text:globalRes.buttons.search,
-          iconCls:'search',
-          scope:this,
-          handler: this.onSearchClick
-        },{
-          text:globalRes.buttons.clear,
-          iconCls:'clear',
-          handler: function(){
-            me.down('textfield#searchKeyword').setValue("");
-            me.onSearchClick();
-          }
-        }
-      ],
       items: {
+          tbar: [
+              {
+                  frame:true,
+                  iconCls:'user-add',
+                  xtype:'button',
+                  text:globalRes.buttons.add,
+                  scope: this,
+                  plugins: Ext.create('Oz.access.RoleAccess', {featureName:'addUser',mode:'hide'}),
+                  handler: this.onAddClick
+              },
+              {
+                  frame:true,
+                  iconCls:'user-edit',
+                  xtype:'button',
+                  text:globalRes.buttons.edit,
+                  itemId:'userEditBtn',
+                  plugins: Ext.create('Oz.access.RoleAccess', {featureName:'updateUser',mode:'hide'}),
+                  scope: this,
+                  handler: this.onEditClick
+              },
+              {
+                  iconCls:'user-edit',
+                  text:userRoleRes.passwordTilte,
+                  scope:this,
+                  itemId:'userPasswordTilteBtn',
+                  plugins: Ext.create('Oz.access.RoleAccess', {featureName:'updateUserPassword',mode:'hide'}),
+                  handler:this.onChangePasswordClick
+              },
+              {
+                  iconCls:'user-delete',
+                  itemId:'lockUserBtn',
+                  text:userRoleRes.lockUser,
+                  scope:this,
+                  itemId:'userLockUserBtn',
+                  plugins: Ext.create('Oz.access.RoleAccess', {featureName:'lockUser',mode:'hide'}),
+                  handler: this.onLockUserClick
+              },
+              {
+                  iconCls:'user-delete',
+                  itemId:'enableUserBtn',
+                  text:userRoleRes.disableUser,
+                  scope:this,
+                  plugins: Ext.create('Oz.access.RoleAccess', {featureName:'disableUser',mode:'hide'}),
+                  handler: this.onDisableUserClick
+              },{
+                  iconCls:'user-edit',
+                  itemId:'unLockUserBtn',
+                  text:userRoleRes.unLockUser,
+                  plugins: Ext.create('Oz.access.RoleAccess', {featureName:'unLockUser',mode:'hide'}),
+                  scope:this,
+                  handler: this.onUnLockUserClick
+              },{
+                  iconCls:'user-edit',
+                  itemId:'unDisableUserBtn',
+                  text:userRoleRes.unDisableUser,
+                  plugins: Ext.create('Oz.access.RoleAccess', {featureName:'enableUser',mode:'hide'}),
+                  scope:this,
+                  handler: this.onUnDisableUserClick
+              }
+              //  ,'->','-',
+              //{
+              //  xtype:'textfield',
+              //  itemId:'searchKeyword',
+              //  listeners:{
+              //    change: function(self,newValue){
+              //      if(!newValue){
+              //        me.onSearchClick();
+              //      }
+              //    }
+              //  }
+              //},
+              //{
+              //  text:globalRes.buttons.search,
+              //  iconCls:'search',
+              //  scope:this,
+              //  handler: this.onSearchClick
+              //},{
+              //  text:globalRes.buttons.clear,
+              //  iconCls:'clear',
+              //  handler: function(){
+              //    me.down('textfield#searchKeyword').setValue("");
+              //    me.onSearchClick();
+              //  }
+              //}
+          ],
+          
         xtype: 'grid',
         border: false,
         forceFit: true,
@@ -136,18 +138,26 @@ Ext.define('FlexCenter.user.view.UserView', {
           dock: 'bottom',
           displayInfo: true
         }],
-          features:{
+          features:[{
+              ftype: 'search',
+              disableIndexes : ['id','defaultRoleDisplayName','accountLocked','enabled','createDate'],
+              paramNames: {
+                  fields: 'fields',
+                  query: 'keyword'
+              },
+              searchMode : 'remote'
+          },{
               id: 'detail',
               ftype: 'detail',
               tplDetail:[
                   '<tpl for=".">',
-                      userRoleRes.header.fullName + ' : <b>{fullName}</b><br/>',
-                      userRoleRes.header.defaultRoleName + ' : <b>{defaultRoleDisplayName}</b><br/>',
-                      userRoleRes.userRoles + ' : <b><tpl for="simpleRoles"><tpl if="xindex != 1">, </tpl>{#}. {displayName}</tpl></b><br/>',
-                      globalRes.header.createDate + ' : <b>{createDate}</b><br/>',
+                  userRoleRes.header.fullName + ' : <b>{fullName}</b><br/>',
+                  userRoleRes.header.defaultRoleName + ' : <b>{defaultRoleDisplayName}</b><br/>',
+                  userRoleRes.userRoles + ' : <b><tpl for="simpleRoles"><tpl if="xindex != 1">, </tpl>{#}. {displayName}</tpl></b><br/>',
+                  globalRes.header.createDate + ' : <b>{createDate}</b><br/>',
                   '</tpl>'
               ]
-          },
+          }],
         columns: [
           {
             header: userRoleRes.header.fullName,

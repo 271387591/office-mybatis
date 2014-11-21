@@ -49,14 +49,30 @@
     </bean>
 
     <!-- Configure Velocity for sending e-mail -->
+    <!--<bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">-->
+        <!--<property name="velocityProperties">-->
+            <!--<props>-->
+                <!--<prop key="resource.loader">class</prop>-->
+                <!--<prop key="class.resource.loader.class">-->
+                    <!--org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader-->
+                <!--</prop>-->
+                <!--<prop key="velocimacro.library"></prop>-->
+            <!--</props>-->
+        <!--</property>-->
+    <!--</bean>-->
     <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+        <property name="resourceLoaderPath" value="classpath:velocity/" />
         <property name="velocityProperties">
             <props>
-                <prop key="resource.loader">class</prop>
-                <prop key="class.resource.loader.class">
-                    org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
-                </prop>
-                <prop key="velocimacro.library"></prop>
+                <prop key="input.encoding">UTF-8</prop>
+                <prop key="output.encoding">UTF-8</prop>
+                <prop key="runtime.log.error.stacktrace">true</prop>
+                <prop key="runtime.log.invalid.reference">true</prop>
+                <!--<prop key="resource.loader">class</prop>-->
+                <!--<prop key="class.resource.loader.class">-->
+                <!--org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader-->
+                <!--</prop>-->
+                <!--<prop key="velocimacro.library"></prop>-->
             </props>
         </property>
     </bean>

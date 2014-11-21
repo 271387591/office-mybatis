@@ -8,8 +8,8 @@ Ext.define('FlexCenter.flows.view.ApplyProcessHistoryView',{
     extend: 'Ext.panel.Panel',
     alias: 'widget.applyProcessHistoryView',
     itemId:'applyProcessHistoryView',
-    title:'流程申请记录',
-    text:'流程申请记录',
+    title:workFlowRes.applyProcessHistoryView.title,
+    text:workFlowRes.applyProcessHistoryView.title,
     layout:'border',
     autoScroll:true,
     getStore:function(){
@@ -42,18 +42,18 @@ Ext.define('FlexCenter.flows.view.ApplyProcessHistoryView',{
                         border:false,
                         items:[
                             {
-                                fieldLabel:'流程名称',
+                                fieldLabel:workFlowRes.applyProcessHistoryView.searchProcessName,
                                 xtype : 'textfield',
                                 name : 'processName'
                             },
                             {
-                                fieldLabel:'流程状态',
+                                fieldLabel:workFlowRes.applyProcessHistoryView.searchPstatus,
                                 name: 'pstatus',
                                 xtype : 'combo',
                                 mode : 'local',
                                 editable : false,
                                 triggerAction : 'all',
-                                store :[['0','正在运行'],['1','已结束']]
+                                store :[['0',workFlowRes.applyProcessHistoryView.runStatus],['1',workFlowRes.applyProcessHistoryView.endStatus]]
                             }
                         ]
                     },
@@ -63,14 +63,14 @@ Ext.define('FlexCenter.flows.view.ApplyProcessHistoryView',{
                         bodyStyle:'padding:5px 0 5px 5px',
                         items:[
                             {
-                                fieldLabel:'开始日期',
+                                fieldLabel:workFlowRes.applyProcessHistoryView.searchStartTime,
                                 xtype : 'datefield',
                                 format : 'Y-m-d',
                                 editable:false,
                                 name : 'startTime'
                             },
                             {
-                                fieldLabel:'结束日期',
+                                fieldLabel:workFlowRes.applyProcessHistoryView.searchEndTime,
                                 xtype : 'datefield',
                                 editable:false,
                                 format : 'Y-m-d 23:59:59',
@@ -85,7 +85,7 @@ Ext.define('FlexCenter.flows.view.ApplyProcessHistoryView',{
                         items:[
                             {
                                 xtype : 'button',
-                                text : '查询',
+                                text : globalRes.buttons.search,
                                 iconCls : 'search',
                                 handler : function() {
                                     var data = me.down('form').getForm().getValues();
@@ -96,7 +96,7 @@ Ext.define('FlexCenter.flows.view.ApplyProcessHistoryView',{
                             },
                             {
                                 xtype : 'button',
-                                text : '清空',
+                                text : globalRes.buttons.clear,
                                 margins:'5 0 0 0',
                                 iconCls : 'clear',
                                 handler : function() {
@@ -128,35 +128,35 @@ Ext.define('FlexCenter.flows.view.ApplyProcessHistoryView',{
                         xtype:'rownumberer'
                     },
                     {
-                        header: '申请标题',
+                        header: workFlowRes.applyProcessHistoryView.headerTitle,
                         dataIndex:'title'
                     },
                     {
-                        header: '流程名称',
+                        header: workFlowRes.applyProcessHistoryView.searchProcessName,
                         dataIndex: 'processName'
                     },
                     {
-                        header: '申请日期',
+                        header: workFlowRes.applyProcessHistoryView.headerStartTime,
                         dataIndex: 'startTime'
                     },
                     {
-                        header: '流程状态',
+                        header: workFlowRes.applyProcessHistoryView.headerStatus,
                         dataIndex: 'endTime',
                         renderer: function (v) {
                             if(v){
-                                return "已结束"
+                                return workFlowRes.applyProcessHistoryView.endStatus
                             }else{
-                                return '<font color="red">正在运行</font>'
+                                return '<font color="red">'+workFlowRes.applyProcessHistoryView.runStatus+'</font>'
                             }
                         }
                     },
                     {
                         xtype:'actioncolumn',
-                        header:'管理',
+                        header:globalRes.header.manager,
                         items:[
                             {
                                 iconCls:'btn-readdocument',
-                                tooltip:'查看流程图',
+                                tooltip:workFlowRes.readdocument,
                                 handler:function(grid, rowIndex, colIndex){
                                     var rec = grid.getStore().getAt(rowIndex);
                                     me.preview(rec);
@@ -164,18 +164,20 @@ Ext.define('FlexCenter.flows.view.ApplyProcessHistoryView',{
                             },'-',
                             {
                                 iconCls:'btn-print',
-                                tooltip:'打印流程执行情况',
+                                tooltip:workFlowRes.applyProcessHistoryView.headerPrint1,
+                                hidden:true,
                                 handler:function(grid, rowIndex, colIndex){
                                     var rec = grid.getStore().getAt(rowIndex);
-                                    window.open('processesController/printFlowDetail?processInstanceId='+rec.get('id')+'&definitionId='+rec.get('definitionId'),'','');
+                                    //window.open('processesController/printFlowDetail?processInstanceId='+rec.get('id')+'&definitionId='+rec.get('definitionId'),'','');
                                 }
                             },'-',
                             {
                                 iconCls:'btn-print',
-                                tooltip:'打印表单数据',
+                                tooltip:workFlowRes.applyProcessHistoryView.headerPrint2,
+                                hidden:true,
                                 handler:function(grid, rowIndex, colIndex){
                                     var rec = grid.getStore().getAt(rowIndex);
-                                    window.open('processesController/printFormData?definitionId='+rec.get('definitionId')+'&instanceId='+rec.get('id')+'&deploymentId='+rec.get('deploymentId'),'','');
+                                    //window.open('processesController/printFormData?definitionId='+rec.get('definitionId')+'&instanceId='+rec.get('id')+'&deploymentId='+rec.get('deploymentId'),'','');
                                 }
                             }
                         ]
@@ -212,7 +214,7 @@ Ext.define('FlexCenter.flows.view.ApplyProcessHistoryView',{
                 moder.show();
             }else{
                 Ext.MessageBox.alert({
-                    title:'警告',
+                    title:globalRes.title.warning,
                     icon: Ext.MessageBox.ERROR,
                     msg:result.message,
                     buttons:Ext.MessageBox.OK

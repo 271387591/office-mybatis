@@ -21,7 +21,7 @@ Ext.define('FlexCenter.flows.view.NewProcessDefinition',{
                     {
                         xtype:'button',
                         frame:true,
-                        text:'存为草稿',
+                        text:workFlowRes.newProcessDefinition.save,
                         iconCls:'save',
                         scope:this,
                         handler:function(){
@@ -31,7 +31,7 @@ Ext.define('FlexCenter.flows.view.NewProcessDefinition',{
                     {
                         xtype:'button',
                         frame:true,
-                        text:'启动流程',
+                        text:workFlowRes.newProcessDefinition.start,
                         iconCls:'btn-flow-ok',
                         scope:this,
                         handler:function(){
@@ -42,7 +42,7 @@ Ext.define('FlexCenter.flows.view.NewProcessDefinition',{
                     { xtype: 'tbspacer', width: 50 },
                     {
                         xtype:'checkboxfield',
-                        boxLabel:'邮件通知',
+                        boxLabel:workFlowRes.newProcessDefinition.mail,
                         name:'mailNotice',
                         itemId:'sendEmail',
                         inputValue:'1'
@@ -51,7 +51,7 @@ Ext.define('FlexCenter.flows.view.NewProcessDefinition',{
                     {
                         xtype:'button',
                         frame:true,
-                        text:'查看流程图',
+                        text:workFlowRes.readdocument,
                         iconCls:'btn-readdocument',
                         scope:this,
                         handler:function(){
@@ -71,7 +71,7 @@ Ext.define('FlexCenter.flows.view.NewProcessDefinition',{
             items.push({
 
                 xtype:'formPreview',
-                title:'填写表单',
+                title:workFlowRes.newProcessDefinition.writeForm,
                 formHtml:me.formHtml
             });
         }
@@ -92,15 +92,15 @@ Ext.define('FlexCenter.flows.view.NewProcessDefinition',{
             ajaxPostRequest('processDefInstanceDraftController.do?method=save',value,function(result){
                 if(result.success){
                     Ext.MessageBox.alert({
-                        title:'提示',
+                        title:globalRes.title.prompt,
                         icon: Ext.MessageBox.INFO,
-                        msg:'保存成功，你可以转到草稿箱查看详细。',
+                        msg:workFlowRes.newProcessDefinition.draftSuc,
                         buttons:Ext.MessageBox.OK
                     });
                     win.close();
                 }else{
                     Ext.MessageBox.alert({
-                        title:'警告',
+                        title:globalRes.title.warning,
                         icon: Ext.MessageBox.ERROR,
                         msg:result.message,
                         buttons:Ext.MessageBox.OK
@@ -117,9 +117,9 @@ Ext.define('FlexCenter.flows.view.NewProcessDefinition',{
         var value=me.getDefinitionValue();
         if(!value.title){
             Ext.MessageBox.alert({
-                title:'警告',
+                title:globalRes.title.warning,
                 icon: Ext.MessageBox.ERROR,
-                msg:'标题不能为空，请重新填写。',
+                msg:workFlowRes.newProcessDefinition.titleNull,
                 buttons:Ext.MessageBox.OK
             });
             return;
@@ -127,15 +127,15 @@ Ext.define('FlexCenter.flows.view.NewProcessDefinition',{
         ajaxPostRequest('processDefInstanceController.do?method=runStartNoneEvent',value,function(result){
             if(result.success){
                 Ext.MessageBox.alert({
-                    title:'提示',
+                    title:globalRes.title.prompt,
                     icon: Ext.MessageBox.INFO,
-                    msg:'流程启动成功。',
+                    msg:workFlowRes.newProcessDefinition.processRunSuc,
                     buttons:Ext.MessageBox.OK
                 });
                 me.close();
             }else{
                 Ext.MessageBox.alert({
-                    title:'警告',
+                    title:globalRes.title.warning,
                     icon: Ext.MessageBox.ERROR,
                     msg:result.message,
                     buttons:Ext.MessageBox.OK
@@ -172,7 +172,7 @@ Ext.define('FlexCenter.flows.view.NewProcessDefinition',{
                 moder.show();
             }else{
                 Ext.MessageBox.alert({
-                    title:'警告',
+                    title:globalRes.title.warning,
                     icon: Ext.MessageBox.ERROR,
                     msg:result.message,
                     buttons:Ext.MessageBox.OK

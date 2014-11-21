@@ -91,7 +91,7 @@ public class ActivityGraphConverter implements EditorJsonConstants, StencilConst
         if(root==null) return null;
         process.setDocumentation(root.getAttribute("documentation"));
         process.setName(root.getAttribute("name"));
-        process.setId(PROCESS_PREFIX+System.currentTimeMillis());
+        process.setId(PROCESS_PREFIX+root.getAttribute("pid"));
         Map<String,Object> map = graphModel.getCells();
         if(map!=null && map.size()>0){
             for(String key : map.keySet()){
@@ -178,16 +178,6 @@ public class ActivityGraphConverter implements EditorJsonConstants, StencilConst
         userTask.setId(EDITOR_SHAPE_ID_PREFIX + cell.getId());
         userTask.setDocumentation(cell.getAttribute(PROPERTY_DOCUMENTATION,""));
         userTask.setAsynchronous(BooleanUtils.toBooleanObject(StringUtils.defaultIfEmpty(cell.getAttribute(PROPERTY_ASYNCHRONOUS),"No")));
-
-
-//        List<ActivitiListener> listeners=new ArrayList<ActivitiListener>();
-        //add complete listener
-//        ActivitiListener activitiListener=new ActivitiListener();
-//        activitiListener.setEvent(LISTENER_EVENTNAME_COMPLETE);
-//        activitiListener.setImplementationType(ImplementationType.IMPLEMENTATION_TYPE_DELEGATEEXPRESSION);
-//        activitiListener.setImplementation(LISTENER_COMPLETE_DELEGATEEXPRESSION);
-//        listeners.add(activitiListener);
-//        userTask.setTaskListeners(listeners);
         
         String usertaskassignment=cell.getAttribute(PROPERTY_USERTASK_ASSIGNMENT);
         Set<String> userSet=new HashSet<String>();
@@ -229,7 +219,18 @@ public class ActivityGraphConverter implements EditorJsonConstants, StencilConst
                 userTask.setCandidateUsers(userList);
             }
             userTask.setAssignee("${signAssignee_"+userTask.getId()+"}");
+        }else if(!StringUtils.equals(countersign,TaskType.Starter.name())){
+            List<ActivitiListener> listeners=new ArrayList<ActivitiListener>();
+            //add create listener
+            ActivitiListener activitiListener=new ActivitiListener();
+            activitiListener.setEvent(LISTENER_EVENTNAME_CREATE);
+            activitiListener.setImplementationType(ImplementationType.IMPLEMENTATION_TYPE_DELEGATEEXPRESSION);
+            activitiListener.setImplementation(LISTENER_CREATE_DELEGATEEXPRESSION);
+            listeners.add(activitiListener);
+            userTask.setTaskListeners(listeners);
         }
+        
+        
         String forms=cell.getAttribute(PROPERTY_FORM_PROPERTIES, "");
         if(StringUtils.isNotEmpty(forms)){
             try {

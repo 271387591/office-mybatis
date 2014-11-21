@@ -11,13 +11,12 @@ Ext.define('FlexCenter.flows.view.ProcessDefinitionView',{
         'FlexCenter.flows.store.ProcessDefinition',
         'FlexCenter.flows.view.ModelerPreviewWindow',
         'FlexCenter.flows.view.NewProcessDefinition'
-        
     ],
     extend: 'Ext.panel.Panel',
     alias: 'widget.processDefinitionView',
     itemId:'processDefinitionView',
-    text:'流程列表',
-    title:'流程列表',
+    text:workFlowRes.processDefinitionView.title,
+    title:workFlowRes.processDefinitionView.title,
     layout:'border',
     role:null,
 //    border:false,
@@ -40,14 +39,14 @@ Ext.define('FlexCenter.flows.view.ProcessDefinitionView',{
         var actioncolumn=[
             {
                 iconCls:'btn-newFlow',
-                tooltip:'新建流程',
+                tooltip:workFlowRes.processDefinitionView.newProcess,
                 handler:function(grid, rowIndex, colIndex){
                     var rec = grid.getStore().getAt(rowIndex);
                     var itemId= 'processRunStartView_'+rec.get('id');
                     var formHtml=rec.get('formHtml');
                     var config={
                         formHtml:formHtml,
-                        text:'启动流程-'+rec.get('name'),
+                        text:(workFlowRes.newProcessDefinition.start+'-'+rec.get('name')),
                         record:rec,
                         itemId:itemId
                     };
@@ -58,7 +57,7 @@ Ext.define('FlexCenter.flows.view.ProcessDefinitionView',{
         ];
         me.items=[
             {
-                title: '流程分类',
+                title: workFlowRes.modeler.processCategory,
                 xtype: 'globalTypeTree',
                 region: 'west',
                 autoScroll:true,
@@ -90,7 +89,7 @@ Ext.define('FlexCenter.flows.view.ProcessDefinitionView',{
                             {
                                 xtype:'button',
                                 frame:true,
-                                text:'刷新',
+                                text:globalRes.buttons.refresh,
                                 iconCls:'refresh',
                                 scope:this,
                                 handler:function(){
@@ -99,95 +98,73 @@ Ext.define('FlexCenter.flows.view.ProcessDefinitionView',{
                             },{
                                 xtype:'button',
                                 frame:true,
-                                text:'查看流程图',
+                                text:workFlowRes.readdocument,
                                 iconCls:'btn-readdocument',
                                 scope:this,
                                 handler:function(){
                                     me.preview();
                                 }
-                            },
-                            '->',
-                            {
-                                xtype : 'textfield',
-                                labelWidth:60,
-                                itemId:'processDefinitionView_search',
-                                name : 'name'
-                            },
-                            {
-                                xtype : 'button',
-                                text : '查询',
-                                iconCls : 'search',
-                                handler : function() {
-                                    var data = me.down('#processDefinitionView_search').getValue();
-                                    me.down('grid').getStore().load({
-                                        params:{
-                                            keyword:data
-                                        }
-                                    });
-                                }
-                            },
-                            {
-                                xtype : 'button',
-                                text : '清空',
-                                margins:'0 0 0 5',
-                                iconCls : 'clear',
-                                handler : function() {
-                                    me.down('#processDefinitionView_search').setValue('');
-                                    me.down('grid').getStore().load();
-                                }
                             }
-
                         ]
                     }
                 ],
+                features:[{
+                    ftype: 'search',
+                    disableIndexes : ['id','documentation','category','deployDate','suspended','version'],
+                    paramNames: {
+                        fields: 'fields',
+                        query: 'keyword'
+                    },
+                    searchMode : 'remote'
+                }],
                 columns:[
                     {
-                        header: '流程名称',
+                        header: workFlowRes.applyProcessHistoryView.searchProcessName,
                         flex:1,
                         dataIndex: 'name'
                     },
                     {
-                        header: '流程分类',
+                        header: workFlowRes.modeler.processCategory,
                         flex:1,
                         dataIndex: 'category',
                         renderer:function(v){
                             if(!v){
-                                return '所有';
+                                return workFlowRes.processDefinitionView.allThe;
                             }
                             return v;
                         }
                     },
                     {
-                        header: '描述',
+                        header: userRoleRes.header.description,
                         flex:1,
                         dataIndex: 'documentation'
                     },
                     {
-                        header: '版本号',
+                        header: workFlowRes.processDefinitionView.version,
                         flex:1,
                         dataIndex: 'version'
                     },
                     {
-                        header: '状态',
+                        header: workFlowRes.applyProcessHistoryView.headerStatus,
                         flex:1,
                         dataIndex: 'suspended',
                         renderer: function (v) {
                             if(v=='true'){
-                                return "挂起"
+                                return workFlowRes.processDefinitionView.suspended
                             }else {
-                                return '正常'
+                                return workFlowRes.processDefinitionView.notSuspended
                             }
                         }
                     },
                     {
-                        header: '部署时间',
+                        header: workFlowRes.processDefinitionView.deployDate,
                         flex:1,
                         dataIndex: 'deployDate'
                     },
                     {
                         xtype:'actioncolumn',
                         flex:1,
-                        header:'管理',
+                        header:globalRes.buttons.managerBtn,
                         items:actioncolumn
                     }
                 ]
@@ -203,9 +180,9 @@ Ext.define('FlexCenter.flows.view.ProcessDefinitionView',{
         var record=(selects.length>0?store.getById(selects[0].get('id')):null);
         if(record==null){
             Ext.MessageBox.show({
-                title: '查看流程图',
+                title: workFlowRes.readdocument,
                 width: 300,
-                msg: '请选择要查看的流程。',
+                msg: workFlowRes.processDefinitionView.readdocumentAlert,
                 buttons: Ext.MessageBox.OK,
                 icon: Ext.MessageBox.INFO
             });
@@ -224,7 +201,7 @@ Ext.define('FlexCenter.flows.view.ProcessDefinitionView',{
                 moder.show();
             }else{
                 Ext.MessageBox.alert({
-                    title:'警告',
+                    title:globalRes.title.warning,
                     icon: Ext.MessageBox.ERROR,
                     msg:result.message,
                     buttons:Ext.MessageBox.OK

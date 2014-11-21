@@ -101,7 +101,7 @@ Ext.define('FlexCenter.user.view.UserForm', {
                                       if(result.success){
                                           input.markInvalid(userRoleRes.usernameExist);
                                       }
-                                  });
+                                  },true);
                               }
                           }
 
@@ -183,7 +183,7 @@ Ext.define('FlexCenter.user.view.UserForm', {
                                   if(result.success){
                                       input.markInvalid(userRoleRes.mobileExist);
                                   }
-                              });
+                              },true);
                           }
                       }
 
@@ -207,7 +207,7 @@ Ext.define('FlexCenter.user.view.UserForm', {
                                   if(result.success){
                                       input.markInvalid(userRoleRes.emailExist);
                                   }
-                              });
+                              },true);
                           }
                       }
 

@@ -11,8 +11,6 @@ Ext.define('FlexCenter.flows.model.ProcessDef',{
         'actDefId',
         'actResId',
         'graphResId',
-        'modelId',
-        'depId',
         'flowFormId',
         'flowFormName',
         'category',

@@ -73,9 +73,6 @@
         f.label=#{label} , 
         f.taskKey=#{taskKey} , 
         f.actClass=#{actClass} , 
-        f.preTaskKeys=#{preTaskKeys} , 
-        f.nextTaskKeys=#{nextTaskKeys} , 
-        f.parentId=#{parentId} , 
         f.countersign=#{countersign} , 
         f.endTask=#{endTask} , 
         f.processDefId=#{processDef.id}  
@@ -85,8 +82,8 @@
         <selectKey keyColumn="id" keyProperty="id" resultType="java.lang.Long">
             select LAST_INSERT_ID()
         </selectKey>
-        insert into PROCESSELEMENT(id,graphType,endTask,taskType,label,taskKey,actClass,preTaskKeys,nextTaskKeys,parentId,countersign,processDefId) 
-        values (#{id},#{graphType},#{endTask},#{taskType,typeHandler=org.apache.ibatis.type.EnumTypeHandler},#{label},#{taskKey},#{actClass},#{preTaskKeys},#{nextTaskKeys},#{parentId},#{countersign},#{processDef.id})
+        insert into PROCESSELEMENT(id,graphType,endTask,taskType,label,taskKey,actClass,countersign,processDefId) 
+        values (#{id},#{graphType},#{endTask},#{taskType,typeHandler=org.apache.ibatis.type.EnumTypeHandler},#{label},#{taskKey},#{actClass},#{countersign},#{processDef.id})
     </insert>
     <sql id="fieldMapping">
         id,graphType,taskType,actClass,label,taskKey,processDefId,preTaskKeys,nextTaskKeys,countersign,parentId,endTask

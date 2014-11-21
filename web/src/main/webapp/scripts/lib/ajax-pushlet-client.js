@@ -184,6 +184,8 @@ var PL = {
 			return;
 		}
 
+		//PL.state=3
+
 		// We may have (async) requests outstanding and thus
 		// may have to wait for them to complete and change state.
 		var waitForState = false;
@@ -305,6 +307,7 @@ var PL = {
 						var event = new PushletEvent();
 						event.put('p_event', 'error')
 						event.put('p_reason', '[pushlet] problem retrieving XML data:\n' + xmlhttp.statusText);
+						
 						PL._onEvent(event);
 					}
 				}
@@ -406,7 +409,9 @@ var PL = {
 				PL._setStatus('not refreshing state=' + PL.STATE_LISTENING);
 			}
 			var timeout = event.get('p_wait');
+			var state= PL.state;
 			setTimeout(function () {
+				PL.state=state;
 				PL._doRequest('refresh');
 			}, timeout);
 			return;

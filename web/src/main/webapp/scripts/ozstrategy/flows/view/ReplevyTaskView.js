@@ -220,7 +220,7 @@ Ext.define('FlexCenter.flows.view.ReplevyTaskView',{
                     msg:'追回成功。',
                     buttons:Ext.MessageBox.OK
                 });
-                me.flushTask();
+                me.down('grid').getStore().load();
             }else{
                 Ext.MessageBox.alert({
                     title:'警告',
@@ -232,6 +232,7 @@ Ext.define('FlexCenter.flows.view.ReplevyTaskView',{
         });
         
     },
+    
     preview:function(record){
         var me=this;
         ajaxPostRequest('processDefController.do?method=getRes',record,function(result){

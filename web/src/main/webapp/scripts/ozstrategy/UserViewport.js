@@ -4,6 +4,7 @@
 Ext.define('FlexCenter.UserViewport', {
     extend: 'Ext.container.Viewport',
     requires: [
+        'Ext.ux.grid.feature.Search',
         'FlexCenter.UserHeader',
         'FlexCenter.WelcomeIndex',
         'FlexCenter.FlowIndex',
@@ -33,8 +34,8 @@ Ext.define('FlexCenter.UserViewport', {
                         cardPanel:'card-panel',
                         centerPanel:'center-panel',
                         staticTabs:[
-                            {cls: 'classes', href: '#welcomeindex', tooltip: 'Home1',display:'active'},
-                            {cls: 'flows', href: '#flowIndex', tooltip: '我的流程'},
+                            {cls: 'classes', href: '#welcomeindex', tooltip: globalRes.title.homePage,display:'active'},
+                            {cls: 'flows', href: '#flowIndex', tooltip: globalRes.title.workflow},
                         ]
                     }
                 ]
@@ -73,10 +74,25 @@ Ext.define('FlexCenter.UserViewport', {
                 ]
             },
             {
-                xtype: 'container',
+                xtype: 'panel',
                 region: 'south',
-                id: 'footer',
-                height: 20
+                border:false,
+                
+                items:[
+                    {
+                        xtype:'toolbar',
+                        height: 25,
+                        border:false,
+                        items:[
+                            messageTip
+                        ]
+                        
+                    }
+                    
+            
+                    
+                    
+                ]
             }
         ];
 

@@ -12,6 +12,7 @@ import java.util.ResourceBundle;
         "classpath:/applicationContext-resources.xml", "classpath:/applicationContext-dao.xml",
         "classpath:/applicationContext-service.xml", "classpath*:/**/applicationContext.xml",
         "classpath:/applicationContext-activiti.xml"
+        //"classpath:/applicationContext-activimq.xml"
 })
 /**
  * Test classes can extend this manager based on a spring context.

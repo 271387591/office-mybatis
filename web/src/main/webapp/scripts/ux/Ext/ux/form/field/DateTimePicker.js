@@ -5,8 +5,8 @@
 Ext.define('Ext.ux.form.field.DateTimePicker', {
     extend: 'Ext.picker.Date',
     alias: 'widget.dateptimepicker',
-    okText:'确定',
-    okTip:'确定',
+    okText:globalRes.buttons.ok,
+    okTip:globalRes.buttons.ok,
     renderTpl: [
         '<div id="{id}-innerEl" role="grid">',
             '<div role="presentation" class="{baseCls}-header">',

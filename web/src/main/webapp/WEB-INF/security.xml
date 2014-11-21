@@ -13,7 +13,7 @@
         <expression-handler ref="expressionHandler"/>
         <intercept-url pattern="/service/desktop" access="hasAnyRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/service/userview" access="hasAnyRole('ROLE_USER')"/>
-        <intercept-url pattern="/service/*" access="hasAnyRole('ROLE_USER,ROLE_ADMIN')"/>
+        <!--<intercept-url pattern="/service/*" access="hasAnyRole('ROLE_USER,ROLE_ADMIN')"/>-->
         <!--<intercept-url pattern="/app/passwordHint*" access="hasFeature('sss')"/>-->
         <!--<intercept-url pattern="/app/signup*" access="ROLE_ANONYMOUS,ROLE_ADMIN,ROLE_USER"/>-->
         <!--<intercept-url pattern="/app/**" access="ROLE_ADMIN,ROLE_USER"/>-->

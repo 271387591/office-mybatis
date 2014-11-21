@@ -77,39 +77,17 @@ Ext.define('FlexCenter.forms.view.FlowFormView',{
                                 handler: me.onDeleteClick
                             }
                         ]
-                    },
-                    
-//                    me.selector?'->':'->',
-                    '->',
-                    {
-                        xtype: 'textfield',
-                        name: 'name',
-                        itemId:'aModelFormSearch'
-                    },
-                    {
-                        xtype:'button',
-                        text:'搜索',
-                        iconCls:'search',
-                        handler:function(){
-                            var value = me.down('#aModelFormSearch').getValue();
-                            var grid=me.down('grid');
-                            grid.getStore().load({
-                                params:{
-                                    keyword:value
-                                }
-                            });
-                        }
-                    },
-                    {
-                        xtype:'button',
-                        text:'清空',
-                        iconCls:'clear',
-                        handler:function(){
-                            me.down('#aModelFormSearch').setValue('');
-                            me.down('grid').getStore().load();
-                        }
                     }
                 ],
+                features:[{
+                    ftype: 'search',
+                    disableIndexes : ['id','description','status','createDate'],
+                    paramNames: {
+                        fields: 'fields',
+                        query: 'keyword'
+                    },
+                    searchMode : 'remote'
+                }],
                 dockedItems:[
                     {
                         xtype: 'pagingtoolbar',

@@ -8,7 +8,7 @@ Ext.define('FlexCenter.flows.view.ProcessDefInstanceDraftForm',{
     alias: 'widget.processDefInstanceDraftForm',
     layout:'fit',
     modal: true,
-    title:'保存草稿',
+    title:globalRes.buttons.save,
     buttonSave:false,
     width:400,
     initComponent:function(){
@@ -35,7 +35,7 @@ Ext.define('FlexCenter.flows.view.ProcessDefInstanceDraftForm',{
                         }
                     },
                     {
-                        text: '取消',
+                        text: globalRes.buttons.cancel,
                         handler: function () {
                             me.close();
                         }
@@ -43,14 +43,14 @@ Ext.define('FlexCenter.flows.view.ProcessDefInstanceDraftForm',{
                 ],
                 items: [
                     {
-                        fieldLabel: '名称<font color="red">*</font>',
+                        fieldLabel: (workFlowRes.modeler.name+'<font color="red">*</font>'),
                         allowBlank: false,
                         blankText:globalRes.tooltip.notEmpty,
                         name: 'name'
                     },{
                         xtype:'textareafield',
                         grow: true,
-                        fieldLabel:'描述',
+                        fieldLabel:workFlowRes.modeler.processDocumentation,
                         name:'description'
                     }]
             }

@@ -19,11 +19,11 @@ Ext.define('FlexCenter.FlowIndex', {
         var taskCount=2;
         var data=[
             {"title": "", parentUrl:('#'+me.itemId),"items": [
-                {"thumb": basePath+"images/flow_chart.png",url:'#processDefinitionView',widget:'processDefinitionView', "description": "在这里，您可以填写流程申请和表单数据并发起新流程。", "title": "新建流程"},
-                {"thumb": basePath+"images/task_recurring.png",url:'#taskView',widget:'taskView', "description": "显示当前需要您处理的任务。</br>您目前有<font color='red'>"+taskCount+"</font>条任务需要处理。", "title": "代办事项 ",comments:taskCount},
-                {"thumb": basePath+"images/draft.png",url:'#processDefInstanceDraftView',widget:'processDefInstanceDraftView', "description": "将填写好的流程申请单存为草稿，需要时可直接发起流程。", "title": "草稿箱"},
-                {"thumb": basePath+"images/replay.png",url:'#replevyTaskView',widget:'replevyTaskView', "description": "可以追回当前还未签收的任务，如当前任务为会签状态则不能追回。", "title": "任务追回"},
-                {"thumb": basePath+"images/presentation.png",url:'#applyProcessHistoryView',widget:'applyProcessHistoryView', "description": "显示您所申请的流程列表。", "title": "流程申请记录"},
+                {thumb: basePath+"images/flow_chart.png",url:'#processDefinitionView',widget:'processDefinitionView', description: workFlowRes.flowIndex.processDefinitionViewDec, title: workFlowRes.flowIndex.processDefinitionViewTitle},
+                {thumb: basePath+"images/task_recurring.png",url:'#taskView',widget:'taskView', description: Ext.String.format(workFlowRes.flowIndex.taskViewDec,taskCount), title: workFlowRes.flowIndex.taskViewTitle,comments:taskCount},
+                {thumb: basePath+"images/draft.png",url:'#processDefInstanceDraftView',widget:'processDefInstanceDraftView', description: workFlowRes.flowIndex.processDefInstanceDraftViewDec, title: workFlowRes.flowIndex.processDefInstanceDraftViewTitle},
+                {thumb: basePath+"images/replay.png",url:'#replevyTaskView',widget:'replevyTaskView', description: workFlowRes.flowIndex.replevyTaskViewDec, title: workFlowRes.flowIndex.replevyTaskViewTitle},
+                {thumb: basePath+"images/presentation.png",url:'#applyProcessHistoryView',widget:'applyProcessHistoryView', description: workFlowRes.flowIndex.applyProcessHistoryViewDec, title: workFlowRes.flowIndex.applyProcessHistoryViewTitle},
 //                {"thumb": basePath+"images/scheduled_tasks.png",url:'#taskRecordView',widget:'taskRecordView', "description": "显示您所有执行过得任务。", "title": "任务执行记录"},
 //                {"thumb": "http://b.vimeocdn.com/ts/166/239/166239450_200.jpg", "description": "33333", "title": "What's New in Ext JS 4 Webinar", "id": "25264626", "name": "25264626"}
             ]}

@@ -18,6 +18,7 @@ var userRoleRes = {
         availableFeatures: '<fmt:message key="userRoleRes.availableFeatures" />',
         assignedFeatures: '<fmt:message key="userRoleRes.assignedFeatures" />',
         selectFeature: '<fmt:message key="userRoleRes.selectFeature" />',
+        editUserProfile: '<fmt:message key="userRoleRes.editUserProfile" />',
         msg: {
             editUser: '<fmt:message key="userRoleRes.msg.editUser" />',
             passwordEdit: '<fmt:message key="userRoleRes.msg.passwordEdit" />',

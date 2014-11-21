@@ -8,8 +8,8 @@ Ext.define('FlexCenter.flows.view.ProcessDefInstanceDraftView', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.processDefInstanceDraftView',
     itemId: 'processDefInstanceDraftView',
-    title: '流程草稿列表',
-    text: '流程草稿列表',
+    title: workFlowRes.processDefInstanceDraftView.title,
+    text: workFlowRes.processDefInstanceDraftView.title,
     autoScroll: true,
     layout:'border',
 //    margin:1,
@@ -42,40 +42,11 @@ Ext.define('FlexCenter.flows.view.ProcessDefInstanceDraftView', {
                     {
                         xtype: 'button',
                         frame: true,
-                        text: '删除',
+                        text: globalRes.buttons.remove,
                         iconCls: 'table-delete',
                         scope: this,
                         handler: function(){
                             me.onDeleteClick();
-                        }
-                    },
-                    '->',
-                    {
-                        xtype: 'textfield',
-                        name: 'keyword',
-                        itemId:'processDefInstanceDraftViewSearch'
-                    },
-                    {
-                        xtype:'button',
-                        text:'搜索',
-                        iconCls:'search',
-                        handler:function(){
-                            var value = me.down('#processDefInstanceDraftViewSearch').getValue();
-                            var grid=me.down('grid');
-                            grid.getStore().load({
-                                params:{
-                                    keyword:value
-                                }
-                            });
-                        }
-                    },
-                    {
-                        xtype:'button',
-                        text:'清空',
-                        iconCls:'clear',
-                        handler:function(){
-                            me.down('#processDefInstanceDraftViewSearch').setValue('');
-                            me.down('grid').getStore().load();
                         }
                     }
                 ],
@@ -87,40 +58,49 @@ Ext.define('FlexCenter.flows.view.ProcessDefInstanceDraftView', {
                         displayInfo: true
                     }
                 ],
+                features:[{
+                    ftype: 'search',
+                    disableIndexes : ['id','description','createDate','version'],
+                    paramNames: {
+                        fields: 'fields',
+                        query: 'keyword'
+                    },
+                    searchMode : 'remote'
+                }],
                 columns:[
                     {
-                        header: '草稿名称',
+                        header: workFlowRes.processDefInstanceDraftView.name,
                         flex:1,
                         dataIndex: 'name'
                     },
                     {
-                        header: '流程名称',
+                        header: workFlowRes.header.flowName,
                         flex:1,
                         dataIndex: 'processDefName'
                     },
                     {
-                        header: '描述',
+                        header: workFlowRes.modeler.processDocumentation,
                         flex:1,
                         dataIndex: 'description'
                     },
                     {
-                        header: '创建时间',
+                        header: globalRes.header.createDate,
                         flex:1,
                         dataIndex: 'createDate'
                     },
                     {
-                        header: '版本号',
+                        header: workFlowRes.processDefinitionView.version,
                         flex:1,
                         dataIndex: 'version'
                     },
                     {
                         xtype:'actioncolumn',
-                        header:'管理',
+                        header:globalRes.buttons.managerBtn,
                         flex:1,
                         items:[
                             {
                                 iconCls:'btn-flow-design',
-                                tooltip:'启动流程',
+                                tooltip:workFlowRes.newProcessDefinition.start,
                                 handler:function(grid, rowIndex, colIndex){
                                     var rec = grid.getStore().getAt(rowIndex);
                                     me.onUpdateClick(rec);
@@ -140,9 +120,9 @@ Ext.define('FlexCenter.flows.view.ProcessDefInstanceDraftView', {
         var selection = grid.getSelectionModel().getSelection();
         if(selection.length<1){
             Ext.MessageBox.show({
-                title: '删除草稿',
+                title: workFlowRes.processDefInstanceDraftView.deleteDraft,
                 width: 300,
-                msg: '请选择要删除的草稿',
+                msg: workFlowRes.processDefInstanceDraftView.deleteDraftMsg,
                 buttons: Ext.MessageBox.OK,
                 icon: Ext.MessageBox.INFO
             });
@@ -153,7 +133,7 @@ Ext.define('FlexCenter.flows.view.ProcessDefInstanceDraftView', {
                 grid.getStore().load();
             }else{
                 Ext.MessageBox.alert({
-                    title:'警告',
+                    title:globalRes.title.warning,
                     icon: Ext.MessageBox.ERROR,
                     msg:result.message,
                     buttons:Ext.MessageBox.OK

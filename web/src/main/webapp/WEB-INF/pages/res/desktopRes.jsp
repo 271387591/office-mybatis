@@ -7,18 +7,23 @@ var globalRes = {
   isAdmin : '${command.admin}',
   features: '${command.features}',
   webname: '<fmt:message key="webapp.name" />',
+welcome: '<fmt:message key="globalRes.welcome" />',
+welcomeToday: '<fmt:message key="globalRes.welcomeToday" />',
   title:{
     resetLocale: '<fmt:message key="globalRes.title.resetLocale" />',
     logout: '<fmt:message key="globalRes.title.logout" />',
     prompt: '<fmt:message key="globalRes.title.prompt" />',
     success: '<fmt:message key="globalRes.title.success" />',
     warning: '<fmt:message key="globalRes.title.warning" />',
+    homePage: '<fmt:message key="globalRes.title.homePage" />',
+    workflow: '<fmt:message key="globalRes.title.workflow" />',
     fail: '<fmt:message key="globalRes.title.fail" />'
   },
   header:{
     createDate: '<fmt:message key="globalRes.header.createDate" />',
     man: '<fmt:message key="globalRes.header.man" />',
     woman: '<fmt:message key="globalRes.header.woman" />',
+    manager: '<fmt:message key="globalRes.header.manager" />',
     lastUpdateDate: '<fmt:message key="globalRes.header.lastUpdateDate" />'
   },
 
@@ -42,6 +47,7 @@ search: '<fmt:message key="globalRes.buttons.search" />',
 clear: '<fmt:message key="globalRes.buttons.clear" />',
 lookFor: '<fmt:message key="globalRes.buttons.lookFor" />',
 managerBtn: '<fmt:message key="globalRes.buttons.managerBtn" />',
+logout: '<fmt:message key="globalRes.buttons.logout" />',
     close: '<fmt:message key="globalRes.buttons.close" />'
   },
   msg: {

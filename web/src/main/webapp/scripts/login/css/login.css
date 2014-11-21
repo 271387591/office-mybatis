@@ -1,0 +1,72 @@
+html,body {
+	background:#3d71b8 url(../images/desktop.jpg) no-repeat left top;   /** jawr:base64-skip */
+	margin: 0;
+	padding: 0;
+	border: 0 none;
+	overflow: hidden;
+	height: 100%;
+}
+
+#class .loading-indicator {
+	font-size: 12px;
+	height: 18px;
+}
+
+.loading-indicator {
+	font-size: 8pt;
+	background-image: url('../images/loading.gif');
+	background-repeat: no-repeat;
+	background-position: top left;
+	padding-left: 20px;
+	height: 18px;
+	text-align: left;
+}
+
+#loading {
+	position: absolute;
+	left: 45%;
+	top: 40%;
+	border: 1px solid #6593cf;
+	padding: 2px;
+	background: #c3daf9;
+	width: 150px;
+	text-align: center;
+	z-index: 20001;
+}
+
+#loading .loading-indicator {
+  border: 1px solid #a3bad9;
+  color: #003366;
+  font: bold 13px tahoma, arial, helvetica;
+  height: 25px;
+  margin: 0;
+  padding: 0 0 0 20px;
+}
+
+.icon-login {
+	background-image: url(../images/login.png) !important;
+}
+
+.product-logo {
+    /*background: transparent url("../images/ozLogin-No-Version.jpg") no-repeat scroll 0 0;*/
+    /*background: url("../images/CMC_CredAgility_Logo.png") no-repeat scroll center top transparent;*/
+    background: url("../images/CMC_DataMigration_Logo_Transparent.png") no-repeat scroll center top transparent;
+    height: 64px;
+    margin-bottom: 5px;
+}
+
+/*.version-info {*/
+    /*position: absolute;*/
+    /*font-family: cursive,Comic Sans MS,Helvetica Neue,Tahoma;*/
+    /*font-size: 1.5em;*/
+    /*left: 2em;*/
+    /*bottom: 1.5em;*/
+/*}*/
+.version-info {
+    bottom: 10px;
+    font-family: cursive,Comic Sans MS,Helvetica Neue,Tahoma;
+    font-size: 10px;
+    position: absolute;
+    right: 20px;
+    display: none;
+}

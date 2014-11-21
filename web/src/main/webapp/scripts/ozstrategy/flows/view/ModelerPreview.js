@@ -26,21 +26,21 @@ Ext.define('FlexCenter.flows.view.ModelerPreview', {
             items: [
                 {
                     iconCls: 'zoomIn',
-                    tooltip: '放大',
+                    tooltip: workFlowRes.modeler.zoomIn,
                     handler: function(button,evt){
                         me.zoomIn();
                     }
                 },'-',
                 {
                     iconCls: 'zoomOut',
-                    tooltip: '缩小',
+                    tooltip: workFlowRes.modeler.zoomOut,
                     handler: function(button,evt){
                         me.zoomOut();
                     }
                 },'-',
                 {
                     iconCls: 'zoomActual',
-                    tooltip: '实际大小',
+                    tooltip: workFlowRes.modeler.zoomActual,
                     handler: function(button,evt){
                         me.actualSize();
                     }

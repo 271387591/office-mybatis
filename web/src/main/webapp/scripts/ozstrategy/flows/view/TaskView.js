@@ -24,47 +24,6 @@ Ext.define('FlexCenter.flows.view.TaskView',{
     initComponent:function(){
         var me=this;
         var store = me.getStore();
-        me.tbar = [
-            {
-                xtype:'button',
-                frame:true,
-                text:'刷新',
-                iconCls:'refresh',
-                scope:this,
-                handler:function(){
-                    me.down('grid').getStore().load();
-                }
-            },
-            '->',
-            {
-                xtype: 'textfield',
-                name: 'keyword',
-                itemId:'taskViewSearch'
-            },
-            {
-                xtype:'button',
-                text:'搜索',
-                iconCls:'search',
-                handler:function(){
-                    var value = me.down('#taskViewSearch').getValue();
-                    var grid=me.down('grid');
-                    grid.getStore().load({
-                        params:{
-                            keyword:value
-                        }
-                    });
-                }
-            },
-            {
-                xtype:'button',
-                text:'清空',
-                iconCls:'clear',
-                handler:function(){
-                    me.down('#taskViewSearch').setValue('');
-                    me.down('grid').getStore().load();
-                }
-            }
-        ];
         me.items=[
             {
                 xtype:'grid',
@@ -73,6 +32,27 @@ Ext.define('FlexCenter.flows.view.TaskView',{
                 forceFit: true,
                 border:false,
                 autoScroll: true,
+                tbar:[
+                    {
+                        xtype:'button',
+                        frame:true,
+                        text:'刷新',
+                        iconCls:'refresh',
+                        scope:this,
+                        handler:function(){
+                            me.down('grid').getStore().load();
+                        }
+                    }
+                ],
+                features:[{
+                    ftype: 'search',
+                    disableIndexes : ['id','description','createDate','assignee'],
+                    paramNames: {
+                        fields: 'fields',
+                        query: 'keyword'
+                    },
+                    searchMode : 'remote'
+                }],
                 columns:[
                     {
                         xtype:'rownumberer'

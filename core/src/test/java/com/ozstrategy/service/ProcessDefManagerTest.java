@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mxgraph.io.mxCodec;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGraphModel;
+import com.mxgraph.util.mxCellRenderer;
 import com.mxgraph.util.mxXmlUtils;
+import com.mxgraph.view.mxGraph;
 import com.ozstrategy.dao.flows.ProcessDefDao;
 import com.ozstrategy.dao.flows.ProcessElementDao;
 import com.ozstrategy.dao.flows.ProcessElementFormDao;
@@ -30,6 +32,10 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -314,12 +320,37 @@ public class ProcessDefManagerTest extends BaseManagerTestCase  {
     public void testDeleteDeployed() throws Exception{
         int i=0;
     }
+    @Test
+    public void testPng() throws Exception{
+        String path=ProcessDefManagerTest.class.getClassLoader().getResource("graphsub.xml").getPath();
+        String value= FileUtils.readFileToString(new File(path));
+        mxCodec codec = new mxCodec();
+        org.w3c.dom.Document doc = mxXmlUtils.parseXml(value);
+        codec = new mxCodec(doc);
+        mxGraphModel model = (mxGraphModel) codec.decode(doc.getDocumentElement());
+        mxGraph graph = new mxGraph();
+        graph.setModel(model);
+        BufferedImage image = mxCellRenderer.createBufferedImage(graph, null,
+                1, Color.WHITE, true, null);
+        byte[] ret = null;
+        ByteArrayOutputStream outputStream = null;
+        try {
+            outputStream = new ByteArrayOutputStream();
+            ImageIO.write(image, "png", outputStream);
+            ret = outputStream.toByteArray();
+            FileUtils.writeByteArrayToFile(new File("/Users/lihao/Downloads/graph.png"),ret);
+
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
     private static mxGraphModel getMxGraphModel(String gxml){
         mxCodec codec = new mxCodec();
         org.w3c.dom.Document doc = mxXmlUtils.parseXml(gxml);
         codec = new mxCodec(doc);
         mxGraphModel model = (mxGraphModel) codec.decode(doc.getDocumentElement());
-        
         return model;
     }
     

@@ -14,7 +14,6 @@
     
     <%--<link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ozstrategy/css/ExecDashboard-all.css'/>"/>--%>
     <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ozstrategy/css/flexcenter.css'/>"/>
-    <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ozstrategy/css/app-88de2e4b4aaefeb72bd4003a88ad5c26.css'/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ozstrategy/css/BoxSelect.css'/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ext/resources/css/ext-all.css'/>"/>
     
@@ -43,7 +42,6 @@
 
     <script type="text/javascript" src="<c:url value='/scripts/lib/jquery-1.7.1.min.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/scripts/lib/ajax-pushlet-client.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/scripts/app/data-c7b46cb25323d76425ecdce8528ce475.js'/>"></script>
 
     <script type="text/javascript">
         <%--extTheme = '<c:url value="/scripts/ext/resources/css/ext-all"/>';--%>
@@ -56,7 +54,7 @@
     <%--<script type="text/javascript" src="<c:url value="/mxgraph/src/js/mxModeler.js"/>"></script>--%>
     <%--<script type="text/javascript" src="<c:url value="/mxgraph/js/mxApplication.js"/>"></script>--%>
 
-    <%--<script type="text/javascript" src='<c:url value="/scripts/ozstrategy/global.js"/>'></script>--%>
+    <script type="text/javascript" src='<c:url value="/scripts/ozstrategy/global.js"/>'></script>
     <%--<style type="text/css" >--%>
     <%--.x-message-box .ext-mb-loading {--%>
     <%--background: url("<c:url value="/scripts/ext/resources/themes/images/default/grid/loading.gif"/>") no-repeat scroll 6px 0 transparent;--%>
@@ -71,7 +69,7 @@
         <%--}--%>
         <%--);--%>
         Ext.Loader.setPath({
-            'Docs':'<c:url value="/scripts/app"/>',
+            <%--'Docs':'<c:url value="/scripts/app"/>',--%>
             <%--'Ext.ux.desktop': '<c:url value="/scripts/desktop/js"/>',--%>
             <%--'Ext.ux': '<c:url value="/scripts/ux/Ext5/ux"/>',--%>
             <%--FlexCenter: '<c:url value="/scripts/ozstrategy"/>',--%>
@@ -89,18 +87,26 @@
 
 <div id='footer-content' style='display: none'>Ext JS 4.2.0 Docs - Generated with <a href='https://github.com/senchalabs/jsduck'>JSDuck</a> 4.6.1. <a href='http://www.sencha.com/legal/terms-of-use/'>Terms of Use</a></div>
 <script type="text/javascript">
-//    PL._init();
-//    PL.joinListen('/system/pushlet');
-//    function onData(event) {
-//        console.log(event.get("publisher"));
-//    }
-Ext.require('Docs.Application');
+    
+//Ext.require('Docs.Application');
 //Ext.require([
 //    'FlexCenter.UserViewport',
 //]);
+
 Ext.onReady(function() {
     
-    Ext.create('Docs.Application');
+    Ext.create('Ext.container.Viewport',{
+        layout: 'border',
+        items:[
+            {
+                region:'center',
+                xtype:'panel',
+                title:'34'
+            }
+        ]
+    });
+    
+//    Ext.create('Docs.Application');
     
 //    Ext.create('Ext.app.Application',{
 //        name: "FlexCenter",

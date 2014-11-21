@@ -185,7 +185,15 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
             UserTask userTask=(UserTask)element;
             List<FormProperty> properties = userTask.getFormProperties();
             insertProcessElementForm(processDef, processElement, properties);
+            
             List<String> usernames=userTask.getCandidateUsers();
+            if(usernames==null){
+                usernames=new ArrayList<String>();
+            }
+            String assignee=userTask.getAssignee();
+            if(StringUtils.isNotEmpty(assignee) && assignee.contains("$")){
+                usernames.add(assignee);
+            }
             saveElementUser(usernames,processElement);
             String taskType=StringUtils.defaultIfEmpty(cell.getAttribute(ActivityGraphConverter.TASK_TYPE), TaskType.CommonUser.name());
             if(StringUtils.equals(taskType,TaskType.Countersign.name())){

@@ -7,7 +7,7 @@ Ext.define('FlexCenter.flows.view.ModelerWindow',{
     ],
     extend:'Ext.Window',
     alias: 'widget.modelerWindow',
-    title: '流程设计',
+    title: workFlowRes.modeler.processDesign,
     maximized: true,
     maximizable:false,
     animCollapse : true,

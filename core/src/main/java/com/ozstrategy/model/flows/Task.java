@@ -31,7 +31,6 @@ public class Task {
     private Long instanceId;
     private String title;
     private String taskType;
-    private Long parentId;
     private String fromTaskKey;
     private String fromTaskType;
     private String fromTaskAssignee;
@@ -236,14 +235,6 @@ public class Task {
 
     public void setTaskType(String taskType) {
         this.taskType = taskType;
-    }
-
-    public Long getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(Long parentId) {
-        this.parentId = parentId;
     }
 
     public String getFromTaskKey() {

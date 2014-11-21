@@ -265,7 +265,6 @@ Ext.define('Ext.ux.grid.feature.Search', {
                   this.onTrigger1Click();
                   return;
                 }
-
                 if (proxy && proxy.$className == 'Ext.ux.data.PagingMemoryProxy' && store.filterLocalBy) {
                   store.filterLocalBy({
                     filterFn: function (record) {

@@ -1,6 +1,44 @@
 if (top != self) {
   top.location = self.location;
 }
+Ext.require('Ext.ux.window.Notification');
+var messageTip=Ext.create('Ext.Button',{
+    hidden: true,
+    autoWidth: true,
+    height: 20,
+    iconCls:'messageTip',
+    handler: function () {
+        Ext.create('widget.uxNotification', {
+            title: '系统消息',
+            position: 'b',
+            manager: 'instructions',
+            cls: 'ux-notification-window',
+            stickWhileHover: false,
+            height: 120,
+            width: 220,
+            html: messageTip.msg,
+            autoCloseDelay: 20000,
+            slideInDuration: 500,
+            slideBackDuration: 200
+        }).show();
+        messageTip.hide();
+    }
+});
+PL._init();
+PL.joinListen('/systemMessage?username='+globalRes.userName);
+function onData(event) {
+    var msg=event.get(globalRes.userName);
+    msg = decodeURIComponent(msg);
+    if(msg){
+        messageTip.setText('<div style="height:25px;">你有未读信息</div>');
+        messageTip.show();
+        messageTip.msg=msg;
+    }else{
+        messageTip.hide();
+    }
+    
+    console.log('msg===',msg)
+}
 
 //if (dwr) {
 ////  dwr.engine.setActiveReverseAjax(true);
@@ -28,9 +66,11 @@ if (top != self) {
 //}
 
 var countDown = 30;
-function ajaxPostRequest(url,params,callback){
+function ajaxPostRequest(url,params,callback,mask){
     var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"请等候..."});
-    myMask.show();
+    if(!mask){
+        myMask.show();
+    }
     Ext.Ajax.request({
         url: url || '',
         params: params || {},
@@ -163,91 +203,9 @@ var timeoutTask = new Ext.util.DelayedTask(function() {
 //  }
 //});
 
-// global access functions
-//var frequencyGraphStore;
-var roundTypeStore;
-
-Ext.onReady(function () {
-//  frequencyGraphStore = Ext.create('Ext.data.ArrayStore', {
-////    autoDestroy: true,
-//    storeId: 'frequencyGraphStore',
-//    fields: ['value', 'label'],
-//    data : graphFrequencies
-//  });
-
-//  roundTypeStore = Ext.create('Ext.data.ArrayStore', {
-////    autoDestroy: true,
-//    storeId: 'roundTypeStore',
-//    fields: ['value', 'label'],
-//    data : roundTypes
-//  });
-//
-//  Ext.apply(Ext.form.field.VTypes, {
-//    balanceText: globalRes.error.notBalanced,
-//    balance: balanceVType
-//  });
-});
 
 
-function balanceVType(v) {
-  return balanceParens(v).balanced;
-}
 
-function balanceParens(v){
-  v = '' || ('' + v);
-  var re = /(\([^\(\)]*\))/g,
-      test = v,
-      hold = test,
-      result = {
-        balanced: true,
-        index: -1,
-        context: "none",
-        display: v,
-        reduced: ""
-      }; // balanced_bool, index, context, resultstr, regex leftover
-
-  while (hold != (test = test.replace(re, ""))) hold = test;
-
-  var left = (test.match(/\(/g) || []).length;
-  var right = (test.match(/\)/g) || []).length;
-  var balance = right - left;
-
-  result.balanced = !balance && !right && !left;
-  result.reduced = test;
-
-  // -------------------------------
-  if (balance < 0) {
-    var indx = -1;
-    do{
-      indx = v.indexOf("(", indx);
-    }
-    while (balance++);
-    indx++;
-    result.context = "left";
-    result.index = indx - 1;
-    result.display = v.substring(0, indx).fontcolor("red").bold() + v.substring(indx);
-  }
-  else
-  if (balance > 0) {
-    var indx = v.length + 1;
-    while (balance--) {
-      indx = v.lastIndexOf(")", indx - 1);
-    }
-    result.context = "right";
-    result.index = indx;
-    result.display = v.substring(0, indx) + v.substring(indx).fontcolor("red").bold();
-  }
-  else if (!result.balanced) { // equal left & right parens -- wrong orientation
-    var lastresort = v.match(/[\)\(]/g);
-
-    result.index = v.indexOf(lastresort[0]);
-    result.display = v.substring(0, result.index) +
-        v.substring(result.index,
-            1 + v.lastIndexOf(lastresort[1])).fontcolor("red").bold() +
-        v.substring(1 + v.lastIndexOf(lastresort[1]));
-  }
-  return result;
-}
 
 Ext.applyIf(Array.prototype, {
     /**
@@ -282,67 +240,3 @@ Ext.applyIf(Array.prototype, {
     }
 });
 
-String.prototype.balanceParens = function(){
-  var re = /(\([^\(\)]*\))/g;
-  var test = this;
-  var hold = test;
-  var result = {
-    balanced: true,
-    index: -1,
-    context: "none",
-    display: this,
-    reduced: ""
-  }; // balanced_bool, index, context, resultstr, regex leftover
-
-  while(hold!=(test = test.replace(re,""))) hold = test;
-
-  var left = (test.match( /\(/g ) || []).length;
-  var right = (test.match( /\)/g ) || []).length;
-  var balance = right - left;
-
-  result.balanced = !balance && !right && !left;
-  result.reduced = test;
-
-  // -------------------------------
-  if(balance < 0){
-    var indx = -1;
-    do{
-      indx = this.indexOf("(", indx);
-    }
-    while(balance++);
-    indx++;
-    result.context = "left";
-    result.index = indx-1;
-    result.display = this.substring(0,indx).fontcolor("red").bold() + this.substring(indx);
-  }
-  else
-  if(balance > 0){
-    var indx = this.length + 1;
-    while(balance--)
-    {
-      indx = this.lastIndexOf(")", indx-1);
-    }
-    result.context = "right";
-    result.index = indx;
-    result.display = this.substring(0,indx) + this.substring(indx).fontcolor("red").bold();
-  }
-  else if(!result.balanced){ // equal left & right parens -- wrong orientation
-    var lastresort = this.match(/[\)\(]/g);
-
-    result.index = this.indexOf(lastresort[0]);
-    result.display = this.substring(0, result.index) +
-      this.substring(result.index,
-        1+this.lastIndexOf(lastresort[1])).fontcolor("red").bold() +
-      this.substring(1 +this.lastIndexOf(lastresort[1]));
-  }
-
-    
-  return result;
-}
-
-function notify(title, message, autoHide) {
-    var sticky = true;
-    if (autoHide) {
-        sticky = false;
-    }
-}

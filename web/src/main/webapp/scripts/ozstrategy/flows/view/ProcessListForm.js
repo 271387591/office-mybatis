@@ -11,7 +11,7 @@ Ext.define('FlexCenter.flows.view.ProcessListForm',{
     alias: 'widget.processListForm',
     layout:'fit',
     modal: true,
-    title:'流程信息',
+    title:workFlowRes.processListView.formTitle,
     buttonSave:false,
     width:400,
     getCategoryStore:function(){
@@ -73,7 +73,7 @@ Ext.define('FlexCenter.flows.view.ProcessListForm',{
                         }
                     },
                     {
-                        text: '取消',
+                        text: globalRes.buttons.cancel,
                         handler: function () {
                             me.close();
                         }
@@ -93,12 +93,12 @@ Ext.define('FlexCenter.flows.view.ProcessListForm',{
                         name:'globalTypeId'
                     },
                     {
-                        fieldLabel: '流程名称<font color="red">*</font>',
+                        fieldLabel: workFlowRes.header.flowName+'<font color="red">*</font>',
                         allowBlank: false,
                         blankText:globalRes.tooltip.notEmpty,
                         name: 'name'
                     },{
-                        fieldLabel: '引用表单',
+                        fieldLabel: workFlowRes.modeler.flowFormName,
                         name:'flowFormName',
                         allowBlank:true,
                         readOnly:true,
@@ -116,7 +116,7 @@ Ext.define('FlexCenter.flows.view.ProcessListForm',{
                             }
                         }
                     },{
-                        fieldLabel:'流程分类',
+                        fieldLabel:workFlowRes.modeler.processCategory,
                         xtype:'combo',
                         name:'category',
                         editable:false,
@@ -135,7 +135,7 @@ Ext.define('FlexCenter.flows.view.ProcessListForm',{
                     },{
                         xtype:'textareafield',
                         grow: true,
-                        fieldLabel:'描述',
+                        fieldLabel:workFlowRes.modeler.processDocumentation,
                         name:'documentation'
                     }]
             }

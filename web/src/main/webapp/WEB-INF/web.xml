@@ -13,7 +13,7 @@
             classpath:/applicationContext-dao.xml
             classpath:/applicationContext-service.xml
             classpath:/applicationContext-activiti.xml
-            <!--classpath:/applicationContext-activimq.xml-->
+            classpath:/applicationContext-activimq.xml
             <!--classpath:/applicationContext-filter.xml-->
             <!--classpath:/applicationContext-activemq.xml-->
             <!--classpath:/preview-client.xml-->

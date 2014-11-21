@@ -2,6 +2,7 @@ package com.ozstrategy.service.flows.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ozstrategy.Constants;
+import com.ozstrategy.dao.flows.ProcessDefDao;
 import com.ozstrategy.dao.flows.ProcessDefInstanceDao;
 import com.ozstrategy.dao.flows.ProcessElementDao;
 import com.ozstrategy.dao.flows.TaskDao;
@@ -62,6 +63,9 @@ public class TaskManagerImpl implements TaskManager{
     private ProcessDefInstanceDao processDefInstanceDao;
     @Autowired
     private ProcessElementDao processElementDao;
+    @Autowired
+    private ProcessDefDao processDefDao;
+    
     @Autowired
     private UserDao userDao;
     @Autowired
@@ -227,7 +231,10 @@ public class TaskManagerImpl implements TaskManager{
         if(StringUtils.isNotEmpty(processDefId)){
             ProcessElement element=processElementDao.getProcessElementByTaskKeyAndDefId(Long.parseLong(processDefId),task.getTaskDefinitionKey());
             instance.setElement(element);
+            ProcessDef def=processDefDao.getProcessDefById(Long.parseLong(processDefId));
+            instance.setProcessDef(def);
         }
+        
         instance.setSendEmail(BooleanUtils.toBooleanObject(ObjectUtils.toString(map.get("sendEmail"))));
         instance.setRemarks(ObjectUtils.toString(map.get("remarks")));
         instance.setStatus(status);
@@ -252,29 +259,20 @@ public class TaskManagerImpl implements TaskManager{
             TaskEntity task = commandContext.getTaskEntityManager().findTaskById(taskId);
             ExecutionEntity execution = task.getExecution();
             ProcessDefinitionEntity entity = (ProcessDefinitionEntity)execution.getProcessDefinition();
-            ActivityImpl currentAct = entity.findActivity(taskKey);
             if(StringUtils.isNotEmpty(sourceTaskId)){
-                List<PvmTransition> transitions = currentAct.getIncomingTransitions();
-                if(transitions!=null && transitions.size()>0){
-                    for(PvmTransition transition : transitions){
-                        ActivityImpl source = (ActivityImpl)transition.getSource();
-                        String id = source.getId();
-                        HistoricTaskInstance historicTaskInstance =Context.getProcessEngineConfiguration().getHistoryService()
-                                .createHistoricTaskInstanceQuery().processInstanceId(execution.getProcessInstanceId()).taskId(sourceTaskId).singleResult();
-                        if(StringUtils.equals(id,historicTaskInstance.getTaskDefinitionKey())){
-                            execution.destroyScope(jumpOrigin);
-                            execution.executeActivity(source);
-                            List<TaskEntity> taskEntities=execution.getTasks();
-                            if(taskEntities!=null && taskEntities.size()>0){
-                                for(TaskEntity taskEntity : taskEntities){
-                                    if(taskEntity.getAssignee()!=null){
-                                        continue;
-                                    }
-                                    taskEntity.setAssignee(historicTaskInstance.getAssignee());
-                                    currentTask=taskEntity;
-                                }
-                            }
+                HistoricTaskInstance historicTaskInstance =Context.getProcessEngineConfiguration().getHistoryService()
+                        .createHistoricTaskInstanceQuery().processInstanceId(execution.getProcessInstanceId()).taskId(sourceTaskId).singleResult();
+                ActivityImpl source = entity.findActivity(historicTaskInstance.getTaskDefinitionKey());
+                execution.destroyScope(jumpOrigin);
+                execution.executeActivity(source);
+                List<TaskEntity> taskEntities=execution.getTasks();
+                if(taskEntities!=null && taskEntities.size()>0) {
+                    for (TaskEntity taskEntity : taskEntities) {
+                        if (taskEntity.getAssignee() != null) {
+                            continue;
                         }
+                        taskEntity.setAssignee(historicTaskInstance.getAssignee());
+                        currentTask = taskEntity;
                     }
                 }
             }else{

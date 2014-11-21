@@ -39,6 +39,7 @@
 		<mapper resource="com/ozstrategy/dao/userrole/FeatureMapper.xml"/>
 		<mapper resource="com/ozstrategy/dao/userrole/RoleFeatureMapper.xml"/>
 		<mapper resource="com/ozstrategy/dao/system/GlobalTypeMapper.xml"/>
+		<mapper resource="com/ozstrategy/dao/system/SystemMessageMapper.xml"/>
 		<mapper resource="com/ozstrategy/dao/forms/FlowFormMapper.xml"/>
 		<mapper resource="com/ozstrategy/dao/forms/FormFieldMapper.xml"/>
 		<mapper resource="com/ozstrategy/dao/flows/ProcessDefMapper.xml"/>

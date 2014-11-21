@@ -53,7 +53,8 @@
     </script>
     <script type="text/javascript" src="<c:url value="/mxgraph/src/js/mxClient.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/mxgraph/src/js/mxModeler.js"/>"></script>
-    <script type="text/javascript" src='<c:url value="/scripts/ozstrategy/global.js"/>'></script>
+    <script type="text/javascript" src="<c:url value='/scripts/lib/ajax-pushlet-client.js'/>"></script>
+    
 
   <style type="text/css" >
       .x-message-box .ext-mb-loading {
@@ -72,7 +73,7 @@
     // Enable dynamic loading for improved debugging support
 //    Ext.getBody().addCls(Ext.baseCSSPrefix + 'theme-' + Ext.themeName);
     var theme = Ext.util.Cookies.get('FlexCenter_Ext_Theme');
-    if(theme!='undefined'){
+    if(theme){
         Ext.util.CSS.swapStyleSheet("FlexCenter_Ext_Theme", extTheme + theme + ".css");
     }
     if (globalRes.isAdmin != 'true'){location.href="dispatcherPage.action";}
@@ -91,7 +92,7 @@
     });
 
   </script>
-  <%--<jwr:script src="/ozExtComponets/flexcenter/global.js" />--%>
+    <script type="text/javascript" src='<c:url value="/scripts/ozstrategy/global.js"/>'></script>
 
   <script type="text/javascript">
     var apps = {};
