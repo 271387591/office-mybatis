@@ -8,13 +8,13 @@
         <collection property="users" column="id" select="com.ozstrategy.dao.userrole.UserDao.getUserByRoleId" fetchType="lazy"/>
     </resultMap>
     <select id="listRoles" resultMap="roleResult"  parameterType="Map">
-        select * from Role r where r.enabled=1
+        select * from Role r where r.enabled=1 and r.name!='ROLE_ADMIN' 
         <if test="keyword!=null and keyword!=''">and (r.name like CONCAT(CONCAT('%', #{keyword}), '%') or r.displayName like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
         order by r.createDate desc
     </select>
     <select id="listRolesCount" resultType="java.lang.Integer" parameterType="Map">
-        select count(*) from Role r
-        where r.enabled=1
+        select count(*) from Role r 
+        where r.enabled=1 and r.name!='ROLE_ADMIN'
         <if test="keyword!=null and keyword!=''">and (r.name like CONCAT(CONCAT('%', #{keyword}), '%') or r.displayName like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
     </select>
     <select id="getRoleByName" resultMap="roleResult" parameterType="java.lang.String">
@@ -32,7 +32,7 @@
         <selectKey keyColumn="id" keyProperty="id" resultType="java.lang.Long">
             select LAST_INSERT_ID()
         </selectKey>
-        insert into Role(id,name,description,displayName,enabled,systemViewId) values (#{id},#{name},#{description},#{displayName},#{enabled},#{systemView.id})
+        insert into Role(id,name,description,displayName,enabled,systemViewId,createDate,lastUpdateDate) values (#{id},#{name},#{description},#{displayName},#{enabled},#{systemView.id},#{createDate},#{lastUpdateDate})
     </insert>
     <update id="updateRole" parameterType="com.ozstrategy.model.userrole.Role" flushCache="true">
         update Role r set 
@@ -40,11 +40,12 @@
         r.description=#{description} , 
         r.displayName=#{displayName} , 
         r.enabled=#{enabled} , 
+        r.lastUpdateDate=#{lastUpdateDate} ,
         r.systemViewId=#{systemView.id} 
         where r.id=#{id}
     </update>
-    <update id="removeRoleById" parameterType="java.lang.Long" flushCache="true">
-        update Role r set r.enabled='0' where r.id=#{id}
-    </update>
+    <delete id="removeRoleById" parameterType="java.lang.Long" flushCache="true">
+        DELETE FROM Role WHERE id=#{id}
+    </delete>
 
 </mapper>

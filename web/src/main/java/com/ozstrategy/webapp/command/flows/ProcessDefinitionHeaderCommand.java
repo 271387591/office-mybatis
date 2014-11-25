@@ -18,6 +18,7 @@ public class ProcessDefinitionHeaderCommand {
     private String fileAttachThreeName;
     private String formHtml;
     private Map<String,Object> formValue=new HashMap<String, Object>();
+    private Map<String,Object> chmods=new HashMap<String, Object>();
     public ProcessDefinitionHeaderCommand(List<ProcessFileAttach> attaches){
         if(attaches!=null && attaches.size()>0){
             for(ProcessFileAttach attach : attaches){
@@ -98,5 +99,13 @@ public class ProcessDefinitionHeaderCommand {
 
     public void setFormHtml(String formHtml) {
         this.formHtml = formHtml;
+    }
+
+    public Map<String, Object> getChmods() {
+        return chmods;
+    }
+
+    public void setChmods(Map<String, Object> chmods) {
+        this.chmods = chmods;
     }
 }

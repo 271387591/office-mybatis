@@ -36,6 +36,40 @@ Ext.define('FlexCenter.forms.view.FlowFormView',{
         var sm = Ext.create('Ext.selection.CheckboxModel',{
             mode:'SINGLE'
         });
+        var actioncolumn=[{
+            iconCls:'btn-preview',
+            tooltip:'预览',
+            handler:function(grid, rowIndex, colIndex){
+                var rec = grid.getStore().getAt(rowIndex),selects=[];
+                var formHtml=rec.get('content');
+                Ext.widget('formPreviewWindow',{
+                    formHtml:formHtml
+                }).show();
+            }
+        }];
+        if(globalRes.isAdmin || accessRes.publishForm){
+            actioncolumn.push('-');
+            actioncolumn.push({
+                tooltip:'发布',
+                handler:function(grid, rowIndex, colIndex){
+                    var rec = grid.getStore().getAt(rowIndex);
+                    me.publishTable(rec);
+                },
+                getClass:function(v,metadata,record){
+                    if(record.get('status')=='Draft'){
+                        return 'icon-publish';
+                    }
+                    return 'x-hide-display';
+                },
+                isDisabled:function(view,rowIndex,colIndex,item,record){
+                    if(record.get('status')=='Draft'){
+                        return true;
+                    }
+                    return false;
+                }
+            });
+        }
+        
         me.items=[
             {
                 xtype:'grid',
@@ -46,39 +80,37 @@ Ext.define('FlexCenter.forms.view.FlowFormView',{
                 autoScroll: true,
                 tbar:[
                     {
-                        xtype: 'buttongroup',
+                        xtype:'button',
+                        frame:true,
+                        text:'添加',
+                        iconCls:'table-add',
+                        scope:me,
                         hidden: me.selector,
-                        items:[
-                            {
-                                xtype:'button',
-                                frame:true,
-                                text:'添加',
-                                iconCls:'table-add',
-                                scope:me,
-                                hidden: me.selector,
-                                handler:me.onAddClick
-                            },
-                            {
-                                xtype: 'button',
-                                frame: true,
-                                text: '编辑',
-                                iconCls: 'table-edit',
-                                hidden: me.selector,
-                                scope: me,
-                                handler: me.updateClick
-                            },
-                            {
-                                xtype: 'button',
-                                frame: true,
-                                text: '删除',
-                                iconCls: 'table-delete',
-                                hidden: me.selector,
-                                scope: me,
-                                handler: me.onDeleteClick
-                            }
-                        ]
+                        plugins:Ext.create('Oz.access.RoleAccess', {featureName:'addForm',mode:'hide',byPass:globalRes.isAdmin}),
+                        handler:me.onAddClick
+                    },
+                    {
+                        xtype: 'button',
+                        frame: true,
+                        text: '编辑',
+                        iconCls: 'table-edit',
+                        plugins:Ext.create('Oz.access.RoleAccess', {featureName:'updateForm',mode:'hide',byPass:globalRes.isAdmin}),
+                        hidden: me.selector,
+                        scope: me,
+                        handler: me.updateClick
+                    },
+                    {
+                        xtype: 'button',
+                        frame: true,
+                        text: '删除',
+                        iconCls: 'table-delete',
+                        hidden: me.selector,
+                        plugins:Ext.create('Oz.access.RoleAccess', {featureName:'deleteForm',mode:'hide',byPass:globalRes.isAdmin}),
+                        scope: me,
+                        handler: me.onDeleteClick
                     }
                 ],
+                plugins:Ext.create('Oz.access.RoleAccess', {featureName:'updateForm',mode:'hide',byPass:globalRes.isAdmin}),
                 features:[{
                     ftype: 'search',
                     disableIndexes : ['id','description','status','createDate'],
@@ -155,32 +187,7 @@ Ext.define('FlexCenter.forms.view.FlowFormView',{
                         header:'管理',
                         flex:1,
                         hidden: me.selector,
-                        items:[
-                            {
-                                iconCls:'btn-preview',
-                                tooltip:'预览',
-                                handler:function(grid, rowIndex, colIndex){
-                                    var rec = grid.getStore().getAt(rowIndex),selects=[];
-                                    var formHtml=rec.get('content');
-                                    Ext.widget('formPreviewWindow',{
-                                        formHtml:formHtml
-                                    }).show();
-                                }
-                            },'-',
-                            {
-                                tooltip:'发布',
-                                handler:function(grid, rowIndex, colIndex){
-                                    var rec = grid.getStore().getAt(rowIndex);
-                                    me.publishTable(rec);
-                                },
-                                getClass:function(v,metadata,record){
-                                    if(record.get('status')=='Draft'){
-                                        return 'icon-publish';
-                                    }
-                                    return 'x-hide-display';
-                                }
-                            }
-                        ]
+                        items:actioncolumn
                     }
                 ],
                 listeners:{

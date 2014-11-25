@@ -196,6 +196,11 @@ var workFlowRes = {
             flowFormName: '<fmt:message key="workFlowRes.processListView.flowFormName" />',
             formTitle: '<fmt:message key="workFlowRes.processListView.formTitle" />',
             design: '<fmt:message key="workFlowRes.processListView.design" />',
+            checkProcessRunning: '<fmt:message key="workFlowRes.processListView.checkProcessRunning" />',
+            depProcess: '<fmt:message key="workFlowRes.processListView.depProcess" />',
+            disAuthorization: '<fmt:message key="workFlowRes.processListView.disAuthorization" />',
+            disAuthorizationProcessMsg: '<fmt:message key="workFlowRes.processListView.disAuthorizationProcessMsg" />',
+            disAuthorizationProcessAlert: '<fmt:message key="workFlowRes.processListView.disAuthorizationProcessAlert" />',
             depSuc: '<fmt:message key="workFlowRes.processListView.depSuc" />'
         },
         processUserSetter: {

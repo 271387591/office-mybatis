@@ -17,7 +17,6 @@ Ext.define('FlexCenter.user.view.RoleForm',{
 
   ],
   crudType:'save',
-//  resizable: false,
     layout: 'fit',
     autoShow: true,
     modal: true,
@@ -82,11 +81,22 @@ Ext.define('FlexCenter.user.view.RoleForm',{
                               allowBlank: false,
                               readOnly:me.isEdit,
                               readOnlyCls:'x-item-disabled',
-                              emptyText:userRoleRes.msg.addRoleEmpty
+                              validator:function(v){
+                                  if(v && v.length>32){
+                                      return globalRes.textLengthTooLong;
+                                  }
+                                  return true;
+                              }
                           },{
                               name: 'displayName',
                               fieldLabel: '<font color="red">*</font>'+userRoleRes.header.displayName,
-                              allowBlank: false
+                              allowBlank: false,
+                              validator:function(v){
+                                  if(v && v.length>64){
+                                      return globalRes.textLengthTooLong;
+                                  }
+                                  return true;
+                              }
                           },{
                               fieldLabel: '<font color="red">*</font>'+userRoleRes.header.defaultContext,
                               name: 'systemViewId',
@@ -159,7 +169,6 @@ Ext.define('FlexCenter.user.view.RoleForm',{
                                           }
                                       },
                                       getRowClass: function (record){
-                                          // return a custom css class based on the record or index
                                           if (record.get('name')){
                                               return 'blue-grid-row';
                                           }
@@ -177,6 +186,22 @@ Ext.define('FlexCenter.user.view.RoleForm',{
                                           width: 170,
                                           sortable: true,
                                           dataIndex: 'displayName'
+                                      },{
+                                          header: userRoleRes.header.featureCriteria,
+                                          width: 170,
+                                          sortable: true,
+                                          dataIndex: 'criteria'
+                                          //renderer: function(v){
+                                          //    if(v=='user'){
+                                          //        return userRoleRes.userCriteria;
+                                          //    }else if(v=='system'){
+                                          //        return userRoleRes.systemCriteria;
+                                          //    }else if(v=='forms'){
+                                          //        return userRoleRes.formsCriteria;
+                                          //    }else if(v=='flows'){
+                                          //        return userRoleRes.flowsCriteria;
+                                          //    }
+                                          //}
                                       }
                                   ]
                               }

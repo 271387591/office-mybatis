@@ -175,7 +175,7 @@ Ext.define('FlexCenter.flows.view.Modeler', {
 //                        },
                 viewConfig: {
                     getRowClass: function(record, rowIndex, rowParams, store){
-                        return (record.get('leaf')==false) ? "blue-grid-row" : "";
+                        return (record.get('leaf')==false) ? "grid-navGraphTree" : "";
                     }
                 },
                 store:store

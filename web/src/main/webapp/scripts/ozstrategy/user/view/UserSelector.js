@@ -38,26 +38,15 @@ Ext.define('FlexCenter.user.view.UserSelector', {
                             region: 'center',
                             autoHeight: true,
                             selModel: csm,
-                            tbar: [
-                                {
-                                    xtype: 'textfield',
-                                    itemId: 'searchKeyword'
+                            features:[{
+                                ftype: 'search',
+                                disableIndexes : ['id','defaultRoleDisplayName','accountLocked','enabled','createDate'],
+                                paramNames: {
+                                    fields: 'fields',
+                                    query: 'keyword'
                                 },
-                                {
-                                    text: '查询',
-                                    iconCls: 'search',
-                                    scope: this,
-                                    handler: this.onSearchClick
-                                },
-                                {
-                                    text: '清空',
-                                    iconCls: 'clear',
-                                    handler: function () {
-                                        me.down('textfield#searchKeyword').setValue("");
-                                        me.onSearchClick();
-                                    }
-                                }
-                            ],
+                                searchMode : 'remote'
+                            }],
                             columns: [new Ext.grid.RowNumberer(),
                                 {
                                     header: '姓名',

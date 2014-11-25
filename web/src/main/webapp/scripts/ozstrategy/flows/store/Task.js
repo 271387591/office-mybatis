@@ -17,7 +17,7 @@ Ext.define('FlexCenter.flows.store.Task', {
     ],
     proxy: {
         type: 'ajax',
-        url: 'taskController.do?method=listTasks',
+        url: 'taskController.do?method=listCandidateTasks',
         reader: {
             root : 'data',
             totalProperty  : 'total',

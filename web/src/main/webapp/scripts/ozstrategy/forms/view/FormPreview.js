@@ -7,7 +7,6 @@
  */
 Ext.define('FlexCenter.forms.view.FormPreview',{
     requires:[
-        'Ext.ux.form.FormDataCustomFiled',
         'FlexCenter.user.view.UserSelector',
         'Ext.ux.form.field.DateTimeField'
     ],
@@ -57,7 +56,7 @@ Ext.define('FlexCenter.forms.view.FormPreview',{
     setFormValue:function(){
         var me=this;
         if(me.formHtml && me.formValue){
-            var formHtml=me.formHtml,formValue= me.formValue;
+            var formHtml=me.formHtml,formValue= me.formValue,chmods=me.chmods || {};
             var form = document.createElement('form');
             form.innerHTML = formHtml;
             var table=$('table[xtype=table]',form),detail=$('table[xtype=detailGrid]',form);
@@ -73,15 +72,22 @@ Ext.define('FlexCenter.forms.view.FormPreview',{
                     'input[xtype=posselector][name='+item+']'
                 ];
                 var value=formValue[item];
-                if(!(value instanceof Array)){
-                    for(var i=0;i<selectors.length;i++){
-                        var field=$(selectors[i],table).not($(selectors[i],detail));
-                        if(field.length>0){
-                            field.attr('value',value);
-                        }
+                var chmod=chmods[item];
+                for(var i=0;i<selectors.length;i++){
+                    var field=$(selectors[i],table).not($(selectors[i],detail));
+                    if(field.length>0){
+                        field.attr('value',Ext.encode(value,true));
                     }
-                }else{
-                    detail.attr('value',Ext.decode(value,true));
+                    console.log(item,chmod)
+                    if(chmod){
+                        
+                        field=$(selectors[i],table);
+                        field.attr('chmod',chmod);
+                    }
+                }
+                var detailName = $(detail).attr('name');
+                if(item==detailName){
+                    detail.attr('value',Ext.encode(value,true));
                 }
             }
             return form.innerHTML;
@@ -151,6 +157,11 @@ Ext.define('FlexCenter.forms.view.FormPreview',{
                         values.push(obj);
                     });
                     datas[name.name]=values;
+                }else if('datefield'==xtype){
+                    var dateValue=item.getValue();
+                    if(dateValue){
+                        datas[name.name]=dateValue.getTime();
+                    }
                 }else{
                     datas[name.name]=item.getValue();
                 }
@@ -240,6 +251,7 @@ Ext.define('FlexCenter.forms.view.FormPreview',{
         var name = item.getAttribute('name');
         var value = item.getAttribute('value');
         var width = item.getAttribute('xwidth');
+        var gridTxtlabel = item.getAttribute('txtlabel');
         var columns=[],fields=[];
         var tds=$('td',item);
         var searchWidget=function(td){
@@ -266,6 +278,7 @@ Ext.define('FlexCenter.forms.view.FormPreview',{
             if(!widget)break;
             var xtype=widget.getAttribute('xtype');
             var wname=widget.getAttribute('name');
+            var chmod = item.getAttribute('chmod');
             widget.setAttribute('name',name+'_'+wname);
             wname=widget.getAttribute('name');
             fields.push(wname);
@@ -277,15 +290,23 @@ Ext.define('FlexCenter.forms.view.FormPreview',{
             };
             if(xtype=='textfield'){
                 obj.editor=me.createTextfield(widget,true);
+                obj.hidden=obj.editor.hidden;
+                obj.disabled =obj.editor.readOnly;
             }else if(xtype=='textareafield'){
                 obj.editor=me.createTextfield(widget,true);
+                obj.hidden=obj.editor.hidden;
+                obj.disabled =obj.editor.readOnly;
             }else if(xtype=='datefield'){
                 obj.editor=me.createDatefield(widget,true);
-                obj.renderer=function(v){
-                    return v?Ext.Date.format(new Date(v),obj.editor.format):v;
-                };
+                //obj.renderer=function(v){
+                //    return v?Ext.Date.format(new Date(v),obj.editor.format):v;
+                //};
+                obj.hidden=obj.editor.hidden;
+                obj.disabled =obj.editor.readOnly;
             }else if(xtype=='combo'){
                 obj.editor=me.createCombos(widget,true);
+                obj.hidden=obj.editor.hidden;
+                obj.disabled =obj.editor.readOnly;
             }else if(xtype=='boxgroup'){
                 obj.editor=me.createBoxGroup(widget,true);
                 obj.renderer=function(v,metaData,record,index,col){
@@ -299,8 +320,32 @@ Ext.define('FlexCenter.forms.view.FormPreview',{
                     }
                     return '';
                 };
+                obj.hidden=obj.editor.hidden;
+                obj.disabled =obj.editor.readOnly;
             }else if(xtype == 'userselector' || xtype == 'depselector' || xtype == 'posselector'){
-                obj.editor=me.createSelector(widget,true);
+                if(xtype=='userselector'){
+                    obj.editor= new Ext.form.field.Trigger({
+                        triggerClass : 'x-form-browse-trigger',
+                        editable:false,
+                        itemId:wname+i,
+                        readOnly: chmod == 1?true: false,
+                        readOnlyCls:'x-item-disabled',
+                        hidden: chmod == 2?true: false,
+                        emptyText:'选择人员',
+                        onTriggerClick:function(){
+                            var rec = Ext.ComponentQuery.query('#'+name)[0].getSelectionModel().getSelection()[0];
+                            Ext.widget('userSelector',{
+                                resultBack:function(ids,values,usernames){
+                                    if(rec){
+                                        rec.set(wname,values); 
+                                    }
+                                }
+                            }).show();
+                        }
+                    });
+                    obj.hidden=obj.editor.hidden;
+                    obj.disabled =obj.editor.readOnly;
+                }
             }
             columns.push(obj);
         }
@@ -353,9 +398,12 @@ Ext.define('FlexCenter.forms.view.FormPreview',{
             renderTo: span,
             columns: columns,
             itemId: name,
+            titleAlign:'center',
+            title:gridTxtlabel,
 //            width: width,
             autoHeight:true,
             height: 250,
+            margins:1,
             sType:'detail',
             tbar: [{
                 text: '添加记录',
@@ -370,7 +418,7 @@ Ext.define('FlexCenter.forms.view.FormPreview',{
         });
         return grid;
     },
-    createSelector:function(item,grid){
+    createSelector:function(item,grid,table){
         var me=this;
         var name = item.getAttribute('name');
         var chmod = item.getAttribute('chmod');
@@ -391,48 +439,55 @@ Ext.define('FlexCenter.forms.view.FormPreview',{
             parentNode.removeChild(item);
         }
         var config={
-            xtype: 'formDataCustomFiled',
             name: name,
             itemId:name,
             labelWidth: 50,
-            value:value,
-//            msgTarget: 'side',
-//            width:200,
-//            anchor: '100%',
             readOnly: chmod == 1?true: false,
             readOnlyCls:'x-item-disabled',
             hidden: chmod == 2?true: false
         };
+        if(value){
+            value=Ext.decode(value,true)
+            config.value=value;
+        }
         if(!grid){
             config.renderTo=span;
         }
         if(xtype == 'userselector'){
-            config.buttonText='选择人员';
-            config.onClick=function(){
+            config.emptyText='选择人员';
+            config.onTriggerClick=function(){
                 Ext.widget('userSelector',{
 //                        type:'SINGLE',
                     returnObj:true,
                     resultBack: function(ids,names,userNames,records){
-//                            console.log(ids,names);
-//                        me.down('#' + name).setValue(names);
-//                        me.down('#' + name).propertiesId = ids;
-//                        me.down('#' + name).selectorObj = records;
+                        var widget = Ext.ComponentQuery.query('#'+name)[0];
+                        widget.setValue(names);
                     }
                 }).show();
                 
             }
         }else if(xtype == 'depselector'){
-            config.buttonText='选择部门';
-            config.onClick=function(){
+            config.emptyText='选择部门';
+            config.onTriggerClick=function(){
+//                Ext.widget('userSelector',{
+////                        type:'SINGLE',
+//                    returnObj:true,
+//                    resultBack: function(ids,names,userNames,records){
+//                        var widget = Ext.ComponentQuery.query('#'+name)[0];
+//                        console.log(widget)
+//                        console.log('names',names)
+//                        widget.setValue(names);
+//                    }
+//                }).show();
 
             }
         }else if(xtype == 'posselector'){
-            config.buttonText='选择岗位';
-            config.onClick=function(){
+            config.emptyText='选择岗位';
+            config.onTriggerClick=function(){
 
             }
         }
-        return Ext.widget('formDataCustomFiled',config);
+        return new Ext.form.field.Trigger(config);
     },
     createBoxGroup:function(item,grid){
         var me=this;
@@ -440,6 +495,7 @@ Ext.define('FlexCenter.forms.view.FormPreview',{
         var multiple = item.getAttribute('multiple');
         var chmod = item.getAttribute('chmod');
         var xtype = item.getAttribute('xtype');
+        var value = item.getAttribute('value');
         var span = document.createElement('span');
         var parentNode=item.parentNode;
         if(parentNode){
@@ -462,7 +518,10 @@ Ext.define('FlexCenter.forms.view.FormPreview',{
                 var obj={
                     boxLabel:input.getAttribute('txtlabel'),
                     name:input.getAttribute('name'),
-                    inputValue:input.getAttribute('value')
+                    inputValue:input.getAttribute('value'),
+                    readOnly: chmod == 1?true: false,
+                    readOnlyCls:'x-item-disabled',
+                    hidden: chmod == 2?true: false
                 }
                 'checked'==checked?obj.checked=true:'';
                 groups.push(obj);
@@ -472,10 +531,11 @@ Ext.define('FlexCenter.forms.view.FormPreview',{
             labelWidth:1,
             name:name,
             itemId:name,
-            readOnly: chmod == 1?true: false,
-            readOnlyCls:'x-item-disabled',
-            hidden: chmod == 2?true: false,
             items:groups
+        }
+        if(value){
+            value=Ext.decode(value,true)
+            config.value=value;
         }
         if(!grid){
             config.renderTo=span;
@@ -488,6 +548,7 @@ Ext.define('FlexCenter.forms.view.FormPreview',{
         var multiple = item.getAttribute('multiple');
         var chmod = item.getAttribute('chmod');
         var xtype = item.getAttribute('xtype');
+        var value = item.getAttribute('value');
         var span = document.createElement('span');
         var parentNode=item.parentNode;
         if(parentNode){
@@ -503,20 +564,16 @@ Ext.define('FlexCenter.forms.view.FormPreview',{
             parentNode.removeChild(item);
         }
         var childs=item.childNodes;
-        var data=[],values=[];
+        var data=[];
         if(childs && childs.length>0){
             for(var i=0;i<childs.length;i++){
                 var option=childs[i];
                 var optValue=option.getAttribute('value');
-                var selected=option.getAttribute('selected');
                 var optDvalue=option.value;
                 var obj={};
                 obj.value=optValue;
                 obj.name=optDvalue;
                 data.push(obj);
-                if(selected){
-                    values.push(optValue);
-                }
             }
         }
         var store = Ext.create('Ext.data.Store', {
@@ -536,8 +593,9 @@ Ext.define('FlexCenter.forms.view.FormPreview',{
             readOnlyCls:'x-item-disabled',
             hidden: chmod == 2?true: false
         };
-        if(values.length>0){
-            config.value=values;
+        if(value){
+            value=Ext.decode(value,true)
+            config.value=value;
         }
         if(!grid){
             config.renderTo=span;
@@ -577,11 +635,14 @@ Ext.define('FlexCenter.forms.view.FormPreview',{
                 hidden: chmod == 2?true: false,
                 readOnlyCls:'x-item-disabled'
             };
-            if(value){
-                config.value=Ext.Date.parse(value,'Y-m-d');
-            }
             if(!grid){
                 config.renderTo=span;
+            }
+            if(value){
+                value=Ext.decode(value,true)
+                var date=new Date();
+                date.setTime(value);
+                config.value=date
             }
             return Ext.widget('datefield',config);
             
@@ -595,7 +656,10 @@ Ext.define('FlexCenter.forms.view.FormPreview',{
                 readOnlyCls:'x-item-disabled'
             };
             if(value){
-                config.value=Ext.Date.parse(value,'Y-m-d');
+                value=Ext.decode(value,true)
+                var date=new Date();
+                date.setTime(value);
+                config.value=date;
             }
             if(!grid){
                 config.renderTo=span;
@@ -634,7 +698,7 @@ Ext.define('FlexCenter.forms.view.FormPreview',{
             readOnlyCls:'x-item-disabled'
         };
         if(value){
-            config.value=value;
+            config.value=Ext.decode(value,true);
         }
         if(!grid){
             config.renderTo=span;
@@ -677,7 +741,7 @@ Ext.define('FlexCenter.forms.view.FormPreview',{
             config.mouseWheelEnabled= false;
         }
         if(value){
-            config.value=value;
+            config.value=Ext.decode(value,true);
         }
         if(!grid){
             config.renderTo=span;

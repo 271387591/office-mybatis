@@ -37,6 +37,8 @@ public interface ProcessDefDao {
 
     List<ProcessDef> getProcessDefinition(Map<String,Object> map,RowBounds rowBounds);
     Integer getProcessDefinitionCount(Map<String,Object> map);
+
+    List<ProcessDef> getProcessDefByRoleId(Long roleId);
     
     
 }

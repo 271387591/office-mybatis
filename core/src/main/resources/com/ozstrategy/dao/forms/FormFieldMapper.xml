@@ -21,13 +21,13 @@
         select f.* from FormField f where f.name=#{name} and f.parentId is null and f.flowFormId in (select f.id from FlowForm f where f.id=#{formId})
     </select>
     <select id="getFormFieldByFormId" resultMap="formFieldResult" parameterType="long">
-        select f.* from FormField f where f.flowFormId=#{flowFormId} and f.parentId is null 
+        select f.* from FormField f where f.flowFormId=#{flowFormId} and f.xtype!='detailGrid'
     </select>
     <select id="getFormFieldById" resultMap="formFieldResult" parameterType="long">
         select f.* from FormField f where f.id=#{id} 
     </select>
     <select id="getNoCascadeFormField" resultType="com.ozstrategy.model.forms.FormField" parameterType="long">
-        select f.* from FormField f where f.id=#{id} and f.parentId is null 
+        select f.* from FormField f where f.id=#{id} and f.xtype!='detailGrid'
     </select>
     
     

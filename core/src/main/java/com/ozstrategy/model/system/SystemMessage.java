@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ozstrategy.model.BaseObject;
 import com.ozstrategy.model.userrole.User;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -78,5 +80,26 @@ public class SystemMessage extends BaseObject {
         }
         return contentMap;
     }
-    
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        SystemMessage that = (SystemMessage) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(receiver, that.receiver)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(id)
+                .append(receiver)
+                .hashCode();
+    }
 }

@@ -1,6 +1,8 @@
 package com.ozstrategy.model.userrole;
 
 import com.ozstrategy.model.BaseObject;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -69,5 +71,28 @@ public class SystemView extends BaseObject {
 
     public void setContext(String context) {
         this.context = context;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        SystemView that = (SystemView) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(name,that.name)
+                .isEquals();
+
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(id)
+                .append(name)
+                .hashCode();
     }
 }

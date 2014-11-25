@@ -1,6 +1,8 @@
 package com.ozstrategy.model.flows;
 
 import com.ozstrategy.model.forms.FormField;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -105,5 +107,28 @@ public class ProcessElementForm implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ProcessElementForm that = (ProcessElementForm) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(variable, that.variable)
+                .append(name, that.name)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(id)
+                .append(variable)
+                .append(name)
+                .hashCode();
     }
 }

@@ -1,6 +1,7 @@
 package com.ozstrategy.service.flows;
 
 import com.ozstrategy.model.flows.ProcessDef;
+import com.ozstrategy.model.flows.ProcessElementForm;
 import com.ozstrategy.model.flows.Task;
 import com.ozstrategy.model.userrole.User;
 
@@ -12,7 +13,10 @@ import java.util.Map;
  */
 public interface TaskManager {
     List<Task> listCandidateTasks(Map<String,Object> map);
+    Integer listCandidateTasksCount(Map<String,Object> map);
     List<Task> listAssigneeTasks(Map<String,Object> map);
+    Integer listAssigneeTasksCount(Map<String,Object> map);
+    Integer listAllTaskCount(User user);
     List<Task> listReplevyTasks(Map<String,Object> map,Integer start,Integer limit);
     Integer listReplevyTasksCount(Map<String,Object> map);
     void claim(String taskId, String username);
@@ -23,4 +27,5 @@ public interface TaskManager {
     void replevyTask(String taskId, String taskKey,String sourceActivity, User creator,Map<String,Object> map) throws Exception;
     void complete(User user,ProcessDef def,String taskId, Map<String, Object> map) throws Exception;
     void sign(User user,ProcessDef def,String taskId, Map<String, Object> map) throws Exception;
+    List<ProcessElementForm> listProcessElementFormByElementId(Long elementId) throws Exception;
 }

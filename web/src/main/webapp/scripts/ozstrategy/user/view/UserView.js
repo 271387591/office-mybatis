@@ -48,7 +48,7 @@ Ext.define('FlexCenter.user.view.UserView', {
                   xtype:'button',
                   text:globalRes.buttons.add,
                   scope: this,
-                  plugins: Ext.create('Oz.access.RoleAccess', {featureName:'addUser',mode:'hide'}),
+                  plugins: Ext.create('Oz.access.RoleAccess', {featureName:'addUser',mode:'hide',byPass:globalRes.isAdmin}),
                   handler: this.onAddClick
               },
               {
@@ -57,7 +57,7 @@ Ext.define('FlexCenter.user.view.UserView', {
                   xtype:'button',
                   text:globalRes.buttons.edit,
                   itemId:'userEditBtn',
-                  plugins: Ext.create('Oz.access.RoleAccess', {featureName:'updateUser',mode:'hide'}),
+                  plugins: Ext.create('Oz.access.RoleAccess', {featureName:'updateUser',mode:'hide',byPass:globalRes.isAdmin}),
                   scope: this,
                   handler: this.onEditClick
               },
@@ -66,7 +66,7 @@ Ext.define('FlexCenter.user.view.UserView', {
                   text:userRoleRes.passwordTilte,
                   scope:this,
                   itemId:'userPasswordTilteBtn',
-                  plugins: Ext.create('Oz.access.RoleAccess', {featureName:'updateUserPassword',mode:'hide'}),
+                  plugins: Ext.create('Oz.access.RoleAccess', {featureName:'updateUserPassword',mode:'hide',byPass:globalRes.isAdmin}),
                   handler:this.onChangePasswordClick
               },
               {
@@ -75,7 +75,7 @@ Ext.define('FlexCenter.user.view.UserView', {
                   text:userRoleRes.lockUser,
                   scope:this,
                   itemId:'userLockUserBtn',
-                  plugins: Ext.create('Oz.access.RoleAccess', {featureName:'lockUser',mode:'hide'}),
+                  plugins: Ext.create('Oz.access.RoleAccess', {featureName:'lockUser',mode:'hide',byPass:globalRes.isAdmin}),
                   handler: this.onLockUserClick
               },
               {
@@ -83,54 +83,29 @@ Ext.define('FlexCenter.user.view.UserView', {
                   itemId:'enableUserBtn',
                   text:userRoleRes.disableUser,
                   scope:this,
-                  plugins: Ext.create('Oz.access.RoleAccess', {featureName:'disableUser',mode:'hide'}),
+                  plugins: Ext.create('Oz.access.RoleAccess', {featureName:'disableUser',mode:'hide',byPass:globalRes.isAdmin}),
                   handler: this.onDisableUserClick
               },{
                   iconCls:'user-edit',
                   itemId:'unLockUserBtn',
                   text:userRoleRes.unLockUser,
-                  plugins: Ext.create('Oz.access.RoleAccess', {featureName:'unLockUser',mode:'hide'}),
+                  plugins: Ext.create('Oz.access.RoleAccess', {featureName:'unLockUser',mode:'hide',byPass:globalRes.isAdmin}),
                   scope:this,
                   handler: this.onUnLockUserClick
               },{
                   iconCls:'user-edit',
                   itemId:'unDisableUserBtn',
                   text:userRoleRes.unDisableUser,
-                  plugins: Ext.create('Oz.access.RoleAccess', {featureName:'enableUser',mode:'hide'}),
+                  plugins: Ext.create('Oz.access.RoleAccess', {featureName:'enableUser',mode:'hide',byPass:globalRes.isAdmin}),
                   scope:this,
                   handler: this.onUnDisableUserClick
               }
-              //  ,'->','-',
-              //{
-              //  xtype:'textfield',
-              //  itemId:'searchKeyword',
-              //  listeners:{
-              //    change: function(self,newValue){
-              //      if(!newValue){
-              //        me.onSearchClick();
-              //      }
-              //    }
-              //  }
-              //},
-              //{
-              //  text:globalRes.buttons.search,
-              //  iconCls:'search',
-              //  scope:this,
-              //  handler: this.onSearchClick
-              //},{
-              //  text:globalRes.buttons.clear,
-              //  iconCls:'clear',
-              //  handler: function(){
-              //    me.down('textfield#searchKeyword').setValue("");
-              //    me.onSearchClick();
-              //  }
-              //}
           ],
           
         xtype: 'grid',
         border: false,
         forceFit: true,
-        plugins: Ext.create('Oz.access.RoleAccess', {featureName:'updateUser',mode:'hide'}),
+        plugins: Ext.create('Oz.access.RoleAccess', {featureName:'updateUser',mode:'hide',byPass:globalRes.isAdmin}),
         autoScroll: true,
         dockedItems:[{
           xtype: 'pagingtoolbar',
@@ -192,7 +167,6 @@ Ext.define('FlexCenter.user.view.UserView', {
         ],
           viewConfig: {
               getRowClass : function(record) {
-                  // return a custom css class based on the record or index
                   if (!record.get('enabled')) {
                       return 'error-row';
                   }
@@ -206,29 +180,7 @@ Ext.define('FlexCenter.user.view.UserView', {
           },
         store: userStore,
         listeners:{
-            itemclick: function(self,record){
-                if(record.get('username')=='admin'){
-                    me.down('button#enableUserBtn').disable();
-                    me.down('button#userEditBtn').disable();
-                    me.down('button#userPasswordTilteBtn').disable();
-                    me.down('button#userLockUserBtn').disable();
-                    me.down('button#enableUserBtn').disable();
-                    me.down('button#unLockUserBtn').disable();
-                    me.down('button#unDisableUserBtn').disable();
-                }else{
-                    me.down('button#enableUserBtn').enable();
-                    me.down('button#userEditBtn').enable();
-                    me.down('button#userPasswordTilteBtn').enable();
-                    me.down('button#userLockUserBtn').enable();
-                    me.down('button#enableUserBtn').enable();
-                    me.down('button#unLockUserBtn').enable();
-                    me.down('button#unDisableUserBtn').enable();
-                }
-            },
             itemdblclick:function( view, record, item, index, e, eOpts ){
-                if(record.get('username')=='admin'){
-                    return;
-                }
                 me.onEditClick();
             }
         }
@@ -240,22 +192,19 @@ Ext.define('FlexCenter.user.view.UserView', {
         var me=this;
         ajaxPostRequest('userRoleController.do?method=readAvailableRoles',undefined,function(result){
             if(result.success){
-                var availableRoleStore;
-                if(!availableRoleStore){
-                    availableRoleStore=Ext.create('FlexCenter.user.store.Roles', {
-                        storeId:'availableRoleStore',
-                        data:result,
-                        proxy: {
-                            type: 'memory',
-                            reader: {
-                                type: 'json',
-                                root: 'data',
-                                totalProperty  : 'total',
-                                messageProperty: 'message'
-                            }
+                var availableRoleStore=Ext.create('FlexCenter.user.store.Roles', {
+                    storeId:'availableRoleStore',
+                    data:result,
+                    proxy: {
+                        type: 'memory',
+                        reader: {
+                            type: 'json',
+                            root: 'data',
+                            totalProperty  : 'total',
+                            messageProperty: 'message'
                         }
-                    });
-                }
+                    }
+                });
                 me.addClick(availableRoleStore);
             }
         });
@@ -279,16 +228,19 @@ Ext.define('FlexCenter.user.view.UserView', {
           if (result.success) {
             grid.getStore().load();
             me.editWin = win;
-            me.editWin.close();
-          }
-          if(result.message){
-            Ext.MessageBox.show({
-              title: globalRes.title.prompt,
-              width: 300,
-              msg: result.message,
-              buttons: Ext.MessageBox.OK,
-              icon: Ext.MessageBox.INFO
-            });
+              Ext.Msg.alert(globalRes.title.prompt,globalRes.addSuccess,function(){
+                  me.editWin.close();
+              });
+          }else{
+              if(result.message){
+                  Ext.MessageBox.show({
+                      title: globalRes.title.prompt,
+                      width: 300,
+                      msg: result.message,
+                      buttons: Ext.MessageBox.OK,
+                      icon: Ext.MessageBox.ERROR
+                  });
+              }
           }
         },
         failure: function (response, options) {
@@ -301,7 +253,6 @@ Ext.define('FlexCenter.user.view.UserView', {
   onDblClick: function(view, record, item, index, e) {
     var edit,me = this;
       edit = Ext.widget('userForm',{
-        isAdmin: record.get("roleName")=='ROLE_ADMIN'?true:false,
           isEdit:false
       }).show();
       edit.setActiveRecord(record);
@@ -328,22 +279,19 @@ Ext.define('FlexCenter.user.view.UserView', {
         var me=this;
         ajaxPostRequest('userRoleController.do?method=readAvailableRoles',undefined,function(result){
             if(result.success){
-                var availableRoleStore;
-                if(!availableRoleStore){
-                    availableRoleStore=Ext.create('FlexCenter.user.store.Roles', {
-                        storeId:'availableRoleStore',
-                        data:result,
-                        proxy: {
-                            type: 'memory',
-                            reader: {
-                                type: 'json',
-                                root: 'data',
-                                totalProperty  : 'total',
-                                messageProperty: 'message'
-                            }
+                var availableRoleStore=Ext.create('FlexCenter.user.store.Roles', {
+                    storeId:'availableRoleStore',
+                    data:result,
+                    proxy: {
+                        type: 'memory',
+                        reader: {
+                            type: 'json',
+                            root: 'data',
+                            totalProperty  : 'total',
+                            messageProperty: 'message'
                         }
-                    });
-                }
+                    }
+                });
                 me.editClick(availableRoleStore);
             }
         });
@@ -356,7 +304,6 @@ Ext.define('FlexCenter.user.view.UserView', {
     if (selection) {
       var edit;
       edit = Ext.widget('userForm',{
-        isAdmin: selection.get("roleName")=='ROLE_ADMIN'?true:false,
           isEdit:true,
           availableRoleStore:availableRoleStore  
       }).show();
@@ -386,16 +333,19 @@ Ext.define('FlexCenter.user.view.UserView', {
             if (result.success) {
               grid.getStore().load();
               me.editWin = win;
-              me.editWin.close();
-            }
-            if(result.message){
-              Ext.MessageBox.show({
-                title: globalRes.title.prompt,
-                width: 300,
-                msg: result.message,
-                buttons: Ext.MessageBox.OK,
-                icon: Ext.MessageBox.INFO
-              });
+                Ext.Msg.alert(globalRes.title.prompt,globalRes.updateSuccess,function(){
+                    me.editWin.close();
+                });
+            }else{
+                if(result.message){
+                    Ext.MessageBox.show({
+                        title: globalRes.title.prompt,
+                        width: 300,
+                        msg: result.message,
+                        buttons: Ext.MessageBox.OK,
+                        icon: Ext.MessageBox.INFO
+                    });
+                }
             }
           },
           failure: function (response, options) {
@@ -496,16 +446,10 @@ Ext.define('FlexCenter.user.view.UserView', {
       success: function (response, options) {
         var result = Ext.decode(response.responseText);
         if (result.success) {
-          openWin.up('window').close();
-//          Ext.MessageBox.show({
-//            title: userRoleRes.passwordTilte,
-//            width: 300,
-//            msg: userRoleRes.msg.changePassword,
-//            buttons: Ext.MessageBox.OK,
-//            icon: Ext.MessageBox.INFO
-//          });
-        }
-        else {
+            Ext.Msg.alert(globalRes.title.prompt,globalRes.updateSuccess,function(){
+                openWin.up('window').close();
+            });
+        }else {
           Ext.MessageBox.show({
             title: userRoleRes.passwordTilte,
             width: 300,
@@ -544,6 +488,8 @@ Ext.define('FlexCenter.user.view.UserView', {
                             success: function (response, options) {
                                 var result = Ext.decode(response.responseText);
                                 if (result.success) {
+                                    Ext.Msg.alert(globalRes.title.prompt,globalRes.addSuccess);
+                                    me.getStore().load();
 //                                    Ext.MessageBox.show({
 //                                        title: title,
 //                                        width: 300,
@@ -551,7 +497,7 @@ Ext.define('FlexCenter.user.view.UserView', {
 //                                        buttons: Ext.MessageBox.OK,
 //                                        icon: Ext.MessageBox.INFO
 //                                    });
-                                    me.getStore().load();
+                                    
                                 }
                                 else {
                                     Ext.MessageBox.show({
@@ -614,13 +560,7 @@ Ext.define('FlexCenter.user.view.UserView', {
                             success: function (response, options) {
                                 var result = Ext.decode(response.responseText);
                                 if (result.success) {
-//                                    Ext.MessageBox.show({
-//                                        title: title,
-//                                        width: 350,
-//                                        msg: lock?userRoleRes.msg.lockUserSuccess:userRoleRes.msg.unLockUserSuccess,
-//                                        buttons: Ext.MessageBox.OK,
-//                                        icon: Ext.MessageBox.INFO
-//                                    });
+                                    Ext.Msg.alert(globalRes.title.prompt,globalRes.updateSuccess);
                                     grid.getStore().load();
                                 } else {
                                     Ext.MessageBox.show({
@@ -654,15 +594,5 @@ Ext.define('FlexCenter.user.view.UserView', {
   },
     onUnLockUserClick: function(){
       this.lockOrUnlockUser(false);
-    },
-    
-
-  onSearchClick: function(){
-    var me = this;
-    var textField = me.down('textfield#searchKeyword');
-    var store = me.getStore();
-    store.getProxy().extraParams = {keyword: textField.getValue()};
-    store.loadPage(1);
-//    store.load();
-  }
+    }
 });

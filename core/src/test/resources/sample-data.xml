@@ -16,7 +16,7 @@
             <value>user</value>
             <value>添加角色</value>
             <value>添加角色</value>
-            <value>Y</value>
+            <value>1</value>
             <value>addRole</value>
         </row>
         <row>
@@ -26,7 +26,7 @@
             <value>user</value>
             <value>编辑角色</value>
             <value>编辑角色</value>
-            <value>Y</value>
+            <value>1</value>
             <value>updateRole</value>
         </row>
         <row>
@@ -36,7 +36,7 @@
             <value>user</value>
             <value>删除角色</value>
             <value>删除角色</value>
-            <value>Y</value>
+            <value>1</value>
             <value>deleteRole</value>
         </row>
         <row>
@@ -46,7 +46,7 @@
             <value>user</value>
             <value>添加用户</value>
             <value>添加用户</value>
-            <value>Y</value>
+            <value>1</value>
             <value>addUser</value>
         </row>
         <row>
@@ -56,7 +56,7 @@
             <value>user</value>
             <value>修改用户</value>
             <value>修改用户</value>
-            <value>Y</value>
+            <value>1</value>
             <value>updateUser</value>
         </row>
         <row>
@@ -66,7 +66,7 @@
             <value>user</value>
             <value>修改用户密码</value>
             <value>修改用户密码</value>
-            <value>Y</value>
+            <value>1</value>
             <value>updateUserPassword</value>
         </row>
         <row>
@@ -76,7 +76,7 @@
             <value>user</value>
             <value>锁定用户</value>
             <value>锁定用户</value>
-            <value>Y</value>
+            <value>1</value>
             <value>lockUser</value>
         </row>
         <row>
@@ -86,7 +86,7 @@
             <value>user</value>
             <value>解锁用户</value>
             <value>解锁用户</value>
-            <value>Y</value>
+            <value>1</value>
             <value>unLockUser</value>
         </row>
         <row>
@@ -96,7 +96,7 @@
             <value>user</value>
             <value>禁用用户</value>
             <value>禁用用户</value>
-            <value>Y</value>
+            <value>1</value>
             <value>disableUser</value>
         </row>
         <row>
@@ -106,9 +106,163 @@
             <value>user</value>
             <value>解禁用户</value>
             <value>解禁用户</value>
-            <value>Y</value>
+            <value>1</value>
             <value>enableUser</value>
         </row>
+        <row>
+            <value>11</value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value>user</value>
+            <value>显示用户模块</value>
+            <value>显示用户模块</value>
+            <value>1</value>
+            <value>showUserManager</value>
+        </row>
+        <row>
+            <value>12</value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value>system</value>
+            <value>显示基础数据模块</value>
+            <value>显示基础数据模块</value>
+            <value>1</value>
+            <value>showSystemDataManager</value>
+        </row>
+        <row>
+            <value>13</value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value>forms</value>
+            <value>显示表单模块</value>
+            <value>显示表单模块</value>
+            <value>1</value>
+            <value>showFlowFormManager</value>
+        </row>
+        <row>
+            <value>14</value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value>flows</value>
+            <value>显示流程模块</value>
+            <value>显示流程模块</value>
+            <value>1</value>
+            <value>showFlowManager</value>
+        </row>
+        <row>
+            <value>15</value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value>flows</value>
+            <value>添加流程</value>
+            <value>添加流程</value>
+            <value>1</value>
+            <value>addProcess</value>
+        </row>
+        <row>
+            <value>16</value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value>flows</value>
+            <value>删除流程</value>
+            <value>删除流程</value>
+            <value>1</value>
+            <value>deleteProcess</value>
+        </row>
+        <row>
+            <value>17</value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value>flows</value>
+            <value>流程授权</value>
+            <value>流程授权</value>
+            <value>1</value>
+            <value>authorizationProcess</value>
+        </row>
+        <row>
+            <value>18</value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value>flows</value>
+            <value>编辑流程</value>
+            <value>编辑流程</value>
+            <value>1</value>
+            <value>updateProcess</value>
+        </row>
+        <row>
+            <value>19</value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value>flows</value>
+            <value>部署流程</value>
+            <value>部署流程</value>
+            <value>1</value>
+            <value>deployProcess</value>
+        </row>
+        <row>
+            <value>20</value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value>flows</value>
+            <value>发布表单</value>
+            <value>发布表单</value>
+            <value>1</value>
+            <value>publishForm</value>
+        </row>
+        <row>
+            <value>21</value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value>flows</value>
+            <value>编辑表单</value>
+            <value>编辑表单</value>
+            <value>1</value>
+            <value>updateForm</value>
+        </row>
+        <row>
+            <value>22</value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value>flows</value>
+            <value>添加表单</value>
+            <value>添加表单</value>
+            <value>1</value>
+            <value>addForm</value>
+        </row>
+        <row>
+            <value>23</value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value>flows</value>
+            <value>删除表单</value>
+            <value>删除表单</value>
+            <value>1</value>
+            <value>deleteForm</value>
+        </row>
+        <row>
+            <value>24</value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value>flows</value>
+            <value>解除流程权限</value>
+            <value>解除流程权限</value>
+            <value>1</value>
+            <value>disAuthorizationProcess</value>
+        </row>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     </table>
     <table name="SystemView">
         <column>id</column>
@@ -123,7 +277,7 @@
             <value><![CDATA[2013-01-27 11:27:03.0]]></value>
             <value><![CDATA[2013-06-27 11:27:25.0]]></value>
             <value>manager</value>
-            <value>Y</value>
+            <value>1</value>
             <value>管理员环境</value>
             <value>desktop</value>
         </row>
@@ -132,7 +286,7 @@
             <value><![CDATA[2013-01-27 11:27:03.0]]></value>
             <value><![CDATA[2013-06-27 11:27:25.0]]></value>
             <value>user</value>
-            <value>Y</value>
+            <value>1</value>
             <value>用户环境</value>
             <value>userview</value>
         </row>
@@ -164,84 +318,6 @@
             <value>1</value>
         </row>
     </table>
-    <table name="RoleFeature">
-        <column>id</column>
-        <column>createDate</column>
-        <column>lastUpdateDate</column>
-        <column>featureId</column>
-        <column>roleId</column>
-        <row>
-            <value>1</value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value>1</value>
-            <value>-1</value>
-        </row>
-        <row>
-            <value>2</value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value>2</value>
-            <value>-1</value>
-        </row>
-        <row>
-            <value>3</value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value>3</value>
-            <value>-1</value>
-        </row>
-        <row>
-            <value>4</value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value>4</value>
-            <value>-1</value>
-        </row>
-        <row>
-            <value>5</value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value>5</value>
-            <value>-1</value>
-        </row>
-        <row>
-            <value>6</value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value>6</value>
-            <value>-1</value>
-        </row>
-        <row>
-            <value>7</value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value>7</value>
-            <value>-1</value>
-        </row>
-        <row>
-            <value>8</value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value>8</value>
-            <value>-1</value>
-        </row>
-        <row>
-            <value>9</value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value>9</value>
-            <value>-1</value>
-        </row>
-        <row>
-            <value>10</value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value>10</value>
-            <value>-1</value>
-        </row>
-    </table>
-    
     <table name="User">
         <column>id</column>
         <column>createDate</column>
@@ -280,7 +356,7 @@
             <value>CO</value>
             <value>N</value>
             <value>admin@ozstrategy.com</value>
-            <value>Y</value>
+            <value>1</value>
             <value>李</value>
             <value>M</value>
             <value>浩admin</value>
@@ -306,7 +382,7 @@
             <value>CO</value>
             <value>N</value>
             <value>user@ozstrategy.com</value>
-            <value>Y</value>
+            <value>1</value>
             <value>李</value>
             <value>M</value>
             <value>浩user</value>
@@ -332,7 +408,7 @@
             <value>CO</value>
             <value>N</value>
             <value>hr@ozstrategy.com</value>
-            <value>Y</value>
+            <value>1</value>
             <value>李</value>
             <value>M</value>
             <value>浩hr</value>
@@ -358,7 +434,7 @@
             <value>CO</value>
             <value>N</value>
             <value>dep@ozstrategy.com</value>
-            <value>Y</value>
+            <value>1</value>
             <value>李</value>
             <value>M</value>
             <value>浩dep</value>

@@ -77,6 +77,10 @@
     <select id="getProcessDefRole" resultType="com.ozstrategy.model.userrole.Role" parameterType="long">
         select r.* from Role r join PROCESSDEF_ROLE p on r.id=p.roleId where p.processDefId=#{id}
     </select>
+    <select id="getProcessDefByRoleId" resultType="com.ozstrategy.model.flows.ProcessDef" parameterType="long">
+        select r.* from PROCESSDEF r join PROCESSDEF_ROLE p on r.id=p.processDefId where p.roleId=#{roleId}
+    </select>
+    
     
     <insert id="saveProcessDefUser" parameterType="Map" flushCache="true">
         insert into PROCESSDEF_USER(userId,processDefId) values (#{userId},#{id})

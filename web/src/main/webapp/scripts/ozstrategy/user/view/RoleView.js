@@ -41,50 +41,25 @@ Ext.define('FlexCenter.user.view.RoleView',{
       text:globalRes.buttons.add,
       iconCls:'user-add',
       scope:me,
-        plugins: Ext.create('Oz.access.RoleAccess', {featureName:'addRole',mode:'hide'}),
+        plugins: Ext.create('Oz.access.RoleAccess', {featureName:'addRole',mode:'hide',byPass:globalRes.isAdmin}),
       handler:me.onAddClick
     },{
       text:globalRes.buttons.edit,
       iconCls:'user-edit',
       itemId:'roleEditBtn',
-        plugins: Ext.create('Oz.access.RoleAccess', {featureName:'updateRole',mode:'hide'}),
+        plugins: Ext.create('Oz.access.RoleAccess', {featureName:'updateRole',mode:'hide',byPass:globalRes.isAdmin}),
       scope:me,
       handler:me.onEditClick
     },{
       text:globalRes.buttons.remove,
       iconCls:'user-delete',
       itemId:'roleDeleteBtn',
-        plugins: Ext.create('Oz.access.RoleAccess', {featureName:'deleteRole',mode:'hide'}),
+        plugins: Ext.create('Oz.access.RoleAccess', {featureName:'deleteRole',mode:'hide',byPass:globalRes.isAdmin}),
       scope:me,
       handler:me.onDeleteClick
     }
-    //    ,'->','-',
-    //{
-    //  xtype:'textfield',
-    //  itemId:'searchRoleName',
-    //  listeners:{
-    //    change: function(self,newValue){
-    //      if(!newValue){
-    //        me.onSearchClick();
-    //      }
-    //    }
-    //  }
-    //},
-    //  {
-    //    text:globalRes.buttons.search,
-    //    iconCls:'search',
-    //    scope:me,
-    //    handler: me.onSearchClick
-    //  },{
-    //    text:globalRes.buttons.clear,
-    //    iconCls:'clear',
-    //    handler: function(){
-    //      me.down('textfield#searchRoleName').setValue("");
-    //      me.onSearchClick();
-    //    }
-    //  }
     ];
-      me.plugins = Ext.create('Oz.access.RoleAccess', {featureName:'updateRole',mode:'hide'});
+      me.plugins = Ext.create('Oz.access.RoleAccess', {featureName:'updateRole',mode:'hide',byPass:globalRes.isAdmin});
 
     me.columns = [{
       header:userRoleRes.header.roleName,
@@ -130,27 +105,8 @@ Ext.define('FlexCenter.user.view.RoleView',{
       dock: 'bottom',
       displayInfo: true
     }];
-      me.viewConfig= {
-          getRowClass : function(record) {
-              if(record.get('name')=='ROLE_ADMIN'){
-                  return 'disabled-row';
-              }
-          }
-      };
         me.listeners={
-            itemclick: function(self,record){
-                if(record.get('name')=='ROLE_ADMIN'){
-                    me.down('button#roleEditBtn').disable();
-                    me.down('button#roleDeleteBtn').disable();
-                }else{
-                    me.down('button#roleEditBtn').enable();
-                    me.down('button#roleDeleteBtn').enable();
-                }
-            },
           itemdblclick:function( view, record, item, index, e, eOpts ){
-              if(record.get('name')=='ROLE_ADMIN'){
-                  return;
-              }
               me.onEditClick();
           }
       };
@@ -165,22 +121,19 @@ Ext.define('FlexCenter.user.view.RoleView',{
       var me=this;
       ajaxPostRequest('userRoleController.do?method=readAvailableFeature',undefined,function(result){
           if(result.success){
-              var availableRoleStore;
-              if(!availableRoleStore){
-                  availableRoleStore=Ext.create('FlexCenter.user.store.AllFeatures', {
-                      storeId:'readAvailableFeature',
-                      data:result,
-                      proxy: {
-                          type: 'memory',
-                          reader: {
-                              type: 'json',
-                              root: 'data',
-                              totalProperty  : 'total',
-                              messageProperty: 'message'
-                          }
+              var availableRoleStore=Ext.create('FlexCenter.user.store.AllFeatures', {
+                  storeId:'readAvailableFeature',
+                  data:result,
+                  proxy: {
+                      type: 'memory',
+                      reader: {
+                          type: 'json',
+                          root: 'data',
+                          totalProperty  : 'total',
+                          messageProperty: 'message'
                       }
-                  });
-              }
+                  }
+              });
               me.addClick(availableRoleStore);
           }
       });
@@ -202,9 +155,10 @@ Ext.define('FlexCenter.user.view.RoleView',{
                     if (result.success) {
                         me.getStore().load();
                         me.editWin = win;
-                        me.editWin.close();
-                    }
-                    if(result.message){
+                        Ext.Msg.alert(globalRes.title.prompt,globalRes.addSuccess,function(){
+                            me.editWin.close();
+                        });
+                    }else{
                         Ext.MessageBox.show({
                             title: globalRes.title.prompt,
                             width: 300,
@@ -225,22 +179,19 @@ Ext.define('FlexCenter.user.view.RoleView',{
     var me = this;
       ajaxPostRequest('userRoleController.do?method=readAvailableFeature',undefined,function(result){
           if(result.success){
-              var availableRoleStore;
-              if(!availableRoleStore){
-                  availableRoleStore=Ext.create('FlexCenter.user.store.AllFeatures', {
-                      storeId:'readAvailableFeature',
-                      data:result,
-                      proxy: {
-                          type: 'memory',
-                          reader: {
-                              type: 'json',
-                              root: 'data',
-                              totalProperty  : 'total',
-                              messageProperty: 'message'
-                          }
+              var availableRoleStore=Ext.create('FlexCenter.user.store.AllFeatures', {
+                  storeId:'readAvailableFeature',
+                  data:result,
+                  proxy: {
+                      type: 'memory',
+                      reader: {
+                          type: 'json',
+                          root: 'data',
+                          totalProperty  : 'total',
+                          messageProperty: 'message'
                       }
-                  });
-              }
+                  }
+              });
               me.editClick(availableRoleStore);
           }
       });
@@ -265,15 +216,16 @@ Ext.define('FlexCenter.user.view.RoleView',{
                         if (result.success) {
                             me.getStore().load();
                             me.editWin = win;
-                            me.editWin.close();
-                        }
-                        if(result.message){
+                            Ext.Msg.alert(globalRes.title.prompt,globalRes.updateSuccess,function(){
+                                me.editWin.close();
+                            });
+                        }else{
                             Ext.MessageBox.show({
                                 title: globalRes.title.prompt,
                                 width: 300,
                                 msg: result.message,
                                 buttons: Ext.MessageBox.OK,
-                                icon: Ext.MessageBox.INFO
+                                icon: Ext.MessageBox.ERROR
                             });
                         }
                     },
@@ -298,26 +250,40 @@ Ext.define('FlexCenter.user.view.RoleView',{
     var me = this;
     var record = me.getSelectionModel().getSelection()[0];
     if(record){
-      Ext.Msg.confirm(userRoleRes.removeRole,Ext.String.format(userRoleRes.msg.removeRole,record.data.displayName),function(txt){
-        if(txt==='yes'){
-          Ext.Ajax.request({
-            url: 'userRoleController.do?method=removeRole',
-            params: {id:record.data.id},
-            method: 'POST',
-            success: function (response, options) {
-              var result = Ext.decode(response.responseText);
-              if(result.success){
-                me.getStore().load();
-              }else{
+        ajaxPostRequest("userRoleController.do?method=checkRoleInUser",{roleId:record.data.id},function(result){
+            if(result.success){
+                Ext.Msg.alert(Ext.String.format(userRoleRes.removeRole,record.data.displayName),result.message);
+            }else{
+                Ext.Msg.confirm(userRoleRes.removeRole,Ext.String.format(userRoleRes.msg.removeRole,record.data.displayName),function(txt){
+                    if(txt==='yes'){
+                        Ext.Ajax.request({
+                            url: 'userRoleController.do?method=removeRole',
+                            params: {id:record.data.id},
+                            method: 'POST',
+                            success: function (response, options) {
+                                var result = Ext.decode(response.responseText);
+                                if(result.success){
+                                    Ext.Msg.alert(globalRes.title.prompt,globalRes.removeSuccess);
+                                    me.getStore().load();
+                                }else{
+                                    Ext.MessageBox.show({
+                                        title: globalRes.title.prompt,
+                                        width: 300,
+                                        msg: result.message,
+                                        buttons: Ext.MessageBox.OK,
+                                        icon: Ext.MessageBox.ERROR
+                                    });
 
-              }
-            },
-            failure: function (response, options) {
-              Ext.MessageBox.alert(globalRes.title.fail, Ext.String.format(globalRes.remoteTimeout,response.status));
+                                }
+                            },
+                            failure: function (response, options) {
+                                Ext.MessageBox.alert(globalRes.title.fail, Ext.String.format(globalRes.remoteTimeout,response.status));
+                            }
+                        });
+                    }
+                });
             }
-          });
-        }
-      });
+        });
     }else{
       Ext.MessageBox.show({
         title: userRoleRes.removeRole,
@@ -327,13 +293,5 @@ Ext.define('FlexCenter.user.view.RoleView',{
         icon: Ext.MessageBox.INFO
       });
     }
-  },
-
-  onSearchClick: function(){
-    var me = this;
-    var textField = me.down('textfield#searchRoleName');
-    var store = me.getStore();
-    store.getProxy().extraParams = {roleName: textField.getValue()};
-    store.load();
   }
 });

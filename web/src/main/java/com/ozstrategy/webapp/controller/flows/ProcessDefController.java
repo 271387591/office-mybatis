@@ -16,8 +16,6 @@ import com.ozstrategy.webapp.command.JsonReaderResponse;
 import com.ozstrategy.webapp.command.flows.ProcessDefCommand;
 import com.ozstrategy.webapp.command.flows.ProcessElementFormCommand;
 import com.ozstrategy.webapp.controller.BaseController;
-import nl.justobjects.pushlet.core.Dispatcher;
-import nl.justobjects.pushlet.core.Event;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -270,6 +268,21 @@ public class ProcessDefController extends BaseController {
         } 
         return new BaseResultCommand(map);
     }
+    @RequestMapping(params = "method=checkProcessRunning")
+    @ResponseBody
+    public BaseResultCommand checkProcessRunning(HttpServletRequest request){
+        try {
+            String actDefId=request.getParameter("actDefId");
+            Boolean check=processDefManager.checkProcessRunning(actDefId);
+            return new BaseResultCommand("",check);
+            
+        }catch (Exception e) {
+            e.printStackTrace();
+            logger.error("checkProcessRunning fail",e);
+            return new BaseResultCommand("查询失败",Boolean.TRUE);
+        } 
+    }
+    
     @RequestMapping(params = "method=authorization")
     @ResponseBody
     public BaseResultCommand authorization(HttpServletRequest request){
@@ -314,6 +327,25 @@ public class ProcessDefController extends BaseController {
         } 
         return new BaseResultCommand(map);
     }
+    @RequestMapping(params = "method=disAuthorization")
+    @ResponseBody
+    public BaseResultCommand disAuthorization(HttpServletRequest request){
+        Map<String,String> map=new HashMap<String, String>();
+        try {
+            Long id = parseLong(request.getParameter("id"));
+            if(id!=null){
+                ProcessDef def=processDefManager.getProcessDefById(id);
+                if(def!=null){
+                    processDefManager.disAuthorization(def);
+                }
+            }
+        }catch (Exception e) {
+            logger.error("流程授权失败",e);
+            return new BaseResultCommand("流程授权失败",Boolean.FALSE);
+        } 
+        return new BaseResultCommand(map);
+    }
+    
     
     
     

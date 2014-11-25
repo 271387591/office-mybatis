@@ -1,6 +1,8 @@
 package com.ozstrategy.model.flows;
 
 import com.ozstrategy.model.CreatorObject;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -158,5 +160,27 @@ public class ProcessDefInstanceDraft extends CreatorObject{
 
     public void setFileAttachThreeName(String fileAttachThreeName) {
         this.fileAttachThreeName = fileAttachThreeName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        ProcessDefInstanceDraft that = (ProcessDefInstanceDraft) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(name, that.name)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(id)
+                .append(name)
+                .hashCode();
     }
 }

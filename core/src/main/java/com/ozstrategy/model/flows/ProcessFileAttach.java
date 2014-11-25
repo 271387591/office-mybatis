@@ -1,6 +1,8 @@
 package com.ozstrategy.model.flows;
 
 import com.ozstrategy.model.CreatorObject;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -91,5 +93,29 @@ public class ProcessFileAttach extends CreatorObject{
 
     public void setActInstanceId(String actInstanceId) {
         this.actInstanceId = actInstanceId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        ProcessFileAttach that = (ProcessFileAttach) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(fileName, that.fileName)
+                .append(fileIndex, that.fileIndex)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(id)
+                .append(fileName)
+                .append(fileIndex)
+                .hashCode();
     }
 }

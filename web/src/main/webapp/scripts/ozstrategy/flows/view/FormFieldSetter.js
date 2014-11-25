@@ -15,7 +15,7 @@ Ext.define('FlexCenter.flows.view.FormFieldSetter', {
     border:false,
     getStore:function(){
         var me=this;
-        var store=Ext.StoreManager.lookup("FormFieldSetterStore");
+        var store=null;
         if(me.formproperties){
             var formproperties=Ext.decode(me.formproperties,true);
             if(formproperties!=null){
@@ -121,7 +121,7 @@ Ext.define('FlexCenter.flows.view.FormFieldSetter', {
                         handler:function(){
                             var selects = me.down('grid').getSelectionModel().getSelection();
                             Ext.Array.each(selects,function(rec){
-                                rec.set('chmod','1')
+                                rec.set('chmod','0')
                             });
 
                         }
@@ -160,9 +160,9 @@ Ext.define('FlexCenter.flows.view.FormFieldSetter', {
                         dataIndex: 'chmod',
                         renderer:function(v,rec){
                             if(v==0){
-                                return '<font color="#00bfff">'+workFlowRes.formFieldSetter.read+'</font>';
+                                return '<font color="#00bfff">'+workFlowRes.formFieldSetter.write+'</font>';
                             }else if(v==1){
-                                return '<font color="red">'+workFlowRes.formFieldSetter.write+'</font>';
+                                return '<font color="red">'+workFlowRes.formFieldSetter.read+'</font>';
                             }else if(v==2){
                                 return '<font color="#808080">'+workFlowRes.formFieldSetter.hidden+'</font>';
                             }
@@ -173,8 +173,8 @@ Ext.define('FlexCenter.flows.view.FormFieldSetter', {
                             triggerAction: 'all',
                             selectOnTab: true,
                             store: [
-                                ['0',workFlowRes.formFieldSetter.read],
-                                ['1',workFlowRes.formFieldSetter.write],
+                                ['0',workFlowRes.formFieldSetter.write],
+                                ['1',workFlowRes.formFieldSetter.read],
                                 ['2',workFlowRes.formFieldSetter.hidden]
                             ],
                             lazyRender: true,
@@ -220,8 +220,8 @@ Ext.define('FlexCenter.flows.view.FormFieldSetter', {
                         model.formproperty_expression=rec.get('expression')||'';
                         model.formproperty_variable=rec.get('variable')||'';
                         model.formproperty_required='No';
-                        model.formproperty_readable=rec.get('chmod')==0?'Yes':'No';
-                        model.formproperty_writeable=rec.get('chmod')==1?'Yes':'No';
+                        model.formproperty_readable=rec.get('chmod')==1?'Yes':'No';
+                        model.formproperty_writeable=rec.get('chmod')==0?'Yes':'No';
                         model.formproperty_formvalues=[];
                         items.push(model);
                     });

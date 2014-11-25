@@ -64,7 +64,6 @@
 </style>
 <script type="text/javascript">
     var apps = {};
-    if (globalRes.isAdmin != 'true'){location.href="dispatcherPage.action";}
     Ext.Loader.setPath({
         'Ext.ux.desktop': '<c:url value="/demo"/>',
         'Ext.ux': '<c:url value="/demo"/>',

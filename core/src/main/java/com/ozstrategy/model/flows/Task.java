@@ -1,5 +1,8 @@
 package com.ozstrategy.model.flows;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import java.util.Date;
 
 /**
@@ -36,6 +39,7 @@ public class Task {
     private String fromTaskAssignee;
     private String fromTaskId;
     private Boolean endTask;
+    private Long processElementId;
 
     public String getId() {
         return id;
@@ -275,5 +279,38 @@ public class Task {
 
     public void setEndTask(Boolean endTask) {
         this.endTask = endTask;
+    }
+
+    public Long getProcessElementId() {
+        return processElementId;
+    }
+
+    public void setProcessElementId(Long processElementId) {
+        this.processElementId = processElementId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Task that = (Task) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(name, that.name)
+                .append(processDefId, that.processDefId)
+                .append(processElementId, that.processElementId)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(id)
+                .append(name)
+                .append(processDefId)
+                .append(processElementId)
+                .hashCode();
     }
 }

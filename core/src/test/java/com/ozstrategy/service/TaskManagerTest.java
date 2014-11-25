@@ -5,6 +5,7 @@ import com.ozstrategy.dao.flows.ProcessElementDao;
 import com.ozstrategy.dao.flows.ProcessElementFormDao;
 import com.ozstrategy.dao.userrole.UserDao;
 import com.ozstrategy.model.flows.ProcessDef;
+import com.ozstrategy.model.flows.ProcessElementForm;
 import com.ozstrategy.model.userrole.User;
 import com.ozstrategy.service.flows.ProcessDefManager;
 import com.ozstrategy.service.flows.TaskManager;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by lihao on 10/29/14.
@@ -72,6 +74,14 @@ public class TaskManagerTest extends BaseManagerTestCase  {
         User user=userDao.getUserByUsername("dep");
         taskManager.returnTask("252502","T_4",null,user,new HashMap<String, Object>());
     }
+    @Test
+    @Rollback(value = true)
+    public void testForm() throws Exception{
+        List<ProcessElementForm> forms=taskManager.listProcessElementFormByElementId(31L);
+        
+        User user=userDao.getUserByUsername("dep");
+    }
+    
     
     
 }

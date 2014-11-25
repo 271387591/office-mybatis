@@ -132,6 +132,7 @@ Ext.define('FlexCenter.flows.view.TaskAssigneeView',{
                 xtype:'formPreview',
                 title:'填写表单',
                 formValue:me.record.formValue,
+                chmods:me.record.chmods,
                 formHtml:me.record.formHtml
             });
         }

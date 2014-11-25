@@ -32,6 +32,48 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
         var store=me.getStore(),sm=Ext.create('Ext.selection.CheckboxModel',{
             mode:'SINGLE'
         });
+        var actioncolumn=[{
+            iconCls:'btn-preview',
+            tooltip:workFlowRes.readdocument,
+            handler:function(grid, rowIndex, colIndex){
+                var rec = grid.getStore().getAt(rowIndex);
+                me.preViewFlow(rec);
+            }
+        }];
+        
+        if(globalRes.isAdmin || accessRes.updateProcess){
+            actioncolumn.push('-');
+            actioncolumn.push({
+                tooltip:workFlowRes.processListView.design,
+                iconCls:'btn-flow-design',
+                handler:function(grid, rowIndex, colIndex){
+                    var rec = grid.getStore().getAt(rowIndex);
+                    me.onUpdateClick(rec);
+                }
+            });
+        }
+        if(globalRes.isAdmin || accessRes.deployProcess){
+            actioncolumn.push('-');
+            actioncolumn.push({
+                iconCls:'deploy',
+                tooltip:workFlowRes.flowDeploymentBtn,
+                handler:function(grid, rowIndex, colIndex){
+                    var rec = grid.getStore().getAt(rowIndex);
+                    var actDefId=rec.get('actDefId');
+                    ajaxPostRequest('processDefController.do?method=checkProcessRunning',{actDefId:actDefId},function(result){
+                        if(result.success){
+                            Ext.Msg.alert(globalRes.title.prompt,workFlowRes.processListView.checkProcessRunning);
+                        }else{
+                            Ext.Msg.confirm(workFlowRes.flowDeploymentBtn,Ext.String.format(workFlowRes.processListView.depProcess,rec.get('name')),function(txt){
+                                if(txt==='yes'){
+                                    me.deployed(rec);
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
         me.items=[
             {
                 title: workFlowRes.modeler.processCategory,
@@ -42,8 +84,6 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
                 collapsible: true,
                 layout: 'fit',
                 width: 200,
-//                margins: '1 0 1 1',
-//                margin:1,
                 catKey: 'Workflow',
                 gridViewItemId:'processListView'
             },
@@ -51,47 +91,48 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
                 xtype:'grid',
                 region:'center',
                 selModel:sm,
-//                margin:1,
-//                margins: '1 0 1 1',
                 itemId:'processListViewGrid',
                 store:store,
                 autoScroll: true,
+                plugins:Ext.create('Oz.access.RoleAccess', {featureName:'updateProcess',mode:'hide',byPass:globalRes.isAdmin}),
                 tbar:[
                     {
-                        xtype: 'buttongroup',
-                        items:[
-                            {
-                                xtype:'button',
-                                frame:true,
-                                text:workFlowRes.processDefinitionView.newProcess,
-                                iconCls:'table-add',
-                                scope:this,
-                                handler:me.onAddClick
-                            },
-                            {
-                                xtype: 'button',
-                                frame: true,
-                                text: globalRes.buttons.remove,
-                                iconCls: 'table-add',
-                                scope: this,
-                                handler: function(){
-                                    me.onUpdateClick();
-                                }
-                            }
-                        ]
+                        xtype:'button',
+                        frame:true,
+                        text:workFlowRes.processDefinitionView.newProcess,
+                        iconCls:'table-add',
+                        scope:this,
+                        plugins: Ext.create('Oz.access.RoleAccess', {featureName:'addProcess',mode:'hide',byPass:globalRes.isAdmin}),
+                        handler:me.onAddClick
                     },
                     {
-                        xtype: 'buttongroup',
-                        items:[
-                            {
-                                xtype:'button',
-                                frame:true,
-                                text:workFlowRes.processListView.authorization,
-                                iconCls:'btn-shared',
-                                scope:me,
-                                handler:me.authorization
-                            }
-                        ]
+                        xtype: 'button',
+                        frame: true,
+                        text: globalRes.buttons.remove,
+                        iconCls: 'table-add',
+                        scope: this,
+                        plugins: Ext.create('Oz.access.RoleAccess', {featureName:'deleteProcess',mode:'hide',byPass:globalRes.isAdmin}),
+                        handler: function(){
+                            me.onUpdateClick();
+                        }
+                    },
+                    {
+                        xtype:'button',
+                        frame:true,
+                        text:workFlowRes.processListView.authorization,
+                        plugins: Ext.create('Oz.access.RoleAccess', {featureName:'authorizationProcess',mode:'hide',byPass:globalRes.isAdmin}),
+                        iconCls:'btn-authorization',
+                        scope:me,
+                        handler:me.authorization
+                    },
+                    {
+                        xtype:'button',
+                        frame:true,
+                        text:workFlowRes.processListView.disAuthorization,
+                        plugins: Ext.create('Oz.access.RoleAccess', {featureName:'disAuthorizationProcess',mode:'hide',byPass:globalRes.isAdmin}),
+                        iconCls:'btn-dis-authorization',
+                        scope:me,
+                        handler:me.disAuthorizationProcess
                     }
                 ],
                 features:[{
@@ -166,33 +207,7 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
                         xtype:'actioncolumn',
                         header:globalRes.buttons.managerBtn,
                         flex:1,
-//                        width:'200',
-                        items:[
-                            {
-                                iconCls:'btn-flow-design',
-                                tooltip:workFlowRes.processListView.design,
-                                handler:function(grid, rowIndex, colIndex){
-                                    var rec = grid.getStore().getAt(rowIndex);
-                                    me.onUpdateClick(rec);
-                                }
-                            },'-',
-                            {
-                                iconCls:'deploy',
-                                tooltip:workFlowRes.flowDeploymentBtn,
-                                handler:function(grid, rowIndex, colIndex){
-                                    var rec = grid.getStore().getAt(rowIndex);
-                                    me.deployed(rec);
-                                }
-                            },'-',
-                            {
-                                iconCls:'btn-preview',
-                                tooltip:workFlowRes.readdocument,
-                                handler:function(grid, rowIndex, colIndex){
-                                    var rec = grid.getStore().getAt(rowIndex);
-                                    me.preViewFlow(rec);
-                                }
-                            }
-                        ]
+                        items:actioncolumn
                     }
                 ],
                 listeners:{
@@ -242,6 +257,40 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
             });
         });
     },
+    disAuthorizationProcess:function(){
+        var me=this;
+        var store=me.down('grid').getStore();
+        var selects=me.down('grid').getSelectionModel().getSelection();
+        var record=(selects.length>0?store.getById(selects[0].get('id')):null);
+        if(record==null){
+            Ext.MessageBox.show({
+                title: workFlowRes.processListView.disAuthorization,
+                width: 300,
+                msg: workFlowRes.processListView.disAuthorizationProcessMsg,
+                buttons: Ext.MessageBox.OK,
+                icon: Ext.MessageBox.INFO
+            });
+            return;
+        }
+        Ext.Msg.confirm(workFlowRes.processListView.disAuthorization,Ext.String.format(workFlowRes.processListView.disAuthorizationProcessAlert,rec.get('name')),function(txt){
+            if(txt==='yes'){
+                ajaxPostRequest('processDefController.do?method=disAuthorization',{id:rec.get('id')},function(result){
+                    if(result.success){
+                        store.load();
+                    }else{
+                        Ext.MessageBox.alert({
+                            title:globalRes.title.prompt,
+                            icon: Ext.MessageBox.ERROR,
+                            msg:result.message,
+                            buttons:Ext.MessageBox.OK
+                        });
+                    }
+                });
+            }
+        });
+        
+    },
+    
     deployed:function(rec){
         var me=this;
         ajaxPostRequest('processDefController.do?method=deploy',{id:rec.get('id')},function(result){

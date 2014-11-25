@@ -2,9 +2,16 @@
 <%@ include file="/common/taglibs.jsp" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
+<%
+    String language = response.getLocale().toString();
+    if ("en_US".equalsIgnoreCase(language)) {
+        language = "en";
+    }
+%>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title><fmt:message key="webapp.name"/></title>
+    <c:set var="language"><%=language %></c:set>
     <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/desktop/css/desktop.css'/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ext/resources/css/ext-all.css'/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ozstrategy/css/flexcenter.css'/>"/>
@@ -18,6 +25,7 @@
     <c:url var="grayExtTheme" value="/scripts/ext/resources/css/ext-all-gray.css"/>
     <c:url var="accessExtTheme" value="/scripts/ext/resources/css/ext-all-access.css"/>
     <script type="text/javascript" src="<c:url value='/scripts/ext/ext-all.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/scripts/ext/locale/ext-lang-${language}.js'/>"></script>
     <script type="text/javascript">
         var appPath = "${appPath}";
         var loginRes = {
@@ -27,7 +35,7 @@
             username: '<fmt:message key="login.username" />',
             password: '<fmt:message key="login.password" />',
             login: '<fmt:message key="button.login" />',
-            reset: '<fmt:message key="button.reset" />',
+            reset: '<fmt:message key="globalRes.buttons.reset" />',
             errorTitle: '<fmt:message key="login.title.error" />',
             error: '<fmt:message key="errors.password.mismatch" />',
             picture: '<div class="product-logo"></div>'
@@ -71,7 +79,7 @@
             }).show();
         }
         else {
-            loading = Ext.get('loading');
+            var loading = Ext.get('loading');
             mask = Ext.get("mask");
             mask.setOpacity('0.8');
             mask.setBounds(loading.getX(), loading.getY(), loading.getWidth(), loading.getHeight(), {

@@ -30,7 +30,11 @@ public interface ProcessDefManager {
     void deployed(ProcessDef processDef) throws Exception;
     
     void authorizationProcessDef(ProcessDef def) throws Exception;
+    void disAuthorization(ProcessDef def) throws Exception;
 
     List<ProcessDef> getProcessDefinition(Map<String,Object> map,Integer start,Integer limit);
     Integer getProcessDefinitionCount(Map<String,Object> map);
+    
+    Boolean checkProcessUseRole(Long roleId);
+    Boolean checkProcessRunning(String actDefId);
 }

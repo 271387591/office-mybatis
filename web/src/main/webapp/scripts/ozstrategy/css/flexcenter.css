@@ -7,6 +7,9 @@ html{
 .flow-form-table{
     
 }
+.blue-grid-row TD{
+    color:blue !important;
+}
 .user-edit {
   background-image: url(icons/user_edit.gif) !important;
     width: 16px;
@@ -115,6 +118,17 @@ html{
     width: 16px;
     height: 16px;
 }
+.btn-authorization {
+    background-image: url(icons/key_add.png) !important;
+    width: 16px;
+    height: 16px;
+}
+.btn-dis-authorization {
+    background-image: url(icons/key_delete.png) !important;
+    width: 16px;
+    height: 16px;
+}
+
 .btn-preview {
     background: url(icons/preview.png) no-repeat !important;
     width: 16px;
@@ -147,6 +161,7 @@ html{
     width: 16px;
     height: 16px;
 }
+
 .manageUser-shortcut img {
   width: 48px;
   height: 48px;

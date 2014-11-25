@@ -2,7 +2,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 var userRoleRes = {
-
         title: '<fmt:message key="userRoleRes.title" />',
         lockUser: '<fmt:message key="userRoleRes.lockUser" />',
         disableUser: '<fmt:message key="userRoleRes.disableUser" />',
@@ -19,6 +18,12 @@ var userRoleRes = {
         assignedFeatures: '<fmt:message key="userRoleRes.assignedFeatures" />',
         selectFeature: '<fmt:message key="userRoleRes.selectFeature" />',
         editUserProfile: '<fmt:message key="userRoleRes.editUserProfile" />',
+        usernameRegexText: '<fmt:message key="userRoleRes.usernameRegexText" />',
+        mobileRegexText: '<fmt:message key="userRoleRes.mobileRegexText" />',
+        userCriteria: '<fmt:message key="userRoleRes.userCriteria" />',
+        systemCriteria: '<fmt:message key="userRoleRes.systemCriteria" />',
+        formsCriteria: '<fmt:message key="userRoleRes.formsCriteria" />',
+        flowsCriteria: '<fmt:message key="userRoleRes.flowsCriteria" />',
         msg: {
             editUser: '<fmt:message key="userRoleRes.msg.editUser" />',
             passwordEdit: '<fmt:message key="userRoleRes.msg.passwordEdit" />',
@@ -31,6 +36,8 @@ var userRoleRes = {
             unDisableUserSuccess: '<fmt:message key="userRoleRes.msg.unDisableUserSuccess" />',
             addRoleEmpty: '<fmt:message key="userRoleRes.msg.addRoleEmpty" />',
             addUserHasRole: '<fmt:message key="userRoleRes.msg.addUserHasRole" />',
+            removeRoleMsg: '<fmt:message key="userRoleRes.msg.removeRoleMsg" />',
+            removeRoleFlowMsg: '<fmt:message key="userRoleRes.msg.removeRoleFlowMsg" />',
             editRole: '<fmt:message key="userRoleRes.msg.editRole" />'
         },
         header: {
@@ -53,6 +60,7 @@ var userRoleRes = {
             userContext: '<fmt:message key="userRoleRes.header.userContext" />',
             roleInfo: '<fmt:message key="userRoleRes.header.roleInfo" />',
             featureName: '<fmt:message key="userRoleRes.header.featureName" />',
+            featureCriteria: '<fmt:message key="userRoleRes.header.featureCriteria" />',
             enabled: '<fmt:message key="userRoleRes.header.enabled" />'
         },
           manageUser: '<fmt:message key="userRoleRes.manageUser" />',

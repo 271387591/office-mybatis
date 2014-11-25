@@ -13,11 +13,12 @@ public interface RoleManager  {
     List<Role> listRoles(Map<String,Object> map, Integer start,Integer limit);
     List<Role> listAllRoles(Map<String,Object> map);
     Integer listRolesCount(Map<String,Object> map);
-    void saveOrUpdate(Role role,List<Feature> features);
+    void saveOrUpdate(Role role,List<Feature> features) throws Exception;
     void removeRoleById(Long id);
     Role getRoleByName(String name);
     Role getRoleById(Long id);
     boolean hasFeature(Set<String> roleName,String feature);
+    boolean authenticatedContext(Set<String> roleName,String context);
     List<RoleFeature> getRoleFeatureByRoleId(Long roleId);
     List<Role> getRoleByUserId(Long userId);
 } 

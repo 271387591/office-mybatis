@@ -21,14 +21,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@NamedQueries(
-  {
-    @NamedQuery(
-      name = "findRoleByName",
-      query = "select r from Role r where r.name = :name "
-    )
-  }
-)
 public class Role extends BaseObject implements Serializable, GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -37,10 +29,10 @@ public class Role extends BaseObject implements Serializable, GrantedAuthority {
     private String name;
     @Column
     private String description;
-    @Column
+    @Column(length = 64)
     private String displayName;
-    @Column
-    private Boolean enabled;
+    @Column(columnDefinition = "char",length = 1)
+    private Boolean enabled=true;
     
     @ManyToMany(fetch = FetchType.LAZY,mappedBy = "roles")
     private Set<User> users=new HashSet<User>();

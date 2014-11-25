@@ -1,6 +1,7 @@
 package com.ozstrategy.model.system;
 
 import com.ozstrategy.model.BaseObject;
+import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
@@ -157,5 +158,28 @@ public class GlobalType extends BaseObject {
   public void setTypeKey(String typeKey) {
     this.typeKey = typeKey;
   }
-    
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    if (!super.equals(o)) return false;
+
+    GlobalType that = (GlobalType) o;
+
+    return new EqualsBuilder()
+            .append(typeId, that.typeId)
+            .append(typeName, that.typeName)
+            .append(typeKey,that.typeKey)
+            .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder()
+            .append(typeId)
+            .append(typeName)
+            .append(typeKey)
+            .hashCode();
+  }
 }

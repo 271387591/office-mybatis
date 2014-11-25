@@ -77,7 +77,7 @@
 				var rowsInput = this.getContentElement( 'info', 'txtRows' ),
 					colsInput = this.getContentElement( 'info', 'txtCols' ),
 					widthInput = this.getContentElement( 'info', 'txtWidth' ),
-					heightInput = this.getContentElement( 'info', 'txtHeight' );
+					heightInput = this.getContentElement( 'info', 'txtHeight'),
 				    isgrid = this.getContentElement( 'info', 'isgrid' );
 				if ( command == 'gridProperties' )
 				{

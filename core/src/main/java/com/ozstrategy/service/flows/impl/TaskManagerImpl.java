@@ -13,6 +13,7 @@ import com.ozstrategy.exception.OzException;
 import com.ozstrategy.model.flows.ProcessDef;
 import com.ozstrategy.model.flows.ProcessDefInstance;
 import com.ozstrategy.model.flows.ProcessElement;
+import com.ozstrategy.model.flows.ProcessElementForm;
 import com.ozstrategy.model.flows.Task;
 import com.ozstrategy.model.flows.TaskInstance;
 import com.ozstrategy.model.flows.TaskInstanceStatus;
@@ -83,8 +84,24 @@ public class TaskManagerImpl implements TaskManager{
         return taskDao.listCandidateTasks(map);
     }
 
+    public Integer listCandidateTasksCount(Map<String, Object> map) {
+        return taskDao.listCandidateTasksCount(map);
+    }
+
     public List<Task> listAssigneeTasks(Map<String, Object> map) {
         return taskDao.listAssigneeTasks(map);
+    }
+
+    public Integer listAssigneeTasksCount(Map<String, Object> map) {
+        return taskDao.listAssigneeTasksCount(map);
+    }
+
+    public Integer listAllTaskCount(User user) {
+        Map<String,Object> map=new HashMap<String, Object>();
+        map.put("userId",user.getUsername());
+        Integer count1=listCandidateTasksCount(map);
+        Integer count2=listAssigneeTasksCount(map);
+        return (count1+count2);
     }
 
     public List<Task> listReplevyTasks(Map<String, Object> map,Integer start,Integer limit) {
@@ -159,6 +176,10 @@ public class TaskManagerImpl implements TaskManager{
     @Transactional(rollbackFor = Throwable.class)
     public void sign(User user, ProcessDef def, String taskId, Map<String, Object> map) throws Exception {
         completeTask(user,def,taskId,map,true);
+    }
+
+    public List<ProcessElementForm> listProcessElementFormByElementId(Long elementId) {
+        return taskDao.listProcessElementFormByElementId(elementId);
     }
 
     private void completeTask(User user,ProcessDef def,String taskId, Map<String, Object> map,boolean sign)throws Exception {

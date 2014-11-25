@@ -52,13 +52,13 @@ public class UserManagerImpl implements UserManager {
         return userDao.listUsersCount(map);
     }
 
-    @Transactional
-    public void deleteUser(Long userId) {
+    @Transactional(rollbackFor = Throwable.class)
+    public void deleteUser(Long userId) throws Exception{
         userDao.enabledUser(userId);
     }
 
-    @Transactional
-    public Integer updateUserPassword(Long userId, String oldPassword, String newPassword, boolean admin) {
+    @Transactional(rollbackFor = Throwable.class)
+    public Integer updateUserPassword(Long userId, String oldPassword, String newPassword, boolean admin)  throws Exception{
         User user=userDao.getUserById(userId);
         String password=user.getPassword();
         if(admin){
@@ -91,8 +91,8 @@ public class UserManagerImpl implements UserManager {
         return userDao.getUserByMobile(mobile);
     }
 
-    @Transactional
-    public void saveOrUpdate(User user) {
+    @Transactional(rollbackFor = Throwable.class)
+    public void saveOrUpdate(User user) throws Exception{
         boolean save=true;
         if(user.getId()!=null){
             userDao.updateUser(user);

@@ -4,6 +4,18 @@
  */
 
 CKEDITOR.editorConfig = function( config ) {
+	//config.toolbarStartupExpanded=true,
+	//	config.language='zh-cn',
+	//	config.height=445,
+	//	config.extraPlugins='dforms,sourcearea',
+	//	config.baseFloatZIndex=19900,
+	//	config.toolbar=[
+	//	[ 'Source'],
+	//	[ 'Cut','Copy','Paste','PasteText','PasteFromWord','-','Undo','Redo','Find','Replace','-','SelectAll' ],
+	//	[ 'HorizontalRule','Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat','NumberedList','BulletedList','-','Outdent','Indent','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl' ],
+	//	[ 'TextField','Textarea','Select','BoxGroup','DateField','Grid','UserSelector','DepSelector','PosSelector'],
+	//	[ 'FontSize','TextColor','BGColor' ]
+	//]
 	// Define changes to default configuration here. For example:
 	// config.language = 'fr';
 	// config.uiColor = '#AADC6E';

@@ -16,7 +16,7 @@ Ext.define('FlexCenter.FlowIndex', {
     ],
     initComponent: function() {
         var me=this;
-        var taskCount=2;
+        var taskCount=globalRes.taskCount;
         var data=[
             {"title": "", parentUrl:('#'+me.itemId),"items": [
                 {thumb: basePath+"images/flow_chart.png",url:'#processDefinitionView',widget:'processDefinitionView', description: workFlowRes.flowIndex.processDefinitionViewDec, title: workFlowRes.flowIndex.processDefinitionViewTitle},

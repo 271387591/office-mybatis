@@ -160,16 +160,16 @@ public class ActivityGraphConverter implements EditorJsonConstants, StencilConst
         endEvent.setId(EDITOR_SHAPE_ID_PREFIX + cell.getId());
         endEvent.setName(cell.getAttribute(PROPERTY_NAME));
         endEvent.setDocumentation(cell.getAttribute(PROPERTY_DOCUMENTATION,""));
-        mxCell parent=(mxCell)cell.getParent();
-        if(!StringUtils.equals(parent.getAttribute(GRAPH_TYPE),GRAPH_SUBPROCESS)){
-            List<ActivitiListener> listeners=new ArrayList<ActivitiListener>();
-            ActivitiListener activitiListener=new ActivitiListener();
-            activitiListener.setEvent(LISTENER_ENDEVENT_END);
-            activitiListener.setImplementationType(ImplementationType.IMPLEMENTATION_TYPE_DELEGATEEXPRESSION);
-            activitiListener.setImplementation(LISTENER_ENDEVENT_DELEGATEEXPRESSION);
-            listeners.add(activitiListener);
-            endEvent.setExecutionListeners(listeners);
-        }
+//        mxCell parent=(mxCell)cell.getParent();
+//        if(!StringUtils.equals(parent.getAttribute(GRAPH_TYPE),GRAPH_SUBPROCESS)){
+//            List<ActivitiListener> listeners=new ArrayList<ActivitiListener>();
+//            ActivitiListener activitiListener=new ActivitiListener();
+//            activitiListener.setEvent(LISTENER_ENDEVENT_END);
+//            activitiListener.setImplementationType(ImplementationType.IMPLEMENTATION_TYPE_DELEGATEEXPRESSION);
+//            activitiListener.setImplementation(LISTENER_ENDEVENT_DELEGATEEXPRESSION);
+//            listeners.add(activitiListener);
+//            endEvent.setExecutionListeners(listeners);
+//        }
         return endEvent;
     }
     public static UserTask createUserTask(mxCell cell){

@@ -32,26 +32,16 @@ Ext.define('FlexCenter.user.view.RoleSelector', {
                     region: 'center',
                     autoHeight: true,
                     selModel: csm,
-                    tbar: [
-                        {
-                            xtype: 'textfield',
-                            itemId: 'searchKeyword'
+                    features:[{
+                        ftype: 'search',
+                        disableIndexes : ['id','description','createDate'],
+                        paramNames: {
+                            fields: 'fields',
+                            query: 'keyword'
                         },
-                        {
-                            text: '查询',
-                            iconCls: 'search',
-                            scope: this,
-                            handler: this.onSearchClick
-                        },
-                        {
-                            text: '清空',
-                            iconCls: 'clear',
-                            handler: function () {
-                                me.down('textfield#searchKeyword').setValue("");
-                                me.onSearchClick();
-                            }
-                        }
-                    ],
+                        searchMode : 'remote'
+                    }],
+                    
                     columns: [new Ext.grid.RowNumberer(),
                         {
                             header: '角色名',

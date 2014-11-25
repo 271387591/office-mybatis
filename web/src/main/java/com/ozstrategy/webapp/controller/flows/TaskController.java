@@ -1,10 +1,10 @@
 package com.ozstrategy.webapp.controller.flows;
 
 import com.ozstrategy.model.flows.ProcessDef;
+import com.ozstrategy.model.flows.ProcessElementForm;
 import com.ozstrategy.model.flows.ProcessFileAttach;
 import com.ozstrategy.model.flows.Task;
 import com.ozstrategy.model.userrole.User;
-import com.ozstrategy.service.flows.ProcessDefInstanceManager;
 import com.ozstrategy.service.flows.ProcessDefManager;
 import com.ozstrategy.service.flows.ProcessFileAttachManager;
 import com.ozstrategy.service.flows.TaskManager;
@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,8 +38,6 @@ public class TaskController extends BaseController{
     private ProcessFileAttachManager processFileAttachManager;
     @Autowired
     private ProcessDefManager processDefManager;
-    @Autowired
-    private ProcessDefInstanceManager processDefInstanceManager;
     @Autowired
     private UserManager userManager;
     
@@ -58,6 +57,34 @@ public class TaskController extends BaseController{
         items.addAll(items2);
         return new JsonReaderResponse<Task>(items);
     }
+    @RequestMapping(params = "method=listAssigneeTasks")
+    @ResponseBody
+    public JsonReaderResponse<Task> listAssigneeTasks(HttpServletRequest request) {
+        String username=request.getRemoteUser();
+        if(StringUtils.isEmpty(username)){
+            return new JsonReaderResponse<Task>(Collections.<Task>emptyList(),0);
+        }
+        Map<String,Object> map=requestMap(request);
+        map.put("userId",username);
+        List<Task> items1= taskManager.listAssigneeTasks(map);
+        Integer count=taskManager.listAssigneeTasksCount(map);
+        return new JsonReaderResponse<Task>(items1,count);
+    }
+    @RequestMapping(params = "method=listCandidateTasks")
+    @ResponseBody
+    public JsonReaderResponse<Task> listCandidateTasks(HttpServletRequest request) {
+        String username=request.getRemoteUser();
+        if(StringUtils.isEmpty(username)){
+            return new JsonReaderResponse<Task>(Collections.<Task>emptyList(),0);
+        }
+        Map<String,Object> map=requestMap(request);
+        map.put("userId",username);
+        List<Task> items1= taskManager.listCandidateTasks(map);
+        Integer count=taskManager.listCandidateTasksCount(map);
+        return new JsonReaderResponse<Task>(items1,count);
+    }
+    
+    
     @RequestMapping(params = "method=listReplevyTasks")
     @ResponseBody
     public JsonReaderResponse<Task> listReplevyTasks(HttpServletRequest request) {
@@ -186,6 +213,7 @@ public class TaskController extends BaseController{
         String executionId=request.getParameter("executionId");
         String instanceId=request.getParameter("instanceId");
         String processDefId=request.getParameter("processDefId");
+        String processElementId=request.getParameter("processElementId");
         Long inId=parseLong(instanceId);
         if(inId!=null){
             List<ProcessFileAttach> processFileAttaches=processFileAttachManager.getProcessFileAttachByInstanceId(inId);
@@ -199,6 +227,24 @@ public class TaskController extends BaseController{
             if(variables!=null){
                 command.setFormValue(variables);
             }
+            try{
+                Long elementId=parseLong(processElementId);
+                if(elementId!=null){
+                    List<ProcessElementForm> forms=taskManager.listProcessElementFormByElementId(elementId);
+                    Map<String,Object> chmods=new HashMap<String, Object>();
+                    if(forms!=null && forms.size()>0){
+                        for(ProcessElementForm form:forms){
+                            chmods.put(form.getVariable(),form.getChmod());
+                        }
+                    }
+                    command.setChmods(chmods);
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+                logger.error("get ProcessElementForm",e);
+                return new BaseResultCommand("获取数据失败",Boolean.FALSE);
+            }
+            
             Long pId=parseLong(processDefId);
             if(pId!=null){
                 ProcessDef processDef=processDefManager.getProcessDefById(pId);

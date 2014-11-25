@@ -13,7 +13,7 @@ Ext.define('Ext.ux.grid.feature.Detail', {
 			/* End Definitions */
 			detailCls: 'detail',
 			tplDetail: [],
-			startingDetail: 'Please select a row to see details',
+			startingDetail: globalRes.startingDetail,
 
 			detailDock: 'bottom',
 			detailPadding: 5,

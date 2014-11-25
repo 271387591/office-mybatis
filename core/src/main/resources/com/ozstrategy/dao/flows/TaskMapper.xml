@@ -4,6 +4,10 @@
     <resultMap id="TaskResult" type="com.ozstrategy.model.flows.Task" autoMapping="true">
         <id column="id" property="id" javaType="string"/>
     </resultMap>
+    <resultMap id="ProcessElementFormResult" type="com.ozstrategy.model.flows.ProcessElementForm" autoMapping="true">
+        <id column="id" property="id" javaType="java.lang.Long"/>
+    </resultMap>
+    
     
     <select id="listCandidateTasks" resultMap="TaskResult" parameterType="Map">
         select 
@@ -34,6 +38,7 @@
         pe.taskType as taskType,
         pi.id as instanceId,
         pe.endTask as endTask,
+        pe.id as processElementId,
         tlt.fromTaskKey as fromTaskKey,
         tlt.fromTaskType as fromTaskType,
         tlt.fromTaskId as fromTaskId,
@@ -41,13 +46,26 @@
         from ACT_RU_TASK art
         left join PROCESSDEF pd on art.PROC_DEF_ID_=pd.actDefId
         left join ACT_RU_IDENTITYLINK ari on art.ID_=ari.TASK_ID_
-        left join ProcessDefInstance pi on art.PROC_INST_ID_=pi.actInstanceId
+        left join PROCESSDEFINSTANCE pi on art.PROC_INST_ID_=pi.actInstanceId
         left join PROCESSELEMENT pe on art.TASK_DEF_KEY_=pe.taskKey
         left join TASKLINKTASK tlt on art.ID_=tlt.currentTaskId 
         where pe.processDefId=pd.id and ari.USER_ID_=#{userId} and art.ASSIGNEE_ is null 
-        <if test="keyword!=null and keyword!=''"> and (pd.name like CONCAT(CONCAT('%', #{keyword}), '%') or art.NAME_ like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
+        <if test="keyword!=null and keyword!=''"> and (pd.name like CONCAT(CONCAT('%', #{keyword}), '%') or art.NAME_ like CONCAT(CONCAT('%', #{keyword}), '%') or pi.title like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
          order by art.CREATE_TIME_ desc
     </select>
+     <select id="listCandidateTasksCount" resultType="java.lang.Integer" parameterType="Map">
+        select count(*) 
+        from ACT_RU_TASK art
+        left join PROCESSDEF pd on art.PROC_DEF_ID_=pd.actDefId
+        left join ACT_RU_IDENTITYLINK ari on art.ID_=ari.TASK_ID_
+        left join PROCESSDEFINSTANCE pi on art.PROC_INST_ID_=pi.actInstanceId
+        left join PROCESSELEMENT pe on art.TASK_DEF_KEY_=pe.taskKey
+        left join TASKLINKTASK tlt on art.ID_=tlt.currentTaskId 
+        where pe.processDefId=pd.id and ari.USER_ID_=#{userId} and art.ASSIGNEE_ is null 
+        <if test="keyword!=null and keyword!=''"> and (pd.name like CONCAT(CONCAT('%', #{keyword}), '%') or art.NAME_ like CONCAT(CONCAT('%', #{keyword}), '%') or pi.title like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
+         order by art.CREATE_TIME_ desc
+    </select>
+    
     <select id="listAssigneeTasks" resultMap="TaskResult" parameterType="Map">
         select
         art.ID_ as id,
@@ -77,6 +95,7 @@
         pe.taskType as taskType,
         pi.id as instanceId,
         pe.endTask as endTask,
+        pe.id as processElementId,
         tlt.fromTaskKey as fromTaskKey,
         tlt.fromTaskType as fromTaskType,
         tlt.fromTaskId as fromTaskId,
@@ -87,9 +106,21 @@
         left join PROCESSELEMENT pe on art.TASK_DEF_KEY_=pe.taskKey 
         left join TASKLINKTASK tlt on art.ID_=tlt.currentTaskId 
         where pe.processDefId=pd.id and art.ASSIGNEE_=#{userId}
-        <if test="keyword!=null and keyword!=''"> and (pd.name like CONCAT(CONCAT('%', #{keyword}), '%') or art.NAME_ like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
+        <if test="keyword!=null and keyword!=''"> and (pd.name like CONCAT(CONCAT('%', #{keyword}), '%') or art.NAME_ like CONCAT(CONCAT('%', #{keyword}), '%') or pi.title like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
          order by art.CREATE_TIME_ desc
     </select>
+    <select id="listAssigneeTasksCount" resultType="java.lang.Integer" parameterType="Map">
+        select count(*)
+        from ACT_RU_TASK art 
+        left join PROCESSDEF pd on art.PROC_DEF_ID_=pd.actDefId
+        left join PROCESSDEFINSTANCE pi on art.PROC_INST_ID_=pi.actInstanceId
+        left join PROCESSELEMENT pe on art.TASK_DEF_KEY_=pe.taskKey 
+        left join TASKLINKTASK tlt on art.ID_=tlt.currentTaskId 
+        where pe.processDefId=pd.id and art.ASSIGNEE_=#{userId}
+        <if test="keyword!=null and keyword!=''"> and (pd.name like CONCAT(CONCAT('%', #{keyword}), '%') or art.NAME_ like CONCAT(CONCAT('%', #{keyword}), '%') or pi.title like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
+         order by art.CREATE_TIME_ desc
+    </select>
+    
     <select id="listReplevyTasks" resultMap="TaskResult" parameterType="Map">
         select
         art.ID_ as id,
@@ -119,6 +150,7 @@
         pi.id as instanceId,
         pe.taskType as taskType,
         pe.endTask as endTask,
+        pe.id as processElementId,
         tlt.fromTaskKey as fromTaskKey,
         tlt.fromTaskType as fromTaskType,
         tlt.fromTaskId as fromTaskId,
@@ -175,4 +207,9 @@
         from ACT_RU_TASK art
         where art.PROC_INST_ID_=#{instanceId}
     </select>
+    <select id="listProcessElementFormByElementId" resultMap="ProcessElementFormResult" parameterType="Map">
+        select * from PROCESSELEMENTFORM pf WHERE 1=1
+        <if test="elementId!=null and elementId!=''"> and pf.processElementId=#{elementId}</if>
+    </select>
+    
 </mapper>

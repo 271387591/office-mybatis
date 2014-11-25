@@ -2,6 +2,7 @@ package com.ozstrategy.webapp.controller;
 
 import com.ozstrategy.model.userrole.Feature;
 import com.ozstrategy.model.userrole.User;
+import com.ozstrategy.service.flows.TaskManager;
 import com.ozstrategy.service.userrole.FeatureManager;
 import com.ozstrategy.service.userrole.UserManager;
 import com.ozstrategy.webapp.command.userrole.UserCommand;
@@ -28,6 +29,9 @@ public class SimpleMVController implements InitializingBean {
     private UserManager userManager = null;
     @Autowired
     private FeatureManager featureManager = null;
+    @Autowired
+    private TaskManager taskManager = null;
+    
 
 
     public void afterPropertiesSet() throws Exception {
@@ -61,7 +65,8 @@ public class SimpleMVController implements InitializingBean {
         UserCommand command = new UserCommand(user);
         List<Feature> roleFeatures = featureManager.getUserFeaturesByUsername(request.getRemoteUser());
         command = command.populateFeatures(roleFeatures);
-
+        Integer taskCount=taskManager.listAllTaskCount(user);
+        command.setTaskCount(taskCount);
         if (log.isDebugEnabled()) {
             log.debug("Populated Command: + " + command + "...");
         }

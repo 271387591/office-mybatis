@@ -31,53 +31,18 @@ Ext.define('FlexCenter.user.view.FeatureView',{
         var me = this;
 
         me.store = me.getStore();
-
-        me.tbar = [
-//            {
-//            text:'添加',
-//            iconCls:'user-add',
-//            scope:me,
-//            handler:me.onAddClick
-//        },{
-//            text:'编辑',
-//            iconCls:'user-edit',
-//            scope:me,
-//            handler:me.onEditClick
-//        },{
-//            text:'删除',
-//            iconCls:'user-delete',
-//            scope:me,
-//            handler:me.onDeleteClick
-//        },'->','-',
-            {
-                xtype:'textfield',
-                itemId:'searchRoleName',
-                listeners:{
-                    change: function(self,newValue){
-                        if(!newValue){
-                            me.onSearchClick();
-                        }
-                    }
-                }
+        me.features=[{
+            ftype: 'search',
+            disableIndexes : ['id','description','criteria','createDate'],
+            paramNames: {
+                fields: 'fields',
+                query: 'keyword'
             },
-            {
-                text:'查询',
-                iconCls:'button-apply',
-                scope:me,
-                handler: me.onSearchClick
-            },{
-                text:'清空',
-                iconCls:'button-clear',
-                handler: function(){
-                    me.down('textfield#searchRoleName').setValue("");
-                    me.onSearchClick();
-                }
-            }
-        ];
-
+            searchMode : 'remote'
+        }];
         me.columns = [
             {
-                header:'功能名称',
+                header:'权限名称',
                 dataIndex:'name',
                 flex:1
             },
@@ -106,16 +71,7 @@ Ext.define('FlexCenter.user.view.FeatureView',{
             xtype: 'pagingtoolbar',
             store: me.getStore(),
             dock: 'bottom',
-            displayInfo: true,
-            firstText:'首页',
-            lastText:'末页',
-            prevText:'上一页',
-            nextText:'下一页',
-            beforePageText:'第',
-            afterPageText: "页,共 {0} 页",
-            displayMsg: '显示 {0} - {1}, 共{2}条',
-            emptyMsg: '没有记录显示',
-            refreshText:'刷新'
+            displayInfo: true
         }],
         me.on('afterrender',function(){
             me.getStore().load();

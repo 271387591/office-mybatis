@@ -23,8 +23,6 @@ import java.util.Map;
 @RequestMapping("processInstanceHistoryController.do")
 public class ProcessInstanceHistoryController extends BaseController {
     @Autowired
-    private UserManager userManager;
-    @Autowired
     private ProcessInstanceHistoryManager processInstanceHistoryManager;
     
     @RequestMapping(params = "method=listProcessInstanceHistories")

@@ -6,9 +6,11 @@ import com.ozstrategy.model.userrole.Feature;
 import com.ozstrategy.model.userrole.Role;
 import com.ozstrategy.model.userrole.RoleFeature;
 import com.ozstrategy.service.userrole.RoleManager;
+import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -18,10 +20,10 @@ import java.util.Set;
 @Service("roleManager")
 public class RoleManagerImpl  implements RoleManager {
   @Autowired
-  RoleDao roleDao;
+  private RoleDao roleDao;
 
   @Autowired
-  RoleFeatureDao roleFeatureDao;
+  private RoleFeatureDao roleFeatureDao;
 
     public List<Role> listRoles(Map<String, Object> map, Integer start, Integer limit) {
         return roleDao.listRoles(map,new RowBounds(start,limit));
@@ -35,7 +37,8 @@ public class RoleManagerImpl  implements RoleManager {
         return roleDao.listRolesCount(map);
     }
 
-    public void saveOrUpdate(Role role,List<Feature> features) {
+    @Transactional(rollbackFor = Throwable.class)
+    public void saveOrUpdate(Role role,List<Feature> features) throws Exception{
         boolean save=true;
         if(role.getId()!=null){
             roleDao.updateRole(role);
@@ -56,7 +59,9 @@ public class RoleManagerImpl  implements RoleManager {
         }
     }
 
+    @Transactional(rollbackFor = Throwable.class)
     public void removeRoleById(Long id) {
+        roleFeatureDao.removeRoleFeatureByRoleId(id);
         roleDao.removeRoleById(id);
     }
 
@@ -70,6 +75,19 @@ public class RoleManagerImpl  implements RoleManager {
 
     public boolean hasFeature(Set<String> roleName, String feature) {
         return true;
+    }
+
+    public boolean authenticatedContext(Set<String> roleNames,String context) {
+        for(String roleName:roleNames){
+            Role role = roleDao.getRoleByName(roleName);
+            if(role==null){
+                return false;
+            }
+            if(StringUtils.equals(context,role.getSystemView().getContext())){
+                return true;
+            }
+        }
+        return false;
     }
 
     public List<RoleFeature> getRoleFeatureByRoleId(Long roleId) {

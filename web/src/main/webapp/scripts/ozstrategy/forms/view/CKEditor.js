@@ -21,14 +21,14 @@ Ext.define('FlexCenter.forms.view.CKEditor', {
                 toolbar:[
                     [ 'Source'],
                     [ 'Cut','Copy','Paste','PasteText','PasteFromWord','-','Undo','Redo','Find','Replace','-','SelectAll' ],
-                    [ 'HorizontalRule','Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat','NumberedList','BulletedList','-','Outdent','Indent','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl' ],
+                    [ 'HorizontalRule','Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat','NumberedList','BulletedList','-','Outdent','Indent','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock' ],
                     [ 'TextField','Textarea','Select','BoxGroup','DateField','Grid','UserSelector','DepSelector','PosSelector'],
-                    [ 'FontSize','TextColor','BGColor' ]
+                    [ 'FontSize','TextColor','BGColor','Table' ]
                 ]
 
             });
-            this.editor.setData('');
-            this.editor.setData(f.getValue()? f.getValue():this.value);
+            //this.editor.setData('');
+            //this.editor.setData(f.getValue()? f.getValue():this.value);
         }
     },
     

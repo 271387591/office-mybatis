@@ -39,35 +39,52 @@ function onData(event) {
     
     console.log('msg===',msg)
 }
+function ActionColumnHideAccess(config){
+    var checkAccess=function(featureName){
+        if(featureName == '#allowAll#'){
+            return true;
+        }
+        var parts = featureName.split('|');
+        for(var i = 0; i < parts.length; i ++){
+            if(accessRes[parts[i]] == true){
+                return true;
+            }
+        }
+        return false;
+    }
+    var getClass=function(){
+        if((checkAccess(config.featureName) || config.byPass) && config.extra){
+            return config.cls;
+        }
+        return 'x-hide-display'
+    }
+    return getClass
+}
+function ActionColumnDisabledAccess(config){
+    var checkAccess=function(featureName){
+        if(featureName == '#allowAll#'){
+            return true;
+        }
+        var parts = featureName.split('|');
+        for(var i = 0; i < parts.length; i ++){
+            if(accessRes[parts[i]] == true){
+                return true;
+            }
+        }
+        return false;
+    }
+    var isDisabled=function(){
+        if(checkAccess(config.featureName) || config.byPass){
+            return false;
+        }
+        return true;
 
-//if (dwr) {
-////  dwr.engine.setActiveReverseAjax(true);
-//  dwr.engine.setTimeout(600000);
-//  dwr.engine.setErrorHandler(function(msg, exception) {
-//    //Session timedout/invalidated
-//    if (exception && exception.javaClassName == 'org.directwebremoting.extend.LoginRequiredException') {
-//      //Reload or display an error etc.
-//      window.location.href = globalRes.logoutUrl;
-//    }
-//  });
-//
-//  dwr.engine.setTextHtmlHandler(function() {
-//    window.location.href = globalRes.logoutUrl;
-//  });
-//
-//  dwr.engine.setPreHook(function() {
-////    console.log('before dwr call...');
-//  });
-//  dwr.engine.setPostHook(function() {
-//    if (globalRes.autoLogout) {
-//      timeoutTask.delay((globalRes.sessionTimeout - countDown - 10) * 1000);
-//    }
-//  });
-//}
+    }
+    return isDisabled
+}
 
-var countDown = 30;
 function ajaxPostRequest(url,params,callback,mask){
-    var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"请等候..."});
+    var myMask = new Ext.LoadMask(Ext.getBody(), {msg:globalRes.loading});
     if(!mask){
         myMask.show();
     }
@@ -84,7 +101,7 @@ function ajaxPostRequest(url,params,callback,mask){
         },
         failure: function (response, options) {
             if (myMask != undefined){ myMask.hide();}
-            Ext.MessageBox.alert('失败', '请求超时或网络故障,错误编号：' + response.status);
+            Ext.MessageBox.alert(globalRes.title.fail, Ext.String.format(globalRes.remoteTimeout,response.status));
         }
     });
 }
@@ -129,84 +146,6 @@ function getCookie(name) {
     var value=document.cookie.substring(start+prefix.length, end);
     return unescape(value);
 }
-
-var timeoutTask = new Ext.util.DelayedTask(function() {
-  var timer = new Array();
-  var f = function(v) {
-//console.log('v=',v);
-    return function() {
-      if (v == countDown) {
-        Ext.MessageBox.hide();
-
-        // session time out, need re login
-        window.location.href = globalRes.logoutUrl;
-      } else {
-        Ext.MessageBox.updateProgress(v / countDown, Oz.Utils.getTplMsg(globalRes.timeoutTpl, {seconds: (countDown - v)}));
-      }
-    };
-  };
-  for (var i = 1; i <= countDown; i++) {
-    timer[i - 1] = setTimeout(f(i), 1000 * i);
-  }
-    
-
-  Ext.MessageBox.show({
-    title: globalRes.timeoutTitle,
-    msg: globalRes.timeoutMessage,
-    progressText: Oz.Utils.getTplMsg(globalRes.timeoutTpl, {seconds: countDown}),
-    width: 300,
-    progress: true,
-    closable: false,
-    buttons: Ext.MessageBox.YESNO,
-    fn: function(btn) {
-      if (btn == 'yes') {
-        // clear all timers
-        for (var i = 0; i < countDown; i++) {
-          if (timer[i]) {
-            clearTimeout(timer[i]);
-          }
-        }
-
-        // trigger a session reload
-        //agentController.dummyCall();//dummy call
-//        roleStore.load();// dummy
-      }
-      else {
-        // session time out, need re login
-        window.location.href = globalRes.logoutUrl;
-      }
-    },
-    icon: Ext.MessageBox.WARNING
-  });
-});
-
-//Ext.Ajax.on('requestcomplete', function(conn, response, options) {
-//  var responseText = response.responseText;
-//  if (responseText.indexOf('<body id="login">') != -1) {
-//    Ext.MessageBox.show({
-//      title: globalRes.reloginTitle,
-//      width: messageBoxRes.width,
-//      msg: globalRes.reloginMessage,
-//      buttons: Ext.MessageBox.OK,
-//      icon: Ext.MessageBox.ERROR,
-//      fn: function() {
-//        // session time out, need re login
-//        window.location.href = globalRes.logoutUrl;
-//      }
-//    });
-//  }
-//  else{
-//    if(globalRes.autoLogout){
-//      var delayTime = (globalRes.sessionTimeout - countDown - 10) * 1000;
-//      timeoutTask.delay(delayTime);
-//    }
-//  }
-//});
-
-
-
-
-
 Ext.applyIf(Array.prototype, {
     /**
      * Checks whether or not the specified object exists in the array.

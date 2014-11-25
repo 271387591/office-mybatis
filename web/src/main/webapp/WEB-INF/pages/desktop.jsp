@@ -76,7 +76,6 @@
     if(theme){
         Ext.util.CSS.swapStyleSheet("FlexCenter_Ext_Theme", extTheme + theme + ".css");
     }
-    if (globalRes.isAdmin != 'true'){location.href="dispatcherPage.action";}
     Ext.Loader.setConfig({
           enabled: true,
           basePath: '<c:url value="/scripts/ext/src"/>',

@@ -78,6 +78,7 @@ Ext.define('Oz.access.RoleAccess', {
           hidden = ((this.mode == 'hide') && disabled);
         }
       }
+      
 
       if((control.isXType('button')) || (control.isXType('buttongroup'))
         || (control.isXType(Ext.button.Button)) || (control.isXType( Ext.container.ButtonGroup))){
@@ -147,6 +148,7 @@ Ext.define('Oz.access.RoleAccess', {
         // deal with row action
         var columns = control.columns,
           ln = columns.length;
+        
         for (var i; i < ln; i++) {
           if (columns[i].isXType('actioncolumn')) {
             columns[i].setVisible(disabled);

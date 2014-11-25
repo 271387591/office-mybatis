@@ -3,6 +3,8 @@ package com.ozstrategy.model.flows;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ozstrategy.model.userrole.User;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -214,5 +216,28 @@ public class ProcessElement implements Serializable {
 
     public void setCountersignMap(Map<String, Object> countersignMap) {
         this.countersignMap = countersignMap;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ProcessElement that = (ProcessElement) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(label, that.label)
+                .append(taskKey, that.taskKey)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(id)
+                .append(label)
+                .append(taskKey)
+                .hashCode();
     }
 }

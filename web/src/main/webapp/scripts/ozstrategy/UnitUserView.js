@@ -64,7 +64,7 @@ Ext.define('FlexCenter.UnitUserView', {
             },
               {
                   xtype:'featrueView',
-                  title:'功能管理'
+                  title:'权限管理'
               }
           ]
           }

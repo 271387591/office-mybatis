@@ -5,6 +5,8 @@ import com.ozstrategy.model.forms.FlowForm;
 import com.ozstrategy.model.system.GlobalType;
 import com.ozstrategy.model.userrole.Role;
 import com.ozstrategy.model.userrole.User;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -250,5 +252,30 @@ public class ProcessDef extends BaseObject {
     }
     public String getGraRes(){
         return GRA_RES+this.id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        ProcessDef that = (ProcessDef) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(name, that.name)
+                .append(actDefId,that.actDefId)
+                .isEquals();
+
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(id)
+                .append(name)
+                .append(actDefId)
+                .hashCode();
     }
 }

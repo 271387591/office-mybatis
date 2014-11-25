@@ -103,8 +103,13 @@ public class UserController extends BaseController {
         if(checkIsNotNumber(id)){
             return new BaseResultCommand(getMessage("message.error.id.null",request),Boolean.FALSE);
         }
-        userManager.deleteUser(parseLong(id));
-        return new BaseResultCommand(Boolean.TRUE);
+        try{     
+            userManager.deleteUser(parseLong(id));
+            return new BaseResultCommand(Boolean.TRUE);
+        }catch (Exception e){
+            logger.error("delete user fail",e);
+        }
+        return new BaseResultCommand(getMessage("message.error.deleteUser.error",request),Boolean.FALSE);
     }
     @RequestMapping(params = "method=updatePassword")
     @ResponseBody 

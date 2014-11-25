@@ -51,13 +51,13 @@ public class User extends BaseObject implements UserDetails {
     private String   passwordHint;
     @Column
     private String   phoneNumber;
-    @Column(unique = true)
+    @Column(unique = true,length = 32)
     private String   username;
     @Column
     private Integer   version;
     @Column
     private String   website;
-    @Column
+    @Column(columnDefinition = "char",length = 1)
     private String   gender;
     @Column(unique = true)
     private String   mobile;

@@ -37,7 +37,7 @@ Ext.define('Oz.LoginWindow', {
 
       items: [{
         xtype: 'fieldset',
-        title: Ext.Date.format(new Date(), 'l d F Y - H:i'),
+        title: Ext.Date.format(new Date(), 'Y-d-m - H:i l'),
         autoHeight: true,
         html: loginRes.picture
       }, {

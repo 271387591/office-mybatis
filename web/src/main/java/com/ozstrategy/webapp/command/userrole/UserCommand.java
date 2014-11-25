@@ -65,6 +65,7 @@ public class UserCommand {
     private String email;
     private String mobile;
     private String   gender;
+    private Integer taskCount;
 
   //~ Constructors -----------------------------------------------------------------------------------------------------
 
@@ -300,5 +301,13 @@ public class UserCommand {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public Integer getTaskCount() {
+        return taskCount;
+    }
+
+    public void setTaskCount(Integer taskCount) {
+        this.taskCount = taskCount;
     }
 } // end class UserCommand

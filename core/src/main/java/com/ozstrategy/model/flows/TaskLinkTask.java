@@ -1,6 +1,8 @@
 package com.ozstrategy.model.flows;
 
 import com.ozstrategy.model.BaseObject;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -105,5 +107,31 @@ public class TaskLinkTask extends BaseObject {
 
     public void setFromTaskId(String fromTaskId) {
         this.fromTaskId = fromTaskId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        TaskLinkTask that = (TaskLinkTask) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(actInstanceId, that.actInstanceId)
+                .append(fromTaskId, that.fromTaskId)
+                .append(currentTaskId, that.currentTaskId)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(id)
+                .append(actInstanceId)
+                .append(fromTaskId)
+                .append(currentTaskId)
+                .hashCode();
     }
 }

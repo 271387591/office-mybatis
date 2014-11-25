@@ -1,5 +1,8 @@
 package com.ozstrategy.model.flows;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -106,5 +109,30 @@ public class ProcessInstanceHistory {
 
     public void setRunTasks(Set<Task> runTasks) {
         this.runTasks = runTasks;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ProcessInstanceHistory that = (ProcessInstanceHistory) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(processName, that.processName)
+                .append(processDefId, that.processDefId)
+                .append(startTime, that.startTime)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(id)
+                .append(processName)
+                .append(processDefId)
+                .append(startTime)
+                .hashCode();
     }
 }

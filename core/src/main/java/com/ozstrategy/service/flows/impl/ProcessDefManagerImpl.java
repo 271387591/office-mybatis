@@ -35,6 +35,7 @@ import org.activiti.bpmn.model.SubProcess;
 import org.activiti.bpmn.model.UserTask;
 import org.activiti.engine.ActivitiObjectNotFoundException;
 import org.activiti.engine.RepositoryService;
+import org.activiti.engine.RuntimeService;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.apache.commons.io.IOUtils;
@@ -75,9 +76,11 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
     private ProcessElementFormDao processElementFormDao;
     @Autowired
     private ProcessDefVersionDao processDefVersionDao;
-    
     @Autowired
     private RepositoryService repositoryService;
+    @Autowired
+    private RuntimeService runtimeService;
+    
     
     public List<ProcessDef> listProcessDefs(Map<String, Object> map, Integer start, Integer limit) {
         return processDefDao.listProcessDefs(map,new RowBounds(start,limit));
@@ -415,6 +418,17 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
             }
         }
     }
+    @Transactional(rollbackFor = Throwable.class)
+    public void disAuthorization(ProcessDef def) throws Exception {
+        Set<User> users=def.getUsers();
+        if(users!=null && users.size()>0){
+            processDefDao.deleteProcessDefUser(def.getId());
+        }
+        Set<Role> roles=def.getRoles();
+        if(roles!=null && roles.size()>0){
+            processDefDao.deleteProcessDefRole(def.getId());
+        }
+    }
 
     public List<ProcessDef> getProcessDefinition(Map<String, Object> map,Integer start,Integer limit) {
         return processDefDao.getProcessDefinition(map,new RowBounds(start,limit));
@@ -422,5 +436,18 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
 
     public Integer getProcessDefinitionCount(Map<String, Object> map) {
         return processDefDao.getProcessDefinitionCount(map);
+    }
+
+    public Boolean checkProcessUseRole(Long roleId) {
+        List<ProcessDef> processDefs=processDefDao.getProcessDefByRoleId(roleId);
+        if(processDefs!=null && processDefs.size()>0){
+            return true;
+        }
+        return false;
+    }
+
+    public Boolean checkProcessRunning(String actDefId) {
+        long count = runtimeService.createProcessInstanceQuery().processDefinitionId(actDefId).count();
+        return count!=0;
     }
 }

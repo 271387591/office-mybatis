@@ -1,6 +1,8 @@
 package com.ozstrategy.model.flows;
 
 import com.ozstrategy.model.CreatorObject;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -116,5 +118,29 @@ public class ProcessDefInstance extends CreatorObject{
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        ProcessDefInstance that = (ProcessDefInstance) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(name, that.name)
+                .append(actInstanceId,that.actInstanceId)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(id)
+                .append(name)
+                .append(actInstanceId)
+                .hashCode();
     }
 }
