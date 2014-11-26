@@ -1,5 +1,6 @@
 package com.ozstrategy.webapp.controller.flows;
 
+import com.ozstrategy.exception.OzException;
 import com.ozstrategy.model.flows.ProcessDef;
 import com.ozstrategy.model.flows.ProcessElementForm;
 import com.ozstrategy.model.flows.ProcessFileAttach;
@@ -105,7 +106,7 @@ public class TaskController extends BaseController{
         String taskId=request.getParameter("taskId");
         String username=request.getRemoteUser();
         if(StringUtils.isEmpty(username)){
-            return new BaseResultCommand("登陆超时",Boolean.FALSE);
+            return new BaseResultCommand(getMessage("message.error.login.timeout",request),Boolean.FALSE);
         }
         taskManager.claim(taskId, username);
         return new BaseResultCommand("",Boolean.TRUE); 
@@ -127,8 +128,8 @@ public class TaskController extends BaseController{
             
         }catch (Exception e){
             e.printStackTrace();
-            logger.error("任务转办失败",e);
-            return new BaseResultCommand("任务转办失败",Boolean.FALSE);
+            logger.error("proxyTask:",e);
+            return new BaseResultCommand(getMessage("message.processDefController.proxyTask",request),Boolean.FALSE);
         }
         return new BaseResultCommand("",Boolean.TRUE); 
     }
@@ -140,16 +141,19 @@ public class TaskController extends BaseController{
         String sourceTask=request.getParameter("sourceTask");
         Map<String,Object> map=requestMap(request);
         try {
-            String username=request.getRemoteUser();
-            User creator=null;
-            if(StringUtils.isNotEmpty(username)){
-                creator=userManager.getUserByUsername(username);
+            String username = request.getRemoteUser();
+            User creator = null;
+            if (StringUtils.isNotEmpty(username)) {
+                creator = userManager.getUserByUsername(username);
             }
-            taskManager.returnTask(taskId,taskKey,sourceTask,creator,map);
+            taskManager.returnTask(taskId, taskKey, sourceTask, creator, map);
+        }catch (OzException ex){
+            logger.error("returnTask:",ex);
+            return new BaseResultCommand(getMessage(ex.getKey(),request),Boolean.FALSE);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("任务回退失败",e);
-            return new BaseResultCommand("任务回退失败",Boolean.FALSE);
+            logger.error("returnTask:",e);
+            return new BaseResultCommand(getMessage("message.processDefController.returnTask",request),Boolean.FALSE);
         }
         return new BaseResultCommand("",Boolean.TRUE); 
     }
@@ -167,10 +171,13 @@ public class TaskController extends BaseController{
                 creator=userManager.getUserByUsername(username);
             }
             taskManager.replevyTask(taskId,taskKey,sourceTask,creator,map);
+        } catch (OzException ex){
+            logger.error("returnTask:",ex);
+            return new BaseResultCommand(getMessage(ex.getKey(),request),Boolean.FALSE);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("任务追回失败",e);
-            return new BaseResultCommand("任务追回失败",Boolean.FALSE);
+            logger.error("replevyTask:",e);
+            return new BaseResultCommand(getMessage("message.processDefController.replevyTask",request),Boolean.FALSE);
         }
         return new BaseResultCommand("",Boolean.TRUE); 
     }
@@ -182,11 +189,11 @@ public class TaskController extends BaseController{
         String processDefId=request.getParameter("processDefId");
         String completeType=request.getParameter("completeType");
         if(StringUtils.isEmpty(taskId)){
-            return new BaseResultCommand("任务ID为空",Boolean.FALSE);
+            return new BaseResultCommand(getMessage("message.error.id.null",request),Boolean.FALSE);
         }
         ProcessDef def=processDefManager.getProcessDefById(parseLong(processDefId));
         if(def==null){
-            return new BaseResultCommand("流程不存在",Boolean.FALSE);
+            return new BaseResultCommand(getMessage("message.processDefController.processNotExist",request),Boolean.FALSE);
         }
         Map<String,Object> map=requestMap(request);
         try {
@@ -200,10 +207,13 @@ public class TaskController extends BaseController{
             }else{
                 taskManager.complete(creator,def,taskId,map);
             }
+        } catch (OzException ex){
+            logger.error("completeTask:",ex);
+            return new BaseResultCommand(getMessage(ex.getKey(),request),Boolean.FALSE);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("任务完成失败",e);
-            return new BaseResultCommand("任务完成失败",Boolean.FALSE);
+            logger.error("completeTask:",e);
+            return new BaseResultCommand(getMessage("message.processDefController.completeTask",request),Boolean.FALSE);
         }
         return new BaseResultCommand("",Boolean.TRUE); 
     }
@@ -222,7 +232,7 @@ public class TaskController extends BaseController{
             try {
                 variables=taskManager.getVariables(executionId);
             } catch (Exception e) {
-                logger.error("获取variables失败",e);
+                logger.error("get variables fail",e);
             }
             if(variables!=null){
                 command.setFormValue(variables);
@@ -242,7 +252,7 @@ public class TaskController extends BaseController{
             }catch (Exception e){
                 e.printStackTrace();
                 logger.error("get ProcessElementForm",e);
-                return new BaseResultCommand("获取数据失败",Boolean.FALSE);
+                return new BaseResultCommand(getMessage("message.error.getRes.fail",request),Boolean.FALSE);
             }
             
             Long pId=parseLong(processDefId);
@@ -255,7 +265,7 @@ public class TaskController extends BaseController{
             }
             return new BaseResultCommand(command);
         }
-        return new BaseResultCommand("获取数据失败",Boolean.FALSE); 
+        return new BaseResultCommand(getMessage("message.error.getRes.fail",request),Boolean.FALSE); 
     }
     
     

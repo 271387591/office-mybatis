@@ -13,7 +13,9 @@ public interface ProcessDefInstanceDao {
     List<ProcessDefInstance> listProcessDefInstances(Map<String,Object> map,RowBounds rowBounds);
     Integer listProcessDefInstancesCount(Map<String,Object> map);
     void saveProcessDefInstance(ProcessDefInstance instance);
+    void updateProcessDefInstance(ProcessDefInstance instance);
     void deleteProcessDefInstance(Long id);
     ProcessDefInstance getProcessDefInstanceById(Long id);
     ProcessDefInstance getProcessDefInstanceByActId(String actId);
+    List<ProcessDefInstance> getProcessDefInstanceByDefId(Long defId);
 }

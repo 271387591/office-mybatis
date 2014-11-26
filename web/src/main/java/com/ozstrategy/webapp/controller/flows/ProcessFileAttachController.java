@@ -79,7 +79,7 @@ public class ProcessFileAttachController extends BaseController{
                 return new BaseResultCommand(attach);
             }
         }
-        return new BaseResultCommand("删除附件错误",false);
+        return new BaseResultCommand(getMessage("message.processDefController.delAttachFail",request),false);
     }
     
     @RequestMapping(params = "method=upload")
@@ -132,7 +132,7 @@ public class ProcessFileAttachController extends BaseController{
                     response.getWriter().print("{success:true,msg:'上传成功!',fileName:'"+attach.getFileName()+"',id:"+attach.getId()+"}");
                 }
             } catch (Exception e) {
-                logger.error("上传文件错误:",e);
+                logger.error("upload:",e);
                 response.setContentType("text/html;charset=utf-8");
                 try {
                     response.getWriter().print("{success:false,msg:'上传出错!'}");

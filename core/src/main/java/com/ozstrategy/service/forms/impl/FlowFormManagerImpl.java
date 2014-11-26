@@ -88,15 +88,24 @@ public class FlowFormManagerImpl implements FlowFormManager {
             return list.get(0);
         return null;
     }
-
-    private void remove(Long id) {
-        flowFormDao.deleteFlowForm(id);
+    private void deleteFlowForm(FlowForm flowForm){
+        Set<FormField> formFields=flowForm.getFields();
+        if(formFields!=null && formFields.size()>0){
+            for(FormField formField : formFields){
+                formFieldDao.deleteChild(formField.getId());
+            }
+        }
+        formFieldDao.deleteByFormId(flowForm.getId());
+        flowFormDao.deleteFlowForm(flowForm.getId());
     }
     @Transactional(rollbackFor = Throwable.class)
     public void multiRemove(String[] ids) {
         for(String id : ids){
             if(NumberUtils.isNumber(id)){
-                remove(Long.parseLong(id));
+                FlowForm flowForm=flowFormDao.getFlowFormById(Long.parseLong(id));
+                if(flowForm!=null){
+                    deleteFlowForm(flowForm);
+                }
             }
         }
     }

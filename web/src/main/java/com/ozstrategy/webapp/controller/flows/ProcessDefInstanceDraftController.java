@@ -42,7 +42,7 @@ public class ProcessDefInstanceDraftController extends BaseController {
         Map<String,Object> map=requestMap(request);
         List<ProcessDefInstanceDraftCommand> commands=new ArrayList<ProcessDefInstanceDraftCommand>();
         if(StringUtils.isEmpty(username)){
-            return new JsonReaderResponse<ProcessDefInstanceDraftCommand>(commands,Boolean.FALSE,"登陆超时");
+            return new JsonReaderResponse<ProcessDefInstanceDraftCommand>(commands,Boolean.FALSE,getMessage("message.error.login.timeout",request));
         }
         User user=userManager.getUserByUsername(username);
         if(user!=null){
@@ -66,7 +66,7 @@ public class ProcessDefInstanceDraftController extends BaseController {
             Long id=parseLong(request.getParameter("id"));
             User user=userManager.getUserByUsername(request.getRemoteUser());
             if(user==null){
-                return new BaseResultCommand(getMessage("登陆超时",request),Boolean.FALSE);
+                return new BaseResultCommand(getMessage("message.error.login.timeout",request),Boolean.FALSE);
             }
             ProcessDefInstanceDraft draft=null;
             if(id!=null){
@@ -86,12 +86,12 @@ public class ProcessDefInstanceDraftController extends BaseController {
             }
         } catch (IllegalAccessException e) {
             e.printStackTrace();
-            logger.error("保存流程草稿失败，详细异常:",e);
-            return new BaseResultCommand(getMessage("保存流程草稿失败",request),Boolean.FALSE);
+            logger.error("save",e);
+            return new BaseResultCommand(getMessage("message.processDefController.saveDraftFail",request),Boolean.FALSE);
         }catch (Exception e) {
             e.printStackTrace();
-            logger.error("保存流程草稿失败，详细异常:",e);
-            return new BaseResultCommand(getMessage("保存流程草稿失败",request),Boolean.FALSE);
+            logger.error("save",e);
+            return new BaseResultCommand(getMessage("message.processDefController.saveDraftFail",request),Boolean.FALSE);
         }
         return new BaseResultCommand(Boolean.TRUE);
     }
@@ -102,21 +102,21 @@ public class ProcessDefInstanceDraftController extends BaseController {
             Long id=parseLong(request.getParameter("id"));
             User user=userManager.getUserByUsername(request.getRemoteUser());
             if(user==null){
-                return new BaseResultCommand(getMessage("登陆超时",request),Boolean.FALSE);
+                return new BaseResultCommand(getMessage("message.error.login.timeout",request),Boolean.FALSE);
             }
             ProcessDefInstanceDraft draft=null;
             if(id!=null){
                 draft=processDefInstanceDraftManager.getProcessDefInstanceDraftById(id);
                 User creator=draft.getCreator();
                 if(creator==null && creator.getId()!=user.getId()){
-                    return new BaseResultCommand(getMessage("无操作权限",request),Boolean.FALSE);
+                    return new BaseResultCommand(getMessage("message.error.not.opt",request),Boolean.FALSE);
                 }
                 processDefInstanceDraftManager.deleteProcessDefInstanceDraft(draft.getId());
             }
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("删除流程草稿错误，详细异常:",e);
-            return new BaseResultCommand(getMessage("删除流程草稿错误",request),Boolean.FALSE);
+            logger.error("delete:",e);
+            return new BaseResultCommand(getMessage("message.processDefController.delDraftFail",request),Boolean.FALSE);
         }
         return new BaseResultCommand(Boolean.TRUE);
     }

@@ -39,6 +39,7 @@ public interface ProcessDefDao {
     Integer getProcessDefinitionCount(Map<String,Object> map);
 
     List<ProcessDef> getProcessDefByRoleId(Long roleId);
+    List<ProcessDef> getProcessDefByFormId(Long formId);
     
     
 }

@@ -23,7 +23,7 @@ import org.activiti.engine.HistoryService;
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
-import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.apache.commons.lang.BooleanUtils;
@@ -187,21 +187,21 @@ public class ProcessDefInstanceManagerImpl implements ProcessDefInstanceManager 
         }
         
         //save TaskInstance
-        List<HistoricTaskInstance> taskInstances=historyService.createHistoricTaskInstanceQuery().processInstanceId(instance.getProcessInstanceId()).finished().list();
+        List<HistoricActivityInstance> taskInstances=historyService.createHistoricActivityInstanceQuery().processInstanceId(instance.getProcessInstanceId()).finished().list();
         if(taskInstances!=null && taskInstances.size()>0){
-            for(HistoricTaskInstance historicTaskInstance:taskInstances){
+            for(HistoricActivityInstance historicTaskInstance:taskInstances){
                 TaskInstance taskInstance=new TaskInstance();
                 taskInstance.setSendEmail(BooleanUtils.toBooleanObject(ObjectUtils.toString(map.get("sendEmail"))));
                 taskInstance.setRemarks(ObjectUtils.toString(map.get("remarks")));
                 taskInstance.setStartDate(historicTaskInstance.getStartTime());
                 taskInstance.setEndDate(historicTaskInstance.getEndTime());
-                taskInstance.setName(historicTaskInstance.getName());
+                taskInstance.setName(historicTaskInstance.getActivityName());
                 taskInstance.setAssignee(user);
                 taskInstance.setInstance(defInstance);
-                taskInstance.setTaskKey(historicTaskInstance.getTaskDefinitionKey());
+                taskInstance.setTaskKey(historicTaskInstance.getActivityId());
                 taskInstance.setActTaskId(historicTaskInstance.getId());
                 taskInstance.setProcessDef(def);
-                ProcessElement element=processElementDao.getProcessElementByTaskKeyAndDefId(def.getId(),historicTaskInstance.getTaskDefinitionKey());
+                ProcessElement element=processElementDao.getProcessElementByTaskKeyAndDefId(def.getId(),historicTaskInstance.getActivityId());
                 taskInstance.setElement(element);
                 taskInstance.setCreator(user);
                 taskInstance.setLastUpdater(user);

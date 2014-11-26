@@ -81,7 +81,7 @@ Ext.define('FlexCenter.flows.view.TaskView',{
                         iconCls:'refresh',
                         scope:this,
                         handler:function(){
-                            me.down('grid').getStore().load();
+                            me.down('#assigneeGrid').getStore().load();
                         }
                     }
                 ],
@@ -204,7 +204,7 @@ Ext.define('FlexCenter.flows.view.TaskView',{
                         iconCls:'refresh',
                         scope:this,
                         handler:function(){
-                            me.down('grid').getStore().load();
+                            me.down('#candidateGrid').getStore().load();
                         }
                     }
                 ],

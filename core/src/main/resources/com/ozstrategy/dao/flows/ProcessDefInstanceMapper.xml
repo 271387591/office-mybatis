@@ -25,6 +25,10 @@
     <select id="getProcessDefInstanceByActId" resultMap="processDefInstanceResult" parameterType="string">
         select f.* from PROCESSDEFINSTANCE f where f.actInstanceId=#{actId} 
     </select>
+    <select id="getProcessDefInstanceByDefId" resultMap="processDefInstanceResult" parameterType="long">
+        select f.* from PROCESSDEFINSTANCE f where f.processDefId=#{defId} 
+    </select>
+    
     
     <select id="getNoCascadeProcessDefInstanceById" resultType="com.ozstrategy.model.flows.ProcessDefInstance" parameterType="long">
         select f.* from PROCESSDEFINSTANCE f where f.id=#{id} 
@@ -34,6 +38,20 @@
     <delete id="deleteProcessDefInstance" parameterType="long" flushCache="true">
         delete from PROCESSDEFINSTANCE where id=#{id}
     </delete>
+    <update id="updateProcessDefInstance" flushCache="true" parameterType="com.ozstrategy.model.flows.ProcessDefInstance">
+        update PROCESSDEFINSTANCE f set 
+        f.name=#{name},
+        f.title=#{title},
+        f.processDefId=#{processDef.id},
+        f.version=#{version},
+        f.actInstanceId=#{actInstanceId},
+        f.suspended=#{suspended},
+        f.startDate=#{startDate},
+        f.endDate=#{endDate},
+        f.lastUpdateDate=#{lastUpdateDate},
+        f.lastUpdaterId=#{lastUpdater.id}
+        where f.id=#{id}
+    </update>
     <insert id="saveProcessDefInstance" parameterType="com.ozstrategy.model.flows.ProcessDefInstance" flushCache="true">
         <selectKey keyColumn="id" keyProperty="id" resultType="java.lang.Long">
             select LAST_INSERT_ID()

@@ -16,7 +16,7 @@ public interface ProcessDefManager {
     List<ProcessDef> listAllProcessDefs();
     Integer listProcessDefsCount(Map<String,Object> map);
     void saveOrUpdate(ProcessDef processDef);
-    void delete(Long id);
+    void delete(ProcessDef def);
     ProcessDef getProcessDefByName(String name,Long typeId);
     Long checkNameExist(String name,Long typeId);
     ProcessDef getProcessDefById(Long id);
@@ -36,5 +36,7 @@ public interface ProcessDefManager {
     Integer getProcessDefinitionCount(Map<String,Object> map);
     
     Boolean checkProcessUseRole(Long roleId);
+    Boolean checkProcessAuthorization(Long defId);
     Boolean checkProcessRunning(String actDefId);
+    List<ProcessDef> getProcessDefByFormId(Long formId);
 }

@@ -199,7 +199,7 @@ Ext.define('FlexCenter.flows.view.TaskAssigneeView',{
         var me=this;
         var taskView=Ext.ComponentQuery.query('#taskView')[0];
         if(taskView){
-            taskView.down('grid').getStore().load();
+            taskView.reloadData();
         }
         me.close();
     },

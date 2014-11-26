@@ -103,6 +103,8 @@ var workFlowRes = {
             redrawAction: '<fmt:message key="workFlowRes.modeler.redrawAction" />',
             undo: '<fmt:message key="workFlowRes.modeler.undo" />',
             redo: '<fmt:message key="workFlowRes.modeler.redo" />',
+            cut: '<fmt:message key="workFlowRes.modeler.cut" />',
+            paste: '<fmt:message key="workFlowRes.modeler.paste" />',
             selectVertices: '<fmt:message key="workFlowRes.modeler.selectVertices" />',
             selectEdges: '<fmt:message key="workFlowRes.modeler.selectEdges" />',
             selectAll: '<fmt:message key="workFlowRes.modeler.selectAll" />',
@@ -147,6 +149,7 @@ var workFlowRes = {
             preview: '<fmt:message key="workFlowRes.modeler.preview" />',
             nodeAtt: '<fmt:message key="workFlowRes.modeler.nodeAtt" />',
             processPreview: '<fmt:message key="workFlowRes.modeler.processPreview" />',
+            startEventMsg: '<fmt:message key="workFlowRes.modeler.startEventMsg" />',
             processDesign: '<fmt:message key="workFlowRes.modeler.processDesign" />'
         },
         newProcessDefinition: {
@@ -201,6 +204,7 @@ var workFlowRes = {
             disAuthorization: '<fmt:message key="workFlowRes.processListView.disAuthorization" />',
             disAuthorizationProcessMsg: '<fmt:message key="workFlowRes.processListView.disAuthorizationProcessMsg" />',
             disAuthorizationProcessAlert: '<fmt:message key="workFlowRes.processListView.disAuthorizationProcessAlert" />',
+            deleteProcess: '<fmt:message key="workFlowRes.processListView.deleteProcess" />',
             depSuc: '<fmt:message key="workFlowRes.processListView.depSuc" />'
         },
         processUserSetter: {

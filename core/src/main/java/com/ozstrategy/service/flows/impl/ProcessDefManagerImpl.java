@@ -5,6 +5,7 @@ import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGraphModel;
 import com.ozstrategy.Constants;
 import com.ozstrategy.dao.flows.ProcessDefDao;
+import com.ozstrategy.dao.flows.ProcessDefInstanceDao;
 import com.ozstrategy.dao.flows.ProcessDefVersionDao;
 import com.ozstrategy.dao.flows.ProcessElementDao;
 import com.ozstrategy.dao.flows.ProcessElementFormDao;
@@ -15,6 +16,7 @@ import com.ozstrategy.exception.OzException;
 import com.ozstrategy.model.flows.GraphType;
 import com.ozstrategy.model.flows.ProcessDef;
 import com.ozstrategy.model.flows.ProcessDefHasType;
+import com.ozstrategy.model.flows.ProcessDefInstance;
 import com.ozstrategy.model.flows.ProcessDefVersion;
 import com.ozstrategy.model.flows.ProcessElement;
 import com.ozstrategy.model.flows.ProcessElementForm;
@@ -75,6 +77,9 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
     @Autowired
     private ProcessElementFormDao processElementFormDao;
     @Autowired
+    private ProcessDefInstanceDao processDefInstanceDao;
+    
+    @Autowired
     private ProcessDefVersionDao processDefVersionDao;
     @Autowired
     private RepositoryService repositoryService;
@@ -97,9 +102,23 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
     public void saveOrUpdate(ProcessDef processDef) {
 
     }
-
-    public void delete(Long id) {
-        processDefDao.deleteProcessDef(id);
+    @Transactional(rollbackFor = {Throwable.class})
+    public void delete(ProcessDef def) {
+        processElementFormDao.deleteProcessElementFormByDefId(def.getId());
+        processElementDao.deleteProcessElementByDefId(def.getId());
+        List<ProcessDefInstance> instances = processDefInstanceDao.getProcessDefInstanceByDefId(def.getId());
+        if(instances!=null && instances.size()>0){
+            for(ProcessDefInstance instance : instances){
+                instance.setProcessDef(null);
+                processDefInstanceDao.updateProcessDefInstance(instance);
+            }
+        }
+        ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().processDefinitionId(def.getActDefId()).singleResult();
+        if(processDefinition!=null){
+            repositoryService.deleteDeployment(processDefinition.getDeploymentId(),true);
+        }
+        repositoryService.deleteDeployment(def.getGraphResId());
+        processDefDao.deleteProcessDef(def.getId());
     }
 
     public ProcessDef getProcessDefByName(String name, Long typeId) {
@@ -446,8 +465,24 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
         return false;
     }
 
+    public Boolean checkProcessAuthorization(Long defId) {
+        List<User> users=processDefDao.getProcessDefUser(defId);
+        if(users!=null && users.size()>0){
+            return true;
+        }
+        List<Role> roles=processDefDao.getProcessDefRole(defId);
+        if(roles!=null && roles.size()>0){
+            return true;
+        }
+        return false;
+    }
+
     public Boolean checkProcessRunning(String actDefId) {
         long count = runtimeService.createProcessInstanceQuery().processDefinitionId(actDefId).count();
         return count!=0;
+    }
+
+    public List<ProcessDef> getProcessDefByFormId(Long formId) {
+        return processDefDao.getProcessDefByFormId(formId);
     }
 }

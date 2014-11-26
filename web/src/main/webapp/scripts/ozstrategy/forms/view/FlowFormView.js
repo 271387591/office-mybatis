@@ -33,9 +33,6 @@ Ext.define('FlexCenter.forms.view.FlowFormView',{
     initComponent:function(){
         var me=this;
         var store = me.getStore();
-        var sm = Ext.create('Ext.selection.CheckboxModel',{
-            mode:'SINGLE'
-        });
         var actioncolumn=[{
             iconCls:'btn-preview',
             tooltip:'预览',
@@ -74,7 +71,6 @@ Ext.define('FlexCenter.forms.view.FlowFormView',{
             {
                 xtype:'grid',
                 region:'center',
-                selModel:sm,
                 store:store,
                 border:false,
                 autoScroll: true,
@@ -260,6 +256,7 @@ Ext.define('FlexCenter.forms.view.FlowFormView',{
     onDeleteClick:function(){
         var me=this;
         var selects=me.down('grid').getSelectionModel().getSelection();
+        
         me.deleteClick(selects);
     },
 
@@ -274,37 +271,37 @@ Ext.define('FlexCenter.forms.view.FlowFormView',{
             });
             return;
         }
-        var status=selects[0].get('status');
-        var msg='确定要删除选中的表单';
-        if(status=='Active'){
-            msg='该表单已发布，可能被其他流程引用，删除会影响流程的使用，你确定要删除该表单?';
-        }
-        Ext.Array.each(selects,function(mode){
-            ids.push(mode.get("id"));
-        });
-        Ext.MessageBox.show({
-            title:'删除表单',
-            buttons:Ext.MessageBox.YESNO,
-            msg:msg,
-            icon:Ext.MessageBox.QUESTION,
-            fn:function(btn){
-                if(btn == 'yes'){
-                    ajaxPostRequest('flowFormController.do?method=multiRemove',{ids:ids},function(result){
-                        if(result.success){
-                            me.down('grid').getStore().load();
-                        }else{
-                            Ext.MessageBox.alert({
-                                title:'警告',
-                                icon: Ext.MessageBox.ERROR,
-                                msg:result.message,
-                                buttons:Ext.MessageBox.OK
+        ajaxPostRequest('flowFormController.do?method=checkFormInUse',{id:selects[0].get('id')},function(result){
+            if(result.success){
+                Ext.Msg.alert(globalRes.title.prompt,"该表单已被流程使用，不能删除。");
+            }else{
+                Ext.Array.each(selects,function(mode){
+                    ids.push(mode.get("id"));
+                });
+                Ext.MessageBox.show({
+                    title:'删除表单',
+                    buttons:Ext.MessageBox.YESNO,
+                    msg:'确定要删除选中的表单',
+                    icon:Ext.MessageBox.QUESTION,
+                    fn:function(btn){
+                        if(btn == 'yes'){
+                            ajaxPostRequest('flowFormController.do?method=multiRemove',{ids:ids},function(result){
+                                if(result.success){
+                                    me.down('grid').getStore().load();
+                                }else{
+                                    Ext.MessageBox.alert({
+                                        title:'警告',
+                                        icon: Ext.MessageBox.ERROR,
+                                        msg:result.message,
+                                        buttons:Ext.MessageBox.OK
+                                    });
+                                }
                             });
                         }
-                    });
-                }
+                    }
+                });
             }
         });
-
     },
     
     saveOrUpdate:function(data,save,win){

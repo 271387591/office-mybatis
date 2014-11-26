@@ -130,20 +130,19 @@ public class ProcessDefController extends BaseController {
 
             Long id=parseLong(request.getParameter("id"));
             if(id==null){
-                return new BaseResultCommand("ID不能为空",Boolean.FALSE);
+                return new BaseResultCommand(getMessage("message.error.id.null",request),Boolean.FALSE);
             }
             ProcessDef def=processDefManager.getProcessDefById(id);
             if(def==null){
-                return new BaseResultCommand("流程不存在",Boolean.FALSE);
+                return new BaseResultCommand(getMessage("message.processDefController.processNotExist",request),Boolean.FALSE);
             }
-            def.setEnabled(false);
-            processDefManager.delete(def.getId());
+            processDefManager.delete(def);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("删除流程失败，详细异常:",e);
-            return new BaseResultCommand(getMessage("message.error.saveuser.fail",request),Boolean.FALSE);
+            logger.error("delete:",e);
+            return new BaseResultCommand(getMessage("message.processDefController.delProcessFail",request),Boolean.FALSE);
         }
-        return new BaseResultCommand(getMessage("message.error.saveuser.fail",request),Boolean.TRUE);
+        return new BaseResultCommand("",Boolean.TRUE);
     }
     @RequestMapping(params = "method=save")
     @ResponseBody
@@ -158,24 +157,24 @@ public class ProcessDefController extends BaseController {
             if(StringUtils.isNotEmpty(formId)){
                 def.setFlowForm(flowFormManager.getNoCascadeFlowFormById(parseLong(formId)));
                 if(def.getFlowForm()==null){
-                    return new BaseResultCommand(getMessage("流程表单已删除",request),Boolean.FALSE);
+                    return new BaseResultCommand(getMessage(getMessage("message.processDefController.delProcessForm",request),request),Boolean.FALSE);
                 }
             }
             processDefManager.save(def);
         } catch (InvocationTargetException e) {
             e.printStackTrace();
-            logger.error("保存流程失败，详细异常:",e);
-            return new BaseResultCommand(getMessage("保存流程失败",request),Boolean.FALSE);
+            logger.error("save:",e);
+            return new BaseResultCommand(getMessage(getMessage("message.processDefController.saveProcessFail",request),request),Boolean.FALSE);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
-            logger.error("保存流程失败，详细异常:",e);
-            return new BaseResultCommand(getMessage("保存流程失败",request),Boolean.FALSE);
+            logger.error("save:",e);
+            return new BaseResultCommand(getMessage(getMessage("message.processDefController.saveProcessFail",request),request),Boolean.FALSE);
         }catch (Exception e) {
             e.printStackTrace();
-            logger.error("保存流程失败，详细异常:",e);
-            return new BaseResultCommand(getMessage("保存流程失败",request),Boolean.FALSE);
+            logger.error("save:",e);
+            return new BaseResultCommand(getMessage(getMessage("message.processDefController.saveProcessFail",request),request),Boolean.FALSE);
         }
-        return new BaseResultCommand(getMessage("保存流程失败",request),Boolean.TRUE);
+        return new BaseResultCommand(getMessage("",request),Boolean.TRUE);
     }
     
     @RequestMapping(params = "method=update")
@@ -188,13 +187,13 @@ public class ProcessDefController extends BaseController {
             String name=request.getParameter("name");
             Long globalTypeId=parseLong(request.getParameter("globalTypeId"));
             if(id==null){
-                return new BaseResultCommand("流程不存在",Boolean.FALSE); 
+                return new BaseResultCommand(getMessage("message.processDefController.processNotExist",request),Boolean.FALSE); 
             }
             ProcessDef def = processDefManager.getProcessDefById(id);
             if(StringUtils.isNotEmpty(name) && globalTypeId!=null){
                 Long checkId= processDefManager.checkNameExist(name,globalTypeId);
                 if(checkId!=null && checkId!=id && globalTypeId==def.getGlobalTypeId()){
-                    return new BaseResultCommand("流程名称已经存在",Boolean.FALSE);
+                    return new BaseResultCommand(getMessage("message.processDefController.processExist",request),Boolean.FALSE);
                 }
             }
             BeanUtils.populate(def, map);
@@ -202,24 +201,24 @@ public class ProcessDefController extends BaseController {
             if(formId!=null){
                 def.setFlowForm(flowFormManager.getNoCascadeFlowFormById(formId));
                 if(def.getFlowForm()==null){
-                    return new BaseResultCommand(getMessage("流程表单已删除",request),Boolean.FALSE);
+                    return new BaseResultCommand(getMessage(getMessage("message.processDefController.delProcessForm",request),request),Boolean.FALSE);
                 }
             }
             
             processDefManager.update(def, graRes);
         } catch (IOException e) {
             e.printStackTrace();
-            logger.error("解析流程数据错误",e);
-            return new BaseResultCommand("解析流程数据错误",Boolean.FALSE);
+            logger.error("update:",e);
+            return new BaseResultCommand(getMessage("message.error.resolving.fail",request),Boolean.FALSE);
         } catch (OzException e) {
             e.printStackTrace();
             return new BaseResultCommand(getMessage(e.getKey(),request),Boolean.FALSE);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("保存流程失败，详细异常:",e);
-            return new BaseResultCommand("保存流程失败",Boolean.FALSE);
+            logger.error("update",e);
+            return new BaseResultCommand(getMessage("message.processDefController.saveProcessFail",request),Boolean.FALSE);
         } 
-        return new BaseResultCommand("保存流程失败",Boolean.TRUE);
+        return new BaseResultCommand("",Boolean.TRUE);
     }
     @RequestMapping(params = "method=getRes")
     @ResponseBody
@@ -240,8 +239,8 @@ public class ProcessDefController extends BaseController {
             }
         }catch (Exception e) {
             e.printStackTrace();
-            logger.error("获取流程资源失败", e);
-            return new BaseResultCommand("获取流程资源失败",Boolean.FALSE);
+            logger.error("getRes", e);
+            return new BaseResultCommand(getMessage("message.error.resource.fail",request),Boolean.FALSE);
         }
         return new BaseResultCommand(map);
     }
@@ -263,8 +262,8 @@ public class ProcessDefController extends BaseController {
             return new BaseResultCommand(getMessage(e.getKey(),request),Boolean.FALSE);
         }catch (Exception e) {
             e.printStackTrace();
-            logger.error("获取流程资源失败",e);
-            return new BaseResultCommand("获取流程资源失败",Boolean.FALSE);
+            logger.error("deploy",e);
+            return new BaseResultCommand(getMessage("message.error.resource.fail",request),Boolean.FALSE);
         } 
         return new BaseResultCommand(map);
     }
@@ -279,9 +278,34 @@ public class ProcessDefController extends BaseController {
         }catch (Exception e) {
             e.printStackTrace();
             logger.error("checkProcessRunning fail",e);
-            return new BaseResultCommand("查询失败",Boolean.TRUE);
+            return new BaseResultCommand(getMessage("message.error.query.fail",request),Boolean.TRUE);
         } 
     }
+    @RequestMapping(params = "method=checkProcessUsing")
+    @ResponseBody
+    public BaseResultCommand checkProcessUsing(HttpServletRequest request){
+        try {
+            String actDefId=request.getParameter("actDefId");
+            String defId=request.getParameter("defId");
+            Long dId=parseLong(defId);
+            if(dId!=null){
+                Boolean author=processDefManager.checkProcessAuthorization(dId);
+                if(author){
+                    return new BaseResultCommand(getMessage("message.processDefController.checkProcessUsing",request),author);
+                }
+            }
+            Boolean running=processDefManager.checkProcessRunning(actDefId);
+            if(running){
+                return new BaseResultCommand(getMessage("message.processDefController.checkProcessRunning",request),running);
+            }
+            return new BaseResultCommand("",Boolean.FALSE);
+        }catch (Exception e) {
+            e.printStackTrace();
+            logger.error("checkProcessUsing fail",e);
+            return new BaseResultCommand(getMessage("message.error.query.fail",request),Boolean.TRUE);
+        } 
+    }
+    
     
     @RequestMapping(params = "method=authorization")
     @ResponseBody
@@ -322,8 +346,8 @@ public class ProcessDefController extends BaseController {
                 }
             }
         }catch (Exception e) {
-            logger.error("流程授权失败",e);
-            return new BaseResultCommand("流程授权失败",Boolean.FALSE);
+            logger.error("authorization",e);
+            return new BaseResultCommand(getMessage("message.processDefController.authorization",request),Boolean.FALSE);
         } 
         return new BaseResultCommand(map);
     }
@@ -340,8 +364,8 @@ public class ProcessDefController extends BaseController {
                 }
             }
         }catch (Exception e) {
-            logger.error("流程授权失败",e);
-            return new BaseResultCommand("流程授权失败",Boolean.FALSE);
+            logger.error("disAuthorization",e);
+            return new BaseResultCommand(getMessage("message.processDefController.disAuthorization",request),Boolean.FALSE);
         } 
         return new BaseResultCommand(map);
     }

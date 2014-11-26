@@ -29,9 +29,7 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
     },
     initComponent: function () {
         var me = this;
-        var store=me.getStore(),sm=Ext.create('Ext.selection.CheckboxModel',{
-            mode:'SINGLE'
-        });
+        var store=me.getStore();
         var actioncolumn=[{
             iconCls:'btn-preview',
             tooltip:workFlowRes.readdocument,
@@ -90,7 +88,6 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
             {
                 xtype:'grid',
                 region:'center',
-                selModel:sm,
                 itemId:'processListViewGrid',
                 store:store,
                 autoScroll: true,
@@ -109,12 +106,10 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
                         xtype: 'button',
                         frame: true,
                         text: globalRes.buttons.remove,
-                        iconCls: 'table-add',
+                        iconCls: 'table-delete',
                         scope: this,
                         plugins: Ext.create('Oz.access.RoleAccess', {featureName:'deleteProcess',mode:'hide',byPass:globalRes.isAdmin}),
-                        handler: function(){
-                            me.onUpdateClick();
-                        }
+                        handler: me.onDeleteClick
                     },
                     {
                         xtype:'button',
@@ -153,9 +148,6 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
                     }
                 ],
                 columns:[
-//                    {
-//                        xtype:'rownumber'
-//                    },
                     {
                         header: workFlowRes.header.flowName,
                         flex:1,
@@ -272,9 +264,9 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
             });
             return;
         }
-        Ext.Msg.confirm(workFlowRes.processListView.disAuthorization,Ext.String.format(workFlowRes.processListView.disAuthorizationProcessAlert,rec.get('name')),function(txt){
+        Ext.Msg.confirm(workFlowRes.processListView.disAuthorization,Ext.String.format(workFlowRes.processListView.disAuthorizationProcessAlert,record.get('name')),function(txt){
             if(txt==='yes'){
-                ajaxPostRequest('processDefController.do?method=disAuthorization',{id:rec.get('id')},function(result){
+                ajaxPostRequest('processDefController.do?method=disAuthorization',{id:record.get('id')},function(result){
                     if(result.success){
                         store.load();
                     }else{
@@ -357,15 +349,25 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
             return;
         }
         var rec=selection[0];
-        ajaxPostRequest('processDefController.do?method=delete',{id:rec.get('id')},function(result){
+        ajaxPostRequest('processDefController.do?method=checkProcessUsing',{actDefId:rec.get('actDefId'),defId:rec.get('id')},function(result){
             if(result.success){
-                me.down('grid').getStore().load();
+                Ext.Msg.alert(globalRes.title.prompt,result.message);
             }else{
-                Ext.MessageBox.alert({
-                    title:globalRes.title.warning,
-                    icon: Ext.MessageBox.ERROR,
-                    msg:result.message,
-                    buttons:Ext.MessageBox.OK
+                Ext.Msg.confirm(globalRes.buttons.remove,Ext.String.format(workFlowRes.processListView.deleteProcess,rec.get('name')),function(txt){
+                    if(txt==='yes'){
+                        ajaxPostRequest('processDefController.do?method=delete',{id:rec.get('id')},function(result){
+                            if(result.success){
+                                me.down('grid').getStore().load();
+                            }else{
+                                Ext.MessageBox.alert({
+                                    title:globalRes.title.warning,
+                                    icon: Ext.MessageBox.ERROR,
+                                    msg:result.message,
+                                    buttons:Ext.MessageBox.OK
+                                });
+                            }
+                        });
+                    }
                 });
             }
         });

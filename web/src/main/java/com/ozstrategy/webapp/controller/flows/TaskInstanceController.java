@@ -45,9 +45,9 @@ public class TaskInstanceController extends BaseController{
             return new JsonReaderResponse<TaskInstanceCommand>(commands);
             
         }catch (Exception e){
-            logger.error("获取TaskInstance异常",e);
+            logger.error("TaskInstance",e);
         }
-        return new JsonReaderResponse<TaskInstanceCommand>(Collections.<TaskInstanceCommand>emptyList(),true,"获取数据失败");
+        return new JsonReaderResponse<TaskInstanceCommand>(Collections.<TaskInstanceCommand>emptyList(),true,getMessage("message.error.getRes.fail",request));
     }
     @RequestMapping(params = "method=listTaskInstanceRecords")
     @ResponseBody
@@ -55,7 +55,7 @@ public class TaskInstanceController extends BaseController{
         try{
             String username=request.getRemoteUser();
             if(StringUtils.isEmpty(username)){
-                return  new JsonReaderResponse<TaskInstanceCommand>(Collections.<TaskInstanceCommand>emptyList(),true,"登陆超时");
+                return  new JsonReaderResponse<TaskInstanceCommand>(Collections.<TaskInstanceCommand>emptyList(),true,getMessage("message.error.login.timeout",request));
             }
             User user=userManager.getUserByUsername(username);
             Map<String,Object> map=requestMap(request);
@@ -71,8 +71,8 @@ public class TaskInstanceController extends BaseController{
             return new JsonReaderResponse<TaskInstanceCommand>(commands,Boolean.TRUE,count,"");
 
         }catch (Exception e){
-            logger.error("获取TaskInstance异常",e);
+            logger.error("TaskInstance",e);
         }
-        return new JsonReaderResponse<TaskInstanceCommand>(Collections.<TaskInstanceCommand>emptyList(),true,"获取数据失败");
+        return new JsonReaderResponse<TaskInstanceCommand>(Collections.<TaskInstanceCommand>emptyList(),true,getMessage("message.error.getRes.fail",request));
     }
 }

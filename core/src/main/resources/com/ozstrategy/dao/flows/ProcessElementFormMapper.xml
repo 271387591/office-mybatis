@@ -37,7 +37,7 @@
         delete from PROCESSELEMENTFORM where processElementId=#{processElementId}
     </delete>
     <delete id="deleteProcessElementFormByDefId" parameterType="long" flushCache="true">
-        delete from PROCESSELEMENTFORM where processDefId=#{processElementId}
+        delete from PROCESSELEMENTFORM where processDefId=#{defId}
     </delete>
     <update id="updateProcessElementForm" parameterType="com.ozstrategy.model.flows.ProcessElementForm" flushCache="true">
         update PROCESSELEMENTFORM f set 

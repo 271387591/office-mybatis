@@ -1,5 +1,6 @@
 package com.ozstrategy.webapp.controller.flows;
 
+import com.ozstrategy.exception.OzException;
 import com.ozstrategy.model.flows.ProcessDef;
 import com.ozstrategy.model.userrole.User;
 import com.ozstrategy.service.flows.ProcessDefInstanceManager;
@@ -36,7 +37,7 @@ public class ProcessDefInstanceController extends BaseController{
         String username=request.getRemoteUser();
         User user=userManager.getUserByUsername(username);
         if(user==null){
-            return new BaseResultCommand(getMessage("登陆超时",request),Boolean.FALSE);
+            return new BaseResultCommand(getMessage("message.error.login.timeout",request),Boolean.FALSE);
         }
         Long defId=parseLong(request.getParameter("processDefId"));
         ProcessDef def=null;
@@ -44,14 +45,17 @@ public class ProcessDefInstanceController extends BaseController{
             def=processDefManager.getProcessDefById(defId);
         }
         if(def==null){
-            return  new BaseResultCommand(getMessage("获取流程失败",request),Boolean.FALSE);
+            return  new BaseResultCommand(getMessage("message.processDefController.processNotExist",request),Boolean.FALSE);
         }
         Map<String,Object> map=requestMap(request);
         try {
-            processDefInstanceManager.runStartNoneEventPro(user,def,map);
+            processDefInstanceManager.runStartNoneEventPro(user, def, map);
+        }catch (OzException ex){
+            logger.error("runStartNoneEvent",ex);
+            return new BaseResultCommand(getMessage(ex.getKey(),request),Boolean.FALSE); 
         } catch (Exception e) {
-            logger.error("启动流程失败",e);
-            return new BaseResultCommand("启动流程失败",Boolean.FALSE);
+            logger.error("runStartNoneEvent:",e);
+            return new BaseResultCommand(getMessage("message.processDefController.startProcessFail",request),Boolean.FALSE);
         }
         return new BaseResultCommand("",Boolean.TRUE);
     }

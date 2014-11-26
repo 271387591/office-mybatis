@@ -2,7 +2,6 @@ package com.ozstrategy.webapp.controller.flows;
 
 import com.ozstrategy.model.flows.ProcessInstanceHistory;
 import com.ozstrategy.service.flows.ProcessInstanceHistoryManager;
-import com.ozstrategy.service.userrole.UserManager;
 import com.ozstrategy.webapp.command.JsonReaderResponse;
 import com.ozstrategy.webapp.controller.BaseController;
 import org.apache.commons.lang.StringUtils;
@@ -35,16 +34,16 @@ public class ProcessInstanceHistoryController extends BaseController {
             Map<String,Object> map=requestMap(request);
             map.put("userId",username);
             if(StringUtils.isEmpty(username)){
-                return new JsonReaderResponse<ProcessInstanceHistory>(Collections.<ProcessInstanceHistory>emptyList(),Boolean.FALSE,"登陆超时");
+                return new JsonReaderResponse<ProcessInstanceHistory>(Collections.<ProcessInstanceHistory>emptyList(),Boolean.FALSE,getMessage("message.error.login.timeout",request));
             }
             List<ProcessInstanceHistory> items= processInstanceHistoryManager.listProcessInstanceHistories(map, parseInteger(start), parseInteger(limit));
             Integer count=processInstanceHistoryManager.listProcessInstanceHistoriesCount(map);
             return new JsonReaderResponse<ProcessInstanceHistory>(items,count);
         }catch (Exception e){
             e.printStackTrace();
-            logger.error("获取ProcessInstanceHistory失败",e);
+            logger.error("listProcessInstanceHistory",e);
         }
-        return new JsonReaderResponse<ProcessInstanceHistory>(Collections.<ProcessInstanceHistory>emptyList(),Boolean.FALSE,"获取数据失败");
+        return new JsonReaderResponse<ProcessInstanceHistory>(Collections.<ProcessInstanceHistory>emptyList(),Boolean.FALSE,getMessage("message.error.getRes.fail",request));
     }
     
 }

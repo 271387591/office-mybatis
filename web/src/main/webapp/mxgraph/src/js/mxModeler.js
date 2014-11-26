@@ -101,25 +101,25 @@ mxModeler.prototype.addMenu=function(graph,editor){
     graph.panningHandler.factoryMethod = function(menu, cell, evt)
     {
         var selected = !graph.isSelectionEmpty();
-        menu.addItem('撤销', null, function(){
+        menu.addItem(workFlowRes.modeler.undo, null, function(){
             editor.execute('undo');
         },null,'undo');
         menu.addSeparator();
-        menu.addItem('剪切', null, function(){
+        menu.addItem(workFlowRes.modeler.cut, null, function(){
             editor.execute('cut');
         },null,'cut',selected);
-        menu.addItem('复制', null, function(){
+        menu.addItem(globalRes.buttons.duplicate, null, function(){
             editor.execute('copy');
         },null,'copy',selected);
-        menu.addItem('粘贴', null, function(){
+        menu.addItem(workFlowRes.modeler.paste, null, function(){
             editor.execute('paste');
         },null,'paste');
         menu.addSeparator();
-        menu.addItem('删除', null, function(){
+        menu.addItem(workFlowRes.deleteFlow, null, function(){
             editor.execute('delete');
         },null,'delete',selected);
         menu.addSeparator();
-        menu.addItem('编辑', null, function(){
+        menu.addItem(globalRes.buttons.edit, null, function(){
             graph.startEditing();
         },null,'edit',selected);
     };
@@ -267,11 +267,11 @@ mxModeler.prototype.overrideGraph = function(graph,editor)
     var  validateConnection=mxConnectionHandler.prototype.validateConnection;
     mxConnectionHandler.prototype.validateConnection=function(source, target){
         if(parent && !parent.value && source && (source.value.getAttribute('type')=='startEvent') && (source.edges!=null) && source.edges.length>0){
-            Ext.Msg.alert('验证','主流程开始节点后只能存在一个任务节点。');
+            Ext.Msg.alert(globalRes.title.prompt,workFlowRes.modeler.startEventMsg);
             return source;
         }
         if(parent && !parent.value && source && (source.value.getAttribute('type')=='startEvent') && (target && target.value.getAttribute('tasktype')=='Countersign')){
-            Ext.Msg.alert('验证','主流程第一个任务点不能设置为会签任务。');
+            Ext.Msg.alert(globalRes.title.prompt,workFlowRes.modeler.countersignMsg);
             return source;
         }
         if(parent && !parent.value && source && (source.value.getAttribute('type')=='startEvent') && (target && target.value.getAttribute('usertaskassignment'))){

@@ -1,7 +1,9 @@
 package com.ozstrategy.webapp.controller.forms;
 
+import com.ozstrategy.model.flows.ProcessDef;
 import com.ozstrategy.model.forms.FlowForm;
 import com.ozstrategy.model.forms.FlowFormStatus;
+import com.ozstrategy.service.flows.ProcessDefManager;
 import com.ozstrategy.service.forms.FlowFormManager;
 import com.ozstrategy.webapp.command.BaseResultCommand;
 import com.ozstrategy.webapp.command.JsonReaderResponse;
@@ -27,6 +29,9 @@ import java.util.Map;
 public class FlowFormController extends BaseController{
     @Autowired
     private FlowFormManager flowFormManager;
+    @Autowired
+    private ProcessDefManager processDefManager;
+    
     @RequestMapping(params = "method=listFlowForms")
     @ResponseBody
     public JsonReaderResponse<FlowFormCommand> listFlowForms(HttpServletRequest request) {
@@ -56,6 +61,19 @@ public class FlowFormController extends BaseController{
         }
         return new BaseResultCommand("",true);
     }
+    @RequestMapping(params = "method=checkFormInUse")
+    @ResponseBody
+    public BaseResultCommand checkFormInUse(HttpServletRequest request){
+        String id=request.getParameter("id");
+        Long fId=parseLong(id);
+        if(fId!=null){
+            List<ProcessDef> processDefs=processDefManager.getProcessDefByFormId(fId);
+            Boolean use= processDefs!=null && processDefs.size()>0;
+            new BaseResultCommand("",use); 
+        }
+        return new BaseResultCommand("",true);
+    }
+    
     @RequestMapping(params = "method=save")
     @ResponseBody
     public BaseResultCommand save(HttpServletRequest request){
@@ -74,8 +92,8 @@ public class FlowFormController extends BaseController{
             try{
                 flowFormManager.multiRemove(ids.split(","));
             }catch (Exception e){
-                logger.error("删除流程失败",e);
-                return new BaseResultCommand("删除流程失败",false);
+                logger.error("multiRemove",e);
+                return new BaseResultCommand(getMessage("message.processDefController.delFormFail",request),false);
             }
             return new BaseResultCommand("",true);
         }
@@ -89,8 +107,8 @@ public class FlowFormController extends BaseController{
             try{
                 flowFormManager.publish(ids.split(","));
             }catch (Exception e){
-                logger.error("发布流程失败",e);
-                return new BaseResultCommand("发布流程失败",false);
+                logger.error("publish",e);
+                return new BaseResultCommand(getMessage("message.processDefController.publish",request),false);
             }
             ;
             return new BaseResultCommand("",true);
@@ -111,13 +129,13 @@ public class FlowFormController extends BaseController{
             if(StringUtils.isNotEmpty(id)){
                 flowForm=flowFormManager.getFlowFormByName(name);
                 if(flowForm!=null && StringUtils.equals(name,flowForm.getName()) && parseLong(id)!=flowForm.getId()){
-                    return new BaseResultCommand(getMessage("message.error.getMobileUser.exist",request),Boolean.FALSE);
+                    return new BaseResultCommand(getMessage("message.error.name.exist",request),Boolean.FALSE);
                 }
                 flowForm=flowFormManager.getFlowFormById(parseLong(id));
             }else{
                 flowForm=flowFormManager.getFlowFormByName(name);
                 if(flowForm!=null){
-                    return new BaseResultCommand(getMessage("message.error.getMobileUser.exist",request),Boolean.FALSE);
+                    return new BaseResultCommand(getMessage("message.error.name.exist",request),Boolean.FALSE);
                 }
                 flowForm=new FlowForm();
                 flowForm.setCreateDate(new Date());

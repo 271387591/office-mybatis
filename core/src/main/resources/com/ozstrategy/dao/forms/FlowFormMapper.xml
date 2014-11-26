@@ -33,12 +33,14 @@
     <select id="getFlowFormByName" resultMap="flowFormResult" parameterType="string">
         select * from FlowForm f where f.name=#{name} and f.enabled=1 
     </select>
-    <update id="deleteFlowForm" parameterType="long" flushCache="true">
-        update FlowForm u set u.enabled=0 where u.id=#{id}
-    </update>
+    
     <update id="publish" parameterType="long" flushCache="true">
         update FlowForm u set u.status='Active' where u.id=#{id}
     </update>
+    <delete id="deleteFlowForm" parameterType="long" flushCache="true">
+        DELETE FROM FlowForm WHERE id=#{id}
+    </delete>
+    
     
     <update id="updateFlowForm" parameterType="com.ozstrategy.model.forms.FlowForm" flushCache="true">
         update FlowForm f set 

@@ -122,7 +122,7 @@ Ext.define('FlexCenter.user.view.RoleView',{
       ajaxPostRequest('userRoleController.do?method=readAvailableFeature',undefined,function(result){
           if(result.success){
               var availableRoleStore=Ext.create('FlexCenter.user.store.AllFeatures', {
-                  storeId:'readAvailableFeature',
+                  storeId:'readAvailableFeatureAdd',
                   data:result,
                   proxy: {
                       type: 'memory',
@@ -180,8 +180,14 @@ Ext.define('FlexCenter.user.view.RoleView',{
       ajaxPostRequest('userRoleController.do?method=readAvailableFeature',undefined,function(result){
           if(result.success){
               var availableRoleStore=Ext.create('FlexCenter.user.store.AllFeatures', {
-                  storeId:'readAvailableFeature',
+                  storeId:'readAvailableFeatureEdit',
                   data:result,
+                  sorters: [
+                      {
+                          property: 'criteria',
+                          direction: 'DESC'
+                      }
+                  ],
                   proxy: {
                       type: 'memory',
                       reader: {

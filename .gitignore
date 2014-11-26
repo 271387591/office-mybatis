@@ -4,6 +4,7 @@
 /office-mybatis/web/target/
 /office/core/log/
 /office/web/log/
+/office-mybatis/web/src/main/webapp/attachFiles/
 /core/target/
 /web/target/
 *.iml

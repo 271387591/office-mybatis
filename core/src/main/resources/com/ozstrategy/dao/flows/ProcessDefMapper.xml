@@ -81,6 +81,11 @@
         select r.* from PROCESSDEF r join PROCESSDEF_ROLE p on r.id=p.processDefId where p.roleId=#{roleId}
     </select>
     
+    <select id="getProcessDefByFormId" resultType="com.ozstrategy.model.flows.ProcessDef" parameterType="long">
+        select r.* from PROCESSDEF r where r.flowFormId=#{flowFormId}
+    </select>
+    
+    
     
     <insert id="saveProcessDefUser" parameterType="Map" flushCache="true">
         insert into PROCESSDEF_USER(userId,processDefId) values (#{userId},#{id})
@@ -93,6 +98,9 @@
     </delete>
     <delete id="deleteProcessDefRole" parameterType="long" flushCache="true">
         delete from PROCESSDEF_ROLE where processDefId=#{id}
+    </delete>
+    <delete id="deleteProcessDef" parameterType="long" flushCache="true">
+        DELETE from PROCESSDEF WHERE id=#{id}
     </delete>
     
     
@@ -113,9 +121,6 @@
         f.hasType=#{hasType,typeHandler=org.apache.ibatis.type.EnumTypeHandler} , 
         f.lastUpdateDate=#{lastUpdateDate} 
         where f.id=#{id}
-    </update>
-    <update id="deleteProcessDef" parameterType="long" flushCache="true">
-        update PROCESSDEF u set u.enabled=0 where u.id=#{id}
     </update>
     <insert id="saveProcessDef" parameterType="Map" flushCache="true">
         <selectKey keyColumn="id" keyProperty="id" resultType="java.lang.Long">
