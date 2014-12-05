@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ozstrategy.dao.flows.ProcessDefInstanceDao;
 import com.ozstrategy.model.flows.ProcessDefInstance;
 import com.ozstrategy.model.system.SystemMessage;
+import com.ozstrategy.model.system.SystemMessageType;
 import com.ozstrategy.model.userrole.User;
 import com.ozstrategy.service.flows.TaskCreateService;
 import com.ozstrategy.service.system.SystemMessageManager;
@@ -25,7 +26,6 @@ import javax.jms.Message;
 import javax.jms.Session;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -60,41 +60,40 @@ public class TaskCreateServiceImpl implements TaskCreateService {
             String instanceTitle=processDefInstance!=null?processDefInstance.getTitle():"";
 
             String assignee=delegateTask.getAssignee();
-            Set<String> users=new HashSet<String>();
             if(StringUtils.isNotEmpty(assignee)){
-                users.add(assignee);
+                saveMessage(assignee,taskName,starter,startTime,instanceTitle,"assignee");
             }
             Set<IdentityLink> candidates= delegateTask.getCandidates();
             if(candidates!=null && candidates.size()>0){
                 for(IdentityLink link:candidates){
-                    users.add(link.getUserId());
-                }
-            }
-            if(users.size()>0){
-                for(String username:users){
-                    final SystemMessage message=new SystemMessage();
-                    message.setCreateDate(new Date());
-                    message.setLastUpdateDate(new Date());
-                    User user=userManager.getUserByUsername(username);
-                    message.setReceiver(user);
-                    Map<String,Object> map=new HashMap<String, Object>();
-                    map.put("userFullName",user.getFullName());
-                    map.put("taskName",taskName);
-                    map.put("starter",starter);
-                    map.put("startTime",startTime);
-                    map.put("instanceTitle",instanceTitle);
-                    String content=new ObjectMapper().writeValueAsString(map);
-                    message.setContent(content);
-                    systemMessageManager.save(message);
-                    jmsTemplate.send(destination,new MessageCreator() {
-                        public Message createMessage(Session session) throws JMSException {
-                            return session.createObjectMessage(message);
-                        }
-                    });
+                    saveMessage(link.getUserId(),taskName,starter,startTime,instanceTitle,"candidates");
                 }
             }
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+    private void saveMessage(String username,String taskName,String starter,String startTime,String instanceTitle,String type) throws Exception{
+        final SystemMessage message=new SystemMessage();
+        message.setCreateDate(new Date());
+        message.setLastUpdateDate(new Date());
+        message.setType(SystemMessageType.WorkFlow);
+        User user=userManager.getUserByUsername(username);
+        message.setReceiver(user);
+        Map<String,Object> map=new HashMap<String, Object>();
+        map.put("userFullName",user.getFullName());
+        map.put("taskName",taskName);
+        map.put("starter",starter);
+        map.put("startTime",startTime);
+        map.put("instanceTitle",instanceTitle);
+        map.put("type",type);
+        String content=new ObjectMapper().writeValueAsString(map);
+        message.setContent(content);
+        systemMessageManager.save(message);
+        jmsTemplate.send(destination,new MessageCreator() {
+            public Message createMessage(Session session) throws JMSException {
+                return session.createObjectMessage(message);
+            }
+        });
     }
 }

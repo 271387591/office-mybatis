@@ -1,7 +1,10 @@
 package com.ozstrategy.webapp.controller.flows;
 
+import com.ozstrategy.model.flows.ProcessDef;
 import com.ozstrategy.model.flows.ProcessInstanceHistory;
+import com.ozstrategy.service.flows.ProcessDefManager;
 import com.ozstrategy.service.flows.ProcessInstanceHistoryManager;
+import com.ozstrategy.webapp.command.BaseResultCommand;
 import com.ozstrategy.webapp.command.JsonReaderResponse;
 import com.ozstrategy.webapp.controller.BaseController;
 import org.apache.commons.lang.StringUtils;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +27,9 @@ import java.util.Map;
 public class ProcessInstanceHistoryController extends BaseController {
     @Autowired
     private ProcessInstanceHistoryManager processInstanceHistoryManager;
+    @Autowired
+    private ProcessDefManager processDefManager;
+    
     
     @RequestMapping(params = "method=listProcessInstanceHistories")
     @ResponseBody
@@ -44,6 +51,32 @@ public class ProcessInstanceHistoryController extends BaseController {
             logger.error("listProcessInstanceHistory",e);
         }
         return new JsonReaderResponse<ProcessInstanceHistory>(Collections.<ProcessInstanceHistory>emptyList(),Boolean.FALSE,getMessage("message.error.getRes.fail",request));
+    }
+    @RequestMapping(params = "method=getFormHtml")
+    @ResponseBody
+    public BaseResultCommand getFormHtml(HttpServletRequest request){
+        String actInstanceId=request.getParameter("actInstanceId");
+        String processDefId=request.getParameter("processDefId");
+        Map<String,Object> map=new HashMap<String, Object>();
+        try{
+            Long defId=parseLong(processDefId);
+            if(defId!=null){
+                ProcessDef processDef=processDefManager.getProcessDefById(defId);
+                if(processDef!=null){
+                    String content=processDef.getFlowForm()!=null?processDef.getFlowForm().getContent():null;
+                    map.put("formHtml",content);
+                }
+            }
+            if(StringUtils.isNotEmpty(actInstanceId)){
+                map.put("formValue",processInstanceHistoryManager.getHisVariables(actInstanceId));
+            }
+            return new BaseResultCommand(map);
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.error("getFormHtml",e);
+        }
+        
+        return new BaseResultCommand(getMessage("message.error.getRes.fail",request),Boolean.FALSE);
     }
     
 }

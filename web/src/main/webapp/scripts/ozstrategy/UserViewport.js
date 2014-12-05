@@ -77,14 +77,13 @@ Ext.define('FlexCenter.UserViewport', {
                 xtype: 'panel',
                 region: 'south',
                 border:false,
-                
                 items:[
                     {
                         xtype:'toolbar',
                         height: 25,
                         border:false,
                         items:[
-                            messageTip
+                            //messageTip
                         ]
                         
                     }

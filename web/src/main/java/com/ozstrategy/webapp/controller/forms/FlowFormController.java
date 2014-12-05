@@ -69,7 +69,7 @@ public class FlowFormController extends BaseController{
         if(fId!=null){
             List<ProcessDef> processDefs=processDefManager.getProcessDefByFormId(fId);
             Boolean use= processDefs!=null && processDefs.size()>0;
-            new BaseResultCommand("",use); 
+            return new BaseResultCommand("",use); 
         }
         return new BaseResultCommand("",true);
     }

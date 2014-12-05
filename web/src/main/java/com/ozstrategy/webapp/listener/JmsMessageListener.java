@@ -5,7 +5,6 @@ import nl.justobjects.pushlet.core.Dispatcher;
 import nl.justobjects.pushlet.core.Event;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import java.net.URLEncoder;
 
@@ -20,10 +19,11 @@ public class JmsMessageListener {
             if(message instanceof SystemMessage){
                 SystemMessage systemMessage=(SystemMessage)message;
                 String username=systemMessage.getReceiver().getUsername();
-                String html= VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "systemMessage/systemMessageTemplete.vm", "UTF-8", systemMessage.getContentMap());
-                html= URLEncoder.encode(html, "UTF-8");
+//                String html= VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "systemMessage/systemMessageTemplete.vm", "UTF-8", systemMessage.getContentMap());
+//                html= URLEncoder.encode(html, "UTF-8");
+                String content= URLEncoder.encode(systemMessage.getContent(), "UTF-8");
                 Event systemEvent = Event.createDataEvent("/systemMessage?username="+username);
-                systemEvent.setField(username, html);
+                systemEvent.setField(username, content);
                 Dispatcher.getInstance().multicast(systemEvent);
             }
             

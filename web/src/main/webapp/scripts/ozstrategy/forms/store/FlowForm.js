@@ -4,11 +4,9 @@
 Ext.define('FlexCenter.forms.store.FlowForm', {
     extend: 'Ext.data.Store',
     alias: 'store.flowForm',
-
     requires: [
         'FlexCenter.forms.model.FlowForm'
     ],
-
     model: 'FlexCenter.forms.model.FlowForm',
     pageSize: 20,
     autoLoad:false,
@@ -19,10 +17,6 @@ Ext.define('FlexCenter.forms.store.FlowForm', {
             root : 'data',
             totalProperty  : 'total',
             messageProperty: 'message'
-        },
-        writer: {
-            writeAllFields: true,
-            root: 'data'
         },
         listeners: {
             exception: function(proxy, response, operation) {

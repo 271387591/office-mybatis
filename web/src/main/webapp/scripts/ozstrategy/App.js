@@ -68,10 +68,10 @@ Ext.define('FlexCenter.App', {
           shortcutDataArray.push({ name:userRoleRes.title, iconCls:'manageUser-shortcut', module:'unitUserView' });
       }
       if(globalRes.isAdmin || (accessRes.showSystemDataManager)){
-          shortcutDataArray.push({ name:systemBaseDataRes.title, iconCls:'globalType-shortcut', module:'systemBaseDataView' });
+          shortcutDataArray.push({ name:systemRes.managerTitle, iconCls:'globalType-shortcut', module:'systemBaseDataView' });
       }
       if(globalRes.isAdmin || (accessRes.showFlowFormManager)){
-          shortcutDataArray.push({ name:'表单管理', iconCls:'form-manager', module:'flowFormManager' });
+          shortcutDataArray.push({ name:flowFormRes.flowFormManager, iconCls:'form-manager', module:'flowFormManager' });
       }
       if(globalRes.isAdmin || (accessRes.showFlowManager)){
           shortcutDataArray.push({ name:workFlowRes.flowDefineManagerTitle,iconCls:'workflow-manager',module:'flowManagerView'});
@@ -145,7 +145,7 @@ Ext.define('FlexCenter.App', {
           '->',
           {
             text:globalRes.title.logout,
-            iconCls:'logout',
+            iconCls:'app-logout',
             handler: me.onLogout,
             scope: me
           }

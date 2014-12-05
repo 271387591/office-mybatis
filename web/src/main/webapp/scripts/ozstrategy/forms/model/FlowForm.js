@@ -18,9 +18,9 @@ Ext.define('FlexCenter.forms.model.FlowForm',{
             return Ext.util.Format.date(new Date(v), 'Y-m-d H:i:s');
         }},
         'fields'
-    ],
-    hasMany: [
-        { model: 'FlexCenter.forms.model.FormField', name: 'fields' }
     ]
+    //hasMany: [
+    //    { model: 'FlexCenter.forms.model.FormField', name: 'fields' }
+    //]
 
 });

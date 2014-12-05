@@ -21,20 +21,6 @@ var workFlowRes = {
         changeDeleteFlowConfirm: '<fmt:message key="workFlowRes.changeDeleteFlowConfirm" />',
         deleteFlow: '<fmt:message key="workFlowRes.deleteFlow" />',
         readdocument: '<fmt:message key="workFlowRes.readdocument" />',
-        msg: {
-            editUser: '<fmt:message key="userRoleRes.msg.editUser" />',
-            passwordEdit: '<fmt:message key="userRoleRes.msg.passwordEdit" />',
-            removeRole: '<fmt:message key="userRoleRes.msg.removeRole" />',
-            passwordNotSame: '<fmt:message key="userRoleRes.msg.passwordNotSame" />',
-            changePassword: '<fmt:message key="userRoleRes.msg.changePassword" />',
-            lockUserSuccess: '<fmt:message key="userRoleRes.msg.lockUserSuccess" />',
-            unLockUserSuccess: '<fmt:message key="userRoleRes.msg.unLockUserSuccess" />',
-            disableUserSuccess: '<fmt:message key="userRoleRes.msg.disableUserSuccess" />',
-            unDisableUserSuccess: '<fmt:message key="userRoleRes.msg.unDisableUserSuccess" />',
-            addRoleEmpty: '<fmt:message key="userRoleRes.msg.addRoleEmpty" />',
-            addUserHasRole: '<fmt:message key="userRoleRes.msg.addUserHasRole" />',
-            editRole: '<fmt:message key="userRoleRes.msg.editRole" />'
-        },
         header: {
             deployment: '<fmt:message key="workFlowRes.header.deployment" />',
             flowName: '<fmt:message key="workFlowRes.header.flowName" />'
@@ -200,6 +186,7 @@ var workFlowRes = {
             formTitle: '<fmt:message key="workFlowRes.processListView.formTitle" />',
             design: '<fmt:message key="workFlowRes.processListView.design" />',
             checkProcessRunning: '<fmt:message key="workFlowRes.processListView.checkProcessRunning" />',
+            checkProcessRunning1: '<fmt:message key="workFlowRes.processListView.checkProcessRunning1" />',
             depProcess: '<fmt:message key="workFlowRes.processListView.depProcess" />',
             disAuthorization: '<fmt:message key="workFlowRes.processListView.disAuthorization" />',
             disAuthorizationProcessMsg: '<fmt:message key="workFlowRes.processListView.disAuthorizationProcessMsg" />',

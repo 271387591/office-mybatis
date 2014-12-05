@@ -33,7 +33,7 @@
         <selectKey keyColumn="id" keyProperty="id" resultType="java.lang.Long">
             select LAST_INSERT_ID()
         </selectKey>
-        insert into TASKINSTANCE(id,taskKey,name,startDate,endDate,overdueDate,elementId,assigneeId,instanceId,remarks,actTaskId,sendEmail,status,processDefId,createDate,lastUpdateDate,creatorId,lastUpdaterId) 
-        values (#{id},#{taskKey},#{name},#{startDate},#{endDate},#{overdueDate},#{element.id},#{assignee.id},#{instance.id},#{remarks},#{actTaskId},#{sendEmail},#{status,typeHandler=org.apache.ibatis.type.EnumTypeHandler},#{processDef.id},#{createDate},#{lastUpdateDate},#{creator.id},#{lastUpdater.id})
+        insert into TASKINSTANCE(id,taskKey,name,startDate,endDate,overdueDate,elementId,assigneeId,instanceId,remarks,actTaskId,sendEmail,status,processDefId,duration,createDate,lastUpdateDate,creatorId,lastUpdaterId) 
+        values (#{id},#{taskKey},#{name},#{startDate},#{endDate},#{overdueDate},#{element.id},#{assignee.id},#{instance.id},#{remarks},#{actTaskId},#{sendEmail},#{status,typeHandler=org.apache.ibatis.type.EnumTypeHandler},#{processDef.id},#{duration},#{createDate},#{lastUpdateDate},#{creator.id},#{lastUpdater.id})
     </insert>
 </mapper>

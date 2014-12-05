@@ -9,7 +9,7 @@ Ext.define('FlexCenter.forms.view.CKEditor', {
     extend: 'Ext.form.field.TextArea',
     alias: 'widget.ckeditor',
     id: 'ckeditor',
-    value:'<table xtype="table" border="1" cellpadding="1" cellspacing="1" style="border-collapse:collapse; border:1px solid;width:100%"><tbody><tr><th colspan="4">标题</th></tr><tr><th style="width: 200px;">字段一</th><td>&nbsp;</td><th style="width: 200px;"><strong>字段二</strong></th><td>&nbsp;</td></tr><tr><th><strong>字段三</strong></th><td>&nbsp;</td><th><strong>字段四</strong></th><td>&nbsp;</td></tr></tbody></table>',
+    value:flowFormRes.ckEditorValue,
     listeners:{
         afterrender:function(f){
             this.editor = CKEDITOR.replace(this.inputEl.id,{

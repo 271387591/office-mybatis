@@ -3,6 +3,7 @@ package com.ozstrategy.model.flows;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -10,7 +11,7 @@ import java.util.Set;
 /**
  * Created by lihao on 10/22/14.
  */
-public class ProcessInstanceHistory {
+public class ProcessInstanceHistory implements Serializable{
     private String id;
     private String processName;
     private String title;

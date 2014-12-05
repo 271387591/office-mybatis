@@ -25,6 +25,7 @@ import org.activiti.engine.HistoryService;
 import org.activiti.engine.ManagementService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.impl.cmd.NeedsActiveTaskCmd;
 import org.activiti.engine.impl.context.Context;
@@ -199,9 +200,19 @@ public class TaskManagerImpl implements TaskManager{
             taskService.complete(taskId,variables);
             //save TaskLinkTask
             saveTaskLinkTask(task,user.getUsername(),sign);
-
+            //save  TaskInstance
             HistoricTaskInstance historicTaskInstance=historyService.createHistoricTaskInstanceQuery().taskId(taskId).singleResult();
             saveTaskInstance(user,historicTaskInstance,map,sign?TaskInstanceStatus.Sign:TaskInstanceStatus.Complete);
+            //save  endEvent
+            List<HistoricActivityInstance> activityInstances=historyService.createHistoricActivityInstanceQuery()
+                    .processInstanceId(task.getProcessInstanceId())
+                    .processDefinitionId(task.getProcessDefinitionId())
+                    .activityType(Constants.END_EVENT_TYPE).list();
+            if(activityInstances!=null && activityInstances.size()>0){
+                for(HistoricActivityInstance activityInstance:activityInstances){
+                    saveTaskInstance(user,activityInstance,map);
+                }
+            }
         }
     }
     private void saveTaskLinkTask(org.activiti.engine.task.Task task,String username,boolean sign){
@@ -225,6 +236,36 @@ public class TaskManagerImpl implements TaskManager{
             }
         }
     }
+    private void saveTaskInstance(User user,HistoricActivityInstance instance,Map<String,Object> map){
+        TaskInstance taskInstance=new TaskInstance();
+        taskInstance.setSendEmail(BooleanUtils.toBooleanObject(ObjectUtils.toString(map.get("sendEmail"))));
+        taskInstance.setRemarks(ObjectUtils.toString(map.get("remarks")));
+        taskInstance.setStartDate(instance.getStartTime());
+        taskInstance.setEndDate(instance.getEndTime());
+        taskInstance.setName(instance.getActivityName());
+        taskInstance.setAssignee(user);
+        String instanceId=ObjectUtils.toString(map.get("instanceId"));
+        if(StringUtils.isNotEmpty(instanceId)){
+            ProcessDefInstance defInstance=processDefInstanceDao.getProcessDefInstanceById(Long.parseLong(instanceId));
+            taskInstance.setInstance(defInstance);
+        }
+        taskInstance.setTaskKey(instance.getActivityId());
+        taskInstance.setActTaskId(instance.getId());
+        taskInstance.setDuration(instance.getDurationInMillis());
+        String processDefId=ObjectUtils.toString(map.get("processDefId"));
+        if(StringUtils.isNotEmpty(processDefId)){
+            ProcessElement element=processElementDao.getProcessElementByTaskKeyAndDefId(Long.parseLong(processDefId),instance.getActivityId());
+            taskInstance.setElement(element);
+            ProcessDef def=processDefDao.getProcessDefById(Long.parseLong(processDefId));
+            taskInstance.setProcessDef(def);
+        }
+        taskInstance.setCreator(user);
+        taskInstance.setLastUpdater(user);
+        taskInstance.setCreateDate(new Date());
+        taskInstance.setLastUpdateDate(new Date());
+        taskInstance.setStatus(TaskInstanceStatus.endEvent);
+        taskInstanceDao.saveTaskInstance(taskInstance);
+    }
 
     private void saveTaskInstance(User user,HistoricTaskInstance task,Map<String,Object> map,TaskInstanceStatus status){
         TaskInstance instance=new TaskInstance();
@@ -238,6 +279,7 @@ public class TaskManagerImpl implements TaskManager{
         instance.setOverdueDate(task.getDueDate());
         instance.setStartDate(task.getStartTime());
         instance.setEndDate(task.getEndTime());
+        instance.setDuration(task.getDurationInMillis());
         String assignee=task.getAssignee();
         if(StringUtils.isNotEmpty(assignee)){
             User assign=userDao.getUserByUsername(assignee);

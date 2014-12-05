@@ -6,10 +6,12 @@ import com.ozstrategy.service.system.SystemMessageManager;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by lihao on 11/6/14.
@@ -28,6 +30,7 @@ public class SystemMessageManagerImpl implements SystemMessageManager {
         return systemMessageDao.listSystemMessagesCount(map);
     }
 
+    @Transactional(rollbackFor = Throwable.class)
     public void update(SystemMessage message) {
         systemMessageDao.update(message);
 
@@ -38,6 +41,7 @@ public class SystemMessageManagerImpl implements SystemMessageManager {
 
     }
 
+    @Transactional(rollbackFor = Throwable.class)
     public void deleteByCreateDate(Date date) {
         systemMessageDao.deleteByCreateDate(date);
 
@@ -46,5 +50,14 @@ public class SystemMessageManagerImpl implements SystemMessageManager {
     public void save(SystemMessage message) {
         systemMessageDao.save(message);
 
+    }
+
+    @Transactional(rollbackFor = Throwable.class)
+    public void multiRemove(Set<Long> ids) {
+        if(ids!=null && ids.size()>0){
+            for(Long id : ids){
+                delete(id);
+            }
+        }
     }
 }

@@ -200,6 +200,7 @@ public class ProcessDefInstanceManagerImpl implements ProcessDefInstanceManager 
                 taskInstance.setInstance(defInstance);
                 taskInstance.setTaskKey(historicTaskInstance.getActivityId());
                 taskInstance.setActTaskId(historicTaskInstance.getId());
+                taskInstance.setDuration(historicTaskInstance.getDurationInMillis());
                 taskInstance.setProcessDef(def);
                 ProcessElement element=processElementDao.getProcessElementByTaskKeyAndDefId(def.getId(),historicTaskInstance.getActivityId());
                 taskInstance.setElement(element);
@@ -207,7 +208,11 @@ public class ProcessDefInstanceManagerImpl implements ProcessDefInstanceManager 
                 taskInstance.setLastUpdater(user);
                 taskInstance.setCreateDate(new Date());
                 taskInstance.setLastUpdateDate(new Date());
-                taskInstance.setStatus(TaskInstanceStatus.Starter);
+                if(StringUtils.equals(historicTaskInstance.getActivityType(),TaskInstanceStatus.startEvent.name())){
+                    taskInstance.setStatus(TaskInstanceStatus.startEvent);
+                }else{
+                    taskInstance.setStatus(TaskInstanceStatus.Starter);
+                }
                 taskInstanceDao.saveTaskInstance(taskInstance);
             }
         }

@@ -53,7 +53,7 @@ Ext.define('FlexCenter.UserHeader', {
                               },
                               {
                                   colspan: 2,
-                                  iconCls:'user-edit',
+                                  iconCls:'app-logout',
                                   text: globalRes.buttons.logout,
                                   scale: 'small',
                                   width: 130,

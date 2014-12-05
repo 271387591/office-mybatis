@@ -163,20 +163,23 @@ Ext.define('FlexCenter.flows.view.ApplyProcessHistoryView',{
                                 }
                             },'-',
                             {
-                                iconCls:'btn-print',
+                                iconCls:'task-instance',
                                 tooltip:workFlowRes.applyProcessHistoryView.headerPrint1,
                                 hidden:true,
                                 handler:function(grid, rowIndex, colIndex){
                                     var rec = grid.getStore().getAt(rowIndex);
-                                    //window.open('processesController/printFlowDetail?processInstanceId='+rec.get('id')+'&definitionId='+rec.get('definitionId'),'','');
+                                    var record={};
+                                    record.instanceId=rec.get('instanceId');
+                                    me.taskInstance(record);
                                 }
                             },'-',
                             {
-                                iconCls:'btn-print',
+                                iconCls:'form-options',
                                 tooltip:workFlowRes.applyProcessHistoryView.headerPrint2,
                                 hidden:true,
                                 handler:function(grid, rowIndex, colIndex){
                                     var rec = grid.getStore().getAt(rowIndex);
+                                    me.getFormHtml(rec);
                                     //window.open('processesController/printFormData?definitionId='+rec.get('definitionId')+'&instanceId='+rec.get('id')+'&deploymentId='+rec.get('deploymentId'),'','');
                                 }
                             }
@@ -193,6 +196,73 @@ Ext.define('FlexCenter.flows.view.ApplyProcessHistoryView',{
             }
         ];
         this.callParent();
+    },
+    getFormHtml:function(rec){
+        ajaxPostRequest('processInstanceHistoryController.do?method=getFormHtml',{actInstanceId:rec.get('id'),processDefId:rec.get('processDefId')},function(result){
+            if(result.success){
+                var data=result.data;
+                var chmods={};
+                for(var item in data.formValue){
+                    chmods[item]=1;
+                }
+                var win=Ext.widget('window',{
+                    title: workFlowRes.applyProcessHistoryView.headerPrint2,
+                    maximizable:true,
+                    animCollapse : true,
+                    layout: 'fit',
+                    width:800,
+                    height:500,
+                    modal:true,
+                    items:[
+                        {
+
+                            xtype:'formPreview',
+                            formValue:data.formValue,
+                            chmods:chmods,
+                            formHtml:data.formHtml
+                        }
+                    ],
+                    buttons:[
+                        {
+                            text: globalRes.buttons.close,
+                            handler: function () {
+                                win.close();
+                            }
+                        }
+                    ]
+                });
+                win.show();
+            }else{
+                Ext.Msg.alert(globalRes.title.warning,result.message);
+            }
+        });
+        
+    },
+    taskInstance:function(record){
+        var win=Ext.widget('window',{
+            title: workFlowRes.applyProcessHistoryView.headerPrint1,
+            maximizable:true,
+            animCollapse : true,
+            layout: 'fit',
+            width:800,
+            height:500,
+            modal:true,
+            items:[
+                {
+                    xtype:'taskInstanceView',
+                    record:record
+                }
+            ],
+            buttons:[
+                {
+                    text: globalRes.buttons.close,
+                    handler: function () {
+                        win.close();
+                    }
+                }
+            ]
+        });
+        win.show();
     },
     preview:function(record){
         var me=this;

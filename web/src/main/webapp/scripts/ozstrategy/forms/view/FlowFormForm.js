@@ -9,7 +9,7 @@ Ext.define('FlexCenter.forms.view.FlowFormForm',{
     extend:'Ext.Window',
     alias: 'widget.flowFormForm',
     itemId:'flowFormForm',
-    title: '添加表单',
+    title: flowFormRes.flowFormForm.title,
     maximized: true,
     maximizable:false,
     shim:false,
@@ -30,7 +30,7 @@ Ext.define('FlexCenter.forms.view.FlowFormForm',{
                 '-',
                 {
                     xtype:'button',
-                    text:' 保存',
+                    text:globalRes.buttons.save,
                     iconCls: 'save',
                     formBind: true,
                     handler: function(){
@@ -55,7 +55,7 @@ Ext.define('FlexCenter.forms.view.FlowFormForm',{
                 },
                 {
                     xtype: 'button',
-                    text: '预览',
+                    text: workFlowRes.modeler.preview,
                     iconCls:'btn-preview',
                     handler:function(){
                         var value =ckeditor.getValue();
@@ -72,7 +72,7 @@ Ext.define('FlexCenter.forms.view.FlowFormForm',{
                 },
                 {
                     xtype: 'button',
-                    text: '关闭',
+                    text: globalRes.buttons.close,
                     iconCls:'close',
                     handler:function(){
                         me.close();
@@ -85,7 +85,7 @@ Ext.define('FlexCenter.forms.view.FlowFormForm',{
                     region:'east',
                     frame: false,
                     collapsible: true,
-                    title: '表单信息',
+                    title: flowFormRes.flowFormForm.detail,
                     autoHeight: true,
                     defaultType: 'textfield',
                     defaults: {               
@@ -104,19 +104,19 @@ Ext.define('FlexCenter.forms.view.FlowFormForm',{
                             name: 'id'
                         },
                         {
-                            fieldLabel: '表单名称',
+                            fieldLabel: flowFormRes.flowFormForm.name,
                             name: 'name',
                             maxLength: 20,
                             labelWidth:60,
                             minLength: 1,
                             tabIndex: 1,
-                            blankText:'必填',
+                            blankText:globalRes.tooltip.notEmpty,
                             listeners:{
                                 blur:function(input){
                                     if(!me.isEdit){
                                         ajaxPostRequest('flowFormController.do?method=checkNameExist',{name:input.getValue()},function(result){
                                             if(!result.success){
-                                                input.markInvalid('表单名称已存在');
+                                                input.markInvalid(message.error.name.exist);
 //                                                input.reset();
                                             }
                                         });
@@ -126,18 +126,18 @@ Ext.define('FlexCenter.forms.view.FlowFormForm',{
                             },
                             allowBlank: false
                         },{
-                            fieldLabel: '显示名称',
+                            fieldLabel: flowFormRes.flowFormForm.displayName,
                             name: 'displayName',
                             maxLength: 20,
                             labelWidth:60,
                             minLength: 1,
                             tabIndex: 1,
-                            blankText:'必填',
+                            blankText:globalRes.tooltip.notEmpty,
                             allowBlank: false
                         },
                         {
                             xtype: 'textarea',
-                            fieldLabel: '表单描述',
+                            fieldLabel: workFlowRes.modeler.processDocumentation,
                             labelWidth:60,
                             name: 'description',
                             maxLength: 50,
@@ -149,7 +149,7 @@ Ext.define('FlexCenter.forms.view.FlowFormForm',{
                     
                     xtype: 'panel',
                     region:'center',
-                    title:'表单设计',
+                    title:flowFormRes.flowFormForm.design,
                     autoScroll:true,
                     defaults: {               
                         anchor: '100%'
@@ -263,8 +263,8 @@ Ext.define('FlexCenter.forms.view.FlowFormForm',{
         var table=$('table[xtype=table]',form);
         if(table.length<1){
             var ret={};
-            ret.title='格式错误';
-            ret.msg='表单格式错误，表单至少要包含一个【table】html标签！';
+            ret.title=flowFormRes.flowFormForm.checkHtmlTitle;
+            ret.msg=flowFormRes.flowFormForm.checkHtmlMsg;
             return ret;
         }
         var selectors=[
@@ -293,8 +293,8 @@ Ext.define('FlexCenter.forms.view.FlowFormForm',{
             var detailChild=$('table[xtype=detailGrid]',detail);
             if(detailChild.length>0){
                 var ret={};
-                ret.title='子表格式错误';
-                ret.msg='子表中不能再包含子表，请重新设计。';
+                ret.title=flowFormRes.flowFormForm.checkHtmlDetailTitle;
+                ret.msg=flowFormRes.flowFormForm.checkHtmlDetailMsg;
                 return ret;
             }
             var obj={};
@@ -310,10 +310,10 @@ Ext.define('FlexCenter.forms.view.FlowFormForm',{
             if(name1){
                 var regExp = new RegExp(/^(?!_)(?![0-9])(?!.*?_$)[0-9A-Za-z_]+$/);
                 if(!regExp.test(name1)){
-                    var msg=(xtype1)?'明细表':'字段';
+                    var msg=(xtype1)?flowFormRes.flowFormForm.detailTable:flowFormRes.flowFormForm.formField;
                     var ret={};
-                    ret.title='名称命名错误';
-                    ret.msg=msg+'名称【'+label1+'】命名不符合规范，名称只能是数字,字母,_组成,并且_不能在最前或者最后！';
+                    ret.title=flowFormRes.flowFormForm.nameEror;
+                    ret.msg=msg+Ext.String.format(flowFormRes.flowFormForm.nameErorMsg1,label);
                     return ret;
                 }
             }
@@ -322,10 +322,10 @@ Ext.define('FlexCenter.forms.view.FlowFormForm',{
                 var label2=names[j].label;
                 var xtype2=names[j].xtype;
                 if(name1==name2){
-                    var msg=(xtype1 && xtype2 && xtype1==xtype2)?'明细表':'字段';
-                    msg=msg+'【'+label1+'】与'+msg+'【'+label2+'】名称重复，请保持每个'+msg+'名称必须唯一！';
+                    var msg=(xtype1 && xtype2 && xtype1==xtype2)?flowFormRes.flowFormForm.detailTable:flowFormRes.flowFormForm.formField;
+                    msg=msg+Ext.String.format(flowFormRes.flowFormForm.nameErorMsg2,label1,msg,label2,msg);
                     var ret={};
-                    ret.title='名称重复';
+                    ret.title=flowFormRes.flowFormForm.nameErorMsg3;
                     ret.msg=msg;
                     return ret;
                 }

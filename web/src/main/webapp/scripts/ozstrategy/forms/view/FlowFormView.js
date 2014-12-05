@@ -16,9 +16,9 @@ Ext.define('FlexCenter.forms.view.FlowFormView',{
     layout:'border',
     selector:false,
     autoScroll:true,
-    
     getStore: function(){
         var store=Ext.create("FlexCenter.forms.store.FlowForm",{
+            storeId:'flowFormViewStore'
         });
         if(this.selector){
             store.on('beforeload',function(s,e){
@@ -35,7 +35,7 @@ Ext.define('FlexCenter.forms.view.FlowFormView',{
         var store = me.getStore();
         var actioncolumn=[{
             iconCls:'btn-preview',
-            tooltip:'预览',
+            tooltip:workFlowRes.modeler.preview,
             handler:function(grid, rowIndex, colIndex){
                 var rec = grid.getStore().getAt(rowIndex),selects=[];
                 var formHtml=rec.get('content');
@@ -47,7 +47,7 @@ Ext.define('FlexCenter.forms.view.FlowFormView',{
         if(globalRes.isAdmin || accessRes.publishForm){
             actioncolumn.push('-');
             actioncolumn.push({
-                tooltip:'发布',
+                tooltip:flowFormRes.flowFormView.publish,
                 handler:function(grid, rowIndex, colIndex){
                     var rec = grid.getStore().getAt(rowIndex);
                     me.publishTable(rec);
@@ -60,9 +60,9 @@ Ext.define('FlexCenter.forms.view.FlowFormView',{
                 },
                 isDisabled:function(view,rowIndex,colIndex,item,record){
                     if(record.get('status')=='Draft'){
-                        return true;
+                        return false;
                     }
-                    return false;
+                    return true;
                 }
             });
         }
@@ -78,7 +78,7 @@ Ext.define('FlexCenter.forms.view.FlowFormView',{
                     {
                         xtype:'button',
                         frame:true,
-                        text:'添加',
+                        text:globalRes.buttons.add,
                         iconCls:'table-add',
                         scope:me,
                         hidden: me.selector,
@@ -88,7 +88,7 @@ Ext.define('FlexCenter.forms.view.FlowFormView',{
                     {
                         xtype: 'button',
                         frame: true,
-                        text: '编辑',
+                        text: globalRes.buttons.edit,
                         iconCls: 'table-edit',
                         plugins:Ext.create('Oz.access.RoleAccess', {featureName:'updateForm',mode:'hide',byPass:globalRes.isAdmin}),
                         hidden: me.selector,
@@ -98,7 +98,7 @@ Ext.define('FlexCenter.forms.view.FlowFormView',{
                     {
                         xtype: 'button',
                         frame: true,
-                        text: '删除',
+                        text: globalRes.buttons.remove,
                         iconCls: 'table-delete',
                         hidden: me.selector,
                         plugins:Ext.create('Oz.access.RoleAccess', {featureName:'deleteForm',mode:'hide',byPass:globalRes.isAdmin}),
@@ -126,48 +126,48 @@ Ext.define('FlexCenter.forms.view.FlowFormView',{
                 ],
                 columns:[
                     {
-                        header: '表单名称',
+                        header: flowFormRes.flowFormForm.name,
                         flex:1,
                         dataIndex: 'name'
                     },
                     {
-                        header: '表单显示名称',
+                        header: flowFormRes.flowFormForm.displayName,
                         flex:1,
                         dataIndex: 'displayName'
                     },
                     
                     {
-                        header: '表单描述',
+                        header: userRoleRes.header.description,
                         flex:1,
                         dataIndex: 'description'
                     },
                     {
-                        header: '状态',
+                        header: flowFormRes.flowFormView.status,
                         flex:1,
                         dataIndex: 'status',
                         renderer:function(v){
                             if(v=='Draft'){
-                                return '草稿';
+                                return flowFormRes.flowFormView.draft;
                             }else if(v=='Active'){
-                                return "已发布";
+                                return flowFormRes.flowFormView.published;
                             }
                             return v;
                         }
                     },
                     {
-                        header: '创建时间',
+                        header: globalRes.header.createDate,
                         flex:1,
                         dataIndex: 'createDate'
                     },
                     
                     me.selector?{
                         xtype:'actioncolumn',
-                        header:'操作',
+                        header:globalRes.buttons.managerBtn,
                         flex:1,
                         items:[
                             {
                                 iconCls:'btn-preview',
-                                tooltip:'预览',
+                                tooltip:workFlowRes.modeler.preview,
                                 handler:function(grid, rowIndex, colIndex){
                                     var rec = grid.getStore().getAt(rowIndex),selects=[];
                                     var formHtml=rec.get('content');
@@ -180,7 +180,7 @@ Ext.define('FlexCenter.forms.view.FlowFormView',{
                     }:
                     {
                         xtype:'actioncolumn',
-                        header:'管理',
+                        header:globalRes.buttons.managerBtn,
                         flex:1,
                         hidden: me.selector,
                         items:actioncolumn
@@ -203,7 +203,7 @@ Ext.define('FlexCenter.forms.view.FlowFormView',{
                 me.down('grid').getStore().load();
             }else{
                 Ext.MessageBox.alert({
-                    title:'警告',
+                    title:globalRes.title.warning,
                     icon: Ext.MessageBox.ERROR,
                     msg:result.message,
                     buttons:Ext.MessageBox.OK
@@ -215,7 +215,7 @@ Ext.define('FlexCenter.forms.view.FlowFormView',{
     onAddClick:function(){
         var me = this;
         var win = Ext.create('FlexCenter.forms.view.FlowFormForm',{
-            title:'添加表单',
+            title:flowFormRes.flowFormForm.title,
             animateTarget:me.getEl()
         });
         win.show();
@@ -236,15 +236,15 @@ Ext.define('FlexCenter.forms.view.FlowFormView',{
         var record=record?record:(selects.length>0?store.getById(selects[0].get('id')):null);
         if(record==null){
             Ext.MessageBox.alert({
-                title:'编辑',
+                title:globalRes.buttons.edit,
                 icon: Ext.MessageBox.ERROR,
-                msg:"请选择要编辑的表单",
+                msg:flowFormRes.flowFormView.editMsg,
                 buttons:Ext.MessageBox.OK
             });
             return;
         }
         var win = Ext.create('FlexCenter.forms.view.FlowFormForm',{
-            title:'编辑表单'
+            title:globalRes.buttons.edit
         });
         win.show();
         win.setActiveRecord(record);
@@ -264,24 +264,24 @@ Ext.define('FlexCenter.forms.view.FlowFormView',{
         var me=this,ids=[];
         if(!selects || selects.length<1){
             Ext.MessageBox.alert({
-                title:'删除表单',
+                title:globalRes.buttons.remove,
                 icon: Ext.MessageBox.ERROR,
-                msg:"请选择要删除的表单",
+                msg:flowFormRes.flowFormView.delMsg,
                 buttons:Ext.MessageBox.OK
             });
             return;
         }
         ajaxPostRequest('flowFormController.do?method=checkFormInUse',{id:selects[0].get('id')},function(result){
             if(result.success){
-                Ext.Msg.alert(globalRes.title.prompt,"该表单已被流程使用，不能删除。");
+                Ext.Msg.alert(globalRes.title.prompt,flowFormRes.flowFormView.delFormMsg);
             }else{
                 Ext.Array.each(selects,function(mode){
                     ids.push(mode.get("id"));
                 });
                 Ext.MessageBox.show({
-                    title:'删除表单',
+                    title:globalRes.buttons.remove,
                     buttons:Ext.MessageBox.YESNO,
-                    msg:'确定要删除选中的表单',
+                    msg:flowFormRes.flowFormView.delPromptMsg,
                     icon:Ext.MessageBox.QUESTION,
                     fn:function(btn){
                         if(btn == 'yes'){
@@ -290,7 +290,7 @@ Ext.define('FlexCenter.forms.view.FlowFormView',{
                                     me.down('grid').getStore().load();
                                 }else{
                                     Ext.MessageBox.alert({
-                                        title:'警告',
+                                        title:globalRes.title.warning,
                                         icon: Ext.MessageBox.ERROR,
                                         msg:result.message,
                                         buttons:Ext.MessageBox.OK
@@ -313,7 +313,7 @@ Ext.define('FlexCenter.forms.view.FlowFormView',{
                 win.close();
             }else{
                 Ext.MessageBox.alert({
-                    title:'警告',
+                    title:globalRes.title.warning,
                     icon: Ext.MessageBox.ERROR,
                     msg:result.message,
                     buttons:Ext.MessageBox.OK

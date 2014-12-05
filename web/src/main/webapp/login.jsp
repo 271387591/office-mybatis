@@ -17,10 +17,8 @@
     <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ozstrategy/css/flexcenter.css'/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ozstrategy/css/BoxSelect.css'/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/shared/icons.css'/>"/>
-
     <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/shared/growl/css/ext-growl.css'/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/login/css/login.css'/>"/>
-
     <c:url var="defaultExtTheme" value="/scripts/ext/resources/css/ext-all.css"/>
     <c:url var="grayExtTheme" value="/scripts/ext/resources/css/ext-all-gray.css"/>
     <c:url var="accessExtTheme" value="/scripts/ext/resources/css/ext-all-access.css"/>
@@ -28,6 +26,15 @@
     <script type="text/javascript" src="<c:url value='/scripts/ext/locale/ext-lang-${language}.js'/>"></script>
     <script type="text/javascript">
         var appPath = "${appPath}";
+        loginError = '';
+        <c:if test="${not empty param.error}">
+        <c:if test="${not empty param.reason}">
+        loginError = '<fmt:message key="errors.reason.${param.reason}" />';
+        </c:if>
+        <c:if test="${empty param.reason}">
+        loginError = '<fmt:message key="errors.password.mismatch" />';
+        </c:if>
+        </c:if>
         var loginRes = {
             formAction: '<c:url value="/j_security_check"/>',
             appsName: '<fmt:message key="webapp.name" />',
@@ -38,9 +45,11 @@
             reset: '<fmt:message key="globalRes.buttons.reset" />',
             errorTitle: '<fmt:message key="login.title.error" />',
             error: '<fmt:message key="errors.password.mismatch" />',
+            loginMsg: '<fmt:message key="login.loginMsg" />',
             picture: '<div class="product-logo"></div>'
         };
     </script>
+    <script type="text/javascript" src="<c:url value='/scripts/lib/login.js'/>"></script>
 </head>
 <body id="login">
 <script type="text/javascript">
@@ -57,20 +66,8 @@
 </script>
 
 <script type="text/javascript" >
-    var loginError = '';
-    <c:if test="${not empty param.error}">
-    <c:if test="${not empty param.reason}">
-    loginError = '<fmt:message key="errors.reason.${param.reason}" />';
-    </c:if>
-    <c:if test="${empty param.reason}">
-    loginError = '<fmt:message key="errors.password.mismatch" />';
-    </c:if>
-    </c:if>
     Ext.Loader.setConfig({enabled: true});
     Ext.Loader.setPath('Oz', '<c:url value="/scripts/login"/>');
-    Ext.require([
-        'Oz.LoginWindow'
-    ]);
     Ext.onReady(function() {
         Ext.BLANK_IMAGE_URL = '<c:url value="/scripts/desktop/images/s.gif"/>';
         if (Ext.isIE) {

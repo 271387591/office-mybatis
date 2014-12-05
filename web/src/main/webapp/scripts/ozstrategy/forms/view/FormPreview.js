@@ -78,7 +78,6 @@ Ext.define('FlexCenter.forms.view.FormPreview',{
                     if(field.length>0){
                         field.attr('value',Ext.encode(value,true));
                     }
-                    console.log(item,chmod)
                     if(chmod){
                         
                         field=$(selectors[i],table);
@@ -331,7 +330,7 @@ Ext.define('FlexCenter.forms.view.FormPreview',{
                         readOnly: chmod == 1?true: false,
                         readOnlyCls:'x-item-disabled',
                         hidden: chmod == 2?true: false,
-                        emptyText:'选择人员',
+                        emptyText:userRoleRes.changeUsers,
                         onTriggerClick:function(){
                             var rec = Ext.ComponentQuery.query('#'+name)[0].getSelectionModel().getSelection()[0];
                             Ext.widget('userSelector',{
@@ -355,7 +354,7 @@ Ext.define('FlexCenter.forms.view.FormPreview',{
             sortable: false,
             items: [{
                 iconCls: 'delete',
-                tooltip: '删除',
+                tooltip: workFlowRes.deleteFlow,
                 handler: function(grid, rowIndex, colIndex) {
                     store.removeAt(rowIndex);
                 }
@@ -406,7 +405,7 @@ Ext.define('FlexCenter.forms.view.FormPreview',{
             margins:1,
             sType:'detail',
             tbar: [{
-                text: '添加记录',
+                text: flowFormRes.flowFormView.addRes,
                 iconCls:'add',
                 handler : function(){
                     store.insert(0,{fields:fields});
@@ -454,7 +453,7 @@ Ext.define('FlexCenter.forms.view.FormPreview',{
             config.renderTo=span;
         }
         if(xtype == 'userselector'){
-            config.emptyText='选择人员';
+            config.emptyText=userRoleRes.changeUsers;
             config.onTriggerClick=function(){
                 Ext.widget('userSelector',{
 //                        type:'SINGLE',
@@ -467,7 +466,7 @@ Ext.define('FlexCenter.forms.view.FormPreview',{
                 
             }
         }else if(xtype == 'depselector'){
-            config.emptyText='选择部门';
+            config.emptyText=userRoleRes.changeDepart;
             config.onTriggerClick=function(){
 //                Ext.widget('userSelector',{
 ////                        type:'SINGLE',
@@ -482,7 +481,7 @@ Ext.define('FlexCenter.forms.view.FormPreview',{
 
             }
         }else if(xtype == 'posselector'){
-            config.emptyText='选择岗位';
+            config.emptyText=userRoleRes.changeDuty;
             config.onTriggerClick=function(){
 
             }

@@ -2,42 +2,57 @@ if (top != self) {
   top.location = self.location;
 }
 Ext.require('Ext.ux.window.Notification');
-var messageTip=Ext.create('Ext.Button',{
-    hidden: true,
-    autoWidth: true,
-    height: 20,
-    iconCls:'messageTip',
-    handler: function () {
-        Ext.create('widget.uxNotification', {
-            title: '系统消息',
-            position: 'b',
-            manager: 'instructions',
-            cls: 'ux-notification-window',
-            stickWhileHover: false,
-            height: 120,
-            width: 220,
-            html: messageTip.msg,
-            autoCloseDelay: 20000,
-            slideInDuration: 500,
-            slideBackDuration: 200
-        }).show();
-        messageTip.hide();
-    }
-});
+var systemMessageTpl=new Ext.XTemplate(
+    '<html>',
+    '<title>系统待办任务提示</title>',
+    '<body>',
+    '<p>{contentMap.userFullName}:您好</p>',
+    '<p>您有一条任务【<font color="red">{contentMap.taskName}</font>】未处理，来自{contentMap.starter}于{contentMap.startTime}申请的{contentMap.instanceTitle}，请你尽快处理。</p>',
+    '<br/>本邮件来xxx办公管理系统自动产生，不需回复。',
+    '</body>',
+    '</html>'
+);
 PL._init();
 PL.joinListen('/systemMessage?username='+globalRes.userName);
 function onData(event) {
     var msg=event.get(globalRes.userName);
     msg = decodeURIComponent(msg);
+    var obj={};
+    obj.contentMap=Ext.decode(msg);
+    var box=Ext.create('widget.uxNotification', {
+        title: '你有未读信息',
+        position: 'br',
+        manager: 'instructions',
+        cls: 'ux-notification-window',
+        stickWhileHover: false,
+        height: 150,
+        width: 220,
+        autoScroll:true,
+        buttons:[
+            {
+                text:'查看更多',
+                handler:function(){
+                    var apptabs = Ext.ComponentQuery.query('#apptabs')[0];
+                    apptabs.addTab('systemMessageView','systemMessageView','#welcomeindex');
+                    box.close();
+                }
+            }
+
+        ],
+        html: systemMessageTpl.applyTemplate(obj),
+        autoCloseDelay: 20000,
+        slideInDuration: 500,
+        slideBackDuration: 200
+    }); 
     if(msg){
-        messageTip.setText('<div style="height:25px;">你有未读信息</div>');
-        messageTip.show();
-        messageTip.msg=msg;
+        if(box){
+            box.show();
+        }
     }else{
-        messageTip.hide();
+        if(box){
+            box.close();
+        }
     }
-    
-    console.log('msg===',msg)
 }
 function ActionColumnHideAccess(config){
     var checkAccess=function(featureName){
@@ -84,23 +99,36 @@ function ActionColumnDisabledAccess(config){
 }
 
 function ajaxPostRequest(url,params,callback,mask){
-    var myMask = new Ext.LoadMask(Ext.getBody(), {msg:globalRes.loading});
-    if(!mask){
-        myMask.show();
-    }
+
+    var box = Ext.MessageBox;
+    box.show({
+        msg: globalRes.loading,
+        progressText: globalRes.loading,
+        width:300,
+        wait:true,
+        waitConfig: {interval:200},
+        iconCls:'loading-ux', //custom class in msg-box.html
+        animateTarget: 'mb7'
+    });
+    //var myMask = new Ext.LoadMask(Ext.getBody(), {msg:globalRes.loading});
+    //if(!mask){
+    //    myMask.show();
+    //}
     Ext.Ajax.request({
         url: url || '',
         params: params || {},
         method: 'POST',
         success: function (response, options) {
-            if (myMask != undefined){ myMask.destroy();}
+            //if (myMask != undefined){ myMask.destroy();}
+            if (box != undefined){ box.close();}
             var result = Ext.decode(response.responseText,true);
             if(callback){
                 callback(result);
             }
         },
         failure: function (response, options) {
-            if (myMask != undefined){ myMask.hide();}
+            //if (myMask != undefined){ myMask.hide();}
+            if (box != undefined){ box.close();}
             Ext.MessageBox.alert(globalRes.title.fail, Ext.String.format(globalRes.remoteTimeout,response.status));
         }
     });

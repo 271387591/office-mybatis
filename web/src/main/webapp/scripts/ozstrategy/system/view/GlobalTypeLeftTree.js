@@ -103,7 +103,6 @@ Ext.define('FlexCenter.system.view.GlobalTypeLeftTree', {
     var globalTypeId = record.get('typeId');
     var path = record.get('path');
     var globalTypeView = me.ownerCt.ownerCt.down('globalTypeView');
-    globalTypeView.down('textfield#searchKeyword').setValue("");
     globalTypeView.catKey = catKey;
     globalTypeView.parentId = globalTypeId;
     var globalTypeStore = globalTypeView.down('grid').getStore();

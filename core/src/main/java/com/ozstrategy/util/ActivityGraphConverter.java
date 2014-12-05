@@ -8,7 +8,6 @@ import com.mxgraph.io.mxCodec;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.model.mxICell;
-import com.mxgraph.util.mxUtils;
 import com.mxgraph.util.mxXmlUtils;
 import com.ozstrategy.Constants;
 import com.ozstrategy.exception.OzException;
@@ -651,7 +650,7 @@ public class ActivityGraphConverter implements EditorJsonConstants, StencilConst
     public static String toMxGraphModelXml(mxGraphModel model){
         mxCodec codec = new mxCodec();
         Node node = codec.encode(model);
-        String xml = mxUtils.getPrettyXml(node);
+        String xml = mxXmlUtils.getXml(node);
         return xml;
     }
     

@@ -40,6 +40,7 @@ import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
+import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.session.RowBounds;
@@ -85,7 +86,6 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
     private RepositoryService repositoryService;
     @Autowired
     private RuntimeService runtimeService;
-    
     
     public List<ProcessDef> listProcessDefs(Map<String, Object> map, Integer start, Integer limit) {
         return processDefDao.listProcessDefs(map,new RowBounds(start,limit));
@@ -354,7 +354,7 @@ public class ProcessDefManagerImpl implements ProcessDefManager {
     public String getRes(String resId,String resName,String taskKey) throws IOException,ActivitiObjectNotFoundException {
         InputStream inputStream = repositoryService.getResourceAsStream(resId,resName);
         if(inputStream!=null){
-            String str=IOUtils.toString(inputStream);
+            String str=IOUtils.toString(inputStream, Charsets.UTF_8);
             if(StringUtils.isNotEmpty(taskKey)){
                 mxGraphModel model= ActivityGraphConverter.getMxGraphModel(str);
                 model.beginUpdate();

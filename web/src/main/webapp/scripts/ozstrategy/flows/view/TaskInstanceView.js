@@ -8,7 +8,6 @@ Ext.define('FlexCenter.flows.view.TaskInstanceView', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.taskInstanceView',
     itemId: 'taskInstanceView',
-    title: '流程执行情况',
 //    autoScroll: true,
     margin:1,
     getTaskInstanceStore:function(){
@@ -68,7 +67,9 @@ Ext.define('FlexCenter.flows.view.TaskInstanceView', {
                 flex:1,
                 dataIndex: 'status',
                 renderer: function (v) {
-                    if(v == 'Starter'){
+                    if(v == 'startEvent'){
+                        return '流程开始';
+                    }else if(v == 'Starter'){
                         return '发起申请';
                     }else if(v == 'Complete'){
                         return '任务完成';

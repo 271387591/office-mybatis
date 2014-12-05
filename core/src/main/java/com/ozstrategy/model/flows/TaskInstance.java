@@ -72,6 +72,8 @@ public class TaskInstance extends CreatorObject{
     @ManyToOne
     @JoinColumn(name = "processDefId")
     private ProcessDef processDef;
+    @Column
+    private Long duration;
 
     public Long getId() {
         return id;
@@ -191,6 +193,14 @@ public class TaskInstance extends CreatorObject{
 
     public void setStatus(TaskInstanceStatus status) {
         this.status = status;
+    }
+
+    public Long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Long duration) {
+        this.duration = duration;
     }
 
     @Override

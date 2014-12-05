@@ -14,11 +14,11 @@
         ahp.PROC_INST_ID_ as actInstanceId,
         ahp.START_USER_ID_ as startUserId,
         pd.name as processName,
-        pd.id as processDefId,
+        pd.processDefId as processDefId,
         pi.title as title,
         pi.id as instanceId
         from ACT_HI_PROCINST ahp 
-        left join PROCESSDEF pd on ahp.PROC_DEF_ID_=pd.actDefId
+        left join PROECESSDEFVERSION pd on ahp.PROC_DEF_ID_=pd.actDefId
         left join PROCESSDEFINSTANCE pi on ahp.PROC_INST_ID_=pi.actInstanceId 
         where ahp.START_USER_ID_=#{userId}
         <if test="title!=null and title!=''"> and pi.title like CONCAT(CONCAT('%', #{title}), '%')</if>
@@ -41,7 +41,7 @@
         select 
         count(*) 
         from ACT_HI_PROCINST ahp 
-        left join PROCESSDEF pd on ahp.PROC_DEF_ID_=pd.actDefId
+        left join PROECESSDEFVERSION pd on ahp.PROC_DEF_ID_=pd.actDefId
         left join PROCESSDEFINSTANCE pi on ahp.PROC_INST_ID_=pi.actInstanceId 
         where ahp.START_USER_ID_=#{userId}
         <if test="title!=null and title!=''"> and pi.title like CONCAT(CONCAT('%', #{title}), '%')</if>

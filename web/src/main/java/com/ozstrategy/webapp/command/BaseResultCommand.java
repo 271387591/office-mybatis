@@ -53,7 +53,7 @@ public class BaseResultCommand {
    * @param  message  DOCUMENT ME!
    * @param  success  DOCUMENT ME!
    */
-  public BaseResultCommand(String message, boolean success) {
+  public BaseResultCommand(String message, Boolean success) {
     this.message = message;
 
     this.success = success;

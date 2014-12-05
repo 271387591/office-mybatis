@@ -156,7 +156,7 @@ html{
 .disabled-row .x-grid-cell-inner {
     color: darkgray;
 }
-.logout {
+.app-logout {
     background-image: url(icons/logout.png) !important;
     width: 16px;
     height: 16px;
@@ -186,6 +186,12 @@ html{
     width:70px;height:70px;
     background-image: url(icons/loading70X702.gif) !important; * jawr:base64-skip 
 }
+.loading-ux{
+    width: 16px;
+    height: 16px;
+    background-image: url(icons/ajax-loading.gif) !important; * jawr:base64-skip 
+}
+
 
 .ozMiddleIcon {
     margin-left: 10px;
@@ -270,6 +276,12 @@ html{
     height: 48px;
     background-image: url(icons/table_manager.png);
 }
+.table_manager16 {
+    width: 16px;
+    height: 16px;
+    background-image: url(icons/table_manager16.png);
+}
+
 
 .icon-globalType {
     background-image: url(icons/type-16.png) !important;
@@ -506,6 +518,19 @@ html{
     width: 16px;
     height: 16px;
 }
+.task-instance {
+    background: url('icons/workflow-manager.png') !important;
+    width: 16px;
+    height: 16px;
+}
+
+.form-options {
+    background: url('icons/options.png') !important;
+    width: 16px;
+    height: 16px;
+}
+
+
 .icon-publish {
     background-image:url(icons/icon-publish.png) !important;
 }
@@ -527,6 +552,12 @@ html{
 .messageTip {
     background-image: url(icons/newpm.gif) !important;
 }
+.user-man16{
+    background-image: url(icons/user16x16.png) !important;
+    width: 16px;
+    height: 16px;
+}
+
 
 
 

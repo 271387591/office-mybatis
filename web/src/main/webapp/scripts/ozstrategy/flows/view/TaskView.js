@@ -184,10 +184,11 @@ Ext.define('FlexCenter.flows.view.TaskView',{
                 region:'center',
                 store:candidateStore,
                 forceFit: true,
-                border:false,
+                border:true,
                 autoScroll: true,
                 itemId:'candidateGrid',
                 title:'待签收任务',
+                margins:'1 0 0 0',
                 dockedItems:[
                     {
                         xtype: 'pagingtoolbar',

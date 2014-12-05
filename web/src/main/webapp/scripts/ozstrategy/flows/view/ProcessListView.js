@@ -46,7 +46,15 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
                 iconCls:'btn-flow-design',
                 handler:function(grid, rowIndex, colIndex){
                     var rec = grid.getStore().getAt(rowIndex);
-                    me.onUpdateClick(rec);
+                    var actDefId=rec.get('actDefId');
+                    ajaxPostRequest('processDefController.do?method=checkProcessRunning',{actDefId:actDefId},function(result){
+                        if(result.success){
+                            Ext.Msg.alert(globalRes.title.prompt,workFlowRes.processListView.checkProcessRunning1);
+                        }else{
+                            me.onUpdateClick(rec);
+                        }
+                    });
+                   
                 }
             });
         }
@@ -204,7 +212,14 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
                 ],
                 listeners:{
                     itemdblclick:function(grid, record, item, index, e, eOpts){
-                        me.onUpdateClick(record)
+                        var actDefId=record.get('actDefId');
+                        ajaxPostRequest('processDefController.do?method=checkProcessRunning',{actDefId:actDefId},function(result){
+                            if(result.success){
+                                Ext.Msg.alert(globalRes.title.prompt,workFlowRes.processListView.checkProcessRunning1);
+                            }else{
+                                me.onUpdateClick(record);
+                            }
+                        });
                     }
 
                 }

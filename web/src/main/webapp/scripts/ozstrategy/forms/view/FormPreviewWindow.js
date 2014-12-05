@@ -13,7 +13,7 @@ Ext.define('FlexCenter.forms.view.FormPreviewWindow',{
     maxHeight:600,
     modal:true,
     shim:false,
-    title:'表单预览',
+    title:flowFormRes.flowFormView.preview,
     autoScroll:true,
     border:false,
     initComponent:function(){
@@ -29,6 +29,7 @@ Ext.define('FlexCenter.forms.view.FormPreviewWindow',{
             {
                 xtype: 'button',
                 text: '取值',
+                hidden:true,
                 handler: function(){
                     var data = me.down('formPreview').getFormValue();
                     console.log('data',data);

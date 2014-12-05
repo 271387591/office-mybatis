@@ -123,6 +123,7 @@ Ext.define('FlexCenter.flows.view.TaskAssigneeView',{
             },
             {
                 xtype:'taskInstanceView',
+                title:'流程执行情况',
                 record:me.record
             }
         ];

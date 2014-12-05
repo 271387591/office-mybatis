@@ -12,12 +12,9 @@ Ext.define('FlexCenter.SystemBaseDataView', {
 
   requires: [
     'FlexCenter.system.view.GlobalTypeView',
-//    'OzSOA.jiuzhai.view.system.DictionaryView',
     'FlexCenter.system.view.GlobalTypeLeftTree',
-//    'OzSOA.jiuzhai.view.system.DictionaryLeftTree',
     'Ext.grid.*',
     'Ext.data.*',
-    'Ext.ux.RowExpander',
     'Oz.access.RoleAccess'
   ],
 
@@ -156,7 +153,6 @@ Ext.define('FlexCenter.SystemBaseDataView', {
           globalTypeStore.getProxy().extraParams = {keyword: '', catKey: catKey};
           globalTypeStore.load();
           var globalTypeView = win.down('globalTypeView');
-          globalTypeView.down('textfield#searchKeyword').setValue("");
           globalTypeView.catKey = catKey;
           var globalTypeGirdStore = globalTypeView.down('grid').getStore();
           globalTypeGirdStore.getProxy().extraParams = {keyword: '',catKey: catKey};

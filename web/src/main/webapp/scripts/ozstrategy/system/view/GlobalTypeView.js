@@ -86,6 +86,7 @@ Ext.define('FlexCenter.system.view.GlobalTypeView', {
               fields: 'fields',
               query: 'keyword'
             },
+            selectAllText:'',
             searchMode : 'remote'
           }],
         columns: [

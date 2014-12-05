@@ -12,7 +12,7 @@ Ext.define('FlexCenter.FlowFormManager', {
     init:function () {
         this.launcher = {
             text:'表单管理',
-            iconCls:'icon-tsm',
+            iconCls:'table_manager16',
             handler:this.createWindow,
             scope:this
         };

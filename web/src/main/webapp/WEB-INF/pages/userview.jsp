@@ -13,9 +13,10 @@
     <c:set var="language"><%=language %></c:set>
     
     <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ext/resources/css/ext-all.css'/>"/>
+    <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ozstrategy/css/app.css'/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ozstrategy/css/flexcenter.css'/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ozstrategy/css/BoxSelect.css'/>"/>
-    <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ozstrategy/css/app.css'/>"/>
+    
     <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/shared/icons.css'/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/shared/growl/css/ext-growl.css'/>"/>
     <c:url var="defaultExtTheme" value="/scripts/ext/resources/css/ext-all.css"/>
@@ -75,7 +76,7 @@
         var ozSOAViewport;
         var ozSOA;
         Ext.onReady(function () {
-//            Ext.QuickTips.init();
+            Ext.QuickTips.init();
 //            var storeTheme = getCookie('OzSOA-Ext-Theme');
 //            if (storeTheme == null || storeTheme == '') {
 //                storeTheme = 'ext-all';

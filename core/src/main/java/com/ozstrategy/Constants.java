@@ -15,4 +15,6 @@ public interface Constants {
     public static final String MESSAGE_REPLEVY_TASK_FAIL = "message.processDefController.replevyTask";
     public static final String MESSAGE_COMPLETE_TASK_NOT_FOUND_TASK = "message.complete.task.not.found.task";
     public static final String TASK_USER_TYPE = "userTask";
+    public static final String END_EVENT_TYPE = "endEvent";
+    public static final String START_EVENT_TYPE = "startEvent";
 } 

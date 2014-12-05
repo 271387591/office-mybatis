@@ -2,10 +2,6 @@ Ext.define('FlexCenter.FlowManagerView', {
     extend:'Oz.desktop.Module',
 
     requires:[
-        'FlexCenter.activiti.view.AModelView',
-        'FlexCenter.activiti.view.AModelFormManager',
-        'FlexCenter.activiti.view.ProcessInstanceView',
-        'FlexCenter.activiti.view.ProcessHistoryView',
         'FlexCenter.flows.view.ProcessListView'
     ],
 
@@ -15,7 +11,7 @@ Ext.define('FlexCenter.FlowManagerView', {
     init:function () {
         this.launcher = {
             text:workFlowRes.flowManagerTitle,
-            iconCls:'icon-tsm',
+            iconCls:'workflow-manager-16',
             handler:this.createWindow,
             scope:this
         };

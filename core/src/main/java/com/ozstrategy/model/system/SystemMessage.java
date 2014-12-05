@@ -9,6 +9,8 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -38,6 +40,11 @@ public class SystemMessage extends BaseObject {
     private String content;
     @Transient
     private Map<String,Object> contentMap=new HashMap<String, Object>();
+    
+    @Column(nullable = false,length = 32)
+    @Enumerated(EnumType.STRING)
+    private SystemMessageType type;
+    
 
     public Long getId() {
         return id;
@@ -69,6 +76,14 @@ public class SystemMessage extends BaseObject {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public SystemMessageType getType() {
+        return type;
+    }
+
+    public void setType(SystemMessageType type) {
+        this.type = type;
     }
 
     public Map<String, Object> getContentMap() {

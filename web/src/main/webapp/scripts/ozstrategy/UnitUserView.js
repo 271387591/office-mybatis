@@ -25,7 +25,7 @@ Ext.define('FlexCenter.UnitUserView', {
   init:function () {
     this.launcher = {
       text:userRoleRes.title,
-      iconCls:'icon-tsm',
+      iconCls:'user-man16',
       handler:this.createWindow,
       scope:this
     };

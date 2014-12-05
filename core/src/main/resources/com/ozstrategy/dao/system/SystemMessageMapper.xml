@@ -25,6 +25,7 @@
         f.receiverId=#{receiver.id} , 
         f.readFlag=#{readFlag} , 
         f.content=#{content} , 
+        f.type=#{type,typeHandler=org.apache.ibatis.type.EnumTypeHandler}, 
         f.lastUpdateDate=#{lastUpdateDate} 
         where f.id=#{id}
     </update>
@@ -39,7 +40,7 @@
         <selectKey keyColumn="id" keyProperty="id" resultType="java.lang.Long">
             select LAST_INSERT_ID()
         </selectKey>
-        insert into SYSTEMMESSAGE(id,receiverId,readFlag,content,createDate,lastUpdateDate) 
-        values (#{id},#{receiver.id},#{readFlag},#{content},#{createDate},#{lastUpdateDate})
+        insert into SYSTEMMESSAGE(id,receiverId,readFlag,content,type,createDate,lastUpdateDate) 
+        values (#{id},#{receiver.id},#{readFlag},#{content},#{type,typeHandler=org.apache.ibatis.type.EnumTypeHandler},#{createDate},#{lastUpdateDate})
     </insert>
 </mapper>

@@ -4,11 +4,9 @@
 Ext.define('FlexCenter.forms.store.FormField', {
     extend: 'Ext.data.Store',
     alias: 'store.formField',
-
     requires: [
         'FlexCenter.forms.model.FormField'
     ],
-
     model: 'FlexCenter.forms.model.FormField',
     pageSize: 20,
     proxy: {
@@ -18,10 +16,6 @@ Ext.define('FlexCenter.forms.store.FormField', {
             root : 'data',
             totalProperty  : 'total',
             messageProperty: 'message'
-        },
-        writer: {
-            writeAllFields: true,
-            root: 'data'
         },
         listeners: {
             exception: function(proxy, response, operation) {

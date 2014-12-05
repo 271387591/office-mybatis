@@ -192,7 +192,7 @@
                                     
                                     <include>scripts/ux/Ext/ux/dd/DragZone.js</include>
                                     <include>scripts/ux/Ext/ux/dd/DropZone.js</include>
-
+<!---->
                                     <include>scripts/ux/Ext/ux/form/SearchField.js</include>
                                     <include>scripts/ux/Ext/ux/form/field/DateTimePicker.js</include>
                                     <include>scripts/ux/Ext/ux/form/field/DateTimeField.js</include>
@@ -202,9 +202,12 @@
                                     <include>scripts/ux/Ext/ux/form/FormDataCustomFiled.js</include>
                                     <include>scripts/ux/Ext/ux/form/ItemSelector.js</include>
                                     <include>scripts/ux/Ext/ux/form/TagInput.js</include>
-
+<!---->
                                     <include>scripts/ux/Ext/ux/window/Notification.js</include>
-
+                                    
+                                    <include>scripts/ux/Ext/ux/grid/feature/Detail.js</include>
+                                    <include>scripts/ux/Ext/ux/grid/feature/Search.js</include>
+<!---->
                                     <include>scripts/desktop/js/Module.js</include>
                                     <include>scripts/desktop/js/ShortcutModel.js</include>
                                     <include>scripts/desktop/js/StartMenu.js</include>
@@ -213,15 +216,13 @@
                                     <include>scripts/desktop/js/Wallpaper.js</include>
                                     <include>scripts/desktop/js/Desktop.js</include>
                                     <include>scripts/desktop/js/App.js</include>
-
+<!---->
                                     <include>scripts/ux/Oz/access/RoleAccess.js</include>
                                     <include>scripts/ux/Oz/app/TabMenu.js</include>
                                     <include>scripts/ux/Oz/app/Tabs.js</include>
                                     <include>scripts/ux/Oz/app/ThumbList.js</include>
                                     <include>scripts/ux/Oz/data/DwrProxy.js</include>
                                     <include>scripts/ux/Oz/desktop/Module.js</include>
-                                    
-                                    
                                     <include>mxgraph/src/js/mxClient.js</include>
                                     <include>mxgraph/src/js/Shapes.js</include>
                                     <include>mxgraph/src/js/mxModeler.js</include>
@@ -237,114 +238,119 @@
                                     <include>scripts/ozstrategy/store/Base.js</include>
 
                                     <!--user-->
-                                    <!--<include>scripts/ozstrategy/user/model/User.js</include>-->
-                                    <!--<include>scripts/ozstrategy/user/model/Role.js</include>-->
-                                    <!--<include>scripts/ozstrategy/user/model/SimpleRole.js</include>-->
-                                    <!--<include>scripts/ozstrategy/user/model/Feature.js</include>-->
-                                    <!--<include>scripts/ozstrategy/user/model/SystemView.js</include>-->
+                                    <include>scripts/ozstrategy/user/model/User.js</include>
+                                    <include>scripts/ozstrategy/user/model/Role.js</include>
+                                    <include>scripts/ozstrategy/user/model/SimpleRole.js</include>
+                                    <include>scripts/ozstrategy/user/model/Feature.js</include>
+                                    <include>scripts/ozstrategy/user/model/SystemView.js</include>
                                     
                                     <!--system-->
-                                    <!--<include>scripts/ozstrategy/system/model/GlobalType.js</include>-->
+                                    <include>scripts/ozstrategy/system/model/GlobalType.js</include>
+                                    <include>scripts/ozstrategy/system/model/SystemMessage.js</include>
                                     
                                     <!--forms-->
-                                    <!--<include>scripts/ozstrategy/forms/model/FlowForm.js</include>-->
-                                    <!--<include>scripts/ozstrategy/forms/model/FormField.js</include>-->
+                                    <include>scripts/ozstrategy/forms/model/FormField.js</include>
+                                    <include>scripts/ozstrategy/forms/model/FlowForm.js</include>
                                     
                                     <!--flow-->
-                                    <!--<include>scripts/ozstrategy/flows/model/ProcessDef.js</include>-->
-                                    <!--<include>scripts/ozstrategy/flows/model/ProcessDefInstanceDraft.js</include>-->
-                                    <!--<include>scripts/ozstrategy/flows/model/ProcessInstanceHistory.js</include>-->
-                                    <!--<include>scripts/ozstrategy/flows/model/Task.js</include>-->
-                                    <!--<include>scripts/ozstrategy/flows/model/TaskInstance.js</include>-->
+                                    <include>scripts/ozstrategy/flows/model/ProcessDef.js</include>
+                                    <include>scripts/ozstrategy/flows/model/ProcessDefInstanceDraft.js</include>
+                                    <include>scripts/ozstrategy/flows/model/ProcessInstanceHistory.js</include>
+                                    <include>scripts/ozstrategy/flows/model/Task.js</include>
+                                    <include>scripts/ozstrategy/flows/model/TaskInstance.js</include>
 
 
                                     <!--user store-->
-                                    <!--<include>scripts/ozstrategy/user/store/SystemView.js</include>-->
-                                    <!--<include>scripts/ozstrategy/user/store/Users.js</include>-->
-                                    <!--<include>scripts/ozstrategy/user/store/Roles.js</include>-->
-                                    <!--<include>scripts/ozstrategy/user/store/AllFeatures.js</include>-->
-                                    <!--<include>scripts/ozstrategy/user/store/RoleTree.js</include>-->
+                                    <include>scripts/ozstrategy/user/store/SystemView.js</include>
+                                    <include>scripts/ozstrategy/user/store/Users.js</include>
+                                    <include>scripts/ozstrategy/user/store/Roles.js</include>
+                                    <include>scripts/ozstrategy/user/store/AllFeatures.js</include>
+                                    <include>scripts/ozstrategy/user/store/RoleTree.js</include>
 
 
                                     <!--system store-->
-                                    <!--<include>scripts/ozstrategy/system/store/GlobalTypes.js</include>-->
-                                    <!--<include>scripts/ozstrategy/system/store/GlobalTypeTree.js</include>-->
+                                    <include>scripts/ozstrategy/system/store/GlobalTypes.js</include>
+                                    <include>scripts/ozstrategy/system/store/GlobalTypeTree.js</include>
+                                    <include>scripts/ozstrategy/system/store/SystemMessage.js</include>
 
                                     <!--form store-->
-                                    <!--<include>scripts/ozstrategy/forms/store/FlowForm.js</include>-->
-                                    <!--<include>scripts/ozstrategy/forms/store/FormField.js</include>-->
+                                    <include>scripts/ozstrategy/forms/store/FlowForm.js</include>
+                                    <include>scripts/ozstrategy/forms/store/FormField.js</include>
                                     
                                     <!--flow store-->
-                                    <!--<include>scripts/ozstrategy/flows/store/ProcessDef.js</include>-->
-                                    <!--<include>scripts/ozstrategy/flows/store/ProcessDefinition.js</include>-->
-                                    <!--<include>scripts/ozstrategy/flows/store/ProcessDefInstanceDraft.js</include>-->
-                                    <!--<include>scripts/ozstrategy/flows/store/ProcessInstanceHistory.js</include>-->
-                                    <!--<include>scripts/ozstrategy/flows/store/Task.js</include>-->
-                                    <!--<include>scripts/ozstrategy/flows/store/TaskInstance.js</include>-->
+                                    <include>scripts/ozstrategy/flows/store/ProcessDef.js</include>
+                                    <include>scripts/ozstrategy/flows/store/ProcessDefinition.js</include>
+                                    <include>scripts/ozstrategy/flows/store/ProcessDefInstanceDraft.js</include>
+                                    <include>scripts/ozstrategy/flows/store/ProcessInstanceHistory.js</include>
+                                    <include>scripts/ozstrategy/flows/store/Task.js</include>
+                                    <include>scripts/ozstrategy/flows/store/TaskInstance.js</include>
                                     
                                     <!--user view-->
-                                    <!--<include>scripts/ozstrategy/user/view/UserForm.js</include>-->
-                                    <!--<include>scripts/ozstrategy/user/view/UserView.js</include>-->
-                                    <!--<include>scripts/ozstrategy/user/view/RoleForm.js</include>-->
-                                    <!--<include>scripts/ozstrategy/user/view/RoleView.js</include>-->
-                                    <!--<include>scripts/ozstrategy/user/view/FeatureForm.js</include>-->
-                                    <!--<include>scripts/ozstrategy/user/view/FeatureView.js</include>-->
-                                    <!--<include>scripts/ozstrategy/user/view/UserSelector.js</include>-->
-                                    <!--<include>scripts/ozstrategy/user/view/RoleSelector.js</include>-->
+                                    <include>scripts/ozstrategy/user/view/UserForm.js</include>
+                                    <include>scripts/ozstrategy/user/view/UserView.js</include>
+                                    <include>scripts/ozstrategy/user/view/RoleForm.js</include>
+                                    <include>scripts/ozstrategy/user/view/RoleView.js</include>
+                                    <include>scripts/ozstrategy/user/view/FeatureForm.js</include>
+                                    <include>scripts/ozstrategy/user/view/FeatureView.js</include>
+                                    <include>scripts/ozstrategy/user/view/UserSelector.js</include>
+                                    <include>scripts/ozstrategy/user/view/RoleSelector.js</include>
 
                                     <!--system view-->
-                                    <!--<include>scripts/ozstrategy/system/view/GlobalTypeForm.js</include>-->
-                                    <!--<include>scripts/ozstrategy/system/view/GlobalTypeLeftTree.js</include>-->
-                                    <!--<include>scripts/ozstrategy/system/view/GlobalTypeTree.js</include>-->
-                                    <!--<include>scripts/ozstrategy/system/view/GlobalTypeView.js</include>-->
+                                    <include>scripts/ozstrategy/system/view/GlobalTypeForm.js</include>
+                                    <include>scripts/ozstrategy/system/view/GlobalTypeLeftTree.js</include>
+                                    <include>scripts/ozstrategy/system/view/GlobalTypeTree.js</include>
+                                    <include>scripts/ozstrategy/system/view/GlobalTypeView.js</include>
+                                    <include>scripts/ozstrategy/system/view/SystemMessageView.js</include>
 
                                     <!--form view-->
-                                    <!--<include>scripts/ozstrategy/forms/view/CKEditor.js</include>-->
-                                    <!--<include>scripts/ozstrategy/forms/view/FlowFormDetail.js</include>-->
-                                    <!--<include>scripts/ozstrategy/forms/view/FormPreview.js</include>-->
-                                    <!--<include>scripts/ozstrategy/forms/view/FormPreviewWindow.js</include>-->
-                                    <!--<include>scripts/ozstrategy/forms/view/FlowFormForm.js</include>-->
-                                    <!--<include>scripts/ozstrategy/forms/view/FlowFormView.js</include>-->
-                                    <!--<include>scripts/ozstrategy/forms/view/FlowFormSelector.js</include>-->
+                                    <include>scripts/ozstrategy/forms/view/CKEditor.js</include>
+                                    <include>scripts/ozstrategy/forms/view/FlowFormDetail.js</include>
+                                    <include>scripts/ozstrategy/forms/view/FormPreview.js</include>
+                                    <include>scripts/ozstrategy/forms/view/FormPreviewWindow.js</include>
+                                    <include>scripts/ozstrategy/forms/view/FlowFormForm.js</include>
+                                    <include>scripts/ozstrategy/forms/view/FlowFormView.js</include>
+                                    <include>scripts/ozstrategy/forms/view/FlowFormSelector.js</include>
                                     
                                     
                                     
                                     <!--flow view-->
-                                    <!--<include>scripts/ozstrategy/flows/view/ProcessUserSetter.js</include>-->
-                                    <!--<include>scripts/ozstrategy/flows/view/CountersignTaskWindow.js</include>-->
-                                    <!--<include>scripts/ozstrategy/flows/view/ProcessUserSetter.js</include>-->
-                                    <!--<include>scripts/ozstrategy/flows/view/Modeler.js</include>-->
-                                    <!--<include>scripts/ozstrategy/flows/view/ModelerPreview.js</include>-->
-                                    <!--<include>scripts/ozstrategy/flows/view/ModelerPreviewWindow.js</include>-->
-                                    <!--<include>scripts/ozstrategy/flows/view/ModelerWindow.js</include>-->
-                                    <!--<include>scripts/ozstrategy/flows/view/ProcessDefAuthorityWindow.js</include>-->
-                                    <!--<include>scripts/ozstrategy/flows/view/ProcessListForm.js</include>-->
-                                    <!--<include>scripts/ozstrategy/flows/view/ProcessListView.js</include>-->
-                                    <!--<include>scripts/ozstrategy/flows/view/ProcessDefinitionHeader.js</include>-->
-                                    <!--<include>scripts/ozstrategy/flows/view/ProcessDefInstanceDraftForm.js</include>-->
-                                    <!--<include>scripts/ozstrategy/flows/view/ProcessDefInstanceDraftView.js</include>-->
-                                    <!--<include>scripts/ozstrategy/flows/view/NewProcessDefinition.js</include>-->
-                                    <!--<include>scripts/ozstrategy/flows/view/ProcessDefinitionView.js</include>-->
-                                    <!--<include>scripts/ozstrategy/flows/view/TaskInstanceView.js</include>-->
-                                    <!--<include>scripts/ozstrategy/flows/view/TaskAssigneeView.js</include>-->
-                                    <!--<include>scripts/ozstrategy/flows/view/TaskView.js</include>-->
-                                    <!--<include>scripts/ozstrategy/flows/view/ReplevyTaskView.js</include>-->
-                                    <!--<include>scripts/ozstrategy/flows/view/ApplyProcessHistoryView.js</include>-->
+                                    <include>scripts/ozstrategy/flows/view/ProcessUserSetter.js</include>
+                                    <include>scripts/ozstrategy/flows/view/FormFieldSetter.js</include>
+                                    <include>scripts/ozstrategy/flows/view/CountersignTaskWindow.js</include>
+                                    <include>scripts/ozstrategy/flows/view/ProcessUserSetter.js</include>
+                                    <include>scripts/ozstrategy/flows/view/Modeler.js</include>
+                                    <include>scripts/ozstrategy/flows/view/ModelerPreview.js</include>
+                                    <include>scripts/ozstrategy/flows/view/ModelerPreviewWindow.js</include>
+                                    <include>scripts/ozstrategy/flows/view/ModelerWindow.js</include>
+                                    <include>scripts/ozstrategy/flows/view/ProcessDefAuthorityWindow.js</include>
+                                    <include>scripts/ozstrategy/flows/view/ProcessListForm.js</include>
+                                    <include>scripts/ozstrategy/flows/view/ProcessListView.js</include>
+                                    <include>scripts/ozstrategy/flows/view/ProcessDefinitionHeader.js</include>
+                                    <include>scripts/ozstrategy/flows/view/ProcessDefInstanceDraftForm.js</include>
+                                    <include>scripts/ozstrategy/flows/view/ProcessDefInstanceDraftView.js</include>
+                                    <include>scripts/ozstrategy/flows/view/NewProcessDefinition.js</include>
+                                    <include>scripts/ozstrategy/flows/view/ProcessDefinitionView.js</include>
+                                    <include>scripts/ozstrategy/flows/view/TaskInstanceView.js</include>
+                                    <include>scripts/ozstrategy/flows/view/TaskAssigneeView.js</include>
+                                    <include>scripts/ozstrategy/flows/view/TaskView.js</include>
+                                    <include>scripts/ozstrategy/flows/view/ReplevyTaskView.js</include>
+                                    <include>scripts/ozstrategy/flows/view/ApplyProcessHistoryView.js</include>
                                     
-                                    <!--<include>scripts/ozstrategy/Settings.js</include>-->
-                                    <!--<include>scripts/ozstrategy/ChangePassword.js</include>-->
-                                    <!--<include>scripts/ozstrategy/UnitUserView.js</include>-->
-                                    <!--<include>scripts/ozstrategy/SystemBaseDataView.js</include>-->
-                                    <!--<include>scripts/ozstrategy/FlowFormManager.js</include>-->
-                                    <!--<include>scripts/ozstrategy/FlowManagerView.js</include>-->
-                                    <!--<include>scripts/ozstrategy/App.js</include>-->
+                                    <include>scripts/ozstrategy/Settings.js</include>
+                                    <include>scripts/ozstrategy/ChangePassword.js</include>
+                                    <include>scripts/ozstrategy/UnitUserView.js</include>
+                                    <include>scripts/ozstrategy/SystemBaseDataView.js</include>
+                                    <include>scripts/ozstrategy/FlowFormManager.js</include>
+                                    <include>scripts/ozstrategy/FlowManagerView.js</include>
+                                    <include>scripts/ozstrategy/App.js</include>
                                     
                                     
-                                    <!--<include>scripts/ozstrategy/Constants.js</include>-->
-                                    <!--<include>scripts/ozstrategy/FlowIndex.js</include>-->
-                                    <!--<include>scripts/ozstrategy/WelcomeIndex.js</include>-->
-                                    <!--<include>scripts/ozstrategy/UserHeader.js</include>-->
-                                    <!--<include>scripts/ozstrategy/UserViewport.js</include>-->
+                                    <include>scripts/ozstrategy/Constants.js</include>
+                                    <include>scripts/ozstrategy/FlowIndex.js</include>
+                                    <include>scripts/ozstrategy/WelcomeIndex.js</include>
+                                    <include>scripts/ozstrategy/UserHeader.js</include>
+                                    <include>scripts/ozstrategy/UserViewport.js</include>
+                                    <include>scripts/ozstrategy/global.js</include>
                                     
                                 </includes>
                             </aggregation>
@@ -378,7 +384,7 @@
                     <artifactId>maven-war-plugin</artifactId>
                     <configuration>
                         <warSourceExcludes>
-                            deploy/**,markup/**,mxgraph/js/*.js,mxgraph/src/js/*.js,scripts/login/**/*.js,scripts/ux/**,scripts/desktop/**/*.js,scripts/ozstrategy/**/*.js,scripts/ext/ext-all-*.js,scripts/ext/ext-c*.js,scripts/ext/ext-d*.js,scripts/ext/ext-f*.js,scripts/ext/ext.js,scripts/ext/boot*.js,scripts/ext/src/**,**/*debug*.js
+                            deploy/**,markup/**,mxgraph/js/*.js,mxgraph/src/js/*.js,scripts/login/*.js,scripts/ux/**,scripts/desktop/**/*.js,scripts/ozstrategy/**/*.js,scripts/ext/ext-all-*.js,scripts/ext/ext-c*.js,scripts/ext/ext-d*.js,scripts/ext/ext-f*.js,scripts/ext/ext.js,scripts/ext/boot*.js,scripts/ext/src/**,**/*debug*.js
                         </warSourceExcludes>
                         <packagingExcludes>scripts/ux/**,scripts/desktop/*.js,scripts/desktop/js/*.js,scripts/ozstrategy/**</packagingExcludes>
                     </configuration>

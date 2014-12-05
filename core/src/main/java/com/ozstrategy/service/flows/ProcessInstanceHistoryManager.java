@@ -11,4 +11,5 @@ import java.util.Map;
 public interface ProcessInstanceHistoryManager {
     List<ProcessInstanceHistory> listProcessInstanceHistories(Map<String,Object> map,Integer start,Integer limit);
     Integer listProcessInstanceHistoriesCount(Map<String,Object> map);
+    Map<String,Object> getHisVariables(String actInstanceId);
 }

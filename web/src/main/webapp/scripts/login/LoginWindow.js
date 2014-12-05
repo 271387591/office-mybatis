@@ -97,12 +97,20 @@ Ext.define('Oz.LoginWindow', {
 
     doLogin: function(){
       if (this.form.isValid()) {
+          var box = Ext.MessageBox;
+          box.show({
+              msg: loginRes.loginMsg,
+              width:300,
+              wait:true,
+              waitConfig: {interval:200},
+              animateTarget: 'mb7'
+          });
         this.form.submit({
             success: function(form, action) {
-//              document.location = loginRes.mainUrl;
-//              document.location.replace(loginRes.mainUrl);
+                if (box != undefined){ box.close();}
             },
             failure: function(form, action) {
+                if (box != undefined){ box.close();}
               Ext.Msg.alert('Failed', action.result.msg);
             }
           });

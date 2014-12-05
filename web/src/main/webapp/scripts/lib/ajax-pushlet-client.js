@@ -266,6 +266,7 @@ var PL = {
 			var src = nodes.item(i).src;
 			if (src) {
 				var index = src.indexOf("ajax-pushlet-client.js");
+				//var index = src.indexOf("pl-client.min");
 				if (index >= 0) {
 					index = src.indexOf("scripts");
 					PL.webRoot = src.substring(0, index);

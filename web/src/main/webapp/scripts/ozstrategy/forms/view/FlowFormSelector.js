@@ -8,7 +8,7 @@ Ext.define('FlexCenter.forms.view.FlowFormSelector', {
     extend: 'Ext.Window',
     alias: 'widget.flowFormSelector',
     itemId: 'flowFormSelector',
-    title: '表单选择器',
+    title: flowFormRes.flowFormSelector.title,
     shim: false,
     modal: true,
     layout: 'fit',
@@ -25,13 +25,13 @@ Ext.define('FlexCenter.forms.view.FlowFormSelector', {
         ];
         me.buttons= [
             {
-                text: '确定',
+                text: globalRes.buttons.ok,
                 formBind: true,
                 scope: me,
                 handler: me.onSubmitClick
             },
             {
-                text: '取消',
+                text: globalRes.buttons.cancel,
                 handler: function () {
                     me.close();
                 }
@@ -68,9 +68,9 @@ Ext.define('FlexCenter.forms.view.FlowFormSelector', {
 
         } else {
             Ext.MessageBox.show({
-                title: '提示消息',
+                title: globalRes.title.prompt,
                 width: 200,
-                msg: '对不起，请选择表单',
+                msg: flowFormRes.flowFormSelector.prompt,
                 buttons: Ext.MessageBox.OK,
                 icon: Ext.MessageBox.INFO
             });

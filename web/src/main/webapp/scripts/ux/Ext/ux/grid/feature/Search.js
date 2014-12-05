@@ -40,7 +40,7 @@ Ext.define('Ext.ux.grid.feature.Search', {
        * @cfg {String} selectAllText
        * Text to display on menu select all
        */
-      selectAllText: 'Search All Columns',
+      selectAllText: globalRes.selectAllText,//'Search All Columns',
 
       /**
        * @cfg {String} searchText
