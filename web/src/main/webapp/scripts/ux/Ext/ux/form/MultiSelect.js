@@ -40,6 +40,7 @@ Ext.define('Ext.ux.form.MultiSelect', {
 
         maxSelected: null,
         selectedSorters: null,
+        displayInfo:true,
 
         pageSize: 10,
         filterMode: 'remote',
@@ -280,7 +281,7 @@ Ext.define('Ext.ux.form.MultiSelect', {
                         //pageSize: 10,
                         store: availableStore,
                         displayMsg: '{0} - {1} of {2}',
-                        displayInfo: true
+                        displayInfo: me.displayInfo
                     })
                 }, me.availableCfg, commonConfig, {flex: me.availableCfg && me.availableCfg.flex ? me.availableCfg.flex : 1 });
 

@@ -2,24 +2,28 @@ Ext.define('FlexCenter.UserCenterPanel', {
 	extend: 'Ext.tab.Panel',
 	alias: 'widget.userCenterPanel',
 	requires: [
-		'Ext.ux.TabCloseMenu',
-		'FlexCenter.UserToolbar'
+		'FlexCenter.UserIndex',
+		'Ext.ux.TabCloseMenu'
 	],
 	initComponent: function () {
 		Ext.apply(this, {
 			itemId: 'centerPanel',
-			region: 'center',
 			resizeTabs: true,
 			enableTabScroll: true,
 			defaults: {
 				autoScroll: true
 			},
 			activeTab: 0,
+			border:false,
 			items: [
-//				{
-//					xtype: 'indexView',
-//					closable: true
-//				}
+				{
+					xtype:'userIndex',
+					iconCls: 'view_tree',
+					tabConfig:{
+						title: '导航',
+						tooltip: '导航'
+					}
+				}
 			],
 			plugins: Ext.create('Ext.ux.TabCloseMenu', {
 				closeTabText: '关闭当前',
@@ -39,7 +43,6 @@ Ext.define('FlexCenter.UserCenterPanel', {
 			} else {
 				panel = Ext.widget(widget);
 			}
-
 			me.add(panel);
 		}
 		me.setActiveTab(panel);

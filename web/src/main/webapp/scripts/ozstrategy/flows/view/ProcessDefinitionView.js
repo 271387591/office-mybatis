@@ -46,12 +46,13 @@ Ext.define('FlexCenter.flows.view.ProcessDefinitionView',{
                     var formHtml=rec.get('formHtml');
                     var config={
                         formHtml:formHtml,
-                        text:(workFlowRes.newProcessDefinition.start+'-'+rec.get('name')),
+                        title:(workFlowRes.newProcessDefinition.start+'-'+rec.get('name')),
                         record:rec,
+                        closable:true,
                         itemId:itemId
                     };
-                    var apptabs = Ext.ComponentQuery.query('#apptabs')[0];
-                    apptabs.addTab('newProcessDefinition',itemId,'#processDefinitionView',config);
+                    var centerTabPanel = Ext.ComponentQuery.query('#centerPanel')[0];
+                    centerTabPanel.addPanel('newProcessDefinition', itemId, config);
                 }
             }
         ];
@@ -64,9 +65,9 @@ Ext.define('FlexCenter.flows.view.ProcessDefinitionView',{
                 frame: false,
                 collapsible: true,
                 layout: 'fit',
-                width: 200,
+                width: 280,
                 catKey: 'Workflow',
-                gridViewItemId:'processDefinitionView'
+                gridViewItemId:me.itemId
             },
             {
                 xtype:'grid',

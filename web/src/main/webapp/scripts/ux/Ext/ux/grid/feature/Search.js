@@ -46,7 +46,7 @@ Ext.define('Ext.ux.grid.feature.Search', {
        * @cfg {String} searchText
        * Text to display on menu button
        */
-      searchText: 'Search',
+      searchText: globalRes.searchText,
 
       /**
        * @cfg {String} searchTipText

@@ -32,16 +32,18 @@ Ext.define('FlexCenter.user.view.UserForm', {
       width: 800,
       autoHeight: true,
       border:false,
-      minWidth: 600,
+        maxHeight:600,
       items: [
         {
           xtype: 'form',
-            frame:true,
+            //frame:true,
+            border:false,
             bodyPadding: 5,
             layout: 'anchor',
             defaults: {
                 anchor: '100%'
             },
+            autoScroll:true,
           buttons: [
             {
               xtype: 'button',
@@ -223,7 +225,7 @@ Ext.define('FlexCenter.user.view.UserForm', {
                   xtype: 'fieldset',
                   title: userRoleRes.selectRole,
                   checkboxToggle: false,
-                  height:250,
+                  height:400,
                   autoHeight: true,
                   defaults: {               // defaults are applied to items, not the container
                       anchor: '100%'
@@ -234,6 +236,7 @@ Ext.define('FlexCenter.user.view.UserForm', {
                           border: false,
                           name: 'simpleRoles',
                           itemId: 'roles',
+                          displayInfo:false,
                           hideLabel: true,
                           filterMode: 'local',
                           allowBlank: false,

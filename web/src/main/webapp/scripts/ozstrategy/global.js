@@ -1,19 +1,19 @@
 if (top != self) {
   top.location = self.location;
 }
-Ext.require('Ext.ux.window.Notification');
-var systemMessageTpl=new Ext.XTemplate(
-    '<html>',
-    '<title>系统待办任务提示</title>',
-    '<body>',
-    '<p>{contentMap.userFullName}:您好</p>',
-    '<p>您有一条任务【<font color="red">{contentMap.taskName}</font>】未处理，来自{contentMap.starter}于{contentMap.startTime}申请的{contentMap.instanceTitle}，请你尽快处理。</p>',
-    '<br/>本邮件来xxx办公管理系统自动产生，不需回复。',
-    '</body>',
-    '</html>'
-);
-PL._init();
-PL.joinListen('/systemMessage?username='+globalRes.userName);
+//Ext.require('Ext.ux.window.Notification');
+//var systemMessageTpl=new Ext.XTemplate(
+//    '<html>',
+//    '<title>系统待办任务提示</title>',
+//    '<body>',
+//    '<p>{contentMap.userFullName}:您好</p>',
+//    '<p>您有一条任务【<font color="red">{contentMap.taskName}</font>】未处理，来自{contentMap.starter}于{contentMap.startTime}申请的{contentMap.instanceTitle}，请你尽快处理。</p>',
+//    '<br/>本邮件来xxx办公管理系统自动产生，不需回复。',
+//    '</body>',
+//    '</html>'
+//);
+//PL._init();
+//PL.joinListen('/systemMessage?username='+globalRes.userName);
 function onData(event) {
     var msg=event.get(globalRes.userName);
     msg = decodeURIComponent(msg);

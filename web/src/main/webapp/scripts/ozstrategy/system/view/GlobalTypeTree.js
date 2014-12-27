@@ -98,7 +98,7 @@ Ext.define('FlexCenter.system.view.GlobalTypeTree', {
     var me = this;
     var typeId = record.get('typeId');
     var catKey = me.catKey?me.catKey:null;
-    var centerPanelView = me.ownerCt.ownerCt.down('#'+(me.gridViewItemId?me.gridViewItemId:'centerPanelView'));
+    var centerPanelView = Ext.ComponentQuery.query('#'+(me.gridViewItemId?me.gridViewItemId:'centerPanelView'))[0];
     var searchField = centerPanelView.down('textfield#searchKeyword');
     if(searchField)searchField.setValue("");
     centerPanelView.catKey = catKey;

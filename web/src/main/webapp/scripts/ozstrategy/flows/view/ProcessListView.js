@@ -16,7 +16,6 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
     title: workFlowRes.processDefinitionView.title,
     autoScroll: true,
     layout:'border',
-    margin:1,
     getStore:function(){
         var store=Ext.StoreManager.lookup("processListViewStore");
         if(!store){
@@ -89,9 +88,9 @@ Ext.define('FlexCenter.flows.view.ProcessListView', {
                 frame: false,
                 collapsible: true,
                 layout: 'fit',
-                width: 200,
+                width: 280,
                 catKey: 'Workflow',
-                gridViewItemId:'processListView'
+                gridViewItemId:me.itemId
             },
             {
                 xtype:'grid',

@@ -10,8 +10,7 @@ Ext.define('FlexCenter.user.store.AllFeatures', {
     alias: 'store.allFeatures',
 
     requires: [
-      'FlexCenter.user.model.Feature',
-      'Oz.data.DwrProxy'
+      'FlexCenter.user.model.Feature'
     ],
 
     model: 'FlexCenter.user.model.Feature',

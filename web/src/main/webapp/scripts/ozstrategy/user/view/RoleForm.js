@@ -17,13 +17,6 @@ Ext.define('FlexCenter.user.view.RoleForm',{
 
   ],
   crudType:'save',
-    layout: 'fit',
-    autoShow: true,
-    modal: true,
-    width: 600,
-    autoHeight: true,
-    border:false,
-    minWidth: 600,
     getSystemViewStore:function (){
         var systemViewStore = Ext.StoreManager.lookup('systemViewStore');
         if (!systemViewStore) {
@@ -42,16 +35,18 @@ Ext.define('FlexCenter.user.view.RoleForm',{
           width: 800,
           autoHeight: true,
           border:false,
-          minWidth: 600,
+          maxHeight:600,
           items:[
               {
                   xtype: 'form',
-                  frame:true,
+                  //frame:true,
+                  border:false,
                   bodyPadding: 5,
                   layout: 'anchor',
                   defaults: {
                       anchor: '100%'
                   },
+                  autoScroll:true,
                   buttons:[{
                       text: globalRes.buttons.save,
                       formBind: true,
@@ -118,7 +113,7 @@ Ext.define('FlexCenter.user.view.RoleForm',{
                           xtype: 'fieldset',
                           title: userRoleRes.selectFeature,
                           checkboxToggle: false,
-                          height: 250,
+                          height: 400,
                           autoHeight: true,
                           defaults: {               // defaults are applied to items, not the container
                               anchor: '100%'
@@ -131,6 +126,7 @@ Ext.define('FlexCenter.user.view.RoleForm',{
                                   itemId: 'features',
                                   hideLabel: true,
                                   filterMode: 'local',
+                                  displayInfo:false,
                                   allowBlank: false,
                                   store: me.availableFeatureStore,
                                   availableTitle:userRoleRes.availableFeatures,

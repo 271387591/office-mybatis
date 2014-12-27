@@ -7,12 +7,10 @@
  */
 Ext.define('FlexCenter.user.view.FeatureView',{
     extend: 'Ext.grid.Panel',
-    alias: 'widget.featrueView',
+    alias: 'widget.featureView',
     requires: [
         'Ext.grid.*',
         'Ext.data.*',
-        'Ext.toolbar.Paging',
-        'Ext.toolbar.TextItem',
         'FlexCenter.user.store.AllFeatures',
         'Oz.access.RoleAccess'
     ],
@@ -25,6 +23,7 @@ Ext.define('FlexCenter.user.view.FeatureView',{
                 storeId: 'allFeaturesList'
             });
         }
+        store.load();
         return store;
     },
     initComponent: function () {
@@ -175,4 +174,4 @@ Ext.define('FlexCenter.user.view.FeatureView',{
         store.getProxy().extraParams = {keyword: textField.getValue()};
         store.load();
     }
-})
+});

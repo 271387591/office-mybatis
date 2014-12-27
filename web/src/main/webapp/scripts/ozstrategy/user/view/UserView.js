@@ -9,8 +9,7 @@
 
 Ext.define('FlexCenter.user.view.UserView', {
   extend: 'Ext.panel.Panel',
-  alias: 'widget.userView',
-
+  alias: 'widget.userView', 
   requires: [
     'Ext.grid.*',
     'Ext.data.*',

@@ -19,6 +19,7 @@ var globalRes = {
     removeFail: '<fmt:message key="globalRes.removeFail" />',
     textLengthTooLong: '<fmt:message key="globalRes.textLengthTooLong" />',
     selectAllText: '<fmt:message key="globalRes.selectAllText" />',
+    searchText: '<fmt:message key="globalRes.searchText" />',
     title:{
         resetLocale: '<fmt:message key="globalRes.title.resetLocale" />',
         logout: '<fmt:message key="globalRes.title.logout" />',

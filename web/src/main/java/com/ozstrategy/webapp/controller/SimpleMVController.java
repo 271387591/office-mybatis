@@ -6,7 +6,6 @@ import com.ozstrategy.service.flows.TaskManager;
 import com.ozstrategy.service.userrole.FeatureManager;
 import com.ozstrategy.service.userrole.UserManager;
 import com.ozstrategy.webapp.command.userrole.UserCommand;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -44,11 +43,11 @@ public class SimpleMVController implements InitializingBean {
         if (user == null) {
             return new ModelAndView("redirect:login");
         }
-        String url = user.getDefaultRole().getSystemView().getUrl();
-        if (StringUtils.isNotEmpty(url)) {
-            return new ModelAndView("redirect:" + url);
-        }
-        return new ModelAndView("redirect:login");
+//        String url = user.getDefaultRole().getSystemView().getUrl();
+//        if (StringUtils.isNotEmpty(url)) {
+//            return new ModelAndView("redirect:" + url);
+//        }
+        return new ModelAndView("redirect:home");
     }
 
     @RequestMapping("/desktopRes.js")
@@ -61,6 +60,9 @@ public class SimpleMVController implements InitializingBean {
 
         if (log.isDebugEnabled()) {
             log.debug("Populated User: + " + user + "...");
+        }
+        if(user==null){
+            return new ModelAndView("redirect:login");
         }
         UserCommand command = new UserCommand(user);
         List<Feature> roleFeatures = featureManager.getUserFeaturesByUsername(request.getRemoteUser());

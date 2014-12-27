@@ -208,21 +208,8 @@
                                     <include>scripts/ux/Ext/ux/grid/feature/Detail.js</include>
                                     <include>scripts/ux/Ext/ux/grid/feature/Search.js</include>
 <!---->
-                                    <include>scripts/desktop/js/Module.js</include>
-                                    <include>scripts/desktop/js/ShortcutModel.js</include>
-                                    <include>scripts/desktop/js/StartMenu.js</include>
-                                    <include>scripts/desktop/js/TaskBar.js</include>
-                                    <include>scripts/desktop/js/Video.js</include>
-                                    <include>scripts/desktop/js/Wallpaper.js</include>
-                                    <include>scripts/desktop/js/Desktop.js</include>
-                                    <include>scripts/desktop/js/App.js</include>
 <!---->
                                     <include>scripts/ux/Oz/access/RoleAccess.js</include>
-                                    <include>scripts/ux/Oz/app/TabMenu.js</include>
-                                    <include>scripts/ux/Oz/app/Tabs.js</include>
-                                    <include>scripts/ux/Oz/app/ThumbList.js</include>
-                                    <include>scripts/ux/Oz/data/DwrProxy.js</include>
-                                    <include>scripts/ux/Oz/desktop/Module.js</include>
                                     <include>mxgraph/src/js/mxClient.js</include>
                                     <include>mxgraph/src/js/Shapes.js</include>
                                     <include>mxgraph/src/js/mxModeler.js</include>
@@ -231,11 +218,6 @@
                                     <include>scripts/ozstrategy/global.js</include>
                                     
                                     <include>scripts/ozstrategy/Constants.js</include>
-
-                                    <include>scripts/ozstrategy/model/LabelValue.js</include>
-                                    <include>scripts/ozstrategy/model/WallpaperModel.js</include>
-
-                                    <include>scripts/ozstrategy/store/Base.js</include>
 
                                     <!--user-->
                                     <include>scripts/ozstrategy/user/model/User.js</include>
@@ -338,17 +320,10 @@
                                     
                                     <include>scripts/ozstrategy/Settings.js</include>
                                     <include>scripts/ozstrategy/ChangePassword.js</include>
-                                    <include>scripts/ozstrategy/UnitUserView.js</include>
-                                    <include>scripts/ozstrategy/SystemBaseDataView.js</include>
-                                    <include>scripts/ozstrategy/FlowFormManager.js</include>
-                                    <include>scripts/ozstrategy/FlowManagerView.js</include>
-                                    <include>scripts/ozstrategy/App.js</include>
-                                    
-                                    
-                                    <include>scripts/ozstrategy/Constants.js</include>
-                                    <include>scripts/ozstrategy/FlowIndex.js</include>
-                                    <include>scripts/ozstrategy/WelcomeIndex.js</include>
                                     <include>scripts/ozstrategy/UserHeader.js</include>
+                                    <include>scripts/ozstrategy/UserMenu.js</include>
+                                    <include>scripts/ozstrategy/UserIndex.js</include>
+                                    
                                     <include>scripts/ozstrategy/UserViewport.js</include>
                                     <include>scripts/ozstrategy/global.js</include>
                                     

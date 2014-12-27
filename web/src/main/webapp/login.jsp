@@ -12,16 +12,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title><fmt:message key="webapp.name"/></title>
     <c:set var="language"><%=language %></c:set>
-    <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/desktop/css/desktop.css'/>"/>
-    <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ext/resources/css/ext-all.css'/>"/>
+    <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ext/resources/css/ext-all-neptune.css'/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ozstrategy/css/flexcenter.css'/>"/>
-    <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ozstrategy/css/BoxSelect.css'/>"/>
-    <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/shared/icons.css'/>"/>
-    <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/shared/growl/css/ext-growl.css'/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/login/css/login.css'/>"/>
-    <c:url var="defaultExtTheme" value="/scripts/ext/resources/css/ext-all.css"/>
-    <c:url var="grayExtTheme" value="/scripts/ext/resources/css/ext-all-gray.css"/>
-    <c:url var="accessExtTheme" value="/scripts/ext/resources/css/ext-all-access.css"/>
+    <c:url var="defaultExtTheme" value="/scripts/ext/resources/css/ext-all-neptune.css"/>
     <script type="text/javascript" src="<c:url value='/scripts/ext/ext-all.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/scripts/ext/locale/ext-lang-${language}.js'/>"></script>
     <script type="text/javascript">

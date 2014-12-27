@@ -10,6 +10,7 @@ Ext.define('FlexCenter.forms.view.FormPreviewWindow',{
     itemId:'formPreviewWindow',
     width:1000,
     autoHeight:true,
+    maximizable:true,
     maxHeight:600,
     modal:true,
     shim:false,
