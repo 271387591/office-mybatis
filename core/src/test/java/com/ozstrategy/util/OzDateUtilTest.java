@@ -61,11 +61,13 @@ public class OzDateUtilTest extends TestCase {
     }
     @Test
     public void testProcessElementType() throws Exception{
-        String path=OzDateUtilTest.class.getClassLoader().getResource("jsoup2.json").getPath();
-        String html= FileUtils.readFileToString(new File(path));
-        ObjectMapper objectMapper=new ObjectMapper();
-        List<Map<String,Object>> fieldList = objectMapper.readValue(html, List.class);
-        parseEl(fieldList,null);
+//        String path=OzDateUtilTest.class.getClassLoader().getResource("jsoup2.json").getPath();
+//        String html= FileUtils.readFileToString(new File(path));
+//        ObjectMapper objectMapper=new ObjectMapper();
+//        List<Map<String,Object>> fieldList = objectMapper.readValue(html, List.class);
+//        parseEl(fieldList,null);
+        System.out.println(System.getProperty("java.io.tmpdir"));
+//        
     }
     public static void parseHtml(ObjectMapper objectMapper){
         

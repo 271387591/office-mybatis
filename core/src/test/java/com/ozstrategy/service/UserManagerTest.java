@@ -19,6 +19,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.ibatis.session.RowBounds;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.test.annotation.Rollback;
 
 import java.io.File;
@@ -41,9 +42,21 @@ public class UserManagerTest extends BaseManagerTestCase {
     GlobalTypeDao globalTypeDao;
     @Autowired
     ProcessDefDao processDefDao;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     
     
     
+    
+    @Test
+    public void testPas() throws Exception{
+        String psw="52726a2dc6e8a969d3d5c858c89da1706ac8021b603bda8d";
+        String str =  passwordEncoder.encodePassword("tomcat", null);
+//        psw="536c0b339345616c1b33caf454454d8b8a190d6c";
+        
+        System.out.println("str1==="+passwordEncoder.isPasswordValid(psw,"tomcat",null));
+        System.out.println("str2==="+str);
+    }
 
     @Test
     public void testGetUser() throws Exception {
