@@ -50,8 +50,6 @@ public class RoleCommand {
 		this.description = role.getDescription();
 		this.createDate = role.getCreateDate();
 		this.lastUpdateDate = role.getLastUpdateDate();
-        this.context=role.getSystemView().getContext();
-        this.systemViewId=role.getSystemView().getId();
         Set<User> userSet=role.getUsers();
         if(userSet!=null && userSet.size()>0){
             for(User user : userSet){

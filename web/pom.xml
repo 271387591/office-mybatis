@@ -207,6 +207,8 @@
                                     
                                     <include>scripts/ux/Ext/ux/grid/feature/Detail.js</include>
                                     <include>scripts/ux/Ext/ux/grid/feature/Search.js</include>
+                                    
+                                    <include>scripts/ux/Ext/ux/TabCloseMenu.js</include>
 <!---->
 <!---->
                                     <include>scripts/ux/Oz/access/RoleAccess.js</include>
@@ -323,6 +325,7 @@
                                     <include>scripts/ozstrategy/UserHeader.js</include>
                                     <include>scripts/ozstrategy/UserMenu.js</include>
                                     <include>scripts/ozstrategy/UserIndex.js</include>
+                                    <include>scripts/ozstrategy/UserCenterPanel.js</include>
                                     
                                     <include>scripts/ozstrategy/UserViewport.js</include>
                                     <include>scripts/ozstrategy/global.js</include>

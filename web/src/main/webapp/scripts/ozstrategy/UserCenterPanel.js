@@ -14,6 +14,7 @@ Ext.define('FlexCenter.UserCenterPanel', {
 				autoScroll: true
 			},
 			activeTab: 0,
+			plain: true,
 			border:false,
 			items: [
 				{
@@ -44,25 +45,6 @@ Ext.define('FlexCenter.UserCenterPanel', {
 				panel = Ext.widget(widget);
 			}
 			me.add(panel);
-		}
-		me.setActiveTab(panel);
-	},
-	addSearchPanel: function (widget, itemId, config, searchKeywordValue) {
-		var me = this;
-		var panel = Ext.ComponentQuery.query('#' + itemId)[0];
-		if (!panel) {
-			if (config) {
-				panel = Ext.widget(widget, config, {
-					indexSearchField: searchKeywordValue
-				});
-			} else {
-				panel = Ext.widget(widget, {
-					indexSearchField: searchKeywordValue
-				});
-			}
-			me.add(panel);
-		} else {
-			panel.activeIndexSearch(searchKeywordValue);
 		}
 		me.setActiveTab(panel);
 	}

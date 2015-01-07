@@ -12,21 +12,13 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <c:set var="language"><%=language %></c:set>
-    <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ext/resources/css/ext-all.css'/>"/>
-    <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ozstrategy/css/app.css'/>"/>
+    <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ext/resources/css/ext-all-neptune.css'/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ozstrategy/css/flexcenter.css'/>"/>
-    <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ozstrategy/css/BoxSelect.css'/>"/>
-
-    <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/shared/icons.css'/>"/>
-    <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/shared/growl/css/ext-growl.css'/>"/>
-
-    <c:url var="defaultExtTheme" value="/scripts/ext/resources/css/ext-all.css"/>
     <script type="text/javascript" src="<c:url value='/scripts/ext/ext-all.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/scripts/json2.js'/>"></script>
     <script type="text/javascript" src="<c:url value="/jscripts/desktopRes.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/jscripts/jscriptRes.js"/>"></script>
     <script type="text/javascript" src="<c:url value='/scripts/ext/locale/ext-lang-${language}.js'/>"></script>
-    <script type="text/javascript" src="<c:url value="/scripts/lib/jquery-1.7.1.min.js"/>"></script>
+    <script type="text/javascript" src="<c:url value='/scripts/lib/jquery-1.7.1.min.js'/>"></script>
 
 
     <script type="text/javascript">
@@ -34,7 +26,6 @@
         basePath = '<c:url value="/"/>';
         mxBasePath = 'mxgraph/src';
     </script>
-    <script type="text/javascript" src="<c:url value="/scripts/lib/ajax-pushlet-client.js"/>"></script>
 
     <script type="text/javascript" src='<c:url value="/demo/demo.js"/>'></script>
 
@@ -82,14 +73,6 @@
         var ozSOA;
         Ext.onReady(function () {
             Ext.QuickTips.init();
-//            var storeTheme = getCookie('OzSOA-Ext-Theme');
-//            if (storeTheme == null || storeTheme == '') {
-//                storeTheme = 'ext-all';
-//            }
-//            Ext.util.CSS.swapStyleSheet("OzSOA-Ext-Theme", extTheme + storeTheme + ".css");
-//            if (!ozSOA) {
-//                ozSOA = new Ext.util.MixedCollection();
-//            }
             ozSOAViewport = new FlexCenter.UserViewport();
             var oDiv = document.getElementById('loading');
             oDiv.style.display = "none";
