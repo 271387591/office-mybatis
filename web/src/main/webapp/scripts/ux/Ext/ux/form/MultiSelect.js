@@ -1,793 +1,457 @@
 /**
- * A control that allows selection of multiple items in a list.
+ * A control that allows selection of multiple items in a list
  */
 Ext.define('Ext.ux.form.MultiSelect', {
-        extend: 'Ext.form.field.Base',
+    
+    extend: 'Ext.form.FieldContainer',
+    
+    mixins: {
+        bindable: 'Ext.util.Bindable',
+        field: 'Ext.form.field.Field'    
+    },
+    
+    alternateClassName: 'Ext.ux.Multiselect',
+    alias: ['widget.multiselectfield', 'widget.multiselect'],
+    
+    requires: ['Ext.panel.Panel', 'Ext.view.BoundList'],
+    
+    uses: ['Ext.view.DragZone', 'Ext.view.DropZone'],
+    
+    /**
+     * @cfg {String} [dragGroup=""] The ddgroup name for the MultiSelect DragZone.
+     */
 
-        alternateClassName: 'Ext.ux.Multiselect',
+    /**
+     * @cfg {String} [dropGroup=""] The ddgroup name for the MultiSelect DropZone.
+     */
+    
+    /**
+     * @cfg {String} [title=""] A title for the underlying panel.
+     */
+    
+    /**
+     * @cfg {Boolean} [ddReorder=false] Whether the items in the MultiSelect list are drag/drop reorderable.
+     */
+    ddReorder: false,
 
-        alias: ['widget.multiselect', 'widget.multiselectfield'],
+    /**
+     * @cfg {Object/Array} tbar An optional toolbar to be inserted at the top of the control's selection list.
+     * This can be a {@link Ext.toolbar.Toolbar} object, a toolbar config, or an array of buttons/button configs
+     * to be added to the toolbar. See {@link Ext.panel.Panel#tbar}.
+     */
 
-        requires: [
-            'Ext.panel.Panel',
-            'Ext.grid.Panel',
-            'Ext.data.Store',
-            'Ext.data.StoreManager',
-            'Ext.form.FieldSet',
-            'Ext.ux.data.PagingMemoryProxy',
-            'Ext.ux.data.AvailableStore',
-            'Ext.ux.dd.DragZone',
-            'Ext.ux.utils.Utils',
-            'Ext.ux.statusbar.StatusBar'
-        ],
+    /**
+     * @cfg {String} [appendOnly=false] True if the list should only allow append drops when drag/drop is enabled.
+     * This is useful for lists which are sorted.
+     */
+    appendOnly: false,
 
-        gridCfg: {},
-        availableCfg: null,
-        selectedCfg: null,
+    /**
+     * @cfg {String} [displayField="text"] Name of the desired display field in the dataset.
+     */
+    displayField: 'text',
 
-        selectedViewCfg: null,
-        availableViewCfg: null,
+    /**
+     * @cfg {String} [valueField="text"] Name of the desired value field in the dataset.
+     */
 
-        availableIdProperty: null,
-        selectedIdProperty: null,
+    /**
+     * @cfg {Boolean} [allowBlank=true] False to require at least one item in the list to be selected, true to allow no
+     * selection.
+     */
+    allowBlank: true,
 
-        availableTitle: 'Available',
-        selectedTitle: 'Selected',
+    /**
+     * @cfg {Number} [minSelections=0] Minimum number of selections allowed.
+     */
+    minSelections: 0,
 
-        columns: [],
-        availableColumns: null,
-        selectedColumns: null,
+    /**
+     * @cfg {Number} [maxSelections=Number.MAX_VALUE] Maximum number of selections allowed.
+     */
+    maxSelections: Number.MAX_VALUE,
 
-        maxSelected: null,
-        selectedSorters: null,
+    /**
+     * @cfg {String} [blankText="This field is required"] Default text displayed when the control contains no items.
+     */
+    blankText: 'This field is required',
 
-        pageSize: 10,
-        filterMode: 'remote',
+    /**
+     * @cfg {String} [minSelectionsText="Minimum {0}item(s) required"] 
+     * Validation message displayed when {@link #minSelections} is not met. 
+     * The {0} token will be replaced by the value of {@link #minSelections}.
+     */
+    minSelectionsText: 'Minimum {0} item(s) required',
+    
+    /**
+     * @cfg {String} [maxSelectionsText="Maximum {0}item(s) allowed"] 
+     * Validation message displayed when {@link #maxSelections} is not met
+     * The {0} token will be replaced by the value of {@link #maxSelections}.
+     */
+    maxSelectionsText: 'Minimum {0} item(s) required',
 
-        selectedStore: undefined,
-        priorityFiled: undefined,
+    /**
+     * @cfg {String} [delimiter=","] The string used to delimit the selected values when {@link #getSubmitValue submitting}
+     * the field as part of a form. If you wish to have the selected values submitted as separate
+     * parameters rather than a single delimited parameter, set this to <tt>null</tt>.
+     */
+    delimiter: ',',
 
-        height: 200,
+    /**
+     * @cfg {Ext.data.Store/Array} store The data source to which this MultiSelect is bound (defaults to <tt>undefined</tt>).
+     * Acceptable values for this property are:
+     * <div class="mdetail-params"><ul>
+     * <li><b>any {@link Ext.data.Store Store} subclass</b></li>
+     * <li><b>an Array</b> : Arrays will be converted to a {@link Ext.data.ArrayStore} internally.
+     * <div class="mdetail-params"><ul>
+     * <li><b>1-dimensional array</b> : (e.g., <tt>['Foo','Bar']</tt>)<div class="sub-desc">
+     * A 1-dimensional array will automatically be expanded (each array item will be the combo
+     * {@link #valueField value} and {@link #displayField text})</div></li>
+     * <li><b>2-dimensional array</b> : (e.g., <tt>[['f','Foo'],['b','Bar']]</tt>)<div class="sub-desc">
+     * For a multi-dimensional array, the value in index 0 of each item will be assumed to be the combo
+     * {@link #valueField value}, while the value at index 1 is assumed to be the combo {@link #displayField text}.
+     * </div></li></ul></div></li></ul></div>
+     */
+    
+    ignoreSelectChange: 0,
+    
+    initComponent: function(){
+        var me = this;
 
-        // private
-        initComponent: function () {
-            var me = this;
-
-            if (me.availableCfg == null) {
-                me.availableCfg = me.gridCfg;
+        me.bindStore(me.store, true);
+        if (me.store.autoCreated) {
+            me.valueField = me.displayField = 'field1';
+            if (!me.store.expanded) {
+                me.displayField = 'field2';
             }
+        }
 
-            if (me.selectedCfg == null) {
-                me.selectedCfg = me.gridCfg;
+        if (!Ext.isDefined(me.valueField)) {
+            me.valueField = me.displayField;
+        }
+        Ext.apply(me, me.setupItems());
+        
+        
+        me.callParent();
+        me.initField();
+        me.addEvents('drop');    
+    },
+    
+    setupItems: function() {
+        var me = this;
+        
+        me.boundList = Ext.create('Ext.view.BoundList', {
+            deferInitialRefresh: false,
+            multiSelect: true,
+            store: me.store,
+            displayField: me.displayField,
+            disabled: me.disabled
+        });
+        
+        me.boundList.getSelectionModel().on('selectionchange', me.onSelectChange, me);
+        return {
+            layout: 'fit',
+            title: me.title,
+            tbar: me.tbar,
+            items: me.boundList
+        };
+    },
+    
+    onSelectChange: function(selModel, selections){
+        if (!this.ignoreSelectChange) {
+            this.setValue(selections);
+        }    
+    },
+    
+    getSelected: function(){
+        return this.boundList.getSelectionModel().getSelection();
+    },
+    
+    // compare array values
+    isEqual: function(v1, v2) {
+        var fromArray = Ext.Array.from,
+            i = 0, 
+            len;
+
+        v1 = fromArray(v1);
+        v2 = fromArray(v2);
+        len = v1.length;
+
+        if (len !== v2.length) {
+            return false;
+        }
+
+        for(; i < len; i++) {
+            if (v2[i] !== v1[i]) {
+                return false;
             }
+        }
 
-            if (me.availableColumns == null && me.columns != null) {
-                me.availableColumns = me.columns;
-            }
-            if (me.selectedColumns == null && me.availableColumns != null) {
-                me.selectedColumns = me.availableColumns;
-            }
+        return true;
+    },
+    
+    afterRender: function(){
+        var me = this;
+        
+        me.callParent();
+        if (me.selectOnRender) {
+            ++me.ignoreSelectChange;
+            me.boundList.getSelectionModel().select(me.getRecordsForValue(me.value));
+            --me.ignoreSelectChange;
+            delete me.toSelect;
+        }    
+        
+        if (me.ddReorder && !me.dragGroup && !me.dropGroup){
+            me.dragGroup = me.dropGroup = 'MultiselectDD-' + Ext.id();
+        }
 
-            me.callParent();
-        },
+        if (me.draggable || me.dragGroup){
+            me.dragZone = Ext.create('Ext.view.DragZone', {
+                view: me.boundList,
+                ddGroup: me.dragGroup,
+                dragText: '{0} Item{1}'
+            });
+        }
+        if (me.droppable || me.dropGroup){
+            me.dropZone = Ext.create('Ext.view.DropZone', {
+                view: me.boundList,
+                ddGroup: me.dropGroup,
+                handleNodeDrop: function(data, dropRecord, position) {
+                    var view = this.view,
+                        store = view.getStore(),
+                        records = data.records,
+                        index;
 
-        bindStore: function (store, initial) {
-            var me = this,
-                oldStore = me.store;
+                    // remove the Models from the source Store
+                    data.view.store.remove(records);
 
-            if (oldStore && !initial && oldStore !== store && oldStore.autoDestroy) {
-                oldStore.destroyStore();
-            }
-
-            me.store = store ? Ext.data.StoreManager.lookup(store) : null;
-        },
-
-        // private
-        onRender: function (ct, position) {
-            var me = this,
-                availableStoreCfg = {
-                    sorters: me.store ? (me.store.sorters ? me.store.sorters.items : null) : null,
-                    model: me.store.model
-                },
-                availableStore = Ext.create('Ext.ux.data.AvailableStore',
-                    Ext.applyIf(availableStoreCfg,
-                            this.filterMode == 'local' ?
-                        {
-                            pageSize: this.pageSize,
-                            reader: me.store.reader,
-                            filterLocalBy: function (filters) {
-                                var me = this,
-                                    decoded = me.decodeFilters(filters),
-                                    i = 0,
-                                    length = decoded.length;
-
-                                me.filters.clear();
-                                for (; i < length; i++) {
-                                    me.filters.replace(decoded[i]);
-                                }
-
-                                me.loadPage(1);
-                            },
-                            clearLocalFilter: function () {
-                                this.filters.clear();
-                                this.loadPage(1);
-                            },
-                            listeners: {
-//                'datachanged': function(store) {
-//                  this.load();
-//                },
-                                'remove': function (store, model) {
-//                  var r, d = model.data, ip = store.proxy.reader.getIdProperty();
-//                  for (var i = 0; i < store.proxy.__data.length; i++) {
-//                    var obj = store.proxy.__data[i];
-//                    if (d[ip] == obj[ip]) {
-//                      r = obj;
-//                      break;
-//                    }
-//                  }
-//                  if (r){
-//                    Ext.Array.remove(store.proxy.__data, r);
-//                    console.log('store.getTotalCount()', store.getTotalCount(), store.proxy.__data.length, (store.currentPage - 1) * store.pageSize);
-//                    if (store.proxy.__data.length <= (store.currentPage - 1) * store.pageSize) {
-//                      console.log('store.currentPage > - 1', store.currentPage - 1);
-//                      store.loadPage(store.currentPage > 0 ? store.currentPage - 1 : 1);
-//                    }
-//                    else
-//                      store.load();
-//                  }
-                                },
-                                'batchRemove': function (store, models) {
-                                    var r, ip = store.proxy.reader.getIdProperty();
-                                    for (var j = 0; j < models.length; j++) {
-                                        var model = models[j], d = model.data;
-                                        for (var i = 0; i < store.proxy.__data.length; i++) {
-                                            var obj = store.proxy.__data[i];
-                                            if (d[ip] == obj[ip]) {
-                                                r = obj;
-                                                Ext.Array.remove(store.proxy.__data, obj);
-                                                break;
-                                            }
-                                        }
-                                    }
-                                    if (r) {
-                                        Ext.Array.remove(store.proxy.__data, r);
-                                        if (store.proxy.__data && store.proxy.__data.length <= (store.currentPage - 1) * store.pageSize) {
-                                            store.loadPage(store.currentPage > 0 ? store.currentPage - 1 : 1);
-                                        }
-                                        else
-                                            store.load();
-                                    }
-                                },
-                                'add': function (store, models) {
-                                    var ip = store.proxy.reader.getIdProperty();
-                                    for (var j = 0; j < models.length; j++) {
-                                        var model = models[j];
-
-
-                                        var d = model.data, r = true;
-                                        for (var i = 0; i < store.proxy.__data.length; i++) {
-                                            var obj = store.proxy.__data[i];
-                                            if (d[ip] == obj[ip]) {
-                                                r = false;
-                                                break;
-                                            }
-                                        }
-                                        if (r) {
-                                            store.proxy.__data.push(d);
-                                        }
-                                    }
-
-                                    if (store.currentPage < 1) {
-                                        store.loadPage(1);
-                                    }
-                                    else {
-                                        store.load();
-                                    }
-                                }
-                            }
-                        } : null
-                    )
-                ), //blank store to begin
-                availableViewConfig = Ext.applyIf({
-                    forceFit: true,
-                    plugins: Ext.applyIf({
-                        ptype: 'gridviewdragdrop',
-                        enableDrag: !me.readOnly,
-                        enableDrop: !me.readOnly,
-                        onViewRender: Ext.ux.utils.Utils.onDragDropViewRender
-                    }, me.enableSort ?
-                    {ddGroup: 'availableGridDDGroup-' + me.id}
-                        :
-                    {
-                        ddGroup: 'availableGridDDGroup-' + me.id,
-                        dropGroup: 'selectedGridDDGroup-' + me.id
-                    })
-                }, me.availableViewCfg),
-                selectedViewCfg = Ext.applyIf({
-                    forceFit: true,
-                    plugins: Ext.applyIf({
-                        ptype: 'gridviewdragdrop',
-                        enableDrag: !me.readOnly,
-                        enableDrop: !me.readOnly,
-                        onViewRender: Ext.ux.utils.Utils.onDragDropViewRender
-                    }, me.enableSort ?
-                    {ddGroup: 'availableGridDDGroup-' + me.id}
-                        :
-                    {
-                        dragGroup: 'selectedGridDDGroup-' + me.id,
-                        dropGroup: 'availableGridDDGroup-' + me.id
-                    }),
-                    listeners: {
-                        beforedrop: function (node, data) {
-                            if (me.maxSelected) {
-                                if (data && data.records && data.view.id != this.id) {
-                                    var total = this.store.getCount() + data.records.length;
-                                    if (total > me.maxSelected) {
-                                        return false;
-                                    }
-                                }
-                            }
-                        },
-                        drop: function (node, data, m, dp) {
-                            if (me.priorityFiled) {
-                                var records = this.store.getRange();
-//                    if (me.etlFileLayoutMode && data && data.records) {
-//                      var dropRecords = data.records;
-//                      //filter selected exists data;
-//                      var needSetDefaultValueRecordArray = [];
-//                      Ext.Array.each(dropRecords, function (dropRecord) {
-//                        Ext.Array.each(records, function (selectRecord) {
-//                          if (dropRecord.get('variableId') === selectRecord.get('variableId')) {
-//                            needSetDefaultValueRecordArray.push(selectRecord);
-//                            return false;
-//                          }
-//                        });
-//                      });
-//                      me.setRecordDefaultValue(needSetDefaultValueRecordArray);
-//                    }
-
-                                for (var i = 0; i < records.length; i++) {
-                                    var rec = records[i];
-                                    rec.set(me.priorityFiled, i + 1);
-                                }
-                            }
-
-                            me.fireEvent('updatedPriorityFiled');
-
-                            this.store.sort(me.selectedSorters ? me.selectedSorters : availableStore.sorters);
-                        }
+                    index = store.indexOf(dropRecord);
+                    if (position === 'after') {
+                        index++;
                     }
-                }, me.selectedViewCfg),
-                commonConfig = {
-                    multiSelect: true,
-                    stripeRows: true,
-                    autoDestroy: true,
-                    flex: 1
-                },
-                availableConfig = Ext.apply({
-                    title: me.availableTitle,
-                    height: me.ownerCt ? me.ownerCt.getHeight() - 45 : '100%',
-                    itemId: me.itemId,
-                    viewConfig: availableViewConfig,
-                    store: availableStore,
-                    margins: '0 5 0 0',
-                    autoScroll: true,
-                    forceFit: true,
-                    columns: me.availableColumns,
-
-                    // paging bar on the bottom
-                    bbar: Ext.create('Ext.toolbar.Paging', {
-                        //pageSize: 10,
-                        store: availableStore,
-                        displayMsg: '{0} - {1} of {2}',
-                        displayInfo: true
-                    })
-                }, me.availableCfg, commonConfig, {flex: me.availableCfg && me.availableCfg.flex ? me.availableCfg.flex : 1 });
-
-            if (!availableStore.proxy.__data) {
-                availableStore.proxy.__data = [];
-            }
-
-            if (me.selectedViewCfg && me.selectedViewCfg.listeners && me.selectedViewCfg.listeners != null) {
-                for (var event in me.selectedViewCfg.listeners) {
-                    if (event && me.selectedViewCfg.listeners[event]) {
-                        selectedViewCfg.listeners[event] = me.selectedViewCfg.listeners[event];
-                    }
+                    store.insert(index, records);
+                    view.getSelectionModel().select(records);
+                    me.fireEvent('drop', me, records);
                 }
+            });
+        }
+    },
+    
+    isValid : function() {
+        var me = this,
+            disabled = me.disabled,
+            validate = me.forceValidation || !disabled;
+            
+        
+        return validate ? me.validateValue(me.value) : disabled;
+    },
+    
+    validateValue: function(value) {
+        var me = this,
+            errors = me.getErrors(value),
+            isValid = Ext.isEmpty(errors);
+            
+        if (!me.preventMark) {
+            if (isValid) {
+                me.clearInvalid();
+            } else {
+                me.markInvalid(errors);
             }
+        }
 
-            if (!me.selectedStore) {
-                me.selectedStore = Ext.create('Ext.data.Store', {
-                    model: me.store.model,
-                    sorters: me.selectedSorters ? me.selectedSorters : me.store.sorters,
-                    listeners: {
-                        add: function (store) {
-                            me.updateSelectedGridStatusBar(store.getCount());
-                            try {
-                                me.up('form').getForm().checkDirty();
-                            } catch (e) {
-                            }
-                        },
-                        remove: function (store) {
-                            me.updateSelectedGridStatusBar(store.getCount());
-                            try {
-                                me.up('form').getForm().checkDirty();
-                            } catch (e) {
-                            }
-                        }
-                    }
-                })
-            }
+        return isValid;
+    },
+    
+    markInvalid : function(errors) {
+        // Save the message and fire the 'invalid' event
+        var me = this,
+            oldMsg = me.getActiveError();
+        me.setActiveErrors(Ext.Array.from(errors));
+        if (oldMsg !== me.getActiveError()) {
+            me.updateLayout();
+        }
+    },
 
-            var selectedConfig = Ext.apply({
-                    title: me.selectedTitle,
-                    height: me.ownerCt ? me.ownerCt.getHeight() - 45 : '100%',
-                    itemId: me.selectedItemId,
-                    viewConfig: selectedViewCfg,
-                    store: me.selectedStore, //blank store to begin
-                    margins: '0 0 0 5',
-                    autoScroll: true,
-                    forceFit: true,
-                    columns: me.selectedColumns,
-                    bbar: me.maxSelected ? Ext.create('Ext.ux.StatusBar', {
-                        id: 'selectedGrid-statusBar',
-                        text: ''
-                    }) : null,
-                    listeners: {
-                        afterrender: function () {
-                            me.updateSelectedGridStatusBar(me.selectedStore.getCount());
-                        }
-                    }
-                }, me.selectedCfg, commonConfig, {flex: me.selectedCfg && me.selectedCfg.flex ? me.selectedCfg.flex : 1}),
-                availableGrid = Ext.widget('grid', availableConfig),
-                selectedGrid = Ext.widget('grid', selectedConfig),
-                innerCt,
-                buttons = [];
-            me.callParent(arguments);
-            if (!Ext.isIE) {
-                me.el.mask('rendering...');
-            }
-
-            me.availableGrid = availableGrid;
-            me.selectedGrid = selectedGrid;
-
-            if (!me.readOnly) {
-                me.mon(me.availableGrid, 'itemdblclick', this.onAvailableDblClick, this);
-                me.mon(me.selectedGrid, 'itemdblclick', this.onSelectedDblClick, this);
-            }
-
-
-            var form = me.up('form');
-            me.mon(form, 'resize', this.onFormResizeHandler, this);
-        },
-
-        updateSelectedGridStatusBar: function (count) {
-            var me = this;
-            if (me.maxSelected) {
-                var sb = Ext.getCmp('selectedGrid-statusBar');
-                var tpl = 'Current/Maximum: {0}/{1}';
-                var maximum = me.maxSelected ? me.maxSelected : '&infin;';
-                sb.setStatus(Ext.String.format(tpl, count, maximum));
-            }
-        },
-
-        onFormResizeHandler: function () {
-            var me = this;
-            var height = me.ownerCt ? me.ownerCt.getHeight() - 45 : '100%';
-            if (Ext.isNumber(height)) {
-                me.availableGrid.setHeight(height);
-                me.selectedGrid.setHeight(height);
-            }
-        },
-
-//    // private
-//    afterRender: function() {
-//      var me = this;
-//      me.callParent();
-//
-//      // Rebind the store so it gets cloned to the availableField
-//      me.bindStore(me.store);
-//    },
-
-        // No content generated via template, it's all added components
-        getSubTplMarkup: function () {
-            return '';
-        },
-
-        afterRender: function () {
-            this.callParent();
-
-            var me = this,
-                availableGrid = me.availableGrid,
-                selectedGrid = me.selectedGrid,
-                availableStore = availableGrid.getStore(),
-                selectedStore = selectedGrid.getStore(), models;
-            if (selectedGrid) {
-                // Clear both field stores
-                selectedGrid.getStore().removeAll();
-                availableStore.removeAll();
-
-                // Clone the contents of the main store into the fromField
-                models = [];
-                if (this.filterMode == 'local') {
-                    me.store.each(function (model) {
-                        models.push(model.data);
-                    });
-
-                    var proxy = availableStore.getProxy();
-                    availableStore.setProxy(new Ext.ux.data.PagingMemoryProxy({data: models, store: availableStore}));
-                    availableStore.load({params: {start: 0, limit: me.pageSize}, initLoad: true});
-                    delete proxy;
-                }
-                else {
-                    me.store.each(function (model) {
-                        models.push(model.copy(model.getId()));
-                    });
-                    availableStore.add(models);
-                }
-            }
-
-            Ext.Function.defer(
-                function () {
-                    var height = me.ownerCt.getHeight() - 20;
-                    var innerCt = me.innerCt = Ext.create('Ext.panel.Panel', {
-                        renderTo: me.bodyEl,
-                        frame: true,
-                        height: height || me.height,
-                        style: 'border:none;',
-                        layout: {
-                            type: 'hbox',
-                            pack: 'start',
-                            align: 'stretch'
-                        },
-                        items: [
-                            availableGrid,
-                            {
-                                xtype: 'container',
-                                width: 30,
-                                height: '100%',
-                                layout: {
-                                    type: 'vbox',
-                                    padding: '0',
-                                    pack: 'center',
-                                    align: 'center'
-                                },
-                                defaults: {margins: '0 0 5 0'},
-                                items: [
-                                    {
-                                        xtype: 'button',
-                                        iconCls: 'arrow_right',
-                                        tooltip: globalRes.tooltip.moveToRight,
-                                        disabled: me.readOnly,
-                                        handler: function () {
-                                            var selModel = availableGrid.getSelectionModel();
-                                            if (selModel.hasSelection()) {
-                                                var records = selModel.getSelection();
-
-                                                if (me.maxSelected && records) {
-                                                    var total = me.selectedStore.getCount() + records.length;
-                                                    if (total > me.maxSelected) {
-                                                        return false;
-                                                    }
-                                                }
-                                                selectedStore.add(records);
-                                                availableStore.remove(records);
-                                                if (!me.etlFileLayoutMode) {
-                                                    availableStore.sort(availableStore.sorters);
-                                                }
-                                                me.updatePriorityFiled();
-                                            }
-                                        }
-                                    },
-                                    {
-                                        xtype: 'button',
-                                        iconCls: 'arrow_right_double',
-                                        tooltip: globalRes.tooltip.moveAllToRight,
-                                        disabled: me.readOnly,
-                                        handler: function () {
-                                            var records;
-
-                                            if (me.maxSelected) {
-                                                var endIndex = me.maxSelected - me.selectedStore.getCount() - 1;
-                                                if (endIndex >= 0) {
-                                                    records = availableStore.getRange(0, endIndex);
-                                                }
-                                            } else {
-                                                records = availableStore.getRange();
-                                            }
-
-                                            if (records) {
-                                                selectedStore.add(records);
-                                                availableStore.remove(records);
-                                                if (!me.etlFileLayoutMode) {
-                                                    availableStore.sort(availableStore.sorters);
-                                                }
-                                                me.updatePriorityFiled();
-                                            }
-                                        }
-                                    },
-                                    {
-                                        xtype: 'button',
-                                        iconCls: 'arrow_left_double',
-                                        tooltip: globalRes.tooltip.moveAllToLeft,
-                                        disabled: me.readOnly,
-                                        handler: function () {
-                                            var records = selectedStore.getRange();
-                                            availableStore.add(records);
-                                            selectedStore.remove(records);
-                                            me.updatePriorityFiled();
-                                        }
-                                    },
-                                    {
-                                        xtype: 'button',
-                                        iconCls: 'arrow_left',
-                                        tooltip: globalRes.tooltip.moveToLeft,
-                                        disabled: me.readOnly,
-                                        handler: function () {
-                                            var selModel = selectedGrid.getSelectionModel()
-                                            if (selModel.hasSelection()) {
-                                                var records = selModel.getSelection();
-                                                availableStore.add(records);
-                                                selectedStore.remove(records);
-                                                me.updatePriorityFiled();
-                                            }
-                                        }
-                                    }
-                                ]
-                            },
-                            selectedGrid
-                        ]
-                    });
-
-                    // Must set upward link after first render
-                    innerCt.ownerCt = me;
-                    me.ownerCt.doLayout();
-                    if (!Ext.isIE) {
-                        me.el.unmask();
-                    }
-                }, 100);
-        },
-
-        updatePriorityFiled: function () {
-            var me = this;
-            new Ext.util.DelayedTask(function () {
-                if (me.priorityFiled) {
-                    var records = me.selectedStore.getRange();
-                    for (var i = 0; i < records.length; i++) {
-                        var rec = records[i];
-                        rec.set(me.priorityFiled, i + 1);
-                    }
-                    try {
-                        me.selectedGrid.getView().refresh();
-                    } catch (e) {
-                    }
-                }
-                me.fireEvent('updatedPriorityFiled');
-            }).delay(500);
-        },
-
-        setRawValue: function (value) {
-            var me = this,
-                Array = Ext.Array,
-                selectedStore, availableStore,
-                isLocalMode = this.filterMode == 'local';
-
-            value = Array.from(value);
-            me.rawValue = value;
-
-            if (me.rendered && me.selectedGrid) {
-                selectedStore = me.selectedGrid.getStore();
-                availableStore = me.availableGrid.getStore();
-
-                // Move any selected values back to the fromField
-                availableStore.add(selectedStore.getRange());
-                selectedStore.removeAll();
-
-                // Move the new values over to the toField
-                var store, models = [], data;
-                if (isLocalMode) {
-                    store = this.store;
-                    data = store.data.clone();
-                }
-                else {
-                    store = availableStore;
-                }
-                Ext.Array.forEach(value, function (val) {
-                    var id = (val.getId && Ext.isFunction(val.getId)) ? val.getId() : val.id || val;
-                    if (me.availableIdProperty) {
-//            id = val[me.availableIdProperty];
-                        // if val is model record then use it data.
-                        id = val.isModel ? val.data[me.availableIdProperty] : val[me.availableIdProperty];
-                    }
-                    var model = store.getById(id);
-
-                    if (model) {
-                        models.push(model);
-                        if (data) {
-                            var index = data.indexOf(model);
-                            if (index !== -1) {
-                                data.removeAt(index);
-                            }
-                        }
-                    }
-                });
-                selectedStore.add(models);
-                me.updateSelectedGridStatusBar(models.length);
-                if (isLocalMode) {
-                    var arr = [];
-                    data.each(function (model) {
-                        arr.push(model.data);
-                    });
-                    var proxy = availableStore.getProxy();
-                    if (proxy.$className == 'Ext.ux.data.PagingMemoryProxy') {
-                        proxy.data = arr;
-                    }
-                    else {
-                        availableStore.setProxy(new Ext.ux.data.PagingMemoryProxy({data: arr}));
-                        delete proxy;
-                    }
-                    availableStore.load({params: {start: 0, limit: 10}, initLoad: true});
-                }
-                else {
-                    availableStore.remove(models);
-                }
-            }
-
-            return value;
-        },
-
-        getRawValue: function () {
-            var me = this,
-                selectedGrid = me.selectedGrid,
-                rawValue = me.rawValue;
-
-            if (selectedGrid) {
-                rawValue = Ext.Array.map(selectedGrid.getStore().getRange(), function (model) {
-                    return model.data;
-                });
-            }
-
-            me.rawValue = rawValue;
-            return rawValue;
-        },
-
-        getCompleteValue: function () {
-            var me = this,
-                selectedGrid = me.selectedGrid,
-                rawValue = me.rawValue;
-
-            if (selectedGrid) {
-                var store = selectedGrid.getStore();
-                if (store.isFiltered()) {
-                    if (store.clearLocalFilter) {
-                        store.clearLocalFilter();
-                    }
-                    else
-                        store.clearFilter();
-                }
-                rawValue = Ext.Array.map(store.getRange(), function (model) {
-                    return model.data;
-                });
-            }
-
-            me.rawValue = rawValue;
-            return rawValue;
-        },
-
-
-        getSubmitValue: function () {
-            return this.processRawValue(this.getCompleteValue());
-        },
-
-        getModelData: function () {
-            var me = this,
-                data = null;
-            if (!me.disabled && !me.isFileUpload()) {
+    /**
+     * Clear any invalid styles/messages for this field.
+     *
+     * **Note**: this method does not cause the Field's {@link #validate} or {@link #isValid} methods to return `true`
+     * if the value does not _pass_ validation. So simply clearing a field's errors will not necessarily allow
+     * submission of forms submitted with the {@link Ext.form.action.Submit#clientValidation} option set.
+     */
+    clearInvalid : function() {
+        // Clear the message and fire the 'valid' event
+        var me = this,
+            hadError = me.hasActiveError();
+        me.unsetActiveError();
+        if (hadError) {
+            me.updateLayout();
+        }
+    },
+    
+    getSubmitData: function() {
+        var me = this,
+            data = null,
+            val;
+        if (!me.disabled && me.submitValue && !me.isFileUpload()) {
+            val = me.getSubmitValue();
+            if (val !== null) {
                 data = {};
-                data[me.getName()] = me.processRawValue(me.getCompleteValue());
+                data[me.getName()] = val;
             }
-            return data;
-        },
+        }
+        return data;
+    },
 
-        // no conversion
-        valueToRaw: function (value) {
-            var models = [];
-
-            if (value) {
-                if (Ext.isArray(value)) {
-                    Ext.Array.forEach(value, function (model) {
-                        models.push(model);
-                    });
+    /**
+     * Returns the value that would be included in a standard form submit for this field.
+     *
+     * @return {String} The value to be submitted, or null.
+     */
+    getSubmitValue: function() {
+        var me = this,
+            delimiter = me.delimiter,
+            val = me.getValue();
+            
+        return Ext.isString(delimiter) ? val.join(delimiter) : val;
+    },
+    
+    getValue: function(){
+        return this.value;
+    },
+    
+    getRecordsForValue: function(value){
+        var me = this,
+            records = [],
+            all = me.store.getRange(),
+            valueField = me.valueField,
+            i = 0,
+            allLen = all.length,
+            rec,
+            j,
+            valueLen;
+            
+        for (valueLen = value.length; i < valueLen; ++i) {
+            for (j = 0; j < allLen; ++j) {
+                rec = all[j];   
+                if (rec.get(valueField) == value[i]) {
+                    records.push(rec);
                 }
-                if (Ext.isObject(value)) {
-                    value.each(function (model) {
-                        models.push(model);
-                    });
+            }    
+        }
+            
+        return records;
+    },
+    
+    setupValue: function(value){
+        var delimiter = this.delimiter,
+            valueField = this.valueField,
+            i = 0,
+            out,
+            len,
+            item;
+            
+        if (Ext.isDefined(value)) {
+            if (delimiter && Ext.isString(value)) {
+                value = value.split(delimiter);
+            } else if (!Ext.isArray(value)) {
+                value = [value];
+            }
+        
+            for (len = value.length; i < len; ++i) {
+                item = value[i];
+                if (item && item.isModel) {
+                    value[i] = item.get(valueField);
                 }
             }
+            out = Ext.Array.unique(value);
+        } else {
+            out = [];
+        }
+        return out;
+    },
+    
+    setValue: function(value){
+        var me = this,
+            selModel = me.boundList.getSelectionModel();
 
-            return models;
-        },
+        // Store not loaded yet - we cannot set the value
+        if (!me.store.getCount()) {
+            me.store.on({
+                load: Ext.Function.bind(me.setValue, me, [value]),
+                single: true
+            });
+            return;
+        }
 
-        onDisable: function () {
-            this.callParent();
-            this.disabled = true;
-            this.updateReadOnly();
-        },
+        value = me.setupValue(value);
+        me.mixins.field.setValue.call(me, value);
+        
+        if (me.rendered) {
+            ++me.ignoreSelectChange;
+            selModel.deselectAll();
+            selModel.select(me.getRecordsForValue(value));
+            --me.ignoreSelectChange;
+        } else {
+            me.selectOnRender = true;
+        }
+    },
+    
+    clearValue: function(){
+        this.setValue([]);    
+    },
+    
+    onEnable: function(){
+        var list = this.boundList;
+        this.callParent();
+        if (list) {
+            list.enable();
+        }
+    },
+    
+    onDisable: function(){
+        var list = this.boundList;
+        this.callParent();
+        if (list) {
+            list.disable();
+        }
+    },
+    
+    getErrors : function(value) {
+        var me = this,
+            format = Ext.String.format,
+            errors = [],
+            numSelected;
 
-        onEnable: function () {
-            this.callParent();
-            this.disabled = false;
-            this.updateReadOnly();
-        },
+        value = Ext.Array.from(value || me.getValue());
+        numSelected = value.length;
 
-        setReadOnly: function (readOnly) {
-            this.readOnly = readOnly;
-            this.updateReadOnly();
-        },
-
-        /**
-         * @private Cascade readOnly/disabled state to the sub-fields and buttons
-         */
-        updateReadOnly: function () {
-            var me = this,
-                readOnly = me.readOnly || me.disabled;
-
-            if (me.rendered) {
-                if (me.selectedGrid)me.selectedGrid.setDisabled(readOnly);
-                if (me.availableGrid)me.availableGrid.setDisabled(readOnly);
-//        Ext.Array.forEach(me.innerCt.query('button'), function(button) {
-//          button.setDisabled(readOnly);
-//        });
-            }
-        },
-
-        onAvailableDblClick: function (view, model) {
-            var me = this;
-            var selectedStore = this.selectedGrid.getStore(),
-                availableStore = this.availableGrid.getStore();
-            if (me.maxSelected) {
-                var total = me.selectedStore.getCount() + 1;
-                if (total > me.maxSelected) {
-                    return false;
-                }
-            }
-            availableStore.remove(model);
-            selectedStore.add(model);
-            this.selectedGrid.getSelectionModel().select(model);
-            me.updatePriorityFiled();
-        },
-
-        onSelectedDblClick: function (view, model) {
-            var me = this;
-            var selectedStore = this.selectedGrid.getStore(),
-                availableStore = this.availableGrid.getStore();
-            availableStore.add(model);
-            selectedStore.remove(model);
-            this.availableGrid.getSelectionModel().select(model);
-            me.updatePriorityFiled();
-        },
-
-        onDestroy: function () {
-            var form = this.up('form');
-            if (!this.readOnly) {
-                this.mun(this.availableGrid, 'itemdblclick', this.onAvailableDblClick, this);
-                this.mun(this.selectedGrid, 'itemdblclick', this.onSelectedDblClick, this);
-            }
-
-            if (form) {
-                this.mon(form, 'resize', this.onFormResizeHandler, this);
-            }
-//      if(this.selectedGrid.getStore()){
-//        this.selectedGrid.getStore().destroyStore();
-//      }
-//      if(this.availableGrid.getStore()){
-//        this.availableGrid.getStore().destroyStore();
-//      }
-            Ext.destroy(this.selectedGrid, this.availableGrid);
-            Ext.destroyMembers(this, 'innerCt');
-            this.callParent();
+        if (!me.allowBlank && numSelected < 1) {
+            errors.push(me.blankText);
+        }
+        if (numSelected < me.minSelections) {
+            errors.push(format(me.minSelectionsText, me.minSelections));
+        }
+        if (numSelected > me.maxSelections) {
+            errors.push(format(me.maxSelectionsText, me.maxSelections));
+        }
+        return errors;
+    },
+    
+    onDestroy: function(){
+        var me = this;
+        
+        me.bindStore(null);
+        Ext.destroy(me.dragZone, me.dropZone);
+        me.callParent();
+    },
+    
+    onBindStore: function(store){
+        var boundList = this.boundList;
+        
+        if (boundList) {
+            boundList.bindStore(store);
         }
     }
-);
-
+    
+});

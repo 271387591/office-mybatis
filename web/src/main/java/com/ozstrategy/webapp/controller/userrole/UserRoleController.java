@@ -5,7 +5,6 @@ import com.ozstrategy.model.userrole.Role;
 import com.ozstrategy.model.userrole.RoleFeature;
 import com.ozstrategy.model.userrole.SystemView;
 import com.ozstrategy.model.userrole.User;
-import com.ozstrategy.service.flows.ProcessDefManager;
 import com.ozstrategy.service.userrole.FeatureManager;
 import com.ozstrategy.service.userrole.RoleManager;
 import com.ozstrategy.service.userrole.UserManager;
@@ -35,6 +34,9 @@ import java.util.Map;
 @Controller
 @RequestMapping("userRoleController.do")
 public class UserRoleController extends BaseController {
+  //~ Instance fields --------------------------------------------------------------------------------------------------
+
+  /** DOCUMENT ME! */
   protected final transient Log log = LogFactory.getLog(getClass());
 
   @Autowired private FeatureManager featureManager;
@@ -44,20 +46,20 @@ public class UserRoleController extends BaseController {
     
 
   @Autowired private UserManager userManager = null;
-  @Autowired private ProcessDefManager processDefManager = null;
-    
+    private static final String ROLE="ROLE_";
+
   
   @RequestMapping(params = "method=getAvailableFeatures")
   @ResponseBody public JsonReaderResponse<FeatureCommand> getAvailableFeatures(String roleId,
     HttpServletRequest request) {
     List<FeatureCommand> result = new ArrayList<FeatureCommand>();
     int                  total  = 0;
-    Map<String,Object> map=requestMap(request);
+
     try {
-      List<Feature> features = featureManager.listAllFeatures(map);
+      List<Feature> features = featureManager.getAllFeatures();
 // String roleId= params.get("roleId");
       if (StringUtils.isNotEmpty(roleId)) {
-        List<Feature> featureList = featureManager.getFeaturesByRoleId(parseLong(roleId));
+        List<Feature> featureList = featureManager.getFeaturesOfRole(Long.parseLong(roleId));
 
         for (Feature feature : featureList) {
           if (features.contains(feature)) {
@@ -78,7 +80,7 @@ public class UserRoleController extends BaseController {
 
     return new JsonReaderResponse<FeatureCommand>(result, total);
 
-  } 
+  } // end method getAvailableFeatures
 
   @RequestMapping(params = "method=getFeaturesOfRole")
   @ResponseBody 
@@ -89,7 +91,7 @@ public class UserRoleController extends BaseController {
     try {
 // String roleId = params.get("roleId");
       if (StringUtils.isNotEmpty(roleId)) {
-        List<Feature> features = featureManager.getFeaturesByRoleId(parseLong(roleId));
+        List<Feature> features = featureManager.getFeaturesOfRole(Long.parseLong(roleId));
 
         for (Feature feature : features) {
           result.add(new FeatureCommand(feature));
@@ -107,8 +109,8 @@ public class UserRoleController extends BaseController {
   }
     @RequestMapping(params = "method=getAllRoleList")
     @ResponseBody
-    public List<RoleTreeCommand> getAllRoleList(HttpServletRequest request) {
-        List<Role> roleList = roleManager.listAllRoles(requestMap(request));
+    public List<RoleTreeCommand> getAllRoleList() {
+        List<Role> roleList = roleManager.getAllRoles();
         List<RoleTreeCommand> list = new ArrayList<RoleTreeCommand>();
         RoleTreeCommand roleCmd = null;
         if (roleList != null && roleList.size() > 0) {
@@ -122,13 +124,13 @@ public class UserRoleController extends BaseController {
     @RequestMapping(params = "method=listSelectorUsers")
     @ResponseBody
     public JsonReaderResponse<UserCommand> listSelectorUsers(HttpServletRequest request) {
+        String keyword=request.getParameter("keyword");
         String roleId=request.getParameter("roleId");
         Long rId=null;
         if(StringUtils.isNotEmpty(roleId)){
             rId=Long.parseLong(roleId);
         }
-        Map<String,Object> map=requestMap(request);
-        List<User> users = userManager.getUserByRoleId(rId);
+        List<User> users = userManager.getUsers(keyword,null,null,rId);
         List<UserCommand> userCommands = new ArrayList<UserCommand>();
         if (users != null && users.size() > 0) {
             for (User user : users) {
@@ -136,35 +138,17 @@ public class UserRoleController extends BaseController {
                 userCommands.add(cmd);
             }
         }
-        Integer count = userManager.listUsersCount(map);
-        return new JsonReaderResponse<UserCommand>(userCommands, count);
+        Long count = userManager.getCount(keyword);
+        return new JsonReaderResponse<UserCommand>(userCommands, count.intValue());
     }
-    @RequestMapping(params = "method=checkRoleInUser")
-    @ResponseBody
-    public BaseResultCommand checkRoleInUser(HttpServletRequest request){
-        String roleId=request.getParameter("roleId");
-        Long rId=parseLong(roleId);
-        if(rId!=null){
-            List<User> users = userManager.getUserByRoleId(rId);
-            if(users!=null && users.size()>0){
-                return new BaseResultCommand(getMessage("userRoleRes.msg.removeRoleMsg",request),Boolean.TRUE);
-            }
-            Boolean checkProcessUseRole=processDefManager.checkProcessUseRole(rId);
-            if(checkProcessUseRole){
-                return new BaseResultCommand(getMessage("userRoleRes.msg.removeRoleFlowMsg",request),Boolean.TRUE);
-            }
-        }
-        return new BaseResultCommand("",Boolean.FALSE); 
-    }
-    
 
   
   @RequestMapping(params = "method=listFeatures")
   @ResponseBody 
   public JsonReaderResponse<FeatureCommand> listFeatures(@RequestParam Map<String, String> params,
     HttpServletRequest request) {
-    List<Feature>        features        = featureManager.listFeatures(requestMap(request),
-            Integer.valueOf(params.get("start")), Integer.valueOf(params.get("limit")));
+    List<Feature>        features        = featureManager.listFeatures(params.get("keyword"),
+        Integer.valueOf(params.get("start")), Integer.valueOf(params.get("limit")));
     List<FeatureCommand> featureCommands = new ArrayList<FeatureCommand>();
 
     if ((features != null) && (features.size() > 0)) {
@@ -190,7 +174,7 @@ public class UserRoleController extends BaseController {
         String criteria=request.getParameter("criteria");
         Feature feature = null;
         if(StringUtils.isNotEmpty(id)){
-            feature=featureManager.getFeatureById(Long.parseLong(id));
+            feature=featureManager.getFeature(Long.parseLong(id));
         }else{
             if(StringUtils.isNotEmpty(name)){
                 feature=featureManager.getFeatureByName(name);
@@ -206,24 +190,23 @@ public class UserRoleController extends BaseController {
         feature.setDisplayName(displayName);
         feature.setDescription(description);
         feature.setCriteria(criteria);
-//        featureManager.(feature);
+        featureManager.saveOrUpdate(feature);
         return new JsonReaderResponse<FeatureCommand>(null,true,"");
     }
 
   @RequestMapping(params = "method=listRoles")
   @ResponseBody 
   public JsonReaderResponse<RoleCommand> listRoles(HttpServletRequest request) {
+      String roleName=request.getParameter("roleName");
       Integer start=Integer.parseInt(request.getParameter("start"));
       Integer limit=Integer.parseInt(request.getParameter("limit"));
-      Map<String,Object> map=requestMap(request);
-      
-      List<Role>        roles        = roleManager.listRoles(map,start, limit);
+      List<Role>        roles        = roleManager.getRoles(roleName,start, limit);
       List<RoleCommand> roleCommands = new ArrayList<RoleCommand>();
 
         if ((roles != null) && (roles.size() > 0)) {
           for (Role role : roles) {
               RoleCommand command=new RoleCommand(role);
-              List<RoleFeature> roleFeatures=roleManager.getRoleFeatureByRoleId(role.getId());
+              List<RoleFeature> roleFeatures=roleManager.getRoleFeature(role.getId());
               List<FeatureCommand> featureCommands=new ArrayList<FeatureCommand>();
               if(roleFeatures!=null){
                   for(RoleFeature roleFeature : roleFeatures){
@@ -236,18 +219,38 @@ public class UserRoleController extends BaseController {
           }
         }
 
-    Integer count = roleManager.listRolesCount(map);
+    Long count = roleManager.getCount(roleName);
 
     return new JsonReaderResponse<RoleCommand>(roleCommands, true,count.intValue(),getMessage("display.title",request));
   }
 
+  public JsonReaderResponse<FeatureCommand> readAllFeature(Map<String, String> params, HttpServletRequest request) {
+    List<FeatureCommand> result = new ArrayList<FeatureCommand>();
+    int                  total  = 0;
+
+    try {
+      List<Feature> features = featureManager.getAllFeatures();
+
+      for (Feature feature : features) {
+        result.add(new FeatureCommand(feature));
+      }
+
+      total = result.size();
+    } catch (Exception e) {
+      log.error(e, e);
+      // return empty
+    } // end try-catch
+
+    return new JsonReaderResponse<FeatureCommand>(result, total);
+  }
 
   @RequestMapping(params = "method=readAvailableRoles")
   @ResponseBody 
-  public JsonReaderResponse<RoleCommand> readAvailableRoles(HttpServletRequest request) {
+  public JsonReaderResponse<RoleCommand> readAvailableRoles(Map<String, String> params,
+    HttpServletRequest request) {
     List<RoleCommand> result = new ArrayList<RoleCommand>();
     try {
-      List<Role> roles     = roleManager.listAllRoles(requestMap(request));
+      List<Role> roles     = roleManager.getAllRoles();
       for (Role role : roles) {
         result.add(new RoleCommand(role));
       }
@@ -256,13 +259,13 @@ public class UserRoleController extends BaseController {
     } // end try-catch
 
     return new JsonReaderResponse<RoleCommand>(result, true,"");
-  } 
+  } // end method readAvailableRoles
     @RequestMapping(params = "method=readAvailableFeature")
     @ResponseBody 
     public JsonReaderResponse<FeatureCommand> readAvailableFeature(HttpServletRequest request) {
         List<FeatureCommand> result = new ArrayList<FeatureCommand>();
         try {
-            List<Feature> features=featureManager.listAllFeatures(requestMap(request));
+            List<Feature> features=featureManager.getAllFeatures();
             if(features!=null && features.size()>0){
                 for(Feature feature : features){
                     result.add(new FeatureCommand(feature));
@@ -278,7 +281,7 @@ public class UserRoleController extends BaseController {
   @RequestMapping(params = "method=removeRole")
   @ResponseBody 
   public BaseResultCommand removeRole(String id, HttpServletRequest request) {
-    roleManager.removeRoleById(parseLong(id));
+    roleManager.removeRole(Long.parseLong(id));
 
     return new BaseResultCommand(true);
   }
@@ -295,52 +298,47 @@ public class UserRoleController extends BaseController {
     }
     
     private BaseResultCommand saveOrUpdateRole(HttpServletRequest request,boolean save){
-        try {
-            String id=request.getParameter("id");
-            String name=request.getParameter("name");
-            String displayName=request.getParameter("displayName");
-            String description=request.getParameter("description");
-            String featureIds=request.getParameter("featureIds");
-            String systemViewId=request.getParameter("systemViewId");
-            Role role=null;
-            if(save){
-                if(!checkIsEmpty(name)){
-                    role = roleManager.getRoleByName(name);
-                    if(role!=null){
-                        return new BaseResultCommand(getMessage("message.error.role.exist",request),Boolean.FALSE);
-                    }
-                }
-                role=new Role();
-                role.setCreateDate(new Date());
-                role.setName(name);
-            }else{
-                role=roleManager.getRoleById(parseLong(id));
-            }
-            role.setLastUpdateDate(new Date());
-            role.setDescription(description);
-            role.setDisplayName(displayName);
-            if(!checkIsEmpty(systemViewId)){
-                SystemView systemView  = userManager.getSystemViewById(Long.parseLong(systemViewId));
-                role.setSystemView(systemView);
-            }
-            List<Feature> features=new ArrayList<Feature>();
-            if(!checkIsEmpty(featureIds)){
-                String[] featureIda = StringUtils.split(featureIds,",");
-                if(featureIda!=null){
-                    for(String fid : featureIda){
-                        Feature feature=featureManager.getFeatureById(parseLong(fid));
-                        if(feature!=null){
-                            features.add(feature);
-                        }
-                    }
+        String id=request.getParameter("id");
+        String name=request.getParameter("name");
+        String displayName=request.getParameter("displayName");
+        String description=request.getParameter("description");
+        String featureIds=request.getParameter("featureIds");
+        String systemViewId=request.getParameter("systemViewId");
+        Role role=null;
+        if(save){
+            if(!checkIsEmpty(name)){
+                name=ROLE+name;
+                role = roleManager.getRole(name);
+                if(role!=null){
+                    return new BaseResultCommand(getMessage("message.error.role.exist",request),Boolean.FALSE);
                 }
             }
-            roleManager.saveOrUpdate(role, features);
-            return new BaseResultCommand(Boolean.TRUE);
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error("save role fail",e);
+            role=new Role();
+            role.setCreateDate(new Date());
+            role.setName(name);
+        }else{
+            role=roleManager.getRole(Long.parseLong(id));
         }
-        return new BaseResultCommand(getMessage(save?"globalRes.addFail":"globalRes.updateFail",request),Boolean.FALSE);
+        role.setLastUpdateDate(new Date());
+        role.setDescription(description);
+        role.setDisplayName(displayName);
+        if(!checkIsEmpty(systemViewId)){
+            SystemView systemView  = roleManager.getSystemViewById(Long.parseLong(systemViewId));
+            role.setSystemView(systemView);
+        }
+        List<Feature> features=new ArrayList<Feature>();
+        if(!checkIsEmpty(featureIds)){
+            String[] featureIda = StringUtils.split(featureIds,",");
+            if(featureIda!=null){
+                for(String fid : featureIda){
+                    Feature feature=featureManager.getFeature(Long.parseLong(fid));
+                    if(feature!=null){
+                        features.add(feature);
+                    }
+                }
+            }
+        }
+        roleManager.saveOrUpdateRole(role,features);
+        return new BaseResultCommand(Boolean.FALSE);
     }
-} 
+} // end class UserRoleController

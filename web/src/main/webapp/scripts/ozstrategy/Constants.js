@@ -137,8 +137,8 @@ Ext.define('FlexCenter.Constants', {
                 id: '2',
                 text: '待办事项',
                 iconCls: 'icon-flowWait',
-                widget: 'taskView',
-                widgetItemId: 'taskView',
+                widget: 'aTaskView',
+                widgetItemId: 'aTaskView',
                 leaf: true
             },
             {
@@ -153,13 +153,6 @@ Ext.define('FlexCenter.Constants', {
                 text: '任务追回',
                 widget: 'clawBackTaskView',
                 widgetItemId: 'clawBackTaskView',
-                leaf: true
-            },
-{
-                id: '5',
-                text: '草稿箱',
-                widget: 'processDefInstanceDraftView',
-                widgetItemId: 'processDefInstanceDraftView',
                 leaf: true
             }
 

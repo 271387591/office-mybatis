@@ -19,7 +19,7 @@ CKEDITOR.dialog.add("textfield", function (b) {
     return {
         title : b.lang.forms.textfield.title,
         minWidth : 350,
-        minHeight : 130,
+        minHeight : 200,
         onShow : function()
         {
             delete this.textField;
@@ -82,7 +82,7 @@ CKEDITOR.dialog.add("textfield", function (b) {
         {id: "info", label: b.lang.forms.textfield.title, title: b.lang.forms.textfield.title,
             elements: [
                 {type: "hbox", widths: ["50%", "50%"], children: [
-                    {id: "_cke_saved_name", type: "text", label: b.lang.forms.textfield.name, "default": "", accessKey: "N",validate : CKEDITOR.dialog.validate.notEmpty(b.lang.dforms.dcommon.validatename), setup: function (a) {
+                    {id: "_cke_saved_name", type: "text", label: b.lang.forms.textfield.name, "default": "", accessKey: "N",validate : CKEDITOR.dialog.validate.notEmpty('文本框名称不能为空'), setup: function (a) {
                         this.setValue(a.data("cke-saved-name") || a.getAttribute("name") || "")
                     }, commit: function (a) {
                         a = a.element;
@@ -91,7 +91,7 @@ CKEDITOR.dialog.add("textfield", function (b) {
                     {
                         id : 'txtlabel',
                         type : 'text',
-                        validate : CKEDITOR.dialog.validate.notEmpty(b.lang.dforms.dcommon.validatetextlable),
+                        validate : CKEDITOR.dialog.validate.notEmpty('标签名称不能为空'),
                         label : b.lang.dforms.dcommon.txtlabel,
                         'default' : '',
                         accessKey : 'V',
@@ -122,19 +122,28 @@ CKEDITOR.dialog.add("textfield", function (b) {
 //                ], onLoad: function () {
 //                    CKEDITOR.env.ie7Compat && this.getElement().setStyle("zoom", "100%")
 //                }},
-                {id: "type", type: "select", label: b.lang.dforms.dcommon.datatype, "default": "notVal", accessKey: "M", items: [
-                    [b.lang.dforms.dtextfield.typeNumber, "number"],
-                    [b.lang.dforms.dtextfield.typeVarchar, "string"]
+                {id: "type", type: "select", label: b.lang.dforms.dcommon.validate, "default": "notVal", accessKey: "M", items: [
+                    [b.lang.dforms.dcommon.notVal, "notVal"],
+                    [b.lang.dforms.dcommon.notNull, "notNull"],
+                    [b.lang.dforms.dcommon.number, "number"],
+                    [b.lang.dforms.dcommon.email, "email"],
+                    [b.lang.dforms.dcommon.mobile, "mobile"],
+                    [b.lang.dforms.dcommon.idCard, "idCard"]
                 ], setup: function (a) {
-                    this.setValue(a.getAttribute("datatype"))
+                    this.setValue(a.getAttribute("xvalidate"))
                 }, commit: function (a) {
                     var c = a.element;
                     var v=this.getValue();
+                    var validator=v=='number'?b.lang.dforms.dcommon.validateNumber:
+                            v=='email'?b.lang.dforms.dcommon.validateEmail:
+                                v=='mobile'?b.lang.dforms.dcommon.validateMobile:
+                                    v=='idCard'?b.lang.dforms.dcommon.validateIdCard:'';
                     if (CKEDITOR.env.ie) {
-                        var d = c.getAttribute("datatype"), e = this.getValue();
-                        d != e && (d = CKEDITOR.dom.element.createFromHtml('<input datatype="'+v+ '></input>', b.document), c.copyAttributes(d, {type: 1}), d.replace(c), a.element = d)
+                        var d = c.getAttribute("xvtype"), e = this.getValue();
+                        d != e && (d = CKEDITOR.dom.element.createFromHtml('<input xvlidator="'+validator+'" xvtype="' + e + '"></input>', b.document), c.copyAttributes(d, {type: 1}), d.replace(c), a.element = d)
                     } else{
-                        c.setAttribute("datatype", v)
+                        c.setAttribute("xvtype", this.getValue())
+                        c.setAttribute("xvlidator", validator)
                     } 
                 }}
             ]}

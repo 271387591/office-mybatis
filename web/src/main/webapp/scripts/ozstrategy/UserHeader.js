@@ -1,103 +1,62 @@
 Ext.define('FlexCenter.UserHeader', {
   extend: 'Ext.panel.Panel',
   alias: 'widget.userHeader',
+  requires : [
+    'FlexCenter.UserToolbar'
+  ],
   initComponent: function () {
     var me = this;
     Ext.apply(this, {
       border: false,
       layout: 'anchor',
       region: 'north',
+      height: 65,
       items: [
         {
+          id: 'header-top',
           xtype: 'toolbar',
-              height: 37,
+//          margin: '0 0 1 0',
+//          anchor: 'none -43',
           items: [
             {
+              margin: '0 0 0 15',
               xtype: 'label',
               html:'logo'
             },
             {
               xtype: 'label',
               html: '办公自动化系统',
-              style: 'font-size:16px;'
+              style: 'font-size:16px;',
+              margin: '0 0 0 5'
             },
             '->',
             {
               xtype: 'label',
+              iconCls: 'grid-add',
               id: 'head-lb-1',
               cls: 'welcome',
               style: 'font-size:12px',
-              text: globalRes.welcome
+              text: '欢迎您, '+globalRes.userFullName,
+              margin: '0 0 0 10'
             },
-              {
-                  text:globalRes.userFullName,
-                  style: 'font-size:12px',
-                  menu: {
-                      xtype: 'menu',
-                      plain: true,
-                      items: {
-                          xtype: 'buttongroup',
-                          columns: 2,
-                          defaults: {
-                              xtype: 'button',
-//                              scale: 'large',
-                              iconAlign: 'left'
-                          },
-                          items: [
-                              {
-                                  colspan: 2,
-                                  iconCls:'user-edit',
-                                  text: userRoleRes.editUserProfile,
-                                  scale: 'small',
-                                  width: 130
-                              },
-                              {
-                                  colspan: 2,
-                                  iconCls:'app-logout',
-                                  text: globalRes.buttons.logout,
-                                  scale: 'small',
-                                  width: 130,
-                                  handler:me.onLogout
-                              }
-                          ]
-                      }
-                  }
-            },
-              
             '-',
             {
               xtype: 'label',
               id: 'head-lb-3',
+              margin: '0 0 0 5',
               cls: 'welcome',
               style: 'font-size:12px',
-              text: globalRes.welcomeToday +this.getToday()
+              text: '今天是：' +this.getToday()
             }
           ]
+        },
+        {
+          xtype:"userToolbar"
         }
       ]
     });
     this.callParent(arguments);
   },
-    onLogout: function () {
-
-        Ext.MessageBox.show({
-            title: globalRes.title.logout,
-            msg : globalRes.userFullName+'：'+globalRes.msg.logout,
-            width: 400,
-            icon: Ext.MessageBox.QUESTION,
-            buttons: Ext.MessageBox.YESNO,
-            buttonText: {
-                yes: globalRes.buttons.ok,
-                no: globalRes.buttons.cancel
-            },
-            fn: function(btn){
-                if(btn == 'yes'){
-                    isLogout=true;
-                    document.location.replace(globalRes.logoutUrl);
-                }
-            }
-        });
-    },
 
   getToday:function(){
     var today = new Date();

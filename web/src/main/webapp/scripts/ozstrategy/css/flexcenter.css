@@ -4,12 +4,6 @@ html{
 .x-field.x-window-text.x-form-item.x-field-default.x-anchor-form-item{
   width: 100%;
 }
-.flow-form-table{
-    
-}
-.blue-grid-row TD{
-    color:blue !important;
-}
 .user-edit {
   background-image: url(icons/user_edit.gif) !important;
     width: 16px;
@@ -48,16 +42,10 @@ html{
     height: 16px;
 }
 .clear {
-    background-image: url(icons/clear.png) !important;
+    background-image: url(icons/reset.png) !important;
     width: 16px;
     height: 16px;
 }
-.close {
-    background-image: url(icons/close.png) !important;
-    width: 16px;
-    height: 16px;
-}
-
 .refresh,.btn-refresh{
     background-image: url(icons/refresh.png) !important;
     width: 16px;
@@ -83,18 +71,6 @@ html{
     width: 16px;
     height: 16px;
 }
-.table-add {
-    background-image: url(icons/table_add.png) !important;
-}
-
-.table-edit {
-    background-image: url(icons/table_edit.png) !important;
-}
-.table-delete {
-    background-image: url(icons/table_delete.png) !important;
-    height: 16px;
-    width: 16px;
-}
 .cut {
     background: url(icons/cut.gif) no-repeat !important;
     width: 16px;
@@ -118,17 +94,6 @@ html{
     width: 16px;
     height: 16px;
 }
-.btn-authorization {
-    background-image: url(icons/key_add.png) !important;
-    width: 16px;
-    height: 16px;
-}
-.btn-dis-authorization {
-    background-image: url(icons/key_delete.png) !important;
-    width: 16px;
-    height: 16px;
-}
-
 .btn-preview {
     background: url(icons/preview.png) no-repeat !important;
     width: 16px;
@@ -156,12 +121,11 @@ html{
 .disabled-row .x-grid-cell-inner {
     color: darkgray;
 }
-.app-logout {
+.logout {
     background-image: url(icons/logout.png) !important;
     width: 16px;
     height: 16px;
 }
-
 .manageUser-shortcut img {
   width: 48px;
   height: 48px;
@@ -186,12 +150,6 @@ html{
     width:70px;height:70px;
     background-image: url(icons/loading70X702.gif) !important; * jawr:base64-skip 
 }
-.loading-ux{
-    width: 16px;
-    height: 16px;
-    background-image: url(icons/ajax-loading.gif) !important; * jawr:base64-skip 
-}
-
 
 .ozMiddleIcon {
     margin-left: 10px;
@@ -271,18 +229,6 @@ html{
     height: 48px;
     background-image: url(icons/workflowManager.png);
 }
-.form-manager {
-    width: 48px;
-    height: 48px;
-    background-image: url(icons/table_manager.png);
-}
-.table_manager16 {
-    width: 16px;
-    height: 16px;
-    background-image: url(icons/table_manager16.png);
-}
-
-
 .icon-globalType {
     background-image: url(icons/type-16.png) !important;
     width: 16px;
@@ -518,50 +464,6 @@ html{
     width: 16px;
     height: 16px;
 }
-.task-instance {
-    background: url('icons/workflow-manager.png') !important;
-    width: 16px;
-    height: 16px;
-}
-
-.form-options {
-    background: url('icons/options.png') !important;
-    width: 16px;
-    height: 16px;
-}
-
-
-.icon-publish {
-    background-image:url(icons/icon-publish.png) !important;
-}
-.deploy {
-    background-image: url(icons/deploy.png) !important;
-}
-.view_tree {
-    background-image: url(icons/view_tree.png) !important;
-}
-.file-download {
-    background-image: url(icons/download_file.png) !important;
-    width: 16px;
-    height: 16px;
-    cursor: pointer;
-}
-.save {
-    background-image: url(icons/save.gif) !important;
-}
-.messageTip {
-    background-image: url(icons/newpm.gif) !important;
-}
-.user-man16{
-    background-image: url(icons/user16x16.png) !important;
-    width: 16px;
-    height: 16px;
-}
-
-
-
-
-
 
 
 

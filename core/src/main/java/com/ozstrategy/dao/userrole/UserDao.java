@@ -1,22 +1,36 @@
 package com.ozstrategy.dao.userrole;
 
+import com.ozstrategy.dao.GenericDao;
+import com.ozstrategy.model.userrole.RoleFeature;
+import com.ozstrategy.model.userrole.SystemView;
 import com.ozstrategy.model.userrole.User;
-import org.apache.ibatis.session.RowBounds;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 
-public interface UserDao {
+public interface UserDao extends GenericDao<User, Long> {
+  
+  Long getCount(String keyword);
 
-    List<User> listUsers(Map<String,Object> map, RowBounds rowBounds);
-    Integer listUsersCount(Map<String,Object> map);
-    void saveUser(User user);
-    void updateUser(User user);
-    List<User> getUserByRoleId(Long roleId);
-    void enabledUser(Long userId);
-    void updateUserPassword(User user);
-    User getUserById(Long id);
-    User getUserByUsername(String username);
+  User getUserByUserName(String username);
     User getUserByEmail(String email);
     User getUserByMobile(String mobile);
+
+  List<RoleFeature> getUserFeaturesByUsername(String username);
+
+  String getUserPassword(String username);
+
+  String getUserPassword(Long userId);
+  List<User> getUsers();
+  Object getUsers(String keyWord,Integer start,Integer limit,boolean count);
+  List<User> getUsers(String keyword, Integer start, Integer limit);
+  @Transactional 
+  UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
+  User saveUser(User user);
+  List<User> searchUserByName(String username, String query);
+    List<SystemView> listSystemView();
+    List<User> getUserByDefaultRoleId(Long id);
+    List<User> getUsers(String keyword, Long orgId, Long posId, Long roleId);
 } 

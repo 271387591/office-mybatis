@@ -17,8 +17,6 @@
                 <add as="fontSize" value="11"/>
                 <add as="fontColor" value="#1d258f"/>
                 <add as="fontFamily" value="Verdana"/>
-                <add as="verticalLabelPosition" value="top"/>
-                <add as="verticalAlign" value="bottom"/>
             </add>
             <add as="label_swimlane">
                 <add as="shape" value="swimlane"/>
@@ -53,9 +51,6 @@
                 <add as="imageAlign" value="left"/>
                 <add as="imageVerticalAlign" value="top"/>
                 <add as="rounded" value="1"/>
-                <!--<add as="gradientColor" value="red"/>-->
-                <!--<add as="strokeColor" value="red"/>-->
-                <!--<add as="labelBackgroundColor" value="red"/>-->
                 <!--<add as="shadow" value="1"/>-->
                 <!--<add as="glass" value="1"/>-->
             </add>
@@ -330,13 +325,5 @@
                 </mxCell>
             </EndErrorEvent>
         </add>
-        <add as="SequenceFlow">
-            <SequenceFlow label="flow" type="edge">
-                <mxCell edge="true" style="defaultEdge">
-                    <mxGeometry relative="true" as="geometry" x="0" y="0"/>
-                </mxCell>
-            </SequenceFlow>
-        </add>
-        
     </Array>
 </mxEditor>

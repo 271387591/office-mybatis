@@ -40183,7 +40183,7 @@ mxCell.prototype.setConnectable = function(connectable)
 {
 	this.connectable = connectable;
 };
-                                     
+
 /**
  * Function: isVisible
  *
@@ -77545,7 +77545,7 @@ mxObjectCodec.prototype.decodeAttribute = function(dec, attr, obj)
 		// This may require an additional check on the obj to see if
 		// the existing field is a boolean value or uninitialized, in
 		// which case we may want to convert true and false to a string.
-		var value = this.convertValueFromXml(attr.value);
+		var value = this.convertValueFromXml(attr.nodeValue);
 		var fieldname = this.getFieldName(name);
 		
 		if (this.isReference(obj, fieldname, value, false))

@@ -1,13 +1,18 @@
 package com.ozstrategy.service;
 
-import com.ozstrategy.Constants;
-import com.ozstrategy.model.userrole.Role;
-import com.ozstrategy.model.userrole.User;
+import java.lang.reflect.Method;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.springframework.aop.AfterReturningAdvice;
 import org.springframework.aop.MethodBeforeAdvice;
+
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
@@ -18,10 +23,10 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import com.ozstrategy.Constants;
+
+import com.ozstrategy.model.userrole.Role;
+import com.ozstrategy.model.userrole.User;
 
 
 /**
@@ -87,7 +92,7 @@ public class UserSecurityAdvice implements MethodBeforeAdvice, AfterReturningAdv
    * @param   target  the target class
    *
    * @throws  Throwable              thrown when args[0] is null or not a User object
-   * @throws  org.springframework.security.access.AccessDeniedException  DOCUMENT ME!
+   * @throws  AccessDeniedException  DOCUMENT ME!
    */
   @Override public void before(Method method, Object[] args, Object target) throws Throwable {
     SecurityContext ctx = SecurityContextHolder.getContext();

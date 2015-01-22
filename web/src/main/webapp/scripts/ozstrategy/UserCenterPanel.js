@@ -3,8 +3,15 @@ Ext.define('FlexCenter.UserCenterPanel', {
 	alias: 'widget.userCenterPanel',
 	requires: [
 		'Ext.ux.TabCloseMenu',
-		'FlexCenter.UserToolbar'
+		'FlexCenter.UserToolbar',
+        'FlexCenter.activiti.view.ProcessDefinitionView',
+        'FlexCenter.activiti.view.ApplyProcessDetailView',
+        'FlexCenter.activiti.view.ApplyProcessView',
+        'FlexCenter.activiti.view.ClawBackTaskView',
+        'FlexCenter.activiti.view.ATaskView'
+//		'FlexCenter.view.home.IndexView'
 	],
+
 	initComponent: function () {
 		Ext.apply(this, {
 			itemId: 'centerPanel',

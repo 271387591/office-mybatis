@@ -1,135 +1,46 @@
 if (top != self) {
   top.location = self.location;
 }
-Ext.require('Ext.ux.window.Notification');
-var systemMessageTpl=new Ext.XTemplate(
-    '<html>',
-    '<title>系统待办任务提示</title>',
-    '<body>',
-    '<p>{contentMap.userFullName}:您好</p>',
-    '<p>您有一条任务【<font color="red">{contentMap.taskName}</font>】未处理，来自{contentMap.starter}于{contentMap.startTime}申请的{contentMap.instanceTitle}，请你尽快处理。</p>',
-    '<br/>本邮件来xxx办公管理系统自动产生，不需回复。',
-    '</body>',
-    '</html>'
-);
-PL._init();
-PL.joinListen('/systemMessage?username='+globalRes.userName);
-function onData(event) {
-    var msg=event.get(globalRes.userName);
-    msg = decodeURIComponent(msg);
-    var obj={};
-    obj.contentMap=Ext.decode(msg);
-    var box=Ext.create('widget.uxNotification', {
-        title: '你有未读信息',
-        position: 'br',
-        manager: 'instructions',
-        cls: 'ux-notification-window',
-        stickWhileHover: false,
-        height: 150,
-        width: 220,
-        autoScroll:true,
-        buttons:[
-            {
-                text:'查看更多',
-                handler:function(){
-                    var apptabs = Ext.ComponentQuery.query('#apptabs')[0];
-                    apptabs.addTab('systemMessageView','systemMessageView','#welcomeindex');
-                    box.close();
-                }
-            }
 
-        ],
-        html: systemMessageTpl.applyTemplate(obj),
-        autoCloseDelay: 20000,
-        slideInDuration: 500,
-        slideBackDuration: 200
-    }); 
-    if(msg){
-        if(box){
-            box.show();
-        }
-    }else{
-        if(box){
-            box.close();
-        }
-    }
-}
-function ActionColumnHideAccess(config){
-    var checkAccess=function(featureName){
-        if(featureName == '#allowAll#'){
-            return true;
-        }
-        var parts = featureName.split('|');
-        for(var i = 0; i < parts.length; i ++){
-            if(accessRes[parts[i]] == true){
-                return true;
-            }
-        }
-        return false;
-    }
-    var getClass=function(){
-        if((checkAccess(config.featureName) || config.byPass) && config.extra){
-            return config.cls;
-        }
-        return 'x-hide-display'
-    }
-    return getClass
-}
-function ActionColumnDisabledAccess(config){
-    var checkAccess=function(featureName){
-        if(featureName == '#allowAll#'){
-            return true;
-        }
-        var parts = featureName.split('|');
-        for(var i = 0; i < parts.length; i ++){
-            if(accessRes[parts[i]] == true){
-                return true;
-            }
-        }
-        return false;
-    }
-    var isDisabled=function(){
-        if(checkAccess(config.featureName) || config.byPass){
-            return false;
-        }
-        return true;
+//if (dwr) {
+////  dwr.engine.setActiveReverseAjax(true);
+//  dwr.engine.setTimeout(600000);
+//  dwr.engine.setErrorHandler(function(msg, exception) {
+//    //Session timedout/invalidated
+//    if (exception && exception.javaClassName == 'org.directwebremoting.extend.LoginRequiredException') {
+//      //Reload or display an error etc.
+//      window.location.href = globalRes.logoutUrl;
+//    }
+//  });
+//
+//  dwr.engine.setTextHtmlHandler(function() {
+//    window.location.href = globalRes.logoutUrl;
+//  });
+//
+//  dwr.engine.setPreHook(function() {
+////    console.log('before dwr call...');
+//  });
+//  dwr.engine.setPostHook(function() {
+//    if (globalRes.autoLogout) {
+//      timeoutTask.delay((globalRes.sessionTimeout - countDown - 10) * 1000);
+//    }
+//  });
+//}
 
-    }
-    return isDisabled
-}
-
-function ajaxPostRequest(url,params,callback,mask){
-
-    var box = Ext.MessageBox;
-    box.show({
-        msg: globalRes.loading,
-        progressText: globalRes.loading,
-        width:300,
-        wait:true,
-        waitConfig: {interval:200},
-        iconCls:'loading-ux', //custom class in msg-box.html
-        animateTarget: 'mb7'
-    });
-    //var myMask = new Ext.LoadMask(Ext.getBody(), {msg:globalRes.loading});
-    //if(!mask){
-    //    myMask.show();
-    //}
+var countDown = 30;
+function ajaxPostRequest(url,params,callback){
     Ext.Ajax.request({
         url: url || '',
         params: params || {},
         method: 'POST',
         success: function (response, options) {
-            //if (myMask != undefined){ myMask.destroy();}
-            if (box != undefined){ box.close();}
             var result = Ext.decode(response.responseText,true);
             if(callback){
                 callback(result);
             }
         },
         failure: function (response, options) {
-            //if (myMask != undefined){ myMask.hide();}
-            if (box != undefined){ box.close();}
-            Ext.MessageBox.alert(globalRes.title.fail, Ext.String.format(globalRes.remoteTimeout,response.status));
+            Ext.MessageBox.alert('失败', '请求超时或网络故障,错误编号：' + response.status);
         }
     });
 }
@@ -139,18 +50,13 @@ Ext.Ajax.on('requestcomplete',checkUserSessionStatus, this);
 function checkUserSessionStatus(conn,response,options){
 //  debugger;
     //Ext重新封装了response对象
-    try{
-        if(response && response.getAllResponseHeaders().sessionstatus){
-            setTimeout(function (){
-                Ext.MessageBox.alert(globalRes.title.fail,globalRes.msg.logoutTimeout,function (){
-                    location.href = location.href;
-                });
-            },500);
-        }
-    }catch (e){
-        
+    if(response.getAllResponseHeaders().sessionstatus){
+        setTimeout(function (){
+            Ext.MessageBox.alert(globalRes.title.fail,globalRes.msg.logoutTimeout,function (){
+                location.href = location.href;
+            });
+        },500);
     }
-    
 }
 function setCookie(name,value,expires,path,domain,secure) {
     document.cookie = name + "=" + escape (value) +
@@ -174,6 +80,166 @@ function getCookie(name) {
     var value=document.cookie.substring(start+prefix.length, end);
     return unescape(value);
 }
+
+var timeoutTask = new Ext.util.DelayedTask(function() {
+  var timer = new Array();
+  var f = function(v) {
+//console.log('v=',v);
+    return function() {
+      if (v == countDown) {
+        Ext.MessageBox.hide();
+
+        // session time out, need re login
+        window.location.href = globalRes.logoutUrl;
+      } else {
+        Ext.MessageBox.updateProgress(v / countDown, Oz.Utils.getTplMsg(globalRes.timeoutTpl, {seconds: (countDown - v)}));
+      }
+    };
+  };
+  for (var i = 1; i <= countDown; i++) {
+    timer[i - 1] = setTimeout(f(i), 1000 * i);
+  }
+    
+
+  Ext.MessageBox.show({
+    title: globalRes.timeoutTitle,
+    msg: globalRes.timeoutMessage,
+    progressText: Oz.Utils.getTplMsg(globalRes.timeoutTpl, {seconds: countDown}),
+    width: 300,
+    progress: true,
+    closable: false,
+    buttons: Ext.MessageBox.YESNO,
+    fn: function(btn) {
+      if (btn == 'yes') {
+        // clear all timers
+        for (var i = 0; i < countDown; i++) {
+          if (timer[i]) {
+            clearTimeout(timer[i]);
+          }
+        }
+
+        // trigger a session reload
+        //agentController.dummyCall();//dummy call
+//        roleStore.load();// dummy
+      }
+      else {
+        // session time out, need re login
+        window.location.href = globalRes.logoutUrl;
+      }
+    },
+    icon: Ext.MessageBox.WARNING
+  });
+});
+
+//Ext.Ajax.on('requestcomplete', function(conn, response, options) {
+//  var responseText = response.responseText;
+//  if (responseText.indexOf('<body id="login">') != -1) {
+//    Ext.MessageBox.show({
+//      title: globalRes.reloginTitle,
+//      width: messageBoxRes.width,
+//      msg: globalRes.reloginMessage,
+//      buttons: Ext.MessageBox.OK,
+//      icon: Ext.MessageBox.ERROR,
+//      fn: function() {
+//        // session time out, need re login
+//        window.location.href = globalRes.logoutUrl;
+//      }
+//    });
+//  }
+//  else{
+//    if(globalRes.autoLogout){
+//      var delayTime = (globalRes.sessionTimeout - countDown - 10) * 1000;
+//      timeoutTask.delay(delayTime);
+//    }
+//  }
+//});
+
+// global access functions
+//var frequencyGraphStore;
+var roundTypeStore;
+
+Ext.onReady(function () {
+//  frequencyGraphStore = Ext.create('Ext.data.ArrayStore', {
+////    autoDestroy: true,
+//    storeId: 'frequencyGraphStore',
+//    fields: ['value', 'label'],
+//    data : graphFrequencies
+//  });
+
+//  roundTypeStore = Ext.create('Ext.data.ArrayStore', {
+////    autoDestroy: true,
+//    storeId: 'roundTypeStore',
+//    fields: ['value', 'label'],
+//    data : roundTypes
+//  });
+//
+//  Ext.apply(Ext.form.field.VTypes, {
+//    balanceText: globalRes.error.notBalanced,
+//    balance: balanceVType
+//  });
+});
+
+
+function balanceVType(v) {
+  return balanceParens(v).balanced;
+}
+
+function balanceParens(v){
+  v = '' || ('' + v);
+  var re = /(\([^\(\)]*\))/g,
+      test = v,
+      hold = test,
+      result = {
+        balanced: true,
+        index: -1,
+        context: "none",
+        display: v,
+        reduced: ""
+      }; // balanced_bool, index, context, resultstr, regex leftover
+
+  while (hold != (test = test.replace(re, ""))) hold = test;
+
+  var left = (test.match(/\(/g) || []).length;
+  var right = (test.match(/\)/g) || []).length;
+  var balance = right - left;
+
+  result.balanced = !balance && !right && !left;
+  result.reduced = test;
+
+  // -------------------------------
+  if (balance < 0) {
+    var indx = -1;
+    do{
+      indx = v.indexOf("(", indx);
+    }
+    while (balance++);
+    indx++;
+    result.context = "left";
+    result.index = indx - 1;
+    result.display = v.substring(0, indx).fontcolor("red").bold() + v.substring(indx);
+  }
+  else
+  if (balance > 0) {
+    var indx = v.length + 1;
+    while (balance--) {
+      indx = v.lastIndexOf(")", indx - 1);
+    }
+    result.context = "right";
+    result.index = indx;
+    result.display = v.substring(0, indx) + v.substring(indx).fontcolor("red").bold();
+  }
+  else if (!result.balanced) { // equal left & right parens -- wrong orientation
+    var lastresort = v.match(/[\)\(]/g);
+
+    result.index = v.indexOf(lastresort[0]);
+    result.display = v.substring(0, result.index) +
+        v.substring(result.index,
+            1 + v.lastIndexOf(lastresort[1])).fontcolor("red").bold() +
+        v.substring(1 + v.lastIndexOf(lastresort[1]));
+  }
+  return result;
+}
+
 Ext.applyIf(Array.prototype, {
     /**
      * Checks whether or not the specified object exists in the array.
@@ -207,3 +273,67 @@ Ext.applyIf(Array.prototype, {
     }
 });
 
+String.prototype.balanceParens = function(){
+  var re = /(\([^\(\)]*\))/g;
+  var test = this;
+  var hold = test;
+  var result = {
+    balanced: true,
+    index: -1,
+    context: "none",
+    display: this,
+    reduced: ""
+  }; // balanced_bool, index, context, resultstr, regex leftover
+
+  while(hold!=(test = test.replace(re,""))) hold = test;
+
+  var left = (test.match( /\(/g ) || []).length;
+  var right = (test.match( /\)/g ) || []).length;
+  var balance = right - left;
+
+  result.balanced = !balance && !right && !left;
+  result.reduced = test;
+
+  // -------------------------------
+  if(balance < 0){
+    var indx = -1;
+    do{
+      indx = this.indexOf("(", indx);
+    }
+    while(balance++);
+    indx++;
+    result.context = "left";
+    result.index = indx-1;
+    result.display = this.substring(0,indx).fontcolor("red").bold() + this.substring(indx);
+  }
+  else
+  if(balance > 0){
+    var indx = this.length + 1;
+    while(balance--)
+    {
+      indx = this.lastIndexOf(")", indx-1);
+    }
+    result.context = "right";
+    result.index = indx;
+    result.display = this.substring(0,indx) + this.substring(indx).fontcolor("red").bold();
+  }
+  else if(!result.balanced){ // equal left & right parens -- wrong orientation
+    var lastresort = this.match(/[\)\(]/g);
+
+    result.index = this.indexOf(lastresort[0]);
+    result.display = this.substring(0, result.index) +
+      this.substring(result.index,
+        1+this.lastIndexOf(lastresort[1])).fontcolor("red").bold() +
+      this.substring(1 +this.lastIndexOf(lastresort[1]));
+  }
+
+    
+  return result;
+}
+
+function notify(title, message, autoHide) {
+    var sticky = true;
+    if (autoHide) {
+        sticky = false;
+    }
+}

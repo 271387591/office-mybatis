@@ -11,9 +11,7 @@
 
     <http use-expressions="true"  >
         <expression-handler ref="expressionHandler"/>
-        <intercept-url pattern="/service/desktop" access="authenticatedContext('manager')"/>
-        <intercept-url pattern="/service/userview" access="authenticatedContext('user')"/>
-        <!--<intercept-url pattern="/service/*" access="hasAnyRole('ROLE_USER,ROLE_ADMIN')"/>-->
+        <intercept-url pattern="/service/*" access="hasAnyRole('ROLE_ADMIN,ROLE_USER')"/>
         <!--<intercept-url pattern="/app/passwordHint*" access="hasFeature('sss')"/>-->
         <!--<intercept-url pattern="/app/signup*" access="ROLE_ANONYMOUS,ROLE_ADMIN,ROLE_USER"/>-->
         <!--<intercept-url pattern="/app/**" access="ROLE_ADMIN,ROLE_USER"/>-->
@@ -23,16 +21,16 @@
                     always-use-default-target="false"
                     authentication-success-handler-ref="authSuccessLogger"/>
                     <!--authentication-failure-handler-ref="authFailLogger"/>-->
-        <remember-me user-service-ref="userManager" key="e37f4b31-0c45-11dd-bd0b-0800200c9a66"/>
+        <remember-me user-service-ref="userDao" key="e37f4b31-0c45-11dd-bd0b-0800200c9a66"/>
     </http>
     <beans:bean id="authSuccessLogger" class="com.ozstrategy.webapp.security.WebAuthenticationSuccessLoggerHandler">
-        <!--<beans:property name="userManager" ref="userManager"></beans:property>-->
+        <beans:property name="userDao" ref="userDao"></beans:property>
     </beans:bean>
     <beans:bean id="authFailLogger" class="com.ozstrategy.webapp.security.WebAuthenticationFailLoggerHandler">
     </beans:bean>
 
     <authentication-manager>
-        <authentication-provider user-service-ref="userManager">
+        <authentication-provider user-service-ref="userDao">
             <password-encoder ref="passwordEncoder"/>
         </authentication-provider>
     </authentication-manager>

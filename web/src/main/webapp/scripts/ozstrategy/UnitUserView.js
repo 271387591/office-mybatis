@@ -25,7 +25,7 @@ Ext.define('FlexCenter.UnitUserView', {
   init:function () {
     this.launcher = {
       text:userRoleRes.title,
-      iconCls:'user-man16',
+      iconCls:'icon-tsm',
       handler:this.createWindow,
       scope:this
     };
@@ -64,7 +64,7 @@ Ext.define('FlexCenter.UnitUserView', {
             },
               {
                   xtype:'featrueView',
-                  title:'权限管理'
+                  title:'功能管理'
               }
           ]
           }

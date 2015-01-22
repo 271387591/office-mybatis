@@ -77,7 +77,7 @@
 				var rowsInput = this.getContentElement( 'info', 'txtRows' ),
 					colsInput = this.getContentElement( 'info', 'txtCols' ),
 					widthInput = this.getContentElement( 'info', 'txtWidth' ),
-					heightInput = this.getContentElement( 'info', 'txtHeight'),
+					heightInput = this.getContentElement( 'info', 'txtHeight' );
 				    isgrid = this.getContentElement( 'info', 'isgrid' );
 				if ( command == 'gridProperties' )
 				{
@@ -147,20 +147,20 @@
                         {
                             var tr=makeElement( 'tr' );
 //                            tr.setAttribute( 'class','tr-info');
-                            tr.setStyle('border','1px solid');
+                            tr.setStyle('border','1px solid blue');
                             var row = tbody.append(tr);
                             for ( var j = 0 ; j < cols ; j++ )
                             {
                                 if(i==0){
                                     var th = makeElement( 'th' );
-                                    th.setStyle('border','1px solid');
+                                    th.setStyle('border','1px solid blue');
                                     var cell = row.append(th);
                                     if ( !CKEDITOR.env.ie )
                                         cell.append( makeElement( 'br' ) );
                                 }else{
                                     var td= makeElement( 'td' );
 //                                td.setAttribute( 'class','td-info')
-                                    td.setStyle('border','1px solid');
+                                    td.setStyle('border','1px solid blue');
                                     var cell = row.append(td);
                                     if ( !CKEDITOR.env.ie )
                                         cell.append( makeElement( 'br' ) );
@@ -245,10 +245,9 @@
 
                     // Set the width and height.
                     info.txtHeight ? table.setStyle( 'height', info.txtHeight ) : table.removeStyle( 'height' );
-//                    info.txtWidth ? table.setStyle( 'width', info.txtWidth ) : table.removeStyle( 'width' );
-                    table.setStyle('border','1px solid');
+                    info.txtWidth ? table.setStyle( 'width', info.txtWidth ) : table.removeStyle( 'width' );
+                    table.setStyle('border','1px solid blue');
                     table.setStyle('border-collapse','collapse');
-                    table.setStyle( 'width', '100%' )
 //                    table.setAttribute( 'cellSpacing',1);
 //                    table.setAttribute( 'cellPadding',0);
 //                    table.setAttribute( 'class','form-info');
@@ -295,7 +294,7 @@
                                         label : editor.lang.dforms.grid.tablename,
                                         'default' : '',
                                         accessKey : 'N',
-								        validate : CKEDITOR.dialog.validate.notEmpty(editor.lang.dforms.dcommon.validatename),
+								        validate : CKEDITOR.dialog.validate.notEmpty('明细表名称不能为空'),
                                         accessKey : 'T',
                                         width:'100%',
                                         setup : function( selectedTable )
@@ -342,34 +341,34 @@
                                 selectedTable.setAttribute( 'description', this.getValue() );
                             }
                         },
-//                        {
-//                            type : 'hbox',
-//                            widths : [ '5em' ],
-//                            children :
-//                                [
-//                                    {
-//                                        type : 'text',
-//                                        id : 'txtWidth',
-//                                        controlStyle : 'width:5em',
-//                                        label : editor.lang.common.width,
-//                                        title : editor.lang.common.cssLengthTooltip,
-//                                        'default' : 500,
-//                                        getValue : defaultToPixel,
-//                                        validate : CKEDITOR.dialog.validate.cssLength( editor.lang.common.invalidCssLength.replace( '%1', editor.lang.common.width ) ),
-//                                        onChange : function()
-//                                        {
-//                                            var styles = this.getDialog().getContentElement( 'advanced', 'advStyles' );
-//                                            styles && styles.updateStyle( 'width', this.getValue() );
-//                                        },
-//                                        setup : function( selectedTable )
-//                                        {
-//                                            var val = selectedTable.getStyle( 'width' );
-//                                            val && this.setValue( val );
-//                                        },
-//                                        commit : commitValue
-//                                    }
-//                                ]
-//                        },
+                        {
+                            type : 'hbox',
+                            widths : [ '5em' ],
+                            children :
+                                [
+                                    {
+                                        type : 'text',
+                                        id : 'txtWidth',
+                                        controlStyle : 'width:5em',
+                                        label : editor.lang.common.width,
+                                        title : editor.lang.common.cssLengthTooltip,
+                                        'default' : 500,
+                                        getValue : defaultToPixel,
+                                        validate : CKEDITOR.dialog.validate.cssLength( editor.lang.common.invalidCssLength.replace( '%1', editor.lang.common.width ) ),
+                                        onChange : function()
+                                        {
+                                            var styles = this.getDialog().getContentElement( 'advanced', 'advStyles' );
+                                            styles && styles.updateStyle( 'width', this.getValue() );
+                                        },
+                                        setup : function( selectedTable )
+                                        {
+                                            var val = selectedTable.getStyle( 'width' );
+                                            val && this.setValue( val );
+                                        },
+                                        commit : commitValue
+                                    }
+                                ]
+                        },
                         {
                             type : 'vbox',
                             padding : 0,

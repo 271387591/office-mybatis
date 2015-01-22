@@ -1,8 +1,9 @@
 package com.ozstrategy.model.userrole;
 
-import com.ozstrategy.model.BaseObject;
+import com.ozstrategy.model.BaseEntity;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,25 +14,26 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import java.io.Serializable;
 
-@Entity 
-public class RoleFeature extends BaseObject implements Serializable {
+@Entity
+public class RoleFeature extends BaseEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
     private Long id;
     @JoinColumn(
-            name       = "featureId",
+            name = "featureId",
             insertable = true,
-            updatable  = true,
-            nullable   = false
+            updatable = true,
+            nullable = false
     )
     @ManyToOne(fetch = FetchType.LAZY)
+    @Where(clause = "enabled = 1")
     private Feature feature;
     @JoinColumn(
-            name       = "roleId",
+            name = "roleId",
             insertable = true,
-            updatable  = true,
-            nullable   = false
-            
+            updatable = true,
+            nullable = false
+
     )
     @ManyToOne(fetch = FetchType.LAZY)
     private Role role;

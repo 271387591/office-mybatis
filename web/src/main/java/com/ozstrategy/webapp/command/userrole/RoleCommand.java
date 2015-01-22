@@ -1,12 +1,10 @@
 package com.ozstrategy.webapp.command.userrole;
 
 import com.ozstrategy.model.userrole.Role;
-import com.ozstrategy.model.userrole.User;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -38,8 +36,6 @@ public class RoleCommand {
     private Long systemViewId;
     
     private List<FeatureCommand> simpleFeatures=new ArrayList<FeatureCommand>();
-    
-    private List<SimpleUserCommand> users=new ArrayList<SimpleUserCommand>();
 
 	public RoleCommand(){}
 
@@ -52,12 +48,6 @@ public class RoleCommand {
 		this.lastUpdateDate = role.getLastUpdateDate();
         this.context=role.getSystemView().getContext();
         this.systemViewId=role.getSystemView().getId();
-        Set<User> userSet=role.getUsers();
-        if(userSet!=null && userSet.size()>0){
-            for(User user : userSet){
-                this.users.add(new SimpleUserCommand(user));
-            }
-        }
 	}
 	public Long getId() {
 		return id;
@@ -129,13 +119,5 @@ public class RoleCommand {
 
     public void setSystemViewId(Long systemViewId) {
         this.systemViewId = systemViewId;
-    }
-
-    public List<SimpleUserCommand> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<SimpleUserCommand> users) {
-        this.users = users;
     }
 }

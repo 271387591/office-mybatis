@@ -1,4 +1,3 @@
-<%@ page language="java" pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
@@ -52,10 +51,43 @@
 //        mxDefaultLanguage='zh_CN';
     </script>
     <script type="text/javascript" src="<c:url value="/mxgraph/src/js/mxClient.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/mxgraph/src/js/mxModeler.js"/>"></script>
-    <script type="text/javascript" src="<c:url value='/scripts/lib/ajax-pushlet-client.js'/>"></script>
-    
+    <%--<script type="text/javascript" src="<c:url value="/mxgraph/js/mxApplication.js"/>"></script>--%>
 
+    <!-- Loads and initiaizes the library -->
+    <%--<script type="text/javascript" src='<c:url value="/mxgraph/js/mxClient.js"/>'></script>--%>
+    <%--<script type="text/javascript" src='<c:url value="/scripts/mxgraph/js/mxClient_debug.js"/>'></script>--%>
+
+  <%--<script type="text/javascript">--%>
+    <%--mxBasePath = '<c:url value="/scripts/mxgraph"/>';--%>
+    <%--mxImageBasePath = '<c:url value="/scripts/mxgraph/images"/>';--%>
+  <%--</script>--%>
+
+
+    <script type="text/javascript" src='<c:url value="/scripts/ozstrategy/global.js"/>'></script>
+
+  <%--<jwr:script src="/scripts/mxgraph/js/mxClient_debug.js"/>--%>
+  <%--<jwr:script src="/bundles/desktop.js" />--%>
+
+  <%--<c:choose>--%>
+    <%--<c:when test="${fn:contains(header['User-Agent'],'MSIE 6') or fn:contains(header['User-Agent'],'MSIE 7')}">--%>
+      <%--<jwr:style src="/bundles/IE67_desktop.css" />--%>
+      <%--<jwr:style src="/bundles/IE67_lib${cookie.FlexCenter_Ext_Theme.value}.css" />--%>
+      <%--<script type="text/javascript">--%>
+        <%--function getExtThemePath(themeValue){--%>
+          <%--return JAWR.loader.getCSSPath('/bundles/IE67_lib'+themeValue+".css")--%>
+        <%--}--%>
+      <%--</script>--%>
+    <%--</c:when>--%>
+    <%--<c:otherwise>--%>
+      <%--<jwr:style src="/bundles/desktop.css" />--%>
+      <%--<jwr:style src="/bundles/lib${cookie.FlexCenter_Ext_Theme.value}.css" />--%>
+      <%--<script type="text/javascript">--%>
+        <%--function getExtThemePath(themeValue){--%>
+          <%--return JAWR.loader.getCSSPath('/bundles/lib'+themeValue+".css")--%>
+        <%--}--%>
+      <%--</script>--%>
+    <%--</c:otherwise>--%>
+  <%--</c:choose>--%>
   <style type="text/css" >
       .x-message-box .ext-mb-loading {
           background: url("<c:url value="/scripts/ext/resources/themes/images/default/grid/loading.gif"/>") no-repeat scroll 6px 0 transparent;
@@ -64,18 +96,13 @@
   </style>
 
   <script type="text/javascript">
-      var isLogout = false;
-      window.onbeforeunload = function () {
-          if(!isLogout){
-              return '您即将离开本页面，如有未保存的数据将会丢失，是否继续？';
-          }
-      };
     // Enable dynamic loading for improved debugging support
 //    Ext.getBody().addCls(Ext.baseCSSPrefix + 'theme-' + Ext.themeName);
     var theme = Ext.util.Cookies.get('FlexCenter_Ext_Theme');
-    if(theme){
+    if(theme!='undefined'){
         Ext.util.CSS.swapStyleSheet("FlexCenter_Ext_Theme", extTheme + theme + ".css");
     }
+    if (globalRes.isAdmin != 'true'){location.href="dispatcherPage.action";}
     Ext.Loader.setConfig({
           enabled: true,
           basePath: '<c:url value="/scripts/ext/src"/>',
@@ -91,22 +118,22 @@
     });
 
   </script>
-    <script type="text/javascript" src='<c:url value="/scripts/ozstrategy/global.js"/>'></script>
+  <%--<jwr:script src="/ozExtComponets/flexcenter/global.js" />--%>
 
   <script type="text/javascript">
     var apps = {};
     Ext.require([
       'FlexCenter.App',
-      'Ext.ux.utils.Utils',
+      'Oz.util.Utils',
       'FlexCenter.Constants',
       'Ext.data.ArrayStore',
       'Ext.util.CSS'
     ]);
+
     var flexCenterApp;
     var treeRegister;
     var surveyRegister;
     Ext.onReady(function () {
-        
       flexCenterApp = new FlexCenter.App();
       var oDiv = document.getElementById('loading');
       oDiv.style.display = "none";

@@ -6,8 +6,6 @@ public class Constants {
     public final static String YMD="yyyy-MM-dd";
     public final static String YMDHMS="yyyy-MM-dd HH:mm:ss";
     public final static Integer LIMIT=20;
-    public final static String processAssigneeExpression="${starter}";
-    
     
     
 } 

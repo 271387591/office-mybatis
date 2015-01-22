@@ -80,7 +80,7 @@ CKEDITOR.dialog.add('datefield', function(editor) {
                                             label : editor.lang.forms.textfield.name,
                                             'default' : '',
                                             accessKey : 'N',
-                                            validate : CKEDITOR.dialog.validate.notEmpty(editor.lang.dforms.dcommon.validatename),
+                                            validate : CKEDITOR.dialog.validate.notEmpty('日期名称不能为空'),
                                             setup : function(element) {
                                                 this.setValue(element.data('cke-saved-name') || element.getAttribute('name') || '');
                                             },
@@ -98,7 +98,7 @@ CKEDITOR.dialog.add('datefield', function(editor) {
                                     {
                                             id : 'txtlabel',
                                             type : 'text',
-                                            validate : CKEDITOR.dialog.validate.notEmpty(editor.lang.dforms.dcommon.validatetextlable),
+                                            validate : CKEDITOR.dialog.validate.notEmpty('时间标签不能为空'),
                                             label : editor.lang.dforms.dcommon.txtlabel,
                                             'default' : '',
                                             accessKey : 'V',
@@ -118,7 +118,7 @@ CKEDITOR.dialog.add('datefield', function(editor) {
                                     {
                                         id : 'txtvaluetype',
                                         type : 'select',
-                                        label : editor.lang.dforms.dtextfield.dateformat,
+                                        label : editor.lang.dforms.dtextfield.datatype,
                                         'default' : 'yyyy-MM-dd',
                                         accessKey : 'T',
                                         items : [['yyyy-MM-dd'], ['yyyy-MM-dd HH:mm:ss']],
@@ -146,32 +146,31 @@ CKEDITOR.dialog.add('datefield', function(editor) {
 //                                        }
 //                                    }
                                 ]
-                            } 
-//                        {
-//                                type : 'hbox',
-//                                widths : ['50%', '50%'],
-//                                children : [{
-//                                            id : 'txtisnotnull',
-//                                            type : 'checkbox',
-//                                            label : editor.lang.dforms.dtextfield.txtisnotnull,
-//                                            'default' : '',
-//                                            accessKey : 'P',
-//                                            value : "checked",
-//                                            setup : function(element) {
-//                                                var value = element.getAttribute('xvtype');
-//                                                if (value == 'notNull') {
-//                                                    this.setValue(true);
-//                                                }
-//                                            },
-//                                            commit : function(data) {
-//                                                var element = data.element;
-//                                                var value = this.getValue();
-//                                                if (value)
-//                                                    element.setAttribute('xvtype', 'notNull');
-//                                                else
-//                                                    element.setAttribute('xvtype', 'notVal');
-//                                            }
-//                                        } 
+                            }, {
+                                type : 'hbox',
+                                widths : ['50%', '50%'],
+                                children : [{
+                                            id : 'txtisnotnull',
+                                            type : 'checkbox',
+                                            label : editor.lang.dforms.dtextfield.txtisnotnull,
+                                            'default' : '',
+                                            accessKey : 'P',
+                                            value : "checked",
+                                            setup : function(element) {
+                                                var value = element.getAttribute('xvtype');
+                                                if (value == 'notNull') {
+                                                    this.setValue(true);
+                                                }
+                                            },
+                                            commit : function(data) {
+                                                var element = data.element;
+                                                var value = this.getValue();
+                                                if (value)
+                                                    element.setAttribute('xvtype', 'notNull');
+                                                else
+                                                    element.setAttribute('xvtype', 'notVal');
+                                            }
+                                        } 
 //                                    {
 //                                            id : 'iscurrent',
 //                                            type : 'checkbox',
@@ -194,9 +193,8 @@ CKEDITOR.dialog.add('datefield', function(editor) {
 //                                                    element.setAttribute('iscurrent', '0');
 //                                            }
 //                                        }
-//                                ]
-//                            }
-                    ]
+                                ]
+                            }]
                 }]
     };
 });

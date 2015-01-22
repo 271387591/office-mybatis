@@ -10,11 +10,12 @@ Ext.define('FlexCenter.user.view.UserForm', {
   alias: 'widget.userForm',
 
   requires: [
+      'Oz.util.Utils',
     'Ext.form.Panel',
     'Ext.data.Store',
-      'Ext.ux.grid.feature.Search',
-      'Ext.ux.Utils',
-      'Ext.ux.form.MultiSelect'
+      'Oz.grid.feature.Search',
+      'Oz.dd.DragZone',
+      'Oz.form.MultiSelect'
   ],
 
   config: {
@@ -22,6 +23,8 @@ Ext.define('FlexCenter.user.view.UserForm', {
     activeRecord: null
   },
   mySelf: false,
+//  iconCls: 'user',
+
   resizable: false,
   initComponent: function () {
     var me = this;
@@ -92,8 +95,6 @@ Ext.define('FlexCenter.user.view.UserForm', {
                       tabIndex: 2,
                       readOnly:me.isEdit,
                       readOnlyCls:'x-item-disabled',
-                      regex:/^[a-zA-Z][a-zA-Z0-9_]*$/,
-                      regexText:userRoleRes.usernameRegexText,
                       listeners:{
                           blur:function(input){
                               if(!me.isEdit){
@@ -101,7 +102,7 @@ Ext.define('FlexCenter.user.view.UserForm', {
                                       if(result.success){
                                           input.markInvalid(userRoleRes.usernameExist);
                                       }
-                                  },true);
+                                  });
                               }
                           }
 
@@ -176,8 +177,6 @@ Ext.define('FlexCenter.user.view.UserForm', {
                   itemId:'mobile',
                   name: 'mobile',
                   blankText:globalRes.tooltip.notEmpty,
-                  regex:/^1[3|4|5|8][0-9]\d{8}$/,
-                  regexText:userRoleRes.mobileRegexText,
                   listeners:{
                       blur:function(input){
                           if(!me.isEdit){
@@ -185,17 +184,17 @@ Ext.define('FlexCenter.user.view.UserForm', {
                                   if(result.success){
                                       input.markInvalid(userRoleRes.mobileExist);
                                   }
-                              },true);
+                              });
                           }
                       }
 
                   },
-                  //validator:function(v){
-                  //    if(!(/^1[3|4|5|8][0-9]\d{8}$/.test(v))){
-                  //        return false;
-                  //    }
-                  //    return true;
-                  //},
+                  validator:function(v){
+                      if(!(/^1[3|4|5|8][0-9]\d{8}$/.test(v))){
+                          return false;
+                      }
+                      return true;
+                  },
                   allowBlank: false
                 },{
                   fieldLabel: '<font color="red">*</font>'+userRoleRes.header.email,
@@ -209,7 +208,7 @@ Ext.define('FlexCenter.user.view.UserForm', {
                                   if(result.success){
                                       input.markInvalid(userRoleRes.emailExist);
                                   }
-                              },true);
+                              });
                           }
                       }
 
@@ -253,6 +252,7 @@ Ext.define('FlexCenter.user.view.UserForm', {
                           },
                           availableViewCfg: {
                               getRowClass: function (record){
+                                  // return a custom css class based on the record or index
                                   if (record.get('organizationRole')){
                                       return 'blue-grid-row';
                                   }
@@ -393,6 +393,7 @@ Ext.define('FlexCenter.user.view.UserForm', {
       datas.roleIds= roleids.join(',');
     if (form.isValid()) {
       if (!active) {
+        // create new record
         this.fireEvent('create', this, datas);
       }
       else {

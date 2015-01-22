@@ -42,11 +42,6 @@ Ext.define('Ext.ux.form.ItemSelector', {
         bottom: "Move to Bottom"
     },
 
-    layout: {
-        type: 'hbox',
-        align: 'stretch'
-    },
-
     initComponent: function() {
         var me = this;
 
@@ -58,30 +53,19 @@ Ext.define('Ext.ux.form.ItemSelector', {
         me.bindStore(me.store);
     },
 
-    createList: function(title){
+    createList: function(){
         var me = this;
 
         return Ext.create('Ext.ux.form.MultiSelect', {
-            // We don't want the multiselects themselves to act like fields,
-            // so override these methods to prevent them from including
-            // any of their values
             submitValue: false,
-            getSubmitData: function(){
-                return null;
-            },
-            getModelData: function(){
-                return null;    
-            },
             flex: 1,
             dragGroup: me.ddGroup,
             dropGroup: me.ddGroup,
-            title: title,
             store: {
                 model: me.store.model,
                 data: []
             },
             displayField: me.displayField,
-            valueField: me.valueField,
             disabled: me.disabled,
             listeners: {
                 boundList: {
@@ -96,25 +80,32 @@ Ext.define('Ext.ux.form.ItemSelector', {
     setupItems: function() {
         var me = this;
 
-        me.fromField = me.createList(me.fromTitle);
-        me.toField = me.createList(me.toTitle);
+        me.fromField = me.createList();
+        me.toField = me.createList();
 
-        return [
-            me.fromField,
-            {
-                xtype: 'container',
-                margins: '0 4',
-                layout: {
-                    type: 'vbox',
-                    pack: 'center'
-                },
-                items: me.createButtons()
+        return {
+            layout: {
+                type: 'hbox',
+                align: 'stretch'
             },
-            me.toField
-        ];
+            items: [
+                me.fromField,
+                {
+                    xtype: 'container',
+                    margins: '0 4',
+                    width: 22,
+                    layout: {
+                        type: 'vbox',
+                        pack: 'center'
+                    },
+                    items: me.createButtons()
+                },
+                me.toField
+            ]
+        };
     },
 
-    createButtons: function() {
+    createButtons: function(){
         var me = this,
             buttons = [];
 
@@ -135,18 +126,11 @@ Ext.define('Ext.ux.form.ItemSelector', {
         return buttons;
     },
 
-    /**
-     * Get the selected records from the specified list.
-     * 
-     * Records will be returned *in store order*, not in order of selection.
-     * @param {Ext.view.BoundList} list The list to read selections from.
-     * @return {Ext.data.Model[]} The selected records in store order.
-     * 
-     */
-    getSelections: function(list) {
-        var store = list.getStore();
+    getSelections: function(list){
+        var store = list.getStore(),
+            selections = list.getSelectionModel().getSelection();
 
-        return Ext.Array.sort(list.getSelectionModel().getSelection(), function(a, b) {
+        return Ext.Array.sort(selections, function(a, b){
             a = store.indexOf(a);
             b = store.indexOf(b);
 
@@ -191,103 +175,101 @@ Ext.define('Ext.ux.form.ItemSelector', {
         var list = this.toField.boundList,
             store = list.getStore(),
             selected = this.getSelections(list),
-            rec,
             i = 0,
             len = selected.length,
-            index = 0;
+            index = store.getCount();
 
-        // Move each selection up by one place if possible
-        store.suspendEvents();
-        for (; i < len; ++i, index++) {
-            rec = selected[i];
-            index = Math.max(index, store.indexOf(rec) - 1);
-            store.remove(rec, true);
-            store.insert(index, rec);
+        // Find index of first selection
+        for (; i < len; ++i) {
+            index = Math.min(index, store.indexOf(selected[i]));
         }
-        store.resumeEvents();
-        list.refresh();
-        this.syncValue();
-        list.getSelectionModel().select(selected);
+        // If first selection is not at the top, move the whole lot up
+        if (index > 0) {
+            store.suspendEvents();
+            store.remove(selected, true);
+            store.insert(index - 1, selected);
+            store.resumeEvents();
+            list.refresh();
+            this.syncValue();
+            list.getSelectionModel().select(selected);
+        }
     },
 
     onDownBtnClick : function() {
         var list = this.toField.boundList,
             store = list.getStore(),
             selected = this.getSelections(list),
-            rec,
-            i = selected.length - 1,
-            index = store.getCount() - 1;
+            i = 0,
+            len = selected.length,
+            index = 0;
 
-        // Move each selection down by one place if possible
-        store.suspendEvents();
-        for (; i > -1; --i, index--) {
-            rec = selected[i];
-            index = Math.min(index, store.indexOf(rec) + 1);
-            store.remove(rec, true);
-            store.insert(index, rec);
+        // Find index of last selection
+        for (; i < len; ++i) {
+            index = Math.max(index, store.indexOf(selected[i]));
         }
-        store.resumeEvents();
-        list.refresh();
-        this.syncValue();
-        list.getSelectionModel().select(selected);
+        // If last selection is not at the bottom, move the whole lot down
+        if (index < store.getCount() - 1) {
+            store.suspendEvents();
+            store.remove(selected, true);
+            store.insert(index + 2 - len, selected);
+            store.resumeEvents();
+            list.refresh();
+            this.syncValue();
+            list.getSelectionModel().select(selected);
+        }
     },
 
     onAddBtnClick : function() {
         var me = this,
-            selected = me.getSelections(me.fromField.boundList);
+            fromList = me.fromField.boundList,
+            selected = this.getSelections(fromList);
 
-        me.moveRec(true, selected);
-        me.toField.boundList.getSelectionModel().select(selected);
+        fromList.getStore().remove(selected);
+        this.toField.boundList.getStore().add(selected);
+        this.syncValue();
     },
 
     onRemoveBtnClick : function() {
         var me = this,
-            selected = me.getSelections(me.toField.boundList);
+            toList = me.toField.boundList,
+            selected = this.getSelections(toList);
 
-        me.moveRec(false, selected);
-        me.fromField.boundList.getSelectionModel().select(selected);
+        toList.getStore().remove(selected);
+        this.fromField.boundList.getStore().add(selected);
+        this.syncValue();
     },
 
-    moveRec: function(add, recs) {
+    syncValue: function() {
+        this.setValue(this.toField.store.getRange()); 
+    },
+
+    onItemDblClick: function(view, rec){
         var me = this,
-            fromField = me.fromField,
-            toField   = me.toField,
-            fromStore = add ? fromField.store : toField.store,
-            toStore   = add ? toField.store   : fromField.store;
+            from = me.fromField.store,
+            to = me.toField.store,
+            current,
+            destination;
 
-        fromStore.suspendEvents();
-        toStore.suspendEvents();
-        fromStore.remove(recs);
-        toStore.add(recs);
-        fromStore.resumeEvents();
-        toStore.resumeEvents();
-
-        fromField.boundList.refresh();
-        toField.boundList.refresh();
-
+        if (view === me.fromField.boundList) {
+            current = from;
+            destination = to;
+        } else {
+            current = to;
+            destination = from;
+        }
+        current.remove(rec);
+        destination.add(rec);
         me.syncValue();
     },
 
-    // Synchronizes the submit value with the current state of the toStore
-    syncValue: function() {
-        var me = this; 
-        me.mixins.field.setValue.call(me, me.setupValue(me.toField.store.getRange()));
-    },
-
-    onItemDblClick: function(view, rec) {
-        this.moveRec(view === this.fromField.boundList, rec);
-    },
-
-    setValue: function(value) {
+    setValue: function(value){
         var me = this,
-            fromField = me.fromField,
-            toField = me.toField,
-            fromStore = fromField.store,
-            toStore = toField.store,
+            fromStore = me.fromField.store,
+            toStore = me.toField.store,
             selected;
 
         // Wait for from store to be loaded
-        if (!me.fromStorePopulated) {
+        if (!me.fromField.store.getCount()) {
             me.fromField.store.on({
                 load: Ext.Function.bind(me.setValue, me, [value]),
                 single: true
@@ -300,34 +282,22 @@ Ext.define('Ext.ux.form.ItemSelector', {
 
         selected = me.getRecordsForValue(value);
 
-        // Clear both left and right Stores.
-        // Both stores must not fire events during this process.
-        fromStore.suspendEvents();
-        toStore.suspendEvents();
-        fromStore.removeAll();
+        Ext.Array.forEach(toStore.getRange(), function(rec){
+            if (!Ext.Array.contains(selected, rec)) {
+                // not in the selected group, remove it from the toStore
+                toStore.remove(rec);
+                fromStore.add(rec);
+            }
+        });
         toStore.removeAll();
 
-        // Reset fromStore
-        me.populateFromStore(me.store);
-
-        // Copy selection across to toStore
         Ext.Array.forEach(selected, function(rec){
             // In the from store, move it over
             if (fromStore.indexOf(rec) > -1) {
-                fromStore.remove(rec);
+                fromStore.remove(rec);     
             }
             toStore.add(rec);
         });
-
-        // Stores may now fire events
-        fromStore.resumeEvents();
-        toStore.resumeEvents();
-
-        // Refresh both sides and then update the app layout
-        Ext.suspendLayouts();
-        fromField.boundList.refresh();
-        toField.boundList.refresh();
-        Ext.resumeLayouts(true);        
     },
 
     onBindStore: function(store, initial) {
@@ -347,15 +317,10 @@ Ext.define('Ext.ux.form.ItemSelector', {
     },
 
     populateFromStore: function(store) {
-        var fromStore = this.fromField.store;
-
-        // Flag set when the fromStore has been loaded
-        this.fromStorePopulated = true;
-
-        fromStore.add(store.getRange());
-
-        // setValue waits for the from Store to be loaded
-        fromStore.fireEvent('load', fromStore);
+        this.fromField.store.add(store.getRange());
+        
+        // setValue wait for the from Store to be loaded
+        this.fromField.store.fireEvent('load', this.fromField.store);
     },
 
     onEnable: function(){

@@ -1,0 +1,84 @@
+/**
+ * Created by IntelliJ IDEA.
+ * User: rojer
+ * Date: 11-06-02
+ * Time: 10:42 PM
+ * To change this template use File | Settings | File Templates.
+ */
+Ext.define('Oz.grid.feature.Detail', {
+    /* Begin Definitions */
+    extend: 'Ext.grid.feature.Feature',
+    alias: 'feature.detail',
+
+    /* End Definitions */
+    detailCls: 'detail',
+    tplDetail: [],
+    startingDetail: globalRes.startingDetail,
+
+    detailDock: 'bottom',
+    detailPadding: 5,
+    detailHeight: 100,
+
+    // doesn't handle grid body events
+    hasFeatureEvent: false,
+    init:function(grid){
+        var me=this;
+        me.attachEvents();
+        this.callParent(arguments);
+    },
+
+    attachEvents: function() {
+      var me = this,
+        grid = me.getGridPanel();
+        var sm = grid.getSelectionModel();
+        me.createDetail(grid);
+      this.mon(sm, 'selectionchange', function(sm, rs) {
+        if (rs.length) {
+          me.detail.update(rs[0].data);
+        }
+        else{
+          me.detail.update(me.startingDetail);
+        }
+      });
+    },
+
+    createDetail: function(grid){
+      var me = this, detail;
+      detail = me.detail = Ext.create('Ext.panel.Panel', {
+          region: 'center',
+          autoScroll: true,
+          baseCls: me.detailCls,
+          padding: me.detailPadding,
+          tpl: me.tplDetail,
+          html: me.startingDetail
+        });
+        var dock=Ext.create('Ext.toolbar.Toolbar', {
+                dock: me.detailDock,
+                height: me.detailHeight,
+                layout: 'border',
+                items: detail
+            }
+        );
+        var dockedItems=grid.dockedItems;
+        dockedItems.push(dock);
+        Ext.apply(grid,{
+            dockedItems:dockedItems
+        });
+    },
+
+    getGridPanel: function() {
+      return this.grid;
+    },
+
+    /**
+     * @private
+     * Handler called by the grid 'beforedestroy' event
+     */
+    onDestroy : function () {
+      var me = this;
+      Ext.destroyMembers(me, 'detail');
+//      me.removeAll();
+      me.clearListeners();
+    }
+  }
+);

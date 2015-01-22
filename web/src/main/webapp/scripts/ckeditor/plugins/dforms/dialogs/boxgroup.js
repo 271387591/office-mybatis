@@ -125,7 +125,7 @@ CKEDITOR.dialog.add("boxgroup", function (d) {
                                 type: "text",
                                 label: d.lang.common.name, "default": "",
                                 accessKey: "N",
-                                validate: CKEDITOR.dialog.validate.notEmpty(d.lang.dforms.dcommon.validatename),
+                                validate: CKEDITOR.dialog.validate.notEmpty('下拉框名称不能为空'),
                                 setup: function (a, b) {
                                     "clear" == a ? this.setValue(this["default"] || "") : "select" == a && this.setValue(b.data("cke-saved-name") || b.getAttribute("name") || "")
                                 },
@@ -139,7 +139,7 @@ CKEDITOR.dialog.add("boxgroup", function (d) {
                             {
                                 id: 'txtlabel',
                                 type: 'text',
-                                validate: CKEDITOR.dialog.validate.notEmpty(d.lang.dforms.dcommon.validatetextlable),
+                                validate: CKEDITOR.dialog.validate.notEmpty('标签名称不能为空'),
                                 label: d.lang.dforms.dcommon.txtlabel,
                                 'default': '',
                                 accessKey: 'V',
@@ -197,7 +197,7 @@ CKEDITOR.dialog.add("boxgroup", function (d) {
                                         size: 5,
                                         style: "width:115px;height:75px",
                                         items: [],
-                                        validate:CKEDITOR.dialog.validate.notEmpty(d.lang.dforms.dcommon.validategroupbox),
+                                        validate:CKEDITOR.dialog.validate.notEmpty('至少有一个选项值'),
                                         onChange: function () {
                                             var a = this.getDialog(), b = a.getContentElement("info", "cmbValue"), e = a.getContentElement("info", "txtOptName"), a = a.getContentElement("info", "txtOptValue"), d = g(this);
                                             i(b, d);
@@ -340,22 +340,22 @@ CKEDITOR.dialog.add("boxgroup", function (d) {
                                 commit: function (a) {
                                     this.getValue() ? a.setAttribute("multiple", this.getValue()) : a.removeAttribute("multiple")
                                 }
-                            }
-//                            {id: "txtisnotnull", type: "checkbox", label: d.lang.dforms.dcommon.notNull, "default": "", accessKey: "M", value: "checked", setup: function (a, b) {
-//                                if(a=='select'){
-//                                    var value=b.getAttribute( 'xvtype' );
-//                                    if(value=='notNull'){
-//                                        this.setValue(true);
-//                                    }
-//                                }
-//                                CKEDITOR.env.webkit && this.getElement().getParent().setStyle("vertical-align", "middle")
-//                            }, commit: function (element) {
-//                                var value = this.getValue();
-//                                if ( value )
-//                                    element.setAttribute( 'xvtype','notNull');
-//                                else
-//                                    element.setAttribute( 'xvtype','notVal');
-//                            }}
+                            },
+                            {id: "txtisnotnull", type: "checkbox", label: d.lang.dforms.dcommon.notNull, "default": "", accessKey: "M", value: "checked", setup: function (a, b) {
+                                if(a=='select'){
+                                    var value=b.getAttribute( 'xvtype' );
+                                    if(value=='notNull'){
+                                        this.setValue(true);
+                                    }
+                                }
+                                CKEDITOR.env.webkit && this.getElement().getParent().setStyle("vertical-align", "middle")
+                            }, commit: function (element) {
+                                var value = this.getValue();
+                                if ( value )
+                                    element.setAttribute( 'xvtype','notNull');
+                                else
+                                    element.setAttribute( 'xvtype','notVal');
+                            }}
                         ]
                     }
                 ]

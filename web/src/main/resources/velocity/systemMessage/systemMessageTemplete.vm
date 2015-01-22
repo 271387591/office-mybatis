@@ -1,7 +1,0 @@
-<html>
-<title>系统待办任务提示</title>
-<body>
-<p>${userFullName}:您好</p>
-<p>您有一条任务【<font color="red">${taskName}</font>】未处理，来自${starter}于${startTime}申请的${instanceTitle}，请你尽快处理。</p>
-</body>
-</html>

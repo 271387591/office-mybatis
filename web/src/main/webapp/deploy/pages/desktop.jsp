@@ -1,4 +1,4 @@
-<%@ page language="java" pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" %>
+<%--<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">--%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -18,7 +18,6 @@
     <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ext/resources/css/ext-all.css'/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ozstrategy/css/flexcenter.css'/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ozstrategy/css/BoxSelect.css'/>"/>
-    <link rel="stylesheet" type="text/css" href="<c:url value='/mxgraph/css/editor.css'/>"/>
     <%--<link rel="stylesheet" type="text/css" href="<c:url value='/mxgraph/css/common.css'/>"/>--%>
     <%--<link rel="stylesheet" type="text/css" href="<c:url value='/mxgraph/css/explorer.css'/>"/>--%>
     <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/shared/icons.css'/>"/>
@@ -36,26 +35,13 @@
     <%--<script type="text/javascript" src="<c:url value='/desktop/classes.js'/>"></script>--%>
     <script type="text/javascript" src="<c:url value='/scripts/ext/locale/ext-lang-${language}.js'/>"></script>
     <script type="text/javascript" src="<c:url value="/scripts/ckeditor/ckeditor.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/scripts/lib/jquery-1.7.1.min.js"/>"></script>
 
     <script type="text/javascript">
         extTheme = '<c:url value="/scripts/ext/resources/css/ext-all"/>';
         basePath = '<c:url value="/"/>';
         mxBasePath = 'mxgraph/src';
-        Ext.Loader.setConfig({
-                    enabled: true,
-                    basePath: '<c:url value="/scripts/ext/src"/>',
-                    disableCaching: true
-                }
-        );
-        Ext.Loader.setPath({
-            'Ext.ux.desktop': '<c:url value="/demo"/>',
-            'Ext.ux': '<c:url value="/demo"/>',
-            FlexCenter: '<c:url value="/demo"/>',
-            Oz: '<c:url value="/demo"/>'
-        });
     </script>
-    <script type="text/javascript" src="<c:url value="/scripts/lib/ajax-pushlet-client.js"/>"></script>
+    <%--<script type="text/javascript" src="<c:url value="/mxgraph/src/js/mxClient.js"/>"></script>--%>
     <%--<script type="text/javascript" src="<c:url value="/mxgraph/js/mxApplication.js"/>"></script>--%>
 
 
@@ -76,7 +62,13 @@
 </style>
 <script type="text/javascript">
     var apps = {};
-    
+    if (globalRes.isAdmin != 'true'){location.href="dispatcherPage.action";}
+    Ext.Loader.setPath({
+        'Ext.ux.desktop': '<c:url value="/demo"/>',
+        'Ext.ux': '<c:url value="/demo"/>',
+        FlexCenter: '<c:url value="/demo"/>',
+        Oz: '<c:url value="/demo"/>'
+    });
 
 
     var flexCenterApp;

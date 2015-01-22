@@ -1,27 +1,23 @@
 package com.ozstrategy.model.userrole;
 
-import com.ozstrategy.model.BaseObject;
+import com.ozstrategy.model.BaseEntity;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
-public class Role extends BaseObject implements Serializable, GrantedAuthority {
+public class Role extends BaseEntity implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -29,16 +25,13 @@ public class Role extends BaseObject implements Serializable, GrantedAuthority {
     private String name;
     @Column
     private String description;
-    @Column(length = 64)
+    @Column
     private String displayName;
-    @Column(columnDefinition = "char",length = 1)
-    private Boolean enabled=true;
-    
-    @ManyToMany(fetch = FetchType.LAZY,mappedBy = "roles")
-    private Set<User> users=new HashSet<User>();
     @ManyToOne
     @JoinColumn(name = "systemViewId")
     private SystemView systemView;
+    @Column
+    private Boolean enabled;
     
     public Role() {
     }
@@ -91,12 +84,12 @@ public class Role extends BaseObject implements Serializable, GrantedAuthority {
         this.systemView = systemView;
     }
 
-    public Set<User> getUsers() {
-        return users;
+    public Boolean getEnabled() {
+        return enabled;
     }
 
-    public void setUsers(Set<User> users) {
-        this.users = users;
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 
     @Override
@@ -118,13 +111,5 @@ public class Role extends BaseObject implements Serializable, GrantedAuthority {
                 .append(id)
                 .append(name)
                 .hashCode();
-    }
-
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
     }
 } 

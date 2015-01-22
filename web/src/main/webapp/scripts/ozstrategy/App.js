@@ -46,36 +46,64 @@ Ext.define('FlexCenter.App', {
   },
 
   getModules:function () {
-      var items=[];
-      if(globalRes.isAdmin || (accessRes.showUserManager)){
-          items.push(new FlexCenter.UnitUserView());
-      }
-      if(globalRes.isAdmin || (accessRes.showSystemDataManager)){
-          items.push(new FlexCenter.SystemBaseDataView());
-      }
-      if(globalRes.isAdmin || (accessRes.showFlowFormManager)){
-          items.push(new FlexCenter.FlowFormManager());
-      }
-      if(globalRes.isAdmin || (accessRes.showFlowManager)){
-          items.push(new FlexCenter.FlowManagerView());
-      }
-      return items;
+    if (globalRes.isAdmin == 'true') { // admin login to system
+      return [
+        apps.UnitUserView =  new FlexCenter.UnitUserView(),
+        apps.SystemBaseDataView =  new FlexCenter.SystemBaseDataView(),
+          apps.FlowManagerView = new FlexCenter.FlowManagerView(),
+        apps.FlowFormManager = new FlexCenter.FlowFormManager()
+//        apps.xcView = new FlexCenter.XcView(),
+//        apps.hotelView = new FlexCenter.HotelView()
+//        apps.FollowupVisitView = new FlexCenter.FollowupVisitView(),
+//        apps.PersonView = new FlexCenter.PersonView(),
+//        apps.UnitPhysicalInfoView=new FlexCenter.UnitPhysicalInfoView(),
+//        apps.CrawlerManagerView =  new FlexCenter.CrawlerManagerView(),
+//        apps.UnitVariableView = new FlexCenter.UnitVariableView(),
+//        apps.ValidateView = new FlexCenter.ValidateView(),
+//        apps.JobConfigApp = new FlexCenter.JobConfigApp(),
+//        apps.ClientApp = new FlexCenter.ClientApp(),
+//        apps.EnvConfigApp = new FlexCenter.EnvConfigApp()
+
+      ];
+    } else {
+      return [
+//        apps.InputHistory = new FlexCenter.InputHistory({
+//          departmentName : globalRes.departmentName
+//        })
+      ];
+    }
   },
 
   getDesktopConfig:function () {
-    var me = this, ret = me.callParent(),shortcutDataArray = [];
-      if((globalRes.isAdmin || accessRes.showUserManager)){
-          shortcutDataArray.push({ name:userRoleRes.title, iconCls:'manageUser-shortcut', module:'unitUserView' });
-      }
-      if(globalRes.isAdmin || (accessRes.showSystemDataManager)){
-          shortcutDataArray.push({ name:systemRes.managerTitle, iconCls:'globalType-shortcut', module:'systemBaseDataView' });
-      }
-      if(globalRes.isAdmin || (accessRes.showFlowFormManager)){
-          shortcutDataArray.push({ name:flowFormRes.flowFormManager, iconCls:'form-manager', module:'flowFormManager' });
-      }
-      if(globalRes.isAdmin || (accessRes.showFlowManager)){
-          shortcutDataArray.push({ name:workFlowRes.flowDefineManagerTitle,iconCls:'workflow-manager',module:'flowManagerView'});
-      }
+    var me = this, ret = me.callParent(),
+      shortcutDataArray = [];
+
+    if (globalRes.isAdmin == 'true') { // admin login to system
+      shortcutDataArray = [
+//        { name:'账号管理', iconCls:'manageOldUser-shortcut', module:'unitOldUserView' },
+        { name:userRoleRes.title, iconCls:'manageUser-shortcut', module:'unitUserView' }, 
+        { name:systemBaseDataRes.title, iconCls:'globalType-shortcut', module:'systemBaseDataView' }, 
+        { name:'表单管理', iconCls:'manageUser-shortcut', module:'flowFormManager' }, 
+          { name:workFlowRes.flowDefineManagerTitle,iconCls:'workflow-manager',module:'flowManagerView'}
+//          { name:'携程',iconCls:'look-up-shortcut',module:'xcView'},
+//          { name:'酒店基本信息管理',iconCls:'look-up-shortcut',module:'hotelView'}
+//          { name:'随访管理',iconCls:'followup-visit-shortcut',module:'followupVisitView'},
+//          { name:'健康档案管理',iconCls:'personDoc-shortcut',module:'personView'},
+//          { name:'体检信息',iconCls:'physical-info-shortcut',module:'unitPhysicalInfoView'},
+//          { name:'数据抓取管理', iconCls:'crawlerManager-shortcut', module:'crawlerManagerView' },
+//          {name:'变量管理',iconCls:'variable-shortcut',module:'unitVariableView'},
+//          {name:'验证管理',iconCls:'validate-shortcut',module:'validateView'} ,
+//          {name:'Client Manager',iconCls:'manageClient-shortcut',module:'clientApp'},
+//          {name:'Job Configuration Manager',iconCls:'manageJob-shortcut',module:'jobConfigApp'},
+//          {name:'Environment Configuration Manager',iconCls:'manageEnv-shortcut',module:'envConfigApp'}
+      ];
+    } else {
+      shortcutDataArray = [
+//        { name:'我的任务量', iconCls:'notepad-shortcut', module:'myTaskPlanView' },
+//        { name:'汇总报表历史', iconCls:'collect-shortcut', module:'collectView' }
+
+      ];
+    }
     return Ext.apply(ret, {
       //cls: 'ux-desktop-black',
 //      contextMenuItems:[
@@ -145,7 +173,7 @@ Ext.define('FlexCenter.App', {
           '->',
           {
             text:globalRes.title.logout,
-            iconCls:'app-logout',
+            iconCls:'logout',
             handler: me.onLogout,
             scope: me
           }
@@ -276,7 +304,6 @@ Ext.define('FlexCenter.App', {
       },
       fn: function(btn){
         if(btn == 'yes'){
-            isLogout=true;
           document.location.replace(globalRes.logoutUrl);
         }
       }
