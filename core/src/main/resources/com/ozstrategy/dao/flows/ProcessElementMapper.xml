@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ozstrategy.dao.flows.ProcessElementDao">
+    <!--<cache type="org.mybatis.caches.ehcache.EhcacheCache"/>-->
+    <resultMap id="processElementResult" type="com.ozstrategy.model.flows.ProcessElement" autoMapping="true">
+        <id column="id" property="id" javaType="long"/>
+        <association property="processDef" column="processDefId" select="com.ozstrategy.dao.flows.ProcessDefDao.getNoCascadeProcessDefById"/>
+        <collection property="elementForms" column="id" select="com.ozstrategy.dao.flows.ProcessElementFormDao.getProcessElementFormsByEid"/>
+        <!--<collection property="users" column="id" select="getProcessElementUsers"/>-->
+    </resultMap>
+    
+    <select id="listProcessElements" resultMap="processElementResult" parameterType="Map">
+        select <include refid="fieldMapping"/> from PROCESSELEMENT f where 1=1
+        <if test="keyword!=null and keyword!=''">and (f.taskKey like CONCAT(CONCAT('%', #{keyword}), '%') or f.label like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
+    </select>
+    <select id="listProcessElementsCount" resultType="java.lang.Integer" parameterType="Map">
+        select count(id) from PROCESSELEMENT f where 1=1
+        <if test="keyword!=null and keyword!=''">and (f.taskKey like CONCAT(CONCAT('%', #{keyword}), '%') or f.label like CONCAT(CONCAT('%', #{keyword}), '%'))</if>
+    </select>
+    
+    <select id="getProcessElementById" resultMap="processElementResult" parameterType="long" flushCache="true">
+        select <include refid="fieldMapping"/> from PROCESSELEMENT f where f.id=#{id} 
+    </select>
+    <select id="getNoCascadeProcessElementById" resultType="com.ozstrategy.model.flows.ProcessElement" parameterType="long" flushCache="true">
+        select <include refid="fieldMapping"/> from PROCESSELEMENT f where f.id=#{id} 
+    </select>
+    
+    <select id="getProcessElementByDefId" resultMap="processElementResult" parameterType="long" flushCache="true">
+        select <include refid="fieldMapping"/> from PROCESSELEMENT f where f.processDefId=#{defId} 
+    </select>
+    
+    <select id="getProcessElementUsers" resultMap="com.ozstrategy.dao.userrole.UserDao.userResult" parameterType="long" flushCache="true">
+        select * from User u join (select peu.userId from PROCESSELEMENT f join PROCESSELEMENT_USER peu on f.id=peu.elementId where f.id=#{id}) peu on u.id=peu.userId 
+    </select>
+    
+    <select id="getProcessElementByTaskKey" resultMap="processElementResult" parameterType="string">
+        select <include refid="fieldMapping"/> from PROCESSELEMENT f where f.taskKey=#{taskKey} 
+    </select>
+    <select id="getProcessElementByTaskKeyAndDefId" resultMap="processElementResult" parameterType="Map">
+        select <include refid="fieldMapping"/> from PROCESSELEMENT f where f.taskKey=#{taskKey} and f.processDefId=#{defId} 
+    </select>
+    <select id="getSignProcessElementByTaskKeyAndDefId" resultMap="processElementResult" parameterType="Map">
+        select <include refid="fieldMapping"/> from PROCESSELEMENT f where f.taskType='Countersign' and f.taskKey=#{taskKey} and f.processDefId=#{defId} 
+    </select>
+    <select id="getProcessElementByTaskKeyAndActDefId" resultMap="processElementResult" parameterType="Map">
+        select pl.* from PROCESSELEMENT pl join PROCESSDEF pd on pl.processDefId=pd.id where pl.taskKey=#{taskKey} and pd.actDefId=#{actDefId}
+    </select>
+    
+    
+    <select id="loadElementActResource" resultType="com.ozstrategy.model.flows.ProcessElement" parameterType="long" >
+        select actResource from PROCESSELEMENT f where f.id=#{id}
+    </select>
+    
+    
+    <insert id="saveProcessElementUser" flushCache="true" parameterType="Map">
+        insert into PROCESSELEMENT_USER(userId,elementId) values (#{userId},#{id})
+    </insert>
+    <delete id="deleteProcessElementUserById" flushCache="true" parameterType="long">
+        delete from PROCESSELEMENT_USER where elementId=#{id}
+    </delete>
+    
+    <delete id="deleteProcessElement" parameterType="long" flushCache="true">
+        delete from PROCESSELEMENT where id=#{id}
+    </delete>
+    <delete id="deleteProcessElementByDefId" parameterType="long" flushCache="true">
+        delete from PROCESSELEMENT where processDefId=#{processDefId}
+    </delete>
+    
+    <update id="updateProcessElement" parameterType="com.ozstrategy.model.flows.ProcessElement" flushCache="true">
+        update PROCESSELEMENT f set 
+        f.graphType=#{graphType} , 
+        f.taskType=#{taskType,typeHandler=org.apache.ibatis.type.EnumTypeHandler} , 
+        f.label=#{label} , 
+        f.taskKey=#{taskKey} , 
+        f.actClass=#{actClass} , 
+        f.countersign=#{countersign} , 
+        f.endTask=#{endTask} , 
+        f.processDefId=#{processDef.id}  
+        where f.id=#{id}
+    </update>
+    <insert id="saveProcessElement" parameterType="com.ozstrategy.model.flows.ProcessElement" flushCache="true">
+        <selectKey keyColumn="id" keyProperty="id" resultType="java.lang.Long">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into PROCESSELEMENT(id,graphType,endTask,taskType,label,taskKey,actClass,countersign,processDefId) 
+        values (#{id},#{graphType},#{endTask},#{taskType,typeHandler=org.apache.ibatis.type.EnumTypeHandler},#{label},#{taskKey},#{actClass},#{countersign},#{processDef.id})
+    </insert>
+    <sql id="fieldMapping">
+        id,graphType,taskType,actClass,label,taskKey,processDefId,preTaskKeys,nextTaskKeys,countersign,parentId,endTask
+    </sql>
+</mapper>

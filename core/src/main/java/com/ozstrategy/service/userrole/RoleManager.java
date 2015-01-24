@@ -3,41 +3,22 @@ package com.ozstrategy.service.userrole;
 import com.ozstrategy.model.userrole.Feature;
 import com.ozstrategy.model.userrole.Role;
 import com.ozstrategy.model.userrole.RoleFeature;
-import com.ozstrategy.model.userrole.SystemView;
-import com.ozstrategy.service.GenericManager;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 
-public interface RoleManager extends GenericManager<Role, Long> {
- 
-  List<Role> getAllRoles();
-
-  
-  Long getCount(String keyword);
-
-  
-  Role getRole(String rolename);
-
-  Role getRole(Long roleId);
-
-  List getRoles(Role role);
-
-  List getRoles(String roleName, Integer start, Integer limit);
-
-  void removeRole(String rolename);
-
-  void removeRole(Long roleId);
-
-  void saveOrUpdateRole(Long id, String name, String displayName, String description, List<Feature> features);
-  void saveOrUpdateRole(Role role, List<Feature> features);
-
-  Role saveRole(Role role);
-
-    boolean hasFeature(Set<String> roles, String feature);
-    
-    SystemView getSystemViewById(Long id);
-    List<RoleFeature> getRoleFeature(Long roleId);
-
-} // end interface RoleManager
+public interface RoleManager  {
+    List<Role> listRoles(Map<String,Object> map, Integer start,Integer limit);
+    List<Role> listAllRoles(Map<String,Object> map);
+    Integer listRolesCount(Map<String,Object> map);
+    void saveOrUpdate(Role role,List<Feature> features) throws Exception;
+    void removeRoleById(Long id);
+    Role getRoleByName(String name);
+    Role getRoleById(Long id);
+    boolean hasFeature(Set<String> roleName,String feature);
+    boolean authenticatedContext(Set<String> roleName,String context);
+    List<RoleFeature> getRoleFeatureByRoleId(Long roleId);
+    List<Role> getRoleByUserId(Long userId);
+} 

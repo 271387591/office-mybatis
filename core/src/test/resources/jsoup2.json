@@ -1,0 +1,102 @@
+[
+    {
+        "name": "at",
+        "label": "at",
+        "xtype": "textfield",
+        "dataType": "string"
+    },
+    {
+        "name": "at9",
+        "label": "at9",
+        "xtype": "textfield",
+        "dataType": "string"
+    },
+    {
+        "name": "bt",
+        "label": "bt",
+        "xtype": "textareafield",
+        "dataType": "string"
+    },
+    {
+        "name": "ct",
+        "label": "c",
+        "xtype": "combo",
+        "dataType": "string"
+    },
+    {
+        "name": "dee",
+        "label": "ddd",
+        "xtype": "detailGrid",
+        "dataType": "array",
+        "children": [
+            {
+                "name": "a",
+                "label": "a",
+                "xtype": "textfield",
+                "dataType": "string"
+            },
+            {
+                "name": "b",
+                "label": "b",
+                "xtype": "textareafield",
+                "dataType": "string"
+            },
+            {
+                "name": "c",
+                "label": "c",
+                "xtype": "combo",
+                "dataType": "string"
+            },
+            {
+                "name": "d",
+                "label": "d",
+                "xtype": "boxgroup",
+                "dataType": "string"
+            },
+            {
+                "name": "e",
+                "label": "e",
+                "xtype": "boxgroup",
+                "dataType": "string"
+            }
+        ]
+    },
+    {
+        "name": "dee1",
+        "label": "ddd1",
+        "xtype": "detailGrid",
+        "dataType": "array",
+        "children": [
+            {
+                "name": "a1",
+                "label": "a",
+                "xtype": "textfield",
+                "dataType": "string"
+            },
+            {
+                "name": "b1",
+                "label": "b",
+                "xtype": "textareafield",
+                "dataType": "string"
+            },
+            {
+                "name": "c1",
+                "label": "c",
+                "xtype": "combo",
+                "dataType": "string"
+            },
+            {
+                "name": "d1",
+                "label": "d",
+                "xtype": "boxgroup",
+                "dataType": "string"
+            },
+            {
+                "name": "e1",
+                "label": "e",
+                "xtype": "boxgroup",
+                "dataType": "string"
+            }
+        ]
+    }
+]

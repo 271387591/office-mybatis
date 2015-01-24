@@ -65,6 +65,7 @@ public class UserCommand {
     private String email;
     private String mobile;
     private String   gender;
+    private Integer taskCount;
 
   //~ Constructors -----------------------------------------------------------------------------------------------------
 
@@ -118,6 +119,13 @@ public class UserCommand {
         }
         return this;
     }
+    public UserCommand populateFeatures(List<Feature> features) {
+        for (Feature feature : features) {
+            this.features.add(feature.getName());
+        }
+        return this;
+    }
+    
 
     public String getLastName() {
         return lastName;
@@ -293,5 +301,13 @@ public class UserCommand {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public Integer getTaskCount() {
+        return taskCount;
+    }
+
+    public void setTaskCount(Integer taskCount) {
+        this.taskCount = taskCount;
     }
 } // end class UserCommand

@@ -19,24 +19,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-/**
- * Created by IntelliJ IDEA. User: yzhang Date: 1/16/11 Time: 1:59 AM To change this template use File | Settings | File
- * Templates.
- *
- * @author   $author$
- * @version  $Revision$, $Date$
- */
 public class WebSecurityExpressionRoot {
-  //~ Instance fields --------------------------------------------------------------------------------------------------
-
-  /** Allows "denyAll" expression. */
   public final boolean denyAll = false;
 
-  /** Allows "permitAll" expression. */
   public final boolean permitAll = true;
 
-  // private FilterInvocation filterInvocation;
-  /** Allows direct access to the request object. */
   public HttpServletRequest request;
   private Authentication    authentication;
   private RoleHierarchy     roleHierarchy;
@@ -46,55 +33,20 @@ public class WebSecurityExpressionRoot {
 
   private AuthenticationTrustResolver trustResolver;
 
-  //~ Constructors -----------------------------------------------------------------------------------------------------
-
-  /**
-   * Creates a new WebSecurityExpressionRoot object.
-   */
   public WebSecurityExpressionRoot() { }
 
-  //~ Methods ----------------------------------------------------------------------------------------------------------
-
-  /**
-   * DOCUMENT ME!
-   *
-   * @return  DOCUMENT ME!
-   */
   public final boolean denyAll() {
     return false;
   }
 
-  //~ ------------------------------------------------------------------------------------------------------------------
-
-  /**
-   * DOCUMENT ME!
-   *
-   * @return  DOCUMENT ME!
-   */
   public final Authentication getAuthentication() {
     return authentication;
   }
 
-  //~ ------------------------------------------------------------------------------------------------------------------
-
-  /**
-   * DOCUMENT ME!
-   *
-   * @return  DOCUMENT ME!
-   */
   public Object getPrincipal() {
     return authentication.getPrincipal();
   }
 
-  //~ ------------------------------------------------------------------------------------------------------------------
-
-  /**
-   * DOCUMENT ME!
-   *
-   * @param   features  DOCUMENT ME!
-   *
-   * @return  DOCUMENT ME!
-   */
   public final boolean hasAnyFeature(String... features) {
     Set<String> roleSet = getAuthoritySet();
 
@@ -103,19 +55,9 @@ public class WebSecurityExpressionRoot {
         return true;
       }
     }
-
     return false;
   }
 
-  //~ ------------------------------------------------------------------------------------------------------------------
-
-  /**
-   * DOCUMENT ME!
-   *
-   * @param   roles  DOCUMENT ME!
-   *
-   * @return  DOCUMENT ME!
-   */
   public final boolean hasAnyRole(String... roles) {
     Set<String> roleSet = getAuthoritySet();
 
@@ -124,34 +66,16 @@ public class WebSecurityExpressionRoot {
         return true;
       }
     }
-
     return false;
   }
 
-  //~ ------------------------------------------------------------------------------------------------------------------
-
-  /**
-   * DOCUMENT ME!
-   *
-   * @param   feature  DOCUMENT ME!
-   *
-   * @return  DOCUMENT ME!
-   */
   public final boolean hasFeature(String feature) {
     return roleManager.hasFeature(getAuthoritySet(), feature);
   }
-
-  //~ ------------------------------------------------------------------------------------------------------------------
-
-  /**
-   * Takes a specific IP address or a range using the IP/Netmask (e.g. 192.168.1.0/24 or 202.24.0.0/14).
-   *
-   * @param   ipAddress  the address or range of addresses from which the request must come.
-   *
-   * @return  true if the IP address of the current request is in the required range.
-   *
-   * @throws  IllegalArgumentException  DOCUMENT ME!
-   */
+  public final boolean authenticatedContext(String context){
+    Set<String> roleSet = getAuthoritySet();
+    return roleManager.authenticatedContext(roleSet,context);
+  }
   public boolean hasIpAddress(String ipAddress) {
     int nMaskBits = 0;
 
@@ -198,31 +122,12 @@ public class WebSecurityExpressionRoot {
     }
 
     return true;
-  } // end method hasIpAddress
+  } 
 
-  //~ ------------------------------------------------------------------------------------------------------------------
-
-  /**
-   * DOCUMENT ME!
-   *
-   * @param   role  DOCUMENT ME!
-   *
-   * @return  DOCUMENT ME!
-   */
   public final boolean hasRole(String role) {
     return getAuthoritySet().contains(role);
   }
 
-  //~ ------------------------------------------------------------------------------------------------------------------
-
-  /**
-   * DOCUMENT ME!
-   *
-   * @param   a   DOCUMENT ME!
-   * @param   fi  DOCUMENT ME!
-   *
-   * @throws  IllegalArgumentException  DOCUMENT ME!
-   */
   public void init(Authentication a, FilterInvocation fi) {
     if (a == null) {
       throw new IllegalArgumentException(
@@ -234,96 +139,39 @@ public class WebSecurityExpressionRoot {
     this.request = fi.getRequest();
   }
 
-  //~ ------------------------------------------------------------------------------------------------------------------
-
-  /**
-   * DOCUMENT ME!
-   *
-   * @return  DOCUMENT ME!
-   */
   public final boolean isAnonymous() {
     return trustResolver.isAnonymous(authentication);
   }
 
-  //~ ------------------------------------------------------------------------------------------------------------------
-
-  /**
-   * DOCUMENT ME!
-   *
-   * @return  DOCUMENT ME!
-   */
   public final boolean isAuthenticated() {
     return !isAnonymous();
   }
 
-  //~ ------------------------------------------------------------------------------------------------------------------
-
-  /**
-   * DOCUMENT ME!
-   *
-   * @return  DOCUMENT ME!
-   */
   public final boolean isFullyAuthenticated() {
     return !trustResolver.isAnonymous(authentication)
       && !trustResolver.isRememberMe(authentication);
   }
 
-  //~ ------------------------------------------------------------------------------------------------------------------
-
-  /**
-   * DOCUMENT ME!
-   *
-   * @return  DOCUMENT ME!
-   */
   public final boolean isRememberMe() {
     return trustResolver.isRememberMe(authentication);
   }
 
-  //~ ------------------------------------------------------------------------------------------------------------------
-
-  /**
-   * DOCUMENT ME!
-   *
-   * @return  DOCUMENT ME!
-   */
   public final boolean permitAll() {
     return true;
   }
 
-  //~ ------------------------------------------------------------------------------------------------------------------
-
-  /**
-   * DOCUMENT ME!
-   *
-   * @param  roleHierarchy  DOCUMENT ME!
-   */
   public void setRoleHierarchy(RoleHierarchy roleHierarchy) {
     this.roleHierarchy = roleHierarchy;
   }
 
-  //~ ------------------------------------------------------------------------------------------------------------------
-
-  /**
-   * DOCUMENT ME!
-   *
-   * @param  roleManager  DOCUMENT ME!
-   */
   public void setRoleManager(RoleManager roleManager) {
     this.roleManager = roleManager;
   }
 
-  //~ ------------------------------------------------------------------------------------------------------------------
-
-  /**
-   * DOCUMENT ME!
-   *
-   * @param  trustResolver  DOCUMENT ME!
-   */
   public void setTrustResolver(AuthenticationTrustResolver trustResolver) {
     this.trustResolver = trustResolver;
   }
 
-  //~ ------------------------------------------------------------------------------------------------------------------
 
   private Set<String> getAuthoritySet() {
 // if (roles == null) {
@@ -340,8 +188,6 @@ public class WebSecurityExpressionRoot {
 
     return roles;
   }
-
-  //~ ------------------------------------------------------------------------------------------------------------------
 
   private InetAddress parseAddress(String address) {
     try {

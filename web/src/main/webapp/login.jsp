@@ -1,8 +1,4 @@
 <%@ page language="java" errorPage="/error.jsp" pageEncoding="UTF-8" contentType="text/html;charset=utf-8" %>
-<%@ page import="org.springframework.context.ApplicationContext" %>
-<%@ page import="org.springframework.web.context.support.WebApplicationContextUtils" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.Locale" %>
 <%@ include file="/common/taglibs.jsp" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -11,89 +7,97 @@
     if ("en_US".equalsIgnoreCase(language)) {
         language = "en";
     }
-    ServletContext servletContext = request.getSession().getServletContext();
-    ApplicationContext ctx = WebApplicationContextUtils.getWebApplicationContext(servletContext);
-//    String msg = ctx.getMessage("webapp.name",null,new Locale("en"));
-//    out.print(msg);
 %>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>office</title>
-  <link href="styles/login.css" rel="stylesheet" type="text/css">
-  <script type="text/javascript" src="<c:url value='/scripts/lib/jquery-1.7.1.min.js'/>"></script>
-  <%--<script type="text/javascript" src="<c:url value='/scripts/loginNewsScroll.js'/>"></script>--%>
-  <script type="text/javascript">
-      var appPath = "${appPath}";
-    $(document).ready(function (e) {
-      $('#j_username').bind('keydown', function (e) {
-        var key = e.which;
-        if (key == 13) {
-          $('#loginForm').submit();
-        }
-      });
-      $('#j_password').bind('keydown', function (e) {
-        var key = e.which;
-        if (key == 13) {
-          $('#loginForm').submit();
-        }
-      });
-      $("#j_username").focus();
-    });
-  </script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title><fmt:message key="webapp.name"/></title>
+    <c:set var="language"><%=language %></c:set>
+    <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/desktop/css/desktop.css'/>"/>
+    <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ext/resources/css/ext-all.css'/>"/>
+    <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ozstrategy/css/flexcenter.css'/>"/>
+    <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/ozstrategy/css/BoxSelect.css'/>"/>
+    <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/shared/icons.css'/>"/>
+    <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/shared/growl/css/ext-growl.css'/>"/>
+    <link rel="stylesheet" type="text/css" href="<c:url value='/scripts/login/css/login.css'/>"/>
+    <c:url var="defaultExtTheme" value="/scripts/ext/resources/css/ext-all.css"/>
+    <c:url var="grayExtTheme" value="/scripts/ext/resources/css/ext-all-gray.css"/>
+    <c:url var="accessExtTheme" value="/scripts/ext/resources/css/ext-all-access.css"/>
+    <script type="text/javascript" src="<c:url value='/scripts/ext/ext-all.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/scripts/ext/locale/ext-lang-${language}.js'/>"></script>
+    <script type="text/javascript">
+        var appPath = "${appPath}";
+        loginError = '';
+        <c:if test="${not empty param.error}">
+        <c:if test="${not empty param.reason}">
+        loginError = '<fmt:message key="errors.reason.${param.reason}" />';
+        </c:if>
+        <c:if test="${empty param.reason}">
+        loginError = '<fmt:message key="errors.password.mismatch" />';
+        </c:if>
+        </c:if>
+        var loginRes = {
+            formAction: '<c:url value="/j_security_check"/>',
+            appsName: '<fmt:message key="webapp.name" />',
+            title: '<fmt:message key="login.title" />',
+            username: '<fmt:message key="login.username" />',
+            password: '<fmt:message key="login.password" />',
+            login: '<fmt:message key="button.login" />',
+            reset: '<fmt:message key="globalRes.buttons.reset" />',
+            errorTitle: '<fmt:message key="login.title.error" />',
+            error: '<fmt:message key="errors.password.mismatch" />',
+            loginMsg: '<fmt:message key="login.loginMsg" />',
+            picture: '<div class="product-logo"></div>'
+        };
+    </script>
+    <script type="text/javascript" src="<c:url value='/scripts/lib/login.js'/>"></script>
 </head>
 <body id="login">
-<div id="wrappertop"></div>
-<div id="wrapper">
-    <div id="content">
-        <div id="header" style="padding: 0 0 0 0">
-            <h1><a href=""><img src="images/oz-logo.png" style="margin-bottom: 5px;margin-top: 5px;" width="400" height="53" alt="Wudang"></a> </h1>
-        </div>
-        <div id="darkbanner" class="banner510">
-            <h2>用户登陆</h2>
-        </div>
-        <div id="darkbannerwrap">
-        </div>
-        <form action="<c:url value='/j_security_check'/>" method="post" id="loginForm">
-            <fieldset class="form">
-                <p>
-                    <label for="j_username">用户名</label>
-                    <input type="text" name="j_username" id="j_username">
-                </p>
+<script type="text/javascript">
+    if (!Ext.isIE) {
+        var str = '<div id="mask" style="width:100%;height:100%;background:#E5E5E5;position:absolute;z-index:20000;left:0;top:0;">&#160;</div>'
+                + '<div id="loading">'
+                + '<div class="loading-indicator">'
+                + '<fmt:message key="login.loading"/>'
+                + '</div>'
+                + '</div>'
+                + '<div id="login-dlg"></div>';
+        document.writeln(str);
+    }
+</script>
 
-                <p>
-                    <label for="j_password">密码</label>
-                    <input class="textInput" type="password" name="j_password" id="j_password">
-                </p>
-                <div style="float: left;margin: 8px 0 8px 70px">
-                    <button type="submit" class="positive" onClick="$('#login').submit();">
-                        <img src="images/key.png" alt="登陆">登陆
-                    </button>
-                    <button type="reset" class="positive" >
-                        <img src="images/undo.png" alt="重置">重置
-                    </button>
-                </div>
-                <c:if test="${param.error != null}">
-                    <div style="float: left;width: 400px;height: 20px; font-size:13px;margin-left: 80px;padding: 15px 0 5px 0;color: red ">
-                        用户名或密码错误
-                    </div>
-                </c:if>
-            </fieldset>
-
-
-        </form>
-    </div>
-</div>
-
-<div id="wrapperbottom_branding">
-    <div id="wrapperbottom_branding_text">
-        <div style="padding: 5px 0 5px 0">
-            <%--<span style="font-weight: bold;">注</span>:本系统仅完美支持Internet Explorer8.0及以上版本,Firefox,Google Chrome浏览器--%>
-        </div>
-        <div>&nbsp;</div>
-        <div>&nbsp;</div>
-        <%--<div><fmt:message key="copyright.info"/></div>--%>
-        <%--<div><fmt:message key="contactInfo"/></div>--%>
-    </div>
-</div>
+<script type="text/javascript" >
+    Ext.Loader.setConfig({enabled: true});
+    Ext.Loader.setPath('Oz', '<c:url value="/scripts/login"/>');
+    Ext.onReady(function() {
+        Ext.BLANK_IMAGE_URL = '<c:url value="/scripts/desktop/images/s.gif"/>';
+        if (Ext.isIE) {
+            Ext.create('Oz.LoginWindow', {
+                loginError: loginError
+            }).show();
+        }
+        else {
+            var loading = Ext.get('loading');
+            mask = Ext.get("mask");
+            mask.setOpacity('0.8');
+            mask.setBounds(loading.getX(), loading.getY(), loading.getWidth(), loading.getHeight(), {
+                remove: true,
+                duration: 500,
+                opacity: '0.3',
+                easing: 'bounceOut',
+                callback: function(){
+                    loading.fadeOut({
+                        duration: 300,
+                        remove: true,
+                        callback: function(){
+                            Ext.create('Oz.LoginWindow', {
+                                loginError: loginError
+                            }).show();
+                        }
+                    });
+                }
+            });
+        }
+    });
+</script>
 </body>
 </html>

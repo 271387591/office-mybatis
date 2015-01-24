@@ -12,18 +12,8 @@
             http://www.springframework.org/schema/task/spring-task-3.0.xsd"
        default-lazy-init="true">
 
-    <!-- =================================================================== -->
-    <!-- AOP: Configuration and Aspects                                      -->
-    <!-- =================================================================== -->
-    <aop:config>
-        <aop:advisor id="userManagerTx" advice-ref="userManagerTxAdvice" pointcut="execution(* *..service.UserManager.*(..))" order="0"/>        
-        <aop:advisor id="userManagerSecurity" advice-ref="userSecurityAdvice" pointcut="execution(* *..service.UserManager.saveUser(..))" order="1"/>
-        <aop:advisor id="managerTx" advice-ref="txAdvice" pointcut="execution(* *..service.*.*Manager.*(..))" order="2"/>
-        <aop:advisor id="commonManagerTx" advice-ref="txAdvice" pointcut="execution(* *..service.*Manager.*(..))" order="3"/>
-    </aop:config>
-    
     <!-- Enable @Transactional support -->
-    <tx:annotation-driven/>
+    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
     
     <!-- Enable @AspectJ support -->
     <aop:aspectj-autoproxy/>
@@ -34,27 +24,15 @@
     <!-- Activates scanning of @Service -->
     <context:component-scan base-package="com.ozstrategy.service"/>
     
-    <tx:advice id="txAdvice">
-        <tx:attributes>
-            <!-- Read-only commented out to make things easier for end-users -->
-            <!-- http://issues.appfuse.org/browse/APF-556 -->
-            <!--tx:method name="get*" read-only="true"/-->
-            <tx:method name="*"/>
-        </tx:attributes>
-    </tx:advice>
-
-    <tx:advice id="userManagerTxAdvice">
-        <tx:attributes>
-            <tx:method name="save*" rollback-for="UserExistsException"/>
-        </tx:attributes>
-    </tx:advice>
-    
     <bean id="userSecurityAdvice" class="com.ozstrategy.service.UserSecurityAdvice"/>
     
     <!-- =================================================================== -->
     <!-- Mail: Sender and Velocity configuration                             -->
     <!-- =================================================================== -->
     <bean id="mailEngine" class="com.ozstrategy.service.MailEngine">
+        <!--<property name="mailSender" ref="mailSender"/>-->
+        <!--<property name="velocityEngine" ref="velocityEngine"/>-->
+        <!--<property name="from" value="${mail.default.from}"/>-->
     </bean>
 
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
@@ -70,6 +48,34 @@
         </property-->
     </bean>
 
+    <!-- Configure Velocity for sending e-mail -->
+    <!--<bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">-->
+        <!--<property name="velocityProperties">-->
+            <!--<props>-->
+                <!--<prop key="resource.loader">class</prop>-->
+                <!--<prop key="class.resource.loader.class">-->
+                    <!--org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader-->
+                <!--</prop>-->
+                <!--<prop key="velocimacro.library"></prop>-->
+            <!--</props>-->
+        <!--</property>-->
+    <!--</bean>-->
+    <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+        <property name="resourceLoaderPath" value="classpath:velocity/" />
+        <property name="velocityProperties">
+            <props>
+                <prop key="input.encoding">UTF-8</prop>
+                <prop key="output.encoding">UTF-8</prop>
+                <prop key="runtime.log.error.stacktrace">true</prop>
+                <prop key="runtime.log.invalid.reference">true</prop>
+                <!--<prop key="resource.loader">class</prop>-->
+                <!--<prop key="class.resource.loader.class">-->
+                <!--org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader-->
+                <!--</prop>-->
+                <!--<prop key="velocimacro.library"></prop>-->
+            </props>
+        </property>
+    </bean>
 
     <bean id="mailMessage" class="org.springframework.mail.SimpleMailMessage" scope="prototype">
         <property name="from" value="${mail.default.from}"/>

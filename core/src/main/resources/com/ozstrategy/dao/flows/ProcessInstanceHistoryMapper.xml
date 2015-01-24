@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ozstrategy.dao.flows.ProcessInstanceHistoryDao">
+    <resultMap id="ProcessInstanceHistoryResult" type="com.ozstrategy.model.flows.ProcessInstanceHistory" autoMapping="true">
+        <id column="id" property="id" javaType="string"/>
+        <collection property="runTasks" column="actInstanceId" select="com.ozstrategy.dao.flows.TaskDao.selectActRunTaskByInstanceId"/>
+    </resultMap>
+    <select id="listProcessInstanceHistories" parameterType="Map" resultMap="ProcessInstanceHistoryResult">
+        select 
+        ahp.ID_ as id,
+        ahp.START_TIME_ as startTime,
+        ahp.END_TIME_ as endTime,
+        ahp.PROC_DEF_ID_ as processDefinitionId,
+        ahp.PROC_INST_ID_ as actInstanceId,
+        ahp.START_USER_ID_ as startUserId,
+        pd.name as processName,
+        pd.processDefId as processDefId,
+        pi.title as title,
+        pi.id as instanceId
+        from ACT_HI_PROCINST ahp 
+        left join PROECESSDEFVERSION pd on ahp.PROC_DEF_ID_=pd.actDefId
+        left join PROCESSDEFINSTANCE pi on ahp.PROC_INST_ID_=pi.actInstanceId 
+        where ahp.START_USER_ID_=#{userId}
+        <if test="title!=null and title!=''"> and pi.title like CONCAT(CONCAT('%', #{title}), '%')</if>
+        <if test="processName!=null and processName!=''"> and pd.name like CONCAT(CONCAT('%', #{processName}), '%')</if>
+        <if test="startTime!=null and startTime!=''"> and ahp.START_TIME_ &gt; #{startTime}</if>
+        <if test="endTime!=null and endTime!=''"> and ahp.START_TIME_ &lt; #{endTime}</if>
+        <if test="pstatus!=null and pstatus!=''">
+            <choose>
+                <when test="pstatus==0">
+                    and ahp.END_TIME_ is null
+                </when>
+                <when test="pstatus==1">
+                    and ahp.END_TIME_ is not null
+                </when>
+            </choose>
+        </if>
+        order by ahp.START_TIME_ desc 
+    </select>
+    <select id="listProcessInstanceHistoriesCount" parameterType="Map" resultType="java.lang.Integer">
+        select 
+        count(*) 
+        from ACT_HI_PROCINST ahp 
+        left join PROECESSDEFVERSION pd on ahp.PROC_DEF_ID_=pd.actDefId
+        left join PROCESSDEFINSTANCE pi on ahp.PROC_INST_ID_=pi.actInstanceId 
+        where ahp.START_USER_ID_=#{userId}
+        <if test="title!=null and title!=''"> and pi.title like CONCAT(CONCAT('%', #{title}), '%')</if>
+        <if test="processName!=null and processName!=''"> and pd.name like CONCAT(CONCAT('%', #{processName}), '%')</if>
+        <if test="startTime!=null and startTime!=''"> and ahp.START_TIME_ &gt; #{startTime}</if>
+        <if test="endTime!=null and endTime!=''"> and ahp.START_TIME_ &lt; #{endTime}</if>
+        <if test="pstatus!=null and pstatus!=''">
+            <choose>
+                <when test="pstatus==0">
+                    and ahp.END_TIME_ is null
+                </when>
+                <when test="pstatus==1">
+                    and ahp.END_TIME_ is not null
+                </when>
+            </choose>
+        </if>
+        order by ahp.START_TIME_ desc 
+    </select>
+</mapper>

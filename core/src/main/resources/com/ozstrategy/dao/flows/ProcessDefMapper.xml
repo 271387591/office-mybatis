@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ozstrategy.dao.flows.ProcessDefDao">
+    <!--<cache type="org.mybatis.caches.ehcache.EhcacheCache"/>-->
+    <resultMap id="processDefResult" type="com.ozstrategy.model.flows.ProcessDef" autoMapping="true">
+        <id column="id" property="id" javaType="long"/>
+        <result column="typeName" property="category" javaType="string"/>
+        <association property="flowForm" column="flowFormId" select="com.ozstrategy.dao.forms.FlowFormDao.getNoCascadeFlowFormById"/>
+        <collection property="elements" column="id" select="com.ozstrategy.dao.flows.ProcessElementDao.getProcessElementByDefId"/>
+        <collection property="users" column="id" select="getProcessDefUser"/>
+        <collection property="roles" column="id" select="getProcessDefRole"/>
+    </resultMap>
+    <resultMap id="processDefinitionResult" type="com.ozstrategy.model.flows.ProcessDef" autoMapping="true">
+        <id column="id" property="id" javaType="long"/>
+        <result column="typeName" property="category" javaType="string"/>
+        <association property="flowForm" column="flowFormId" select="com.ozstrategy.dao.forms.FlowFormDao.getNoCascadeFlowFormById"/>
+    </resultMap>
+    
+    
+    <select id="listProcessDefs" resultMap="processDefResult" parameterType="Map">
+        select g.typeName,p.* from PROCESSDEF p left join GlobalType g on g.typeId=p.globalTypeId where p.enabled=1
+        <if test="keyword!=null and keyword!=''">and p.name like CONCAT(CONCAT('%', #{keyword}), '%')</if>
+        <if test="typeId!=null and typeId!=''">and p.globalTypeId=#{typeId}</if>
+        order by p.createDate desc
+    </select>
+    <select id="listProcessDefsCount" resultType="java.lang.Integer" parameterType="Map">
+        select count(*) from PROCESSDEF p left join GlobalType g on g.typeId=p.globalTypeId where p.enabled=1
+        <if test="keyword!=null and keyword!=''">and p.name like CONCAT(CONCAT('%', #{keyword}), '%')</if>
+        <if test="typeId!=null and typeId!=''">and p.globalTypeId=#{typeId}</if>
+    </select>
+    
+    <select id="getProcessDefinition" resultMap="processDefinitionResult" parameterType="Map">
+        select g.typeName,p.* from PROCESSDEF p left join GlobalType g on g.typeId=p.globalTypeId 
+        where p.enabled=1
+        <if test="keyword!=null and keyword!=''">and p.name like CONCAT(CONCAT('%', #{keyword}), '%') </if>
+        <if test="typeId!=null and typeId!=''">and p.globalTypeId=#{typeId} </if>
+        and p.actDefId is not null 
+        and (p.id in (select pu.processDefId from PROCESSDEF_USER pu where pu.userId=#{userId})
+            or
+            p.id in (select pr.processDefId from PROCESSDEF_ROLE pr where pr.roleId in (#{roleIds})))
+    </select>
+    <select id="getProcessDefinitionCount" resultType="java.lang.Integer" parameterType="Map">
+        select count(*) from PROCESSDEF p left join GlobalType g on g.typeId=p.globalTypeId 
+        where p.enabled=1
+        <if test="keyword!=null and keyword!=''">and p.name like CONCAT(CONCAT('%', #{keyword}), '%') </if>
+        <if test="typeId!=null and typeId!=''">and p.globalTypeId=#{typeId} </if>
+        and p.actDefId is not null 
+        and (p.id in (select pu.processDefId from PROCESSDEF_USER pu where pu.userId=#{userId})
+            or
+            p.id in (select pr.processDefId from PROCESSDEF_ROLE pr where pr.roleId in (#{roleIds})))
+    </select>
+    
+    
+    
+    
+    
+    
+    <select id="getProcessDefById" resultMap="processDefResult" parameterType="long" flushCache="true">
+        select f.* from PROCESSDEF f where f.enabled=1 and f.id=#{id} 
+    </select>
+    <select id="getProcessDefByActId" resultMap="processDefResult" parameterType="string">
+        select f.* from PROCESSDEF f where f.actDefId=#{actDefId} and f.enabled=1 
+    </select>
+    
+    <select id="getNoCascadeProcessDefById" resultType="com.ozstrategy.model.flows.ProcessDef" parameterType="long">
+        select f.* from PROCESSDEF f where f.id=#{id} and f.enabled=1
+    </select>
+    <select id="getProcessDefByName" resultMap="processDefResult" parameterType="Map">
+        select f.* from PROCESSDEF f where f.name=#{name} and f.enabled=1 and f.globalTypeId=#{typeId}
+    </select>
+    <select id="checkNameExist" resultType="long" parameterType="Map">
+        select f.id from PROCESSDEF f where f.name=#{name} and f.enabled=1 and f.globalTypeId=#{typeId}
+    </select>
+    <select id="getProcessDefUser" resultType="com.ozstrategy.model.userrole.User" parameterType="long">
+        select u.* from User u join PROCESSDEF_USER p on u.id=p.userId where p.processDefId=#{id}
+    </select>
+    <select id="getProcessDefRole" resultType="com.ozstrategy.model.userrole.Role" parameterType="long">
+        select r.* from Role r join PROCESSDEF_ROLE p on r.id=p.roleId where p.processDefId=#{id}
+    </select>
+    <select id="getProcessDefByRoleId" resultType="com.ozstrategy.model.flows.ProcessDef" parameterType="long">
+        select r.* from PROCESSDEF r join PROCESSDEF_ROLE p on r.id=p.processDefId where p.roleId=#{roleId}
+    </select>
+    
+    <select id="getProcessDefByFormId" resultType="com.ozstrategy.model.flows.ProcessDef" parameterType="long">
+        select r.* from PROCESSDEF r where r.flowFormId=#{flowFormId}
+    </select>
+    
+    
+    
+    <insert id="saveProcessDefUser" parameterType="Map" flushCache="true">
+        insert into PROCESSDEF_USER(userId,processDefId) values (#{userId},#{id})
+    </insert>
+    <insert id="saveProcessDefRole" parameterType="Map" flushCache="true">
+        insert into PROCESSDEF_ROLE(roleId,processDefId) values (#{roleId},#{id})
+    </insert>
+    <delete id="deleteProcessDefUser" parameterType="long" flushCache="true">
+        delete from PROCESSDEF_USER where processDefId=#{id}
+    </delete>
+    <delete id="deleteProcessDefRole" parameterType="long" flushCache="true">
+        delete from PROCESSDEF_ROLE where processDefId=#{id}
+    </delete>
+    <delete id="deleteProcessDef" parameterType="long" flushCache="true">
+        DELETE from PROCESSDEF WHERE id=#{id}
+    </delete>
+    
+    
+    
+    <update id="updateProcessDef" parameterType="com.ozstrategy.model.flows.ProcessDef" flushCache="true">
+        update PROCESSDEF f set 
+        f.name=#{name} , 
+        f.globalTypeId=#{globalTypeId} , 
+        f.version=#{version} , 
+        f.actDefId=#{actDefId} , 
+        f.actResId=#{actResId} , 
+        f.graphResId=#{graphResId} , 
+        f.documentation=#{documentation} , 
+        f.enabled=#{enabled} , 
+        f.flowFormId=#{flowForm.id} , 
+        f.deployDate=#{deployDate} , 
+        f.suspended=#{suspended} , 
+        f.hasType=#{hasType,typeHandler=org.apache.ibatis.type.EnumTypeHandler} , 
+        f.lastUpdateDate=#{lastUpdateDate} 
+        where f.id=#{id}
+    </update>
+    <insert id="saveProcessDef" parameterType="Map" flushCache="true">
+        <selectKey keyColumn="id" keyProperty="id" resultType="java.lang.Long">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into PROCESSDEF(id,name,hasType,flowFormId,globalTypeId,documentation,version,actDefId,actResId,graphResId,enabled,createDate,lastUpdateDate,deployDate,suspended) 
+        values (#{id},#{name},#{hasType,typeHandler=org.apache.ibatis.type.EnumTypeHandler},#{flowForm.id},#{globalTypeId},#{documentation},#{version},#{actDefId},#{actResId},#{graphResId},#{enabled},#{createDate},#{lastUpdateDate},#{deployDate},#{suspended})
+    </insert>
+</mapper>

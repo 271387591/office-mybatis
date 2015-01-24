@@ -19,6 +19,7 @@
       </list>
     </property>
   </bean>
+  <bean id="jmsMessageListener" class="com.ozstrategy.webapp.listener.JmsMessageListener"/>
 
   <bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
     <property name="driverClass" value="${jdbc.driverClassName}"/>

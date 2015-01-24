@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ozstrategy.dao.flows.ProcessDefInstanceDao">
+    <!--<cache type="org.mybatis.caches.ehcache.EhcacheCache"/>-->
+    <resultMap id="processDefInstanceResult" type="com.ozstrategy.model.flows.ProcessDefInstance" autoMapping="true">
+        <id column="id" property="id" javaType="long"/>
+        <association property="creator" column="creatorId" select="com.ozstrategy.dao.userrole.UserDao.getNoCascadeUserById"/>
+        <association property="lastUpdater" column="lastUpdaterId" select="com.ozstrategy.dao.userrole.UserDao.getNoCascadeUserById"/>
+        <association property="processDef" column="processDefId" select="com.ozstrategy.dao.flows.ProcessDefDao.getNoCascadeProcessDefById"/>
+    </resultMap>
+    
+    <select id="listProcessDefInstances" resultMap="processDefInstanceResult" parameterType="Map">
+        select p.* from PROCESSDEFINSTANCE p where p.creatorId=#{creatorId}
+        <if test="keyword!=null and keyword!=''">and p.name like CONCAT(CONCAT('%', #{keyword}), '%')</if>
+        order by p.createDate desc
+    </select>
+    <select id="listProcessDefInstancesCount" resultType="java.lang.Integer" parameterType="Map">
+        select count(*) from PROCESSDEFINSTANCE p where p.creatorId=#{creatorId}
+        <if test="keyword!=null and keyword!=''">and p.name like CONCAT(CONCAT('%', #{keyword}), '%')</if>
+    </select>
+    
+    <select id="getProcessDefInstanceById" resultMap="processDefInstanceResult" parameterType="long">
+        select f.* from PROCESSDEFINSTANCE f where f.id=#{id} 
+    </select>
+    <select id="getProcessDefInstanceByActId" resultMap="processDefInstanceResult" parameterType="string">
+        select f.* from PROCESSDEFINSTANCE f where f.actInstanceId=#{actId} 
+    </select>
+    <select id="getProcessDefInstanceByDefId" resultMap="processDefInstanceResult" parameterType="long">
+        select f.* from PROCESSDEFINSTANCE f where f.processDefId=#{defId} 
+    </select>
+    
+    
+    <select id="getNoCascadeProcessDefInstanceById" resultType="com.ozstrategy.model.flows.ProcessDefInstance" parameterType="long">
+        select f.* from PROCESSDEFINSTANCE f where f.id=#{id} 
+    </select>
+    
+   
+    <delete id="deleteProcessDefInstance" parameterType="long" flushCache="true">
+        delete from PROCESSDEFINSTANCE where id=#{id}
+    </delete>
+    <update id="updateProcessDefInstance" flushCache="true" parameterType="com.ozstrategy.model.flows.ProcessDefInstance">
+        update PROCESSDEFINSTANCE f set 
+        f.name=#{name},
+        f.title=#{title},
+        f.processDefId=#{processDef.id},
+        f.version=#{version},
+        f.actInstanceId=#{actInstanceId},
+        f.suspended=#{suspended},
+        f.startDate=#{startDate},
+        f.endDate=#{endDate},
+        f.lastUpdateDate=#{lastUpdateDate},
+        f.lastUpdaterId=#{lastUpdater.id}
+        where f.id=#{id}
+    </update>
+    <insert id="saveProcessDefInstance" parameterType="com.ozstrategy.model.flows.ProcessDefInstance" flushCache="true">
+        <selectKey keyColumn="id" keyProperty="id" resultType="java.lang.Long">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into PROCESSDEFINSTANCE(id,name,title,processDefId,version,actInstanceId,suspended,startDate,endDate,createDate,lastUpdateDate,creatorId,lastUpdaterId) 
+        values (#{id},#{name},#{title},#{processDef.id},#{version},#{actInstanceId},#{suspended},#{startDate},#{endDate},#{createDate},#{lastUpdateDate},#{creator.id},#{lastUpdater.id})
+    </insert>
+</mapper>

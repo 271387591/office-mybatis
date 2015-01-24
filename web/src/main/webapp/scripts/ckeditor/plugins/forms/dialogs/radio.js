@@ -20,7 +20,7 @@ CKEDITOR.dialog.add("radio", function (d) {
                     widths : [ '50%', '50%' ],
                     children :
                         [
-                            {id: "name", type: "text", label: d.lang.common.name, "default": "", accessKey: "N",validate : CKEDITOR.dialog.validate.notEmpty('单选框名称不能为空'), setup: function (a) {
+                            {id: "name", type: "text", label: d.lang.common.name, "default": "", accessKey: "N",validate : CKEDITOR.dialog.validate.notEmpty(d.lang.dforms.dcommon.validatename), setup: function (a) {
                                 this.setValue(a.data("cke-saved-name") || a.getAttribute("name") || "")
                             }, commit: function (a) {
                                 a = a.element;
@@ -29,7 +29,7 @@ CKEDITOR.dialog.add("radio", function (d) {
                             {
                                 id : 'txtlabel',
                                 type : 'text',
-                                validate : CKEDITOR.dialog.validate.notEmpty('标签名称不能为空'),
+                                validate : CKEDITOR.dialog.validate.notEmpty(d.lang.dforms.dcommon.validatetextlable),
                                 label : d.lang.dforms.dcommon.txtlabel,
                                 'default' : '',
                                 accessKey : 'V',

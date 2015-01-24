@@ -4,6 +4,7 @@ import com.ozstrategy.model.userrole.Role;
 import com.ozstrategy.model.userrole.User;
 import com.ozstrategy.service.userrole.RoleManager;
 import com.ozstrategy.service.userrole.UserManager;
+import com.ozstrategy.webapp.Constants;
 import com.ozstrategy.webapp.command.BaseResultCommand;
 import com.ozstrategy.webapp.command.JsonReaderResponse;
 import com.ozstrategy.webapp.command.userrole.UserCommand;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -39,12 +41,20 @@ public class UserController extends BaseController {
     public JsonReaderResponse<UserCommand> listUsers(HttpServletRequest request) {
         String start=request.getParameter("start");
         String limit=request.getParameter("limit");
+        String processAssignee=request.getParameter("processAssignee");
+        Map<String,Object> map=requestMap(request);
         if(checkIsNotNumber(start)){
             return new JsonReaderResponse<UserCommand>(emptyData, Boolean.FALSE,getMessage("message.error.start",request));
         }
-        String keyword=request.getParameter("keyword");
-        List<User> users        = userManager.getUsers(keyword, parseInteger(start), initLimit(limit));
+        List<User> users        = userManager.listUsers(map, parseInteger(start), initLimit(limit));
         List<UserCommand> userCommands = new ArrayList<UserCommand>();
+        
+        if(StringUtils.isNotEmpty(processAssignee)){
+            UserCommand userCommand=new UserCommand();
+            userCommand.setUsername(Constants.processAssigneeExpression);
+            userCommand.setFullName("发起人");
+            userCommands.add(userCommand);
+        }
 
         if ((users != null) && (users.size() > 0)) {
             for (User user : users) {
@@ -52,14 +62,17 @@ public class UserController extends BaseController {
                 userCommands.add(cmd);
             }
         }
-        int count = userManager.getUsersCount(keyword);
+        int count = userManager.listUsersCount(map);
+        if(StringUtils.isNotEmpty(processAssignee)){
+            count=count+1;
+        }
         return new JsonReaderResponse<UserCommand>(userCommands,count);
     }
     @RequestMapping(params = "method=listAllUsers")
     @ResponseBody
     public JsonReaderResponse<UserCommand> listAllUsers(HttpServletRequest request) {
-        String keyword=request.getParameter("keyword");
-        List<User> users        = userManager.getAllUsers(keyword);
+        Map<String,Object> map=requestMap(request);
+        List<User> users        = userManager.listAllUsers(map);
         List<UserCommand> userCommands = new ArrayList<UserCommand>();
         if ((users != null) && (users.size() > 0)) {
             for (User user : users) {
@@ -67,7 +80,7 @@ public class UserController extends BaseController {
                 userCommands.add(cmd);
             }
         }
-        int count = userManager.getUsersCount(keyword);
+        int count = userManager.listUsersCount(map);
         return new JsonReaderResponse<UserCommand>(userCommands,count);
     }
     
@@ -90,12 +103,13 @@ public class UserController extends BaseController {
         if(checkIsNotNumber(id)){
             return new BaseResultCommand(getMessage("message.error.id.null",request),Boolean.FALSE);
         }
-        User user=userManager.getUser(id);
-        if(user!=null){
-            user.setEnabled(Boolean.FALSE);
-            userManager.save(user);
+        try{     
+            userManager.deleteUser(parseLong(id));
+            return new BaseResultCommand(Boolean.TRUE);
+        }catch (Exception e){
+            logger.error("delete user fail",e);
         }
-        return new BaseResultCommand(Boolean.TRUE);
+        return new BaseResultCommand(getMessage("message.error.deleteUser.error",request),Boolean.FALSE);
     }
     @RequestMapping(params = "method=updatePassword")
     @ResponseBody 
@@ -206,7 +220,7 @@ public class UserController extends BaseController {
                 return new BaseResultCommand(getMessage("message.error.id.null",request),Boolean.FALSE);
             }
             try{
-                User user=userManager.getUser(id);
+                User user=userManager.getUserById(parseLong(id));
                 return new BaseResultCommand(new UserCommand(user));
             }catch (Exception e){
             }
@@ -220,7 +234,7 @@ public class UserController extends BaseController {
         if(checkIsNotNumber(id)){
             return new BaseResultCommand(getMessage("message.error.id.null",request),Boolean.FALSE);
         }
-        User    targetUser  = userManager.get(Long.parseLong(id));
+        User    targetUser  = userManager.getUserById(Long.parseLong(id));
         if(lock){
             targetUser.setAccountLocked(true);
         }else{
@@ -235,7 +249,7 @@ public class UserController extends BaseController {
         if(checkIsNotNumber(id)){
             return new BaseResultCommand(getMessage("message.error.id.null",request),Boolean.FALSE);
         }
-        User    targetUser  = userManager.get(Long.parseLong(id));
+        User    targetUser  = userManager.getUserById(Long.parseLong(id));
         if(enable){
             targetUser.setEnabled(true);
         }else{
@@ -266,11 +280,11 @@ public class UserController extends BaseController {
         try {
             User user=null;
             if(admin){
-                user=userManager.getUser(id);
+                user=userManager.getUserById(parseLong(id));
             }else{
                 user = userManager.getUserByUsername(request.getRemoteUser());
             }
-            Integer result=userManager.updateUserPassword(user,oldPassword,newPassword,admin);
+            Integer result=userManager.updateUserPassword(user.getId(),oldPassword,newPassword,admin);
             if(result==1){
                 return new BaseResultCommand(getMessage("message.error.updatePassword.oldPassword.error",request),Boolean.FALSE);
             }
@@ -312,7 +326,7 @@ public class UserController extends BaseController {
             if(checkIsEmpty(password)){
                 return new BaseResultCommand(getMessage("message.error.password.null",request),Boolean.FALSE);
             }
-            if(userManager.existByUserName(username)){
+            if(userManager.getUserByUsername(username)!=null){
                 return new BaseResultCommand(getMessage("message.error.username.exist",request),Boolean.FALSE);
             }
             if(userManager.getUserByMobile(mobile)!=null){
@@ -324,7 +338,7 @@ public class UserController extends BaseController {
         }
         try{
             if(!save){
-                user=userManager.getUser(id);
+                user=userManager.getUserById(parseLong(id));
                 if(!StringUtils.equals(mobile,user.getMobile())){
                     if(userManager.getUserByMobile(mobile)!=null){
                         return new BaseResultCommand(getMessage("message.error.getMobileUser.exist",request),Boolean.FALSE);
@@ -351,7 +365,7 @@ public class UserController extends BaseController {
             user.setMobile(mobile);
             user.setEmail(email);
             if(!checkIsNotNumber(defaultRoleId)){
-               Role role=roleManager.getRole(Long.parseLong(defaultRoleId));
+               Role role=roleManager.getRoleById(parseLong(defaultRoleId));
                user.setDefaultRole(role);
             }
             Set<Role> roleSet  = new HashSet<Role>();
@@ -359,14 +373,14 @@ public class UserController extends BaseController {
                 String[] roleIdes=StringUtils.split(roleIds,",");
                 if(roleIdes!=null){
                     for(String roleId:roleIdes){
-                        Role role = roleManager.getRole(Long.parseLong(roleId));
+                        Role role = roleManager.getRoleById(parseLong(roleId));
                         roleSet.add(role);
                     }
                 }
             }
             user.getRoles().clear();
             user.getRoles().addAll(roleSet);
-            userManager.saveUser(user);
+            userManager.saveOrUpdate(user);
             return new BaseResultCommand("",true);
         }catch (Exception e){
             log.error(e.getMessage(),e);

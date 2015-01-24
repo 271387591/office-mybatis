@@ -28,7 +28,7 @@ CKEDITOR.plugins.setLang( 'dforms', 'zh_cn',
         btnSetValue: '设为初始选定', 
         btnDelete: '删除',
         chkMulti: '允许多选',
-        checkboxTitle: '复选框属性', 
+        checkboxTitle: '复选/单选框属性', 
         radioTitle: '单选按钮属性', 
         value: '选定值', 
         selected: '已勾选'
@@ -48,6 +48,9 @@ CKEDITOR.plugins.setLang( 'dforms', 'zh_cn',
         validateEmail:'\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*',
         validateMobile:'1[3|5|7|8|][0-9]{9}',
         validateIdCard:'(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)',
+        validatetextlable:'标签名称不能为空',
+        validatename:'文本框名称不能为空',
+        validategroupbox:'至少有一个选项值',
 	  txtlabel:'标签名称',
 	  validateEmpty:'不能为空',
 	  dTextField:'单行文本框',
@@ -71,7 +74,7 @@ CKEDITOR.plugins.setLang( 'dforms', 'zh_cn',
 	},
 	dtextfield :
 	{
-		datatype:'格式化类型',
+		datatype:'数据类型',
 		typeVarchar:'字符',
 		typeNumber:'数字',
 		typeBigInt:'长整型',
@@ -82,7 +85,8 @@ CKEDITOR.plugins.setLang( 'dforms', 'zh_cn',
 		typeDecimal:'decimal型',
 		dataformat:'验证表达式',
 		txtisprimary:'主键',
-		txtisnotnull:'不为空'
+		txtisnotnull:'不为空',
+		dateformat:'日期格式'
 	},
 	dtextarea:{
 		

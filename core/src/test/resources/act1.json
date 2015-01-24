@@ -1,0 +1,476 @@
+{"bounds": {
+    "lowerRight": {
+        "x": 1485.0,
+        "y": 1050.0
+    },
+    "upperLeft": {
+        "x": 0.0,
+        "y": 0.0
+    }
+}, "resourceId": "canvas", "stencil": {
+    "id": "BPMNDiagram"
+}, "stencilset": {
+    "namespace": "http://b3mn.org/stencilset/bpmn2.0#",
+    "url": "../editor/stencilsets/bpmn2.0/bpmn2.0.json"
+}, "properties": {
+    "process_id": "P_2",
+    "name": "test2",
+    "process_namespace": null,
+    "eventlisteners": {
+        "totalCount": 0,
+        "items": []
+    },
+    "documentation": "sadf"
+}, "childShapes": [
+    {
+        "bounds": {
+            "lowerRight": {
+                "x": 330.0,
+                "y": 60.0
+            },
+            "upperLeft": {
+                "x": 230.0,
+                "y": 0.0
+            }
+        },
+        "resourceId": "T_9",
+        "childShapes": [],
+        "stencil": {
+            "id": "UserTask"
+        },
+        "properties": {
+            "overrideid": "T_9",
+            "name": "部门审核",
+            "documentation": "阿斯达飞",
+            "usertaskassignment": {
+                "totalCount": 1,
+                "items": [
+                    {
+                        "assignment_type": "candidateUsers",
+                        "resourceassignmentexpr": "\"user,hr,dep\""
+                    }
+                ]
+            },
+            "formproperties": {
+                "totalCount": 3,
+                "items": [
+                    {
+                        "formproperty_id": "1",
+                        "formproperty_name": "ss",
+                        "formproperty_type": "string",
+                        "formproperty_expression": null,
+                        "formproperty_variable": "sss",
+                        "formproperty_required": "No",
+                        "formproperty_readable": "No",
+                        "formproperty_writeable": "Yes",
+                        "formproperty_formvalues": "{\"totalCount\":0,\"items\":[]}"
+                    },
+                    {
+                        "formproperty_id": "2",
+                        "formproperty_name": "d",
+                        "formproperty_type": "string",
+                        "formproperty_expression": null,
+                        "formproperty_variable": "d",
+                        "formproperty_required": "No",
+                        "formproperty_readable": "No",
+                        "formproperty_writeable": "Yes",
+                        "formproperty_formvalues": "{\"totalCount\":0,\"items\":[]}"
+                    },
+                    {
+                        "formproperty_id": "7",
+                        "formproperty_name": "sdf",
+                        "formproperty_type": "string",
+                        "formproperty_expression": null,
+                        "formproperty_variable": "fds",
+                        "formproperty_required": "No",
+                        "formproperty_readable": "No",
+                        "formproperty_writeable": "Yes",
+                        "formproperty_formvalues": "{\"totalCount\":0,\"items\":[]}"
+                    }
+                ]
+            },
+            "tasklisteners": {
+                "totalCount": 0,
+                "items": []
+            }
+        },
+        "outgoing": []
+    },
+    {
+        "bounds": {
+            "lowerRight": {
+                "x": 480.0,
+                "y": 60.0
+            },
+            "upperLeft": {
+                "x": 380.0,
+                "y": 0.0
+            }
+        },
+        "resourceId": "T_8",
+        "childShapes": [],
+        "stencil": {
+            "id": "UserTask"
+        },
+        "properties": {
+            "overrideid": "T_8",
+            "name": "人事审核",
+            "documentation": "大多数的奋斗",
+            "formproperties": {
+                "totalCount": 3,
+                "items": [
+                    {
+                        "formproperty_id": "1",
+                        "formproperty_name": "ss",
+                        "formproperty_type": "string",
+                        "formproperty_expression": null,
+                        "formproperty_variable": "sss",
+                        "formproperty_required": "No",
+                        "formproperty_readable": "No",
+                        "formproperty_writeable": "Yes",
+                        "formproperty_formvalues": "{\"totalCount\":0,\"items\":[]}"
+                    },
+                    {
+                        "formproperty_id": "2",
+                        "formproperty_name": "d",
+                        "formproperty_type": "string",
+                        "formproperty_expression": null,
+                        "formproperty_variable": "d",
+                        "formproperty_required": "No",
+                        "formproperty_readable": "No",
+                        "formproperty_writeable": "Yes",
+                        "formproperty_formvalues": "{\"totalCount\":0,\"items\":[]}"
+                    },
+                    {
+                        "formproperty_id": "7",
+                        "formproperty_name": "sdf",
+                        "formproperty_type": "string",
+                        "formproperty_expression": null,
+                        "formproperty_variable": "fds",
+                        "formproperty_required": "No",
+                        "formproperty_readable": "No",
+                        "formproperty_writeable": "Yes",
+                        "formproperty_formvalues": "{\"totalCount\":0,\"items\":[]}"
+                    }
+                ]
+            },
+            "tasklisteners": {
+                "totalCount": 0,
+                "items": []
+            }
+        },
+        "outgoing": []
+    },
+    {
+        "bounds": {
+            "lowerRight": {
+                "x": 180.0,
+                "y": 60.0
+            },
+            "upperLeft": {
+                "x": 80.0,
+                "y": 0.0
+            }
+        },
+        "resourceId": "T_7",
+        "childShapes": [],
+        "stencil": {
+            "id": "UserTask"
+        },
+        "properties": {
+            "overrideid": "T_7",
+            "name": "填写表单",
+            "documentation": "挨到飞",
+            "usertaskassignment": {
+                "totalCount": 1,
+                "items": [
+                    {
+                        "assignment_type": "assignee",
+                        "resourceassignmentexpr": "\"${starter}\""
+                    }
+                ]
+            },
+            "formproperties": {
+                "totalCount": 3,
+                "items": [
+                    {
+                        "formproperty_id": "1",
+                        "formproperty_name": "ss",
+                        "formproperty_type": "string",
+                        "formproperty_expression": null,
+                        "formproperty_variable": "sss",
+                        "formproperty_required": "No",
+                        "formproperty_readable": "No",
+                        "formproperty_writeable": "Yes",
+                        "formproperty_formvalues": "{\"totalCount\":0,\"items\":[]}"
+                    },
+                    {
+                        "formproperty_id": "2",
+                        "formproperty_name": "d",
+                        "formproperty_type": "string",
+                        "formproperty_expression": null,
+                        "formproperty_variable": "d",
+                        "formproperty_required": "No",
+                        "formproperty_readable": "No",
+                        "formproperty_writeable": "Yes",
+                        "formproperty_formvalues": "{\"totalCount\":0,\"items\":[]}"
+                    },
+                    {
+                        "formproperty_id": "7",
+                        "formproperty_name": "sdf",
+                        "formproperty_type": "string",
+                        "formproperty_expression": null,
+                        "formproperty_variable": "fds",
+                        "formproperty_required": "No",
+                        "formproperty_readable": "No",
+                        "formproperty_writeable": "Yes",
+                        "formproperty_formvalues": "{\"totalCount\":0,\"items\":[]}"
+                    }
+                ]
+            },
+            "tasklisteners": {
+                "totalCount": 0,
+                "items": []
+            }
+        },
+        "outgoing": []
+    },
+    {
+        "bounds": {
+            "lowerRight": {
+                "x": 30.0,
+                "y": 45.0
+            },
+            "upperLeft": {
+                "x": 0.0,
+                "y": 15.0
+            }
+        },
+        "resourceId": "T_6",
+        "childShapes": [],
+        "stencil": {
+            "id": "StartNoneEvent"
+        },
+        "properties": {
+            "overrideid": "T_6",
+            "name": "开始",
+            "documentation": "阿斯达飞挨到",
+            "initiator": "initiator",
+            "formproperties": {
+                "totalCount": 0,
+                "items": []
+            }
+        },
+        "outgoing": []
+    },
+    {
+        "bounds": {
+            "lowerRight": {
+                "x": 172.0,
+                "y": 212.0
+            },
+            "upperLeft": {
+                "x": 128.0,
+                "y": 212.0
+            }
+        },
+        "resourceId": "T_14",
+        "childShapes": [],
+        "stencil": {
+            "id": "SequenceFlow"
+        },
+        "dockers": [
+            {
+                "x": 50.0,
+                "y": 30.0
+            },
+            {
+                "x": 492.0,
+                "y": 30.0
+            },
+            {
+                "x": 492.0,
+                "y": 30.000000000000004
+            },
+            {
+                "x": 15.0,
+                "y": 15.0
+            }
+        ],
+        "outgoing": [
+            {
+                "resourceId": "T_10"
+            }
+        ],
+        "target": {
+            "resourceId": "T_10"
+        },
+        "properties": {
+            "overrideid": "T_14",
+            "name": "flow4"
+        }
+    },
+    {
+        "bounds": {
+            "lowerRight": {
+                "x": 172.0,
+                "y": 212.0
+            },
+            "upperLeft": {
+                "x": 128.0,
+                "y": 212.0
+            }
+        },
+        "resourceId": "T_13",
+        "childShapes": [],
+        "stencil": {
+            "id": "SequenceFlow"
+        },
+        "dockers": [
+            {
+                "x": 50.0,
+                "y": 30.0
+            },
+            {
+                "x": 342.0,
+                "y": 30.0
+            },
+            {
+                "x": 342.0,
+                "y": 30.000000000000007
+            },
+            {
+                "x": 50.0,
+                "y": 30.0
+            }
+        ],
+        "outgoing": [
+            {
+                "resourceId": "T_8"
+            }
+        ],
+        "target": {
+            "resourceId": "T_8"
+        },
+        "properties": {
+            "overrideid": "T_13",
+            "name": "flow3"
+        }
+    },
+    {
+        "bounds": {
+            "lowerRight": {
+                "x": 172.0,
+                "y": 212.0
+            },
+            "upperLeft": {
+                "x": 128.0,
+                "y": 212.0
+            }
+        },
+        "resourceId": "T_12",
+        "childShapes": [],
+        "stencil": {
+            "id": "SequenceFlow"
+        },
+        "dockers": [
+            {
+                "x": 50.0,
+                "y": 30.0
+            },
+            {
+                "x": 192.0,
+                "y": 30.0
+            },
+            {
+                "x": 192.0,
+                "y": 30.000000000000007
+            },
+            {
+                "x": 50.0,
+                "y": 30.0
+            }
+        ],
+        "outgoing": [
+            {
+                "resourceId": "T_9"
+            }
+        ],
+        "target": {
+            "resourceId": "T_9"
+        },
+        "properties": {
+            "overrideid": "T_12",
+            "name": "flow2"
+        }
+    },
+    {
+        "bounds": {
+            "lowerRight": {
+                "x": 172.0,
+                "y": 212.0
+            },
+            "upperLeft": {
+                "x": 128.0,
+                "y": 212.0
+            }
+        },
+        "resourceId": "T_11",
+        "childShapes": [],
+        "stencil": {
+            "id": "SequenceFlow"
+        },
+        "dockers": [
+            {
+                "x": 15.0,
+                "y": 15.0
+            },
+            {
+                "x": 42.0,
+                "y": 30.0
+            },
+            {
+                "x": 42.0,
+                "y": 30.000000000000007
+            },
+            {
+                "x": 50.0,
+                "y": 30.0
+            }
+        ],
+        "outgoing": [
+            {
+                "resourceId": "T_7"
+            }
+        ],
+        "target": {
+            "resourceId": "T_7"
+        },
+        "properties": {
+            "overrideid": "T_11",
+            "name": "flow1"
+        }
+    },
+    {
+        "bounds": {
+            "lowerRight": {
+                "x": 560.0,
+                "y": 45.0
+            },
+            "upperLeft": {
+                "x": 530.0,
+                "y": 15.0
+            }
+        },
+        "resourceId": "T_10",
+        "childShapes": [],
+        "stencil": {
+            "id": "EndNoneEvent"
+        },
+        "properties": {
+            "overrideid": "T_10",
+            "documentation": "阿斯达飞的"
+        },
+        "outgoing": []
+    }
+]}

@@ -29,7 +29,7 @@ public class JsonReaderResponse<T> {
   public String message;
 
   /** DOCUMENT ME! */
-  public boolean success;
+  public Boolean success;
 
   /** DOCUMENT ME! */
   public int total = 0;
@@ -186,17 +186,7 @@ public class JsonReaderResponse<T> {
     return total;
   }
 
-  //~ ------------------------------------------------------------------------------------------------------------------
-
-  /**
-   * DOCUMENT ME!
-   *
-   * @return  DOCUMENT ME!
-   */
-  public boolean isSuccess() {
-    return success;
-  }
-
+  
   //~ ------------------------------------------------------------------------------------------------------------------
 
   /**
@@ -230,18 +220,15 @@ public class JsonReaderResponse<T> {
     this.message = message;
   }
 
-  //~ ------------------------------------------------------------------------------------------------------------------
+    public Boolean getSuccess() {
+        return success;
+    }
 
-  /**
-   * DOCUMENT ME!
-   *
-   * @param  success  DOCUMENT ME!
-   */
-  public void setSuccess(boolean success) {
-    this.success = success;
-  }
+    public void setSuccess(Boolean success) {
+        this.success = success;
+    }
 
-  //~ ------------------------------------------------------------------------------------------------------------------
+    //~ ------------------------------------------------------------------------------------------------------------------
 
   /**
    * DOCUMENT ME!

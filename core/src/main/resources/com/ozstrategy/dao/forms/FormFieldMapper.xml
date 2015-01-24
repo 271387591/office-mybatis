@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ozstrategy.dao.forms.FormFieldDao">
+    <!--<cache type="org.mybatis.caches.ehcache.EhcacheCache"/>-->
+    <resultMap id="formFieldResult" type="com.ozstrategy.model.forms.FormField" autoMapping="true">
+        <id column="id" property="id" javaType="long"/>
+        <result column="flowFormId" javaType="java.lang.Long"/>
+        <association property="flowForm" column="flowFormId" select="com.ozstrategy.dao.forms.FlowFormDao.getNoCascadeFlowFormById"/>
+        <!--<association property="flowForm" column="flowFormId" select="com.ozstrategy.dao.forms.FlowFormDao.getNoCascadeFlowFormById"/>-->
+        <!--<association property="flowForm" resultMap="com.ozstrategy.dao.forms.FlowFormDao.flowFormResult"/>-->
+    </resultMap>
+    <select id="listFormFields" resultMap="formFieldResult" parameterType="string">
+        select f.* from FormField f where f.parentId is null
+        <if test="keyword!=null">and f.name like CONCAT(CONCAT('%', #{keyword}), '%')</if>
+    </select>
+    <select id="listFormFieldsCount" resultType="java.lang.Integer" parameterType="string">
+        select count(*) from FormField f where f.parentId is null
+        <if test="keyword!=null">and f.name like CONCAT(CONCAT('%', #{keyword}), '%')</if>
+    </select>
+    <select id="getFormFieldByNameAndFlowFormId" resultMap="formFieldResult" parameterType="Map">
+        select f.* from FormField f where f.name=#{name} and f.parentId is null and f.flowFormId in (select f.id from FlowForm f where f.id=#{formId})
+    </select>
+    <select id="getFormFieldByFormId" resultMap="formFieldResult" parameterType="long">
+        select f.* from FormField f where f.flowFormId=#{flowFormId} and f.xtype!='detailGrid'
+    </select>
+    <select id="getFormFieldById" resultMap="formFieldResult" parameterType="long">
+        select f.* from FormField f where f.id=#{id} 
+    </select>
+    <select id="getNoCascadeFormField" resultType="com.ozstrategy.model.forms.FormField" parameterType="long">
+        select f.* from FormField f where f.id=#{id} and f.xtype!='detailGrid'
+    </select>
+    
+    
+    <update id="updateFormField" parameterType="com.ozstrategy.model.forms.FormField" flushCache="true">
+        update FormField f set 
+        f.name=#{name} , 
+        f.xtype=#{xtype} , 
+        f.flowFormId=#{flowForm.id} , 
+        f.dataType=#{dataType} , 
+        f.lastUpdateDate=#{lastUpdateDate} , 
+        f.label=#{label},  
+        f.dateFormat=#{dateFormat},  
+        f.parentId=#{parent.id}  
+        where f.id=#{id}
+    </update>
+    <delete id="deleteByFormId" parameterType="long" flushCache="true">
+        delete from FormField where flowFormId=#{formId}
+    </delete>
+    <delete id="deleteChild" parameterType="long" flushCache="true">
+        delete from FormField where parentId=#{parentId}
+    </delete>
+    
+    <insert id="saveFormField" parameterType="com.ozstrategy.model.forms.FormField" flushCache="true">
+        <selectKey keyColumn="id" keyProperty="id" resultType="java.lang.Long">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into FormField(id,name,xtype,flowFormId,dataType,createDate,lastUpdateDate,label,dateFormat,parentId) 
+        values (#{id},#{name},#{xtype},#{flowForm.id},#{dataType},#{createDate},#{lastUpdateDate},#{label},#{dateFormat},#{parent.id})
+    </insert>
+</mapper>

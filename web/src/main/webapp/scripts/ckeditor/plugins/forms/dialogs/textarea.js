@@ -3,7 +3,7 @@
  For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 CKEDITOR.dialog.add("textarea", function (b) {
-    return{title: b.lang.forms.textarea.title, minWidth: 350, minHeight: 220, onShow: function () {
+    return{title: b.lang.forms.textarea.title, minWidth: 350, minHeight: 100, onShow: function () {
         delete this.textarea;
         var a = this.getParentEditor().getSelection().getSelectedElement();
         a && "textarea" == a.getName() && (this.textarea = a, this.setupContent(a))
@@ -11,6 +11,7 @@ CKEDITOR.dialog.add("textarea", function (b) {
         var a, b = this.textarea, c = !b;
         c && (a = this.getParentEditor(), b = a.document.createElement("textarea"));
         b.setAttribute('xtype','textareafield');
+        b.setAttribute('datatype','string');
         this.commitContent(b);
         c && a.insertElement(b)
     }, contents: [
@@ -21,7 +22,7 @@ CKEDITOR.dialog.add("textarea", function (b) {
                     widths : [ '50%', '50%' ],
                     children :
                         [
-                            {id: "_cke_saved_name", type: "text", label: b.lang.common.name, "default": "", accessKey: "N",validate : CKEDITOR.dialog.validate.notEmpty('文本域名称不能为空'), setup: function (a) {
+                            {id: "_cke_saved_name", type: "text", label: b.lang.common.name, "default": "", accessKey: "N",validate : CKEDITOR.dialog.validate.notEmpty(b.lang.dforms.dcommon.validatename), setup: function (a) {
                                 this.setValue(a.data("cke-saved-name") || a.getAttribute("name") || "")
                             }, commit: function (a) {
                                 this.getValue() ? a.data("cke-saved-name", this.getValue()) : (a.data("cke-saved-name", !1), a.removeAttribute("name"))
@@ -29,7 +30,7 @@ CKEDITOR.dialog.add("textarea", function (b) {
                             {
                                 id : 'txtlabel',
                                 type : 'text',
-                                validate : CKEDITOR.dialog.validate.notEmpty('标签名称不能为空'),
+                                validate : CKEDITOR.dialog.validate.notEmpty(b.lang.dforms.dcommon.validatetextlable),
                                 label : b.lang.dforms.dcommon.txtlabel,
                                 'default' : '',
                                 accessKey : 'V',
@@ -44,30 +45,30 @@ CKEDITOR.dialog.add("textarea", function (b) {
                                 }
                             }
                         ]
-                },
-                {
-                    id : 'txtisnotnull',
-                    type : 'checkbox',
-                    label : b.lang.dforms.dcommon.notNull,
-                    'default' : '',
-                    accessKey : 'P',
-                    value : "checked",
-                    setup : function( element )
-                    {
-                        var value=element.getAttribute( 'xvtype' );
-                        if(value=='notNull'){
-                            this.setValue(true);
-                        }
-                    },
-                    commit : function( element )
-                    {
-                        var value = this.getValue();
-                        if ( value )
-                            element.setAttribute( 'xvtype','notNull');
-                        else
-                            element.setAttribute( 'xvtype','notVal');
-                    }
                 }
+//                {
+//                    id : 'txtisnotnull',
+//                    type : 'checkbox',
+//                    label : b.lang.dforms.dcommon.notNull,
+//                    'default' : '',
+//                    accessKey : 'P',
+//                    value : "checked",
+//                    setup : function( element )
+//                    {
+//                        var value=element.getAttribute( 'xvtype' );
+//                        if(value=='notNull'){
+//                            this.setValue(true);
+//                        }
+//                    },
+//                    commit : function( element )
+//                    {
+//                        var value = this.getValue();
+//                        if ( value )
+//                            element.setAttribute( 'xvtype','notNull');
+//                        else
+//                            element.setAttribute( 'xvtype','notVal');
+//                    }
+//                }
 //                {type: "hbox", widths: ["50%", "50%"], children: [
 //                    {id: "cols", type: "text", label: b.lang.forms.textarea.cols, "default": "", accessKey: "C", style: "width:50px", validate: CKEDITOR.dialog.validate.integer(b.lang.common.validateNumberFailed),
 //                        setup: function (a) {

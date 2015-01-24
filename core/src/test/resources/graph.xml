@@ -1,0 +1,63 @@
+<mxGraphModel>
+    <root>
+        <Process name="普通流程" category="" documentation="" id="0">
+            <mxCell/>
+        </Process>
+        <mxCell id="1" parent="0"/>
+        <StartNoneEvent label="Start" type="startEvent" name="开始" id="2">
+            <mxCell style="roundImage;image=mxgraph/images/startevent/none.node.png" vertex="1" parent="1">
+                <mxGeometry x="60" y="100" width="40" height="40" as="geometry"/>
+            </mxCell>
+        </StartNoneEvent>
+        <UserTask label="User task" type="task" tasktype="Starter" name="填写表单" formproperties="{&quot;totalCount&quot;:3,&quot;items&quot;:[{&quot;formproperty_id&quot;:1,&quot;formproperty_name&quot;:&quot;ss&quot;,&quot;formproperty_type&quot;:&quot;string&quot;,&quot;formproperty_expression&quot;:&quot;&quot;,&quot;formproperty_variable&quot;:&quot;sss&quot;,&quot;formproperty_required&quot;:&quot;No&quot;,&quot;formproperty_readable&quot;:&quot;No&quot;,&quot;formproperty_writeable&quot;:&quot;Yes&quot;,&quot;formproperty_formvalues&quot;:[]},{&quot;formproperty_id&quot;:2,&quot;formproperty_name&quot;:&quot;d&quot;,&quot;formproperty_type&quot;:&quot;string&quot;,&quot;formproperty_expression&quot;:&quot;&quot;,&quot;formproperty_variable&quot;:&quot;d&quot;,&quot;formproperty_required&quot;:&quot;No&quot;,&quot;formproperty_readable&quot;:&quot;No&quot;,&quot;formproperty_writeable&quot;:&quot;Yes&quot;,&quot;formproperty_formvalues&quot;:[]},{&quot;formproperty_id&quot;:7,&quot;formproperty_name&quot;:&quot;sdf&quot;,&quot;formproperty_type&quot;:&quot;string&quot;,&quot;formproperty_expression&quot;:&quot;&quot;,&quot;formproperty_variable&quot;:&quot;fds&quot;,&quot;formproperty_required&quot;:&quot;No&quot;,&quot;formproperty_readable&quot;:&quot;No&quot;,&quot;formproperty_writeable&quot;:&quot;Yes&quot;,&quot;formproperty_formvalues&quot;:[]}]}" id="3">
+            <mxCell style="label;image=mxgraph/images/activity/list/type.user.png" vertex="1" parent="1">
+                <mxGeometry x="180" y="80" width="140" height="80" as="geometry"/>
+            </mxCell>
+        </UserTask>
+        <UserTask label="User task" type="task" name="部门审核" usertaskassignment="[{},{&quot;assignment_type&quot;:&quot;candidateUsers&quot;,&quot;resourceassignmentexpr&quot;:&quot;dep&quot;},{}]" formproperties="{&quot;totalCount&quot;:3,&quot;items&quot;:[{&quot;formproperty_id&quot;:1,&quot;formproperty_name&quot;:&quot;ss&quot;,&quot;formproperty_type&quot;:&quot;string&quot;,&quot;formproperty_expression&quot;:&quot;&quot;,&quot;formproperty_variable&quot;:&quot;sss&quot;,&quot;formproperty_required&quot;:&quot;No&quot;,&quot;formproperty_readable&quot;:&quot;No&quot;,&quot;formproperty_writeable&quot;:&quot;Yes&quot;,&quot;formproperty_formvalues&quot;:[]},{&quot;formproperty_id&quot;:2,&quot;formproperty_name&quot;:&quot;d&quot;,&quot;formproperty_type&quot;:&quot;string&quot;,&quot;formproperty_expression&quot;:&quot;&quot;,&quot;formproperty_variable&quot;:&quot;d&quot;,&quot;formproperty_required&quot;:&quot;No&quot;,&quot;formproperty_readable&quot;:&quot;No&quot;,&quot;formproperty_writeable&quot;:&quot;Yes&quot;,&quot;formproperty_formvalues&quot;:[]},{&quot;formproperty_id&quot;:7,&quot;formproperty_name&quot;:&quot;sdf&quot;,&quot;formproperty_type&quot;:&quot;string&quot;,&quot;formproperty_expression&quot;:&quot;&quot;,&quot;formproperty_variable&quot;:&quot;fds&quot;,&quot;formproperty_required&quot;:&quot;No&quot;,&quot;formproperty_readable&quot;:&quot;No&quot;,&quot;formproperty_writeable&quot;:&quot;Yes&quot;,&quot;formproperty_formvalues&quot;:[]}]}" id="4">
+            <mxCell style="label;image=mxgraph/images/activity/list/type.user.png" vertex="1" parent="1">
+                <mxGeometry x="410" y="80" width="140" height="80" as="geometry"/>
+            </mxCell>
+        </UserTask>
+        <UserTask label="User task" type="task" name="经理审核" usertaskassignment="[{},{&quot;assignment_type&quot;:&quot;candidateUsers&quot;,&quot;resourceassignmentexpr&quot;:&quot;user&quot;},{}]" id="5">
+            <mxCell style="label;image=mxgraph/images/activity/list/type.user.png" vertex="1" parent="1">
+                <mxGeometry x="180" y="240" width="140" height="80" as="geometry"/>
+            </mxCell>
+        </UserTask>
+        <UserTask label="User task" type="task" name="人事审核" usertaskassignment="[{},{&quot;assignment_type&quot;:&quot;candidateUsers&quot;,&quot;resourceassignmentexpr&quot;:&quot;hr&quot;},{}]" formproperties="{&quot;totalCount&quot;:3,&quot;items&quot;:[{&quot;formproperty_id&quot;:1,&quot;formproperty_name&quot;:&quot;ss&quot;,&quot;formproperty_type&quot;:&quot;string&quot;,&quot;formproperty_expression&quot;:&quot;&quot;,&quot;formproperty_variable&quot;:&quot;sss&quot;,&quot;formproperty_required&quot;:&quot;No&quot;,&quot;formproperty_readable&quot;:&quot;No&quot;,&quot;formproperty_writeable&quot;:&quot;Yes&quot;,&quot;formproperty_formvalues&quot;:[]},{&quot;formproperty_id&quot;:2,&quot;formproperty_name&quot;:&quot;d&quot;,&quot;formproperty_type&quot;:&quot;string&quot;,&quot;formproperty_expression&quot;:&quot;&quot;,&quot;formproperty_variable&quot;:&quot;d&quot;,&quot;formproperty_required&quot;:&quot;No&quot;,&quot;formproperty_readable&quot;:&quot;No&quot;,&quot;formproperty_writeable&quot;:&quot;Yes&quot;,&quot;formproperty_formvalues&quot;:[]},{&quot;formproperty_id&quot;:7,&quot;formproperty_name&quot;:&quot;sdf&quot;,&quot;formproperty_type&quot;:&quot;string&quot;,&quot;formproperty_expression&quot;:&quot;&quot;,&quot;formproperty_variable&quot;:&quot;fds&quot;,&quot;formproperty_required&quot;:&quot;No&quot;,&quot;formproperty_readable&quot;:&quot;No&quot;,&quot;formproperty_writeable&quot;:&quot;Yes&quot;,&quot;formproperty_formvalues&quot;:[]}]}" id="6">
+            <mxCell style="label;image=mxgraph/images/activity/list/type.user.png" vertex="1" parent="1">
+                <mxGeometry x="400" y="240" width="140" height="80" as="geometry"/>
+            </mxCell>
+        </UserTask>
+        <EndNoneEvent label="End event" type="endEvent" name="结束" id="7">
+            <mxCell style="roundImage;image=mxgraph/images/endevent/event_end.png" vertex="1" parent="1">
+                <mxGeometry x="50" y="260" width="40" height="40" as="geometry"/>
+            </mxCell>
+        </EndNoneEvent>
+        <SequenceFlow label="flow" type="edge" id="8">
+            <mxCell edge="1" parent="1" source="2" target="3">
+                <mxGeometry relative="1" as="geometry"/>
+            </mxCell>
+        </SequenceFlow>
+        <SequenceFlow label="flow" type="edge" id="9">
+            <mxCell edge="1" parent="1" source="3" target="4">
+                <mxGeometry relative="1" as="geometry"/>
+            </mxCell>
+        </SequenceFlow>
+        <SequenceFlow label="flow" type="edge" id="10">
+            <mxCell edge="1" parent="1" source="4" target="6">
+                <mxGeometry relative="1" as="geometry"/>
+            </mxCell>
+        </SequenceFlow>
+        <SequenceFlow label="flow" type="edge" id="11">
+            <mxCell edge="1" parent="1" source="6" target="5">
+                <mxGeometry relative="1" as="geometry"/>
+            </mxCell>
+        </SequenceFlow>
+        <SequenceFlow label="flow" type="edge" id="12">
+            <mxCell edge="1" parent="1" source="5" target="7">
+                <mxGeometry relative="1" as="geometry"/>
+            </mxCell>
+        </SequenceFlow>
+    </root>
+</mxGraphModel>

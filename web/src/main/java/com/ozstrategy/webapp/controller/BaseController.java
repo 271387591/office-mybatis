@@ -1,6 +1,7 @@
 package com.ozstrategy.webapp.controller;
 
 import com.ozstrategy.webapp.Constants;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -28,7 +29,7 @@ import java.util.Map;
  */
 @Controller
 public class BaseController {
-    protected final transient Log log = LogFactory.getLog(getClass());
+    protected final transient Log logger = LogFactory.getLog(getClass());
     @Autowired
     private ApplicationContext context;
     protected static final List emptyData= Collections.EMPTY_LIST;
@@ -66,6 +67,7 @@ public class BaseController {
         if(StringUtils.isEmpty(request.getParameter("limit"))){
             map.put("limit", Constants.LIMIT);
         }
+        
         return map;
     }
     public Integer initLimit(String limit){
@@ -101,23 +103,38 @@ public class BaseController {
         return null;
     }
     public Long parseLong(String filed){
-        return Long.parseLong(filed);
+        if(NumberUtils.isNumber(filed))
+            return Long.parseLong(filed);
+        return null;
     }
     public Integer parseInteger(String filed){
-        return Integer.parseInt(filed);
+        if(NumberUtils.isNumber(filed))
+            return Integer.parseInt(filed);
+        return null;
     }
     public Short parseShort(String filed){
-        return Short.parseShort(filed);
+        if(NumberUtils.isNumber(filed))
+            return Short.parseShort(filed);
+        return null;
     }
     public Double parseDouble(String filed){
-        return Double.parseDouble(filed);
+        if(NumberUtils.isNumber(filed))
+            return Double.parseDouble(filed);
+        return null;
     }
+    public Boolean parseBoolean(String filed){
+        if(StringUtils.isNotEmpty(filed)){
+            return BooleanUtils.toBooleanObject(filed);
+        }
+        return null;
+    }
+    
     public void ajax(String str,boolean result,HttpServletResponse response){
         try{
             response.setContentType("text/html;charset=UTF-8");
             response.getWriter().write("{\"communicate\":"+str+",\"result\":\""+result+"\"}");
         }catch(IOException e){
-            log.error(e.getMessage(),e);
+            logger.error(e.getMessage(),e);
         }
     }
 }

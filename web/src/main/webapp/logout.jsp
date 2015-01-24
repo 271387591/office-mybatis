@@ -13,4 +13,4 @@ terminate.setMaxAge(0);
 response.addCookie(terminate);
 %>
 
-<c:redirect url="/service/dispatcherPage.action"/>
+<c:redirect url="/login"/>

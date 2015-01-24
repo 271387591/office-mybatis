@@ -3,14 +3,29 @@
     "http://tuckey.org/res/dtds/urlrewrite3.0.dtd">
 
 <urlrewrite default-match-type="wildcard">
+
+    <rule>
+        <from>/service/**</from>
+        <to last="true" type="redirect">%{context-path}/$1</to>
+    </rule>
+    
     <rule>
         <from>/j_security_check</from>
         <to>/j_security_check</to>
     </rule>
     <rule>
-        <from>/logout</from>
+        <from>/login*</from>
+        <to>/login.jsp</to>
+    </rule>
+    <rule>
+        <from>/logout*</from>
         <to>/logout.jsp</to>
     </rule>
+    <rule>
+        <from>/**/logout*</from>
+        <to>/logout.jsp</to>
+    </rule>
+    
     <rule>
         <from>/images/**</from>
         <to>/images/$1</to>
@@ -27,6 +42,7 @@
         <from>/scripts/**</from>
         <to>/scripts/$1</to>
     </rule>
+    
     <rule>
         <from>/styles/**</from>
         <to>/styles/$1</to>
@@ -50,10 +66,20 @@
         <to>/jscripts/$1</to>
     </rule>
     
+    <!--<rule>-->
+        <!--<from>/service/**</from>-->
+        <!--<to>/service/$1</to>-->
+    <!--</rule>-->
+    <!--<rule>-->
+        <!--<from>/service/</from>-->
+        <!--<to>/login.jsp</to>-->
+    <!--</rule>-->
+    
     <rule>
-        <from>/service/**</from>
-        <to>/service/$1</to>
+        <from>/pushlet.srv</from>
+        <to>/pushlet.srv</to>
     </rule>
+    
     
     
     
@@ -63,15 +89,22 @@
         <from>/</from>
         <to type="redirect" last="true">login</to>
     </rule>
-    <rule>
-        <from>/login*</from>
-        <to>/login.jsp</to>
-    </rule>
+    <!--<rule>-->
+        <!--<from>/login*</from>-->
+        <!--<to>/login.jsp</to>-->
+    <!--</rule>-->
+    <!--<rule>-->
+        <!--<from>/**</from>-->
+        <!--<to type="forward">/service/$1</to>-->
+    <!--</rule>-->
     <rule>
         <from>/**</from>
-        <to type="forward">/service/$1</to>
+        <to>/service/$1</to>
     </rule>
-    
+    <outbound-rule>
+        <from>/service/**</from>
+        <to>/$1</to>
+    </outbound-rule>
     
     
     <outbound-rule encodefirst="true" match-type="regex">

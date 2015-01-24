@@ -1,0 +1,88 @@
+<mxGraphModel>
+    <root>
+        <Process name="3" category="" documentation="" id="0">
+            <mxCell/>
+        </Process>
+        <mxCell id="1" parent="0"/>
+        <SubProcess label="Sub process" type="subProcess" id="2">
+            <mxCell style="swimlane;" vertex="1" parent="1">
+                <mxGeometry x="300" y="70" width="450" height="200" as="geometry"/>
+            </mxCell>
+        </SubProcess>
+        <StartNoneEvent label="Start" type="startEvent" name="子开始" id="7">
+            <mxCell style="roundImage;image=mxgraph/images/startevent/none.node.png" vertex="1" parent="2">
+                <mxGeometry x="30" y="70" width="40" height="40" as="geometry"/>
+            </mxCell>
+        </StartNoneEvent>
+        <UserTask label="User task" type="task" tasktype="Starter" name="子任务1" id="8">
+            <mxCell style="label;image=mxgraph/images/activity/list/type.user.png" vertex="1" parent="2">
+                <mxGeometry x="110" y="60" width="140" height="80" as="geometry"/>
+            </mxCell>
+        </UserTask>
+        <UserTask label="User task" type="task" name="子任务2" id="10">
+            <mxCell style="label;image=mxgraph/images/activity/list/type.user.png" vertex="1" parent="2">
+                <mxGeometry x="300" y="50" width="140" height="80" as="geometry"/>
+            </mxCell>
+        </UserTask>
+        <EndNoneEvent label="End event" type="endEvent" name="子结束" id="9">
+            <mxCell style="roundImage;image=mxgraph/images/endevent/event_end.png" vertex="1" parent="2">
+                <mxGeometry x="310" y="160" width="40" height="40" as="geometry"/>
+            </mxCell>
+        </EndNoneEvent>
+        <SequenceFlow label="flow" type="edge" id="11">
+            <mxCell edge="1" parent="2" source="7" target="8">
+                <mxGeometry relative="1" as="geometry"/>
+            </mxCell>
+        </SequenceFlow>
+        <SequenceFlow label="flow" type="edge" id="12">
+            <mxCell edge="1" parent="2" source="8" target="10">
+                <mxGeometry relative="1" as="geometry"/>
+            </mxCell>
+        </SequenceFlow>
+        <SequenceFlow label="flow" type="edge" id="13">
+            <mxCell edge="1" parent="2" source="10" target="9">
+                <mxGeometry relative="1" as="geometry"/>
+            </mxCell>
+        </SequenceFlow>
+        <StartNoneEvent label="Start" type="startEvent" name="主开始" id="3">
+            <mxCell style="roundImage;image=mxgraph/images/startevent/none.node.png" vertex="1" parent="1">
+                <mxGeometry x="30" y="140" width="40" height="40" as="geometry"/>
+            </mxCell>
+        </StartNoneEvent>
+        <UserTask label="User task" type="task" tasktype="Starter" name="主任务1" id="4">
+            <mxCell style="label;image=mxgraph/images/activity/list/type.user.png" vertex="1" parent="1">
+                <mxGeometry x="120" y="130" width="140" height="80" as="geometry"/>
+            </mxCell>
+        </UserTask>
+        <SequenceFlow label="flow" type="edge" id="5">
+            <mxCell edge="1" parent="1" source="3" target="4">
+                <mxGeometry relative="1" as="geometry"/>
+            </mxCell>
+        </SequenceFlow>
+        <SequenceFlow label="flow" type="edge" id="6">
+            <mxCell edge="1" parent="1" source="4" target="2">
+                <mxGeometry relative="1" as="geometry"/>
+            </mxCell>
+        </SequenceFlow>
+        <UserTask label="User task" type="task" name="主任务2" id="14">
+            <mxCell style="label;image=mxgraph/images/activity/list/type.user.png" vertex="1" parent="1">
+                <mxGeometry x="350" y="350" width="140" height="80" as="geometry"/>
+            </mxCell>
+        </UserTask>
+        <SequenceFlow label="flow" type="edge" id="15">
+            <mxCell edge="1" parent="1" source="2" target="14">
+                <mxGeometry relative="1" as="geometry"/>
+            </mxCell>
+        </SequenceFlow>
+        <EndNoneEvent label="End event" type="endEvent" name="主结束" id="16">
+            <mxCell style="roundImage;image=mxgraph/images/endevent/event_end.png" vertex="1" parent="1">
+                <mxGeometry x="610" y="380" width="40" height="40" as="geometry"/>
+            </mxCell>
+        </EndNoneEvent>
+        <SequenceFlow label="flow" type="edge" id="17">
+            <mxCell edge="1" parent="1" source="14" target="16">
+                <mxGeometry relative="1" as="geometry"/>
+            </mxCell>
+        </SequenceFlow>
+    </root>
+</mxGraphModel>

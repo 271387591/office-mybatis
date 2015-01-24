@@ -109,6 +109,160 @@
             <value>1</value>
             <value>enableUser</value>
         </row>
+        <row>
+            <value>11</value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value>user</value>
+            <value>显示用户模块</value>
+            <value>显示用户模块</value>
+            <value>1</value>
+            <value>showUserManager</value>
+        </row>
+        <row>
+            <value>12</value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value>system</value>
+            <value>显示基础数据模块</value>
+            <value>显示基础数据模块</value>
+            <value>1</value>
+            <value>showSystemDataManager</value>
+        </row>
+        <row>
+            <value>13</value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value>forms</value>
+            <value>显示表单模块</value>
+            <value>显示表单模块</value>
+            <value>1</value>
+            <value>showFlowFormManager</value>
+        </row>
+        <row>
+            <value>14</value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value>flows</value>
+            <value>显示流程模块</value>
+            <value>显示流程模块</value>
+            <value>1</value>
+            <value>showFlowManager</value>
+        </row>
+        <row>
+            <value>15</value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value>flows</value>
+            <value>添加流程</value>
+            <value>添加流程</value>
+            <value>1</value>
+            <value>addProcess</value>
+        </row>
+        <row>
+            <value>16</value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value>flows</value>
+            <value>删除流程</value>
+            <value>删除流程</value>
+            <value>1</value>
+            <value>deleteProcess</value>
+        </row>
+        <row>
+            <value>17</value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value>flows</value>
+            <value>流程授权</value>
+            <value>流程授权</value>
+            <value>1</value>
+            <value>authorizationProcess</value>
+        </row>
+        <row>
+            <value>18</value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value>flows</value>
+            <value>编辑流程</value>
+            <value>编辑流程</value>
+            <value>1</value>
+            <value>updateProcess</value>
+        </row>
+        <row>
+            <value>19</value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value>flows</value>
+            <value>部署流程</value>
+            <value>部署流程</value>
+            <value>1</value>
+            <value>deployProcess</value>
+        </row>
+        <row>
+            <value>20</value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value>flows</value>
+            <value>发布表单</value>
+            <value>发布表单</value>
+            <value>1</value>
+            <value>publishForm</value>
+        </row>
+        <row>
+            <value>21</value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value>flows</value>
+            <value>编辑表单</value>
+            <value>编辑表单</value>
+            <value>1</value>
+            <value>updateForm</value>
+        </row>
+        <row>
+            <value>22</value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value>flows</value>
+            <value>添加表单</value>
+            <value>添加表单</value>
+            <value>1</value>
+            <value>addForm</value>
+        </row>
+        <row>
+            <value>23</value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value>flows</value>
+            <value>删除表单</value>
+            <value>删除表单</value>
+            <value>1</value>
+            <value>deleteForm</value>
+        </row>
+        <row>
+            <value>24</value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value><![CDATA[2014-07-25 13:50:23.0]]></value>
+            <value>flows</value>
+            <value>解除流程权限</value>
+            <value>解除流程权限</value>
+            <value>1</value>
+            <value>disAuthorizationProcess</value>
+        </row>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     </table>
     <table name="SystemView">
         <column>id</column>
@@ -145,7 +299,6 @@
         <column>displayName</column>
         <column>name</column>
         <column>systemViewId</column>
-        <column>enabled</column>
         <row>
             <value>-2</value>
             <value><![CDATA[2013-01-22 16:03:26.0]]></value>
@@ -154,7 +307,6 @@
             <value>分公司用户</value>
             <value>ROLE_USER</value>
             <value>2</value>
-            <value>1</value>
         </row>
         <row>
             <value>-1</value>
@@ -164,87 +316,8 @@
             <value>超级管理员</value>
             <value>ROLE_ADMIN</value>
             <value>1</value>
-            <value>1</value>
         </row>
     </table>
-    <table name="RoleFeature">
-        <column>id</column>
-        <column>createDate</column>
-        <column>lastUpdateDate</column>
-        <column>featureId</column>
-        <column>roleId</column>
-        <row>
-            <value>1</value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value>1</value>
-            <value>-1</value>
-        </row>
-        <row>
-            <value>2</value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value>2</value>
-            <value>-1</value>
-        </row>
-        <row>
-            <value>3</value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value>3</value>
-            <value>-1</value>
-        </row>
-        <row>
-            <value>4</value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value>4</value>
-            <value>-1</value>
-        </row>
-        <row>
-            <value>5</value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value>5</value>
-            <value>-1</value>
-        </row>
-        <row>
-            <value>6</value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value>6</value>
-            <value>-1</value>
-        </row>
-        <row>
-            <value>7</value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value>7</value>
-            <value>-1</value>
-        </row>
-        <row>
-            <value>8</value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value>8</value>
-            <value>-1</value>
-        </row>
-        <row>
-            <value>9</value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value>9</value>
-            <value>-1</value>
-        </row>
-        <row>
-            <value>10</value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value><![CDATA[2014-07-25 14:22:04.0]]></value>
-            <value>10</value>
-            <value>-1</value>
-        </row>
-    </table>
-    
     <table name="User">
         <column>id</column>
         <column>createDate</column>
@@ -274,14 +347,14 @@
             <value>1</value>
             <value><![CDATA[2013-01-27 11:27:03.0]]></value>
             <value><![CDATA[2013-01-27 11:27:25.0]]></value>
-            <value>0</value>
-            <value>0</value>
+            <value>N</value>
+            <value>N</value>
             <value>Denver</value>
             <value>Denver</value>
             <value>US</value>
             <value>80210</value>
             <value>CO</value>
-            <value>0</value>
+            <value>N</value>
             <value>admin@ozstrategy.com</value>
             <value>1</value>
             <value>李</value>
@@ -300,14 +373,14 @@
             <value>2</value>
             <value><![CDATA[2013-01-27 11:27:03.0]]></value>
             <value><![CDATA[2013-01-27 11:27:25.0]]></value>
-            <value>0</value>
-            <value>0</value>
+            <value>N</value>
+            <value>N</value>
             <value>Denver</value>
             <value>Denver</value>
             <value>US</value>
             <value>80210</value>
             <value>CO</value>
-            <value>0</value>
+            <value>N</value>
             <value>user@ozstrategy.com</value>
             <value>1</value>
             <value>李</value>
@@ -326,14 +399,14 @@
             <value>3</value>
             <value><![CDATA[2013-01-27 11:27:03.0]]></value>
             <value><![CDATA[2013-01-27 11:27:25.0]]></value>
-            <value>0</value>
-            <value>0</value>
+            <value>N</value>
+            <value>N</value>
             <value>Denver</value>
             <value>Denver</value>
             <value>US</value>
             <value>80210</value>
             <value>CO</value>
-            <value>0</value>
+            <value>N</value>
             <value>hr@ozstrategy.com</value>
             <value>1</value>
             <value>李</value>
@@ -352,14 +425,14 @@
             <value>4</value>
             <value><![CDATA[2013-01-27 11:27:03.0]]></value>
             <value><![CDATA[2013-01-27 11:27:25.0]]></value>
-            <value>0</value>
-            <value>0</value>
+            <value>N</value>
+            <value>N</value>
             <value>Denver</value>
             <value>Denver</value>
             <value>US</value>
             <value>80210</value>
             <value>CO</value>
-            <value>0</value>
+            <value>N</value>
             <value>dep@ozstrategy.com</value>
             <value>1</value>
             <value>李</value>

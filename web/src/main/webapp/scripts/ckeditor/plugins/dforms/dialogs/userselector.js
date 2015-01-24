@@ -96,7 +96,7 @@ CKEDITOR.dialog.add( 'userselector', function( editor )
 								label : editor.lang.forms.textfield.name,
 								'default' : '',
 								accessKey : 'N',
-								validate : CKEDITOR.dialog.validate.notEmpty('人员名称不能为空'),
+								validate : CKEDITOR.dialog.validate.notEmpty(editor.lang.dforms.dcommon.validatename),
 								setup : function( element )
 								{
 									this.setValue(
@@ -120,7 +120,7 @@ CKEDITOR.dialog.add( 'userselector', function( editor )
 							{
 								id : 'txtlabel',
 								type : 'text',
-								validate : CKEDITOR.dialog.validate.notEmpty('人员标签不能为空'),
+								validate : CKEDITOR.dialog.validate.notEmpty(editor.lang.dforms.dcommon.validatetextlable),
 								label : editor.lang.dforms.dcommon.txtlabel,
 								'default' : '',
 								accessKey : 'V',
@@ -211,40 +211,41 @@ CKEDITOR.dialog.add( 'userselector', function( editor )
 						widths : [ '50%', '50%' ],
 						children :
 						[
-							{
-									id : 'txtisnotnull',
-									type : 'checkbox',
-									label : editor.lang.dforms.dtextfield.txtisnotnull,
-									'default' : '',
-									accessKey : 'P',
-									value : "checked",
-									setup : function( element )
-									{
-									    var value=element.getAttribute( 'txtisnotnull' );
-									    if(value==1){
-									    	this.setValue(true);
-									    }
-									},
-									commit : function( data )
-									{
-										var element = data.element;
-										var value = this.getValue();
-										if ( value )
-											element.setAttribute( 'txtisnotnull','1');
-										else
-											element.setAttribute( 'txtisnotnull','0');
-									}
-							},{
+//							{
+//									id : 'txtisnotnull',
+//									type : 'checkbox',
+//									label : editor.lang.dforms.dtextfield.txtisnotnull,
+//									'default' : '',
+//									accessKey : 'P',
+//									value : "checked",
+//									setup : function( element )
+//									{
+//									    var value=element.getAttribute( 'txtisnotnull' );
+//									    if(value==1){
+//									    	this.setValue(true);
+//									    }
+//									},
+//									commit : function( data )
+//									{
+//										var element = data.element;
+//										var value = this.getValue();
+//										if ( value )
+//											element.setAttribute( 'txtisnotnull','1');
+//										else
+//											element.setAttribute( 'txtisnotnull','0');
+//									}
+//							},
+                            {
 								id : 'issingle',
 								type : 'checkbox',
-								label : editor.lang.dforms.userselector.issingle,
+								label : editor.lang.dforms.boxgroup.chkMulti,
 								'default' : '',
 								accessKey : 'P',
 								value : "checked",
 								setup : function( element )
 								{
 								    var value=element.getAttribute( 'issingle' );
-								    if(value==1){
+								    if(value==0){
 								    	this.setValue(true);
 								    }
 								},
@@ -253,9 +254,9 @@ CKEDITOR.dialog.add( 'userselector', function( editor )
 									var element = data.element;
 									var value = this.getValue();
 									if ( value )
-										element.setAttribute( 'issingle','1');
-									else
 										element.setAttribute( 'issingle','0');
+									else
+										element.setAttribute( 'issingle','1');
 								}
 						}
 					]}

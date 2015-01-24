@@ -1,7 +1,7 @@
 package com.ozstrategy.model.userrole;
 
 import com.ozstrategy.Constants;
-import com.ozstrategy.model.BaseEntity;
+import com.ozstrategy.model.BaseObject;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,21 +23,22 @@ import javax.persistence.Transient;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
+
 @Entity
-public class User extends BaseEntity implements UserDetails {
+public class User extends BaseObject implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long     id;
-    @Column
+    @Column(columnDefinition = "char",length = 1)
     private Boolean  accountExpired=Boolean.FALSE;
-    @Column
+    @Column(columnDefinition = "char",length = 1)
     private Boolean  accountLocked=Boolean.FALSE;
-    @Column
+    @Column(columnDefinition = "char",length = 1)
     private Boolean  credentialsExpired=Boolean.FALSE;
-    @Column
+    @Column(columnDefinition = "char",length = 1)
     private Boolean  enabled=Boolean.TRUE;
     @Embedded
-    private Address  address            = new Address();
+    private Address address            = new Address();
     @Column(unique = true)
     private String   email;
     @Column
@@ -50,13 +51,13 @@ public class User extends BaseEntity implements UserDetails {
     private String   passwordHint;
     @Column
     private String   phoneNumber;
-    @Column(unique = true)
+    @Column(unique = true,length = 32)
     private String   username;
     @Column
     private Integer   version;
     @Column
     private String   website;
-    @Column
+    @Column(columnDefinition = "char",length = 1)
     private String   gender;
     @Column(unique = true)
     private String   mobile;
@@ -119,10 +120,6 @@ public class User extends BaseEntity implements UserDetails {
 
     public void setCredentialsExpired(Boolean credentialsExpired) {
         this.credentialsExpired = credentialsExpired;
-    }
-
-    public Boolean getEnabled() {
-        return enabled;
     }
 
     public void setEnabled(Boolean enabled) {

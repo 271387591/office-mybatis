@@ -1,35 +1,21 @@
 package com.ozstrategy.dao.userrole;
 
-import com.ozstrategy.dao.GenericDao;
 import com.ozstrategy.model.userrole.Role;
-import com.ozstrategy.model.userrole.SystemView;
+import com.ozstrategy.model.userrole.RoleFeature;
+import com.ozstrategy.model.userrole.User;
+import org.apache.ibatis.session.RowBounds;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
-public interface RoleDao extends GenericDao<Role, Long> {
-  //~ Methods ----------------------------------------------------------------------------------------------------------
-
-  void flush();
-
-  List<Role> getAllRoles();
-
-  Long getCount(String keyword);
-
-  Role getRoleByName(String rolename);
-
-  List<Role> getRoles(String roleName, Integer start, Integer limit);
-
-  void removeRole(String rolename);
+public interface RoleDao {
+    List<Role> listRoles(Map<String,Object> map, RowBounds rowBounds);
+    Integer listRolesCount(Map<String,Object> map);
+    void saveRole(Role role);
+    void updateRole(Role role);
+    void removeRoleById(Long id);
+    Role getRoleByName(String name);
+    Role getRoleById(Long id);
+    List<Role> getRoleByUserId(Long userId);
     
-  void removeRole(Role role);
-    int removeUserRoleByRoleId(Long id);
-
-  void saveRole(Role role);
-
-    boolean hasFeature(Set<String> roles, String feature);
-    SystemView getSystemViewById(Long id);
-    
-
-
-} // end interface RoleDao
+} 

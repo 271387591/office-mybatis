@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <classPathEntry location="/Users/lihao/.m2/repository/mysql/mysql-connector-java/5.1.14/mysql-connector-java-5.1.14.jar" />
+
+    <context id="DB2Tables" targetRuntime="MyBatis3">
+        <jdbcConnection driverClass="net.sourceforge.jtds.jdbc.Driver"
+                        connectionURL="jdbc:jtds:sqlserver://192.168.168.49:1433/erhdb"
+                        userId="root"
+                        password="Passw0rd">
+        </jdbcConnection>
+
+        <javaTypeResolver >
+            <property name="forceBigDecimals" value="false" />
+        </javaTypeResolver>
+
+        <javaModelGenerator targetPackage="com.ozstrategy.model" targetProject="/Users/lihao/Documents/office-mybatis/core/src/main/java">
+            <property name="enableSubPackages" value="true" />
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="com.ozstrategy.model.dao"  targetProject="/Users/lihao/Documents/office-mybatis/core/src/main/resources">
+            <property name="enableSubPackages" value="true" />
+        </sqlMapGenerator>
+
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.ozstrategy.model.dao.test"  targetProject="/Users/lihao/Documents/office-mybatis/core/src/main/java">
+            <property name="enableSubPackages" value="true" />
+        </javaClientGenerator>
+
+        <table schema="ehrdb" tableName="BASE_EHRCode_Order" domainObjectName="BASE_EHRCode_Order" />
+        <table schema="ehrdb" tableName="BASE_EHRGBCode_Order" domainObjectName="BASE_EHRGBCode_Order" />
+        <table schema="ehrdb" tableName="DATA_ResidentsInfo" domainObjectName="DATA_ResidentsInfo" />
+        <table schema="ehrdb" tableName="DATA_UDSRecord" domainObjectName="DATA_UDSRecord" />
+        <table schema="ehrdb" tableName="DATA_UDSRecord_Detail" domainObjectName="DATA_UDSRecord_Detail" />
+        <table schema="ehrdb" tableName="DATA_UDSRecordGrid_Detail" domainObjectName="DATA_UDSRecordGrid_Detail" />
+        <table schema="ehrdb" tableName="SEQUEN_UDSRecordID" domainObjectName="SEQUEN_UDSRecordID" />
+
+    </context>
+</generatorConfiguration>

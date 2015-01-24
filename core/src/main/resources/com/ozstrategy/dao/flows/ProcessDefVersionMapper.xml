@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ozstrategy.dao.flows.ProcessDefVersionDao">
+    <!--<cache type="org.mybatis.caches.ehcache.EhcacheCache"/>-->
+    <resultMap id="processDefVersionResult" type="com.ozstrategy.model.flows.ProcessDefVersion" autoMapping="true">
+        <id column="id" property="id" javaType="long"/>
+    </resultMap>
+    
+    <update id="updateProcessDef" parameterType="com.ozstrategy.model.flows.ProcessDefVersion" flushCache="true">
+        update PROECESSDEFVERSION f set 
+        f.name=#{name} , 
+        f.globalTypeId=#{globalTypeId} , 
+        f.version=#{version} , 
+        f.actDefId=#{actDefId} , 
+        f.actResId=#{actResId} , 
+        f.graphResId=#{graphResId} , 
+        f.documentation=#{documentation} , 
+        f.enabled=#{enabled} , 
+        f.flowFormId=#{flowFormId} , 
+        f.processDefId=#{processDefId} , 
+        f.lastUpdateDate=#{lastUpdateDate} 
+        where f.id=#{id}
+    </update>
+    <update id="deleteProcessDefVersion" parameterType="long" flushCache="true">
+        update PROECESSDEFVERSION u set u.enabled=0 where u.id=#{id}
+    </update>
+    <insert id="saveProcessDefVersion" parameterType="com.ozstrategy.model.flows.ProcessDefVersion" flushCache="true">
+        <selectKey keyColumn="id" keyProperty="id" resultType="java.lang.Long">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into PROECESSDEFVERSION(id,name,processDefId,flowFormId,globalTypeId,documentation,version,actDefId,actResId,graphResId,enabled,createDate,lastUpdateDate) 
+        values (#{id},#{name},#{processDefId},#{flowFormId},#{globalTypeId},#{documentation},#{version},#{actDefId},#{actResId},#{graphResId},#{enabled},#{createDate},#{lastUpdateDate})
+    </insert>
+</mapper>

@@ -52,6 +52,7 @@
 //        mxDefaultLanguage='zh_CN';
     </script>
     <script type="text/javascript" src="<c:url value="/mxgraph/src/js/mxClient.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/mxgraph/src/js/mxModeler.js"/>"></script>
     <%--<script type="text/javascript" src="<c:url value="/mxgraph/js/mxApplication.js"/>"></script>--%>
 
     <script type="text/javascript" src='<c:url value="/scripts/ozstrategy/global.js"/>'></script>
@@ -83,8 +84,6 @@
 <script type="text/javascript">
     var apps = {};
     Ext.require([
-        'FlexCenter.App',
-        'Oz.util.Utils',
         'FlexCenter.Constants',
         'Ext.data.ArrayStore',
         'Ext.util.CSS',
@@ -96,7 +95,8 @@
             items:[
                 {
                     region:'center',
-                    xtype:'modeler'
+                    xtype:'modeler',
+                    processRecord:{name:'3'}
                 }
             ]
         });

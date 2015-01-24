@@ -1,0 +1,665 @@
+{"resourceId": "canvas", "properties": {
+    "name": "",
+    "documentation": "",
+    "process_id": "process",
+    "process_author": "",
+    "process_executable": "Yes",
+    "process_version": "",
+    "process_namespace": "http://www.activiti.org/processdef",
+    "executionlisteners": ""
+}, "stencil": {
+    "id": "BPMNDiagram"
+}, "childShapes": [
+    {
+        "resourceId": "sid-89A6A772-7C32-45FA-AB21-3A189DB8295F",
+        "properties": {
+            "overrideid": "",
+            "name": "主流程开始",
+            "documentation": "",
+            "formproperties": "",
+            "initiator": "",
+            "formkeydefinition": "",
+            "executionlisteners": ""
+        },
+        "stencil": {
+            "id": "StartNoneEvent"
+        },
+        "childShapes": [],
+        "outgoing": [
+            {
+                "resourceId": "sid-A3BB5DE4-C0B7-4362-B3C2-0E80DDED6500"
+            }
+        ],
+        "bounds": {
+            "lowerRight": {
+                "x": 170,
+                "y": 123
+            },
+            "upperLeft": {
+                "x": 140,
+                "y": 93
+            }
+        },
+        "dockers": []
+    },
+    {
+        "resourceId": "sid-7C939C29-6839-4A64-B116-8570EB3CE08F",
+        "properties": {
+            "overrideid": "",
+            "name": "主流程任务1",
+            "documentation": "",
+            "formkeydefinition": "",
+            "duedatedefinition": "",
+            "prioritydefinition": "",
+            "usertaskassignment": "",
+            "formproperties": "",
+            "tasklisteners": "",
+            "asynchronousdefinition": "No",
+            "exclusivedefinition": "Yes",
+            "looptype": "None",
+            "multiinstance_sequential": "Yes",
+            "multiinstance_cardinality": "",
+            "multiinstance_collection": "",
+            "multiinstance_variable": "",
+            "multiinstance_condition": "",
+            "isforcompensation": "false"
+        },
+        "stencil": {
+            "id": "UserTask"
+        },
+        "childShapes": [],
+        "outgoing": [
+            {
+                "resourceId": "sid-499AC497-8713-4ACB-BFAC-C729641A46E9"
+            }
+        ],
+        "bounds": {
+            "lowerRight": {
+                "x": 394,
+                "y": 127
+            },
+            "upperLeft": {
+                "x": 294,
+                "y": 47
+            }
+        },
+        "dockers": []
+    },
+    {
+        "resourceId": "sid-A3BB5DE4-C0B7-4362-B3C2-0E80DDED6500",
+        "properties": {
+            "overrideid": "",
+            "name": "",
+            "documentation": "",
+            "conditionsequenceflow": "",
+            "defaultflow": "None",
+            "conditionalflow": "None"
+        },
+        "stencil": {
+            "id": "SequenceFlow"
+        },
+        "childShapes": [],
+        "outgoing": [
+            {
+                "resourceId": "sid-7C939C29-6839-4A64-B116-8570EB3CE08F"
+            }
+        ],
+        "bounds": {
+            "lowerRight": {
+                "x": 293.53515625,
+                "y": 92.5625
+            },
+            "upperLeft": {
+                "x": 155,
+                "y": 87
+            }
+        },
+        "dockers": [
+            {
+                "x": 15,
+                "y": 15
+            },
+            {
+                "x": 155,
+                "y": 87
+            },
+            {
+                "x": 50,
+                "y": 40
+            }
+        ],
+        "target": {
+            "resourceId": "sid-7C939C29-6839-4A64-B116-8570EB3CE08F"
+        }
+    },
+    {
+        "resourceId": "sid-D121B52C-5463-4679-A3F7-99C351A0BE70",
+        "properties": {
+            "overrideid": "",
+            "name": "",
+            "documentation": "",
+            "asynchronousdefinition": "No",
+            "exclusivedefinition": "Yes",
+            "executionlisteners": "",
+            "looptype": "None"
+        },
+        "stencil": {
+            "id": "SubProcess"
+        },
+        "childShapes": [
+            {
+                "resourceId": "sid-124A3E35-35CB-4BA4-AE8D-7D9E4A916CF7",
+                "properties": {
+                    "overrideid": "",
+                    "name": "子流程开始",
+                    "documentation": "",
+                    "formproperties": "",
+                    "initiator": "",
+                    "formkeydefinition": "",
+                    "executionlisteners": ""
+                },
+                "stencil": {
+                    "id": "StartNoneEvent"
+                },
+                "childShapes": [],
+                "outgoing": [
+                    {
+                        "resourceId": "sid-B6121BAA-39EB-48E0-9930-2746D4C4CEDD"
+                    }
+                ],
+                "bounds": {
+                    "lowerRight": {
+                        "x": 45,
+                        "y": 85
+                    },
+                    "upperLeft": {
+                        "x": 15,
+                        "y": 55
+                    }
+                },
+                "dockers": []
+            },
+            {
+                "resourceId": "sid-5EAC22D0-5FD7-4D63-A45D-628EEFA2AF7F",
+                "properties": {
+                    "overrideid": "",
+                    "name": "子流程任务1",
+                    "documentation": "",
+                    "formkeydefinition": "",
+                    "duedatedefinition": "",
+                    "prioritydefinition": "",
+                    "usertaskassignment": "",
+                    "formproperties": "",
+                    "tasklisteners": "",
+                    "asynchronousdefinition": "No",
+                    "exclusivedefinition": "Yes",
+                    "looptype": "None",
+                    "multiinstance_sequential": "Yes",
+                    "multiinstance_cardinality": "",
+                    "multiinstance_collection": "",
+                    "multiinstance_variable": "",
+                    "multiinstance_condition": "",
+                    "isforcompensation": "false"
+                },
+                "stencil": {
+                    "id": "UserTask"
+                },
+                "childShapes": [],
+                "outgoing": [
+                    {
+                        "resourceId": "sid-78CCA9E3-826B-4C7D-B0F9-68BD4B7E018E"
+                    }
+                ],
+                "bounds": {
+                    "lowerRight": {
+                        "x": 177,
+                        "y": 110
+                    },
+                    "upperLeft": {
+                        "x": 77,
+                        "y": 30
+                    }
+                },
+                "dockers": []
+            },
+            {
+                "resourceId": "sid-D963BA29-BC07-4688-A839-1680AAE40817",
+                "properties": {
+                    "overrideid": "",
+                    "name": "子流程任务2",
+                    "documentation": "",
+                    "formkeydefinition": "",
+                    "duedatedefinition": "",
+                    "prioritydefinition": "",
+                    "usertaskassignment": "",
+                    "formproperties": "",
+                    "tasklisteners": "",
+                    "asynchronousdefinition": "No",
+                    "exclusivedefinition": "Yes",
+                    "looptype": "None",
+                    "multiinstance_sequential": "Yes",
+                    "multiinstance_cardinality": "",
+                    "multiinstance_collection": "",
+                    "multiinstance_variable": "",
+                    "multiinstance_condition": "",
+                    "isforcompensation": "false"
+                },
+                "stencil": {
+                    "id": "UserTask"
+                },
+                "childShapes": [],
+                "outgoing": [
+                    {
+                        "resourceId": "sid-19911804-8D97-4160-8D09-510F62C2E850"
+                    }
+                ],
+                "bounds": {
+                    "lowerRight": {
+                        "x": 336,
+                        "y": 110
+                    },
+                    "upperLeft": {
+                        "x": 236,
+                        "y": 30
+                    }
+                },
+                "dockers": []
+            },
+            {
+                "resourceId": "sid-DCACC77F-AFCA-442C-A885-6DAD1A20F0E0",
+                "properties": {
+                    "overrideid": "",
+                    "name": "子流程结束",
+                    "documentation": "",
+                    "executionlisteners": ""
+                },
+                "stencil": {
+                    "id": "EndNoneEvent"
+                },
+                "childShapes": [],
+                "outgoing": [],
+                "bounds": {
+                    "lowerRight": {
+                        "x": 433,
+                        "y": 84
+                    },
+                    "upperLeft": {
+                        "x": 405,
+                        "y": 56
+                    }
+                },
+                "dockers": []
+            }
+        ],
+        "outgoing": [
+            {
+                "resourceId": "sid-42F5F482-5A4B-449A-B56A-AB6B1090199F"
+            }
+        ],
+        "bounds": {
+            "lowerRight": {
+                "x": 994,
+                "y": 331
+            },
+            "upperLeft": {
+                "x": 495,
+                "y": 105
+            }
+        },
+        "dockers": []
+    },
+    {
+        "resourceId": "sid-B6121BAA-39EB-48E0-9930-2746D4C4CEDD",
+        "properties": {
+            "overrideid": "",
+            "name": "",
+            "documentation": "",
+            "conditionsequenceflow": "",
+            "defaultflow": "None",
+            "conditionalflow": "None"
+        },
+        "stencil": {
+            "id": "SequenceFlow"
+        },
+        "childShapes": [],
+        "outgoing": [
+            {
+                "resourceId": "sid-5EAC22D0-5FD7-4D63-A45D-628EEFA2AF7F"
+            }
+        ],
+        "bounds": {
+            "lowerRight": {
+                "x": 571.7421875,
+                "y": 175
+            },
+            "upperLeft": {
+                "x": 540.3984375,
+                "y": 175
+            }
+        },
+        "dockers": [
+            {
+                "x": 15,
+                "y": 15
+            },
+            {
+                "x": 50,
+                "y": 40
+            }
+        ],
+        "target": {
+            "resourceId": "sid-5EAC22D0-5FD7-4D63-A45D-628EEFA2AF7F"
+        }
+    },
+    {
+        "resourceId": "sid-78CCA9E3-826B-4C7D-B0F9-68BD4B7E018E",
+        "properties": {
+            "overrideid": "",
+            "name": "",
+            "documentation": "",
+            "conditionsequenceflow": "",
+            "defaultflow": "None",
+            "conditionalflow": "None"
+        },
+        "stencil": {
+            "id": "SequenceFlow"
+        },
+        "childShapes": [],
+        "outgoing": [
+            {
+                "resourceId": "sid-D963BA29-BC07-4688-A839-1680AAE40817"
+            }
+        ],
+        "bounds": {
+            "lowerRight": {
+                "x": 730.3125,
+                "y": 175
+            },
+            "upperLeft": {
+                "x": 672.6875,
+                "y": 175
+            }
+        },
+        "dockers": [
+            {
+                "x": 50,
+                "y": 40
+            },
+            {
+                "x": 50,
+                "y": 40
+            }
+        ],
+        "target": {
+            "resourceId": "sid-D963BA29-BC07-4688-A839-1680AAE40817"
+        }
+    },
+    {
+        "resourceId": "sid-19911804-8D97-4160-8D09-510F62C2E850",
+        "properties": {
+            "overrideid": "",
+            "name": "",
+            "documentation": "",
+            "conditionsequenceflow": "",
+            "defaultflow": "None",
+            "conditionalflow": "None"
+        },
+        "stencil": {
+            "id": "SequenceFlow"
+        },
+        "childShapes": [],
+        "outgoing": [
+            {
+                "resourceId": "sid-DCACC77F-AFCA-442C-A885-6DAD1A20F0E0"
+            }
+        ],
+        "bounds": {
+            "lowerRight": {
+                "x": 899.4921875,
+                "y": 175
+            },
+            "upperLeft": {
+                "x": 831.875,
+                "y": 175
+            }
+        },
+        "dockers": [
+            {
+                "x": 50,
+                "y": 40
+            },
+            {
+                "x": 14,
+                "y": 14
+            }
+        ],
+        "target": {
+            "resourceId": "sid-DCACC77F-AFCA-442C-A885-6DAD1A20F0E0"
+        }
+    },
+    {
+        "resourceId": "sid-499AC497-8713-4ACB-BFAC-C729641A46E9",
+        "properties": {
+            "overrideid": "",
+            "name": "",
+            "documentation": "",
+            "conditionsequenceflow": "",
+            "defaultflow": "None",
+            "conditionalflow": "None"
+        },
+        "stencil": {
+            "id": "SequenceFlow"
+        },
+        "childShapes": [],
+        "outgoing": [
+            {
+                "resourceId": "sid-D121B52C-5463-4679-A3F7-99C351A0BE70"
+            }
+        ],
+        "bounds": {
+            "lowerRight": {
+                "x": 494.751953125,
+                "y": 218
+            },
+            "upperLeft": {
+                "x": 344,
+                "y": 127.9140625
+            }
+        },
+        "dockers": [
+            {
+                "x": 50,
+                "y": 40
+            },
+            {
+                "x": 344,
+                "y": 218
+            },
+            {
+                "x": 249.5,
+                "y": 113
+            }
+        ],
+        "target": {
+            "resourceId": "sid-D121B52C-5463-4679-A3F7-99C351A0BE70"
+        }
+    },
+    {
+        "resourceId": "sid-4EEFFCBA-2825-4D1B-8C24-D79685CDD452",
+        "properties": {
+            "overrideid": "",
+            "name": "主流程任务2",
+            "documentation": "",
+            "formkeydefinition": "",
+            "duedatedefinition": "",
+            "prioritydefinition": "",
+            "usertaskassignment": "",
+            "formproperties": "",
+            "tasklisteners": "",
+            "asynchronousdefinition": "No",
+            "exclusivedefinition": "Yes",
+            "looptype": "None",
+            "multiinstance_sequential": "Yes",
+            "multiinstance_cardinality": "",
+            "multiinstance_collection": "",
+            "multiinstance_variable": "",
+            "multiinstance_condition": "",
+            "isforcompensation": "false"
+        },
+        "stencil": {
+            "id": "UserTask"
+        },
+        "childShapes": [],
+        "outgoing": [
+            {
+                "resourceId": "sid-B9D71118-4041-4DF0-A817-B4BBAA927827"
+            }
+        ],
+        "bounds": {
+            "lowerRight": {
+                "x": 357,
+                "y": 401
+            },
+            "upperLeft": {
+                "x": 257,
+                "y": 321
+            }
+        },
+        "dockers": []
+    },
+    {
+        "resourceId": "sid-42F5F482-5A4B-449A-B56A-AB6B1090199F",
+        "properties": {
+            "overrideid": "",
+            "name": "",
+            "documentation": "",
+            "conditionsequenceflow": "",
+            "defaultflow": "None",
+            "conditionalflow": "None"
+        },
+        "stencil": {
+            "id": "SequenceFlow"
+        },
+        "childShapes": [],
+        "outgoing": [
+            {
+                "resourceId": "sid-4EEFFCBA-2825-4D1B-8C24-D79685CDD452"
+            }
+        ],
+        "bounds": {
+            "lowerRight": {
+                "x": 744.5,
+                "y": 361
+            },
+            "upperLeft": {
+                "x": 357.560546875,
+                "y": 331.8359375
+            }
+        },
+        "dockers": [
+            {
+                "x": 249.5,
+                "y": 113.00000000000001
+            },
+            {
+                "x": 744.5,
+                "y": 361
+            },
+            {
+                "x": 50,
+                "y": 40
+            }
+        ],
+        "target": {
+            "resourceId": "sid-4EEFFCBA-2825-4D1B-8C24-D79685CDD452"
+        }
+    },
+    {
+        "resourceId": "sid-15D5F1A7-DA3E-42C5-BAE9-925C7F129603",
+        "properties": {
+            "overrideid": "",
+            "name": "主流程结束",
+            "documentation": "",
+            "executionlisteners": ""
+        },
+        "stencil": {
+            "id": "EndNoneEvent"
+        },
+        "childShapes": [],
+        "outgoing": [],
+        "bounds": {
+            "lowerRight": {
+                "x": 113,
+                "y": 356
+            },
+            "upperLeft": {
+                "x": 85,
+                "y": 328
+            }
+        },
+        "dockers": []
+    },
+    {
+        "resourceId": "sid-B9D71118-4041-4DF0-A817-B4BBAA927827",
+        "properties": {
+            "overrideid": "",
+            "name": "",
+            "documentation": "",
+            "conditionsequenceflow": "",
+            "defaultflow": "None",
+            "conditionalflow": "None"
+        },
+        "stencil": {
+            "id": "SequenceFlow"
+        },
+        "childShapes": [],
+        "outgoing": [
+            {
+                "resourceId": "sid-15D5F1A7-DA3E-42C5-BAE9-925C7F129603"
+            }
+        ],
+        "bounds": {
+            "lowerRight": {
+                "x": 256.4375,
+                "y": 361
+            },
+            "upperLeft": {
+                "x": 113.4375,
+                "y": 342
+            }
+        },
+        "dockers": [
+            {
+                "x": 50,
+                "y": 40
+            },
+            {
+                "x": 185,
+                "y": 361
+            },
+            {
+                "x": 185,
+                "y": 342
+            },
+            {
+                "x": 14,
+                "y": 14
+            }
+        ],
+        "target": {
+            "resourceId": "sid-15D5F1A7-DA3E-42C5-BAE9-925C7F129603"
+        }
+    }
+], "bounds": {
+    "lowerRight": {
+        "x": 1485,
+        "y": 1050
+    },
+    "upperLeft": {
+        "x": 0,
+        "y": 0
+    }
+}, "stencilset": {
+    "url": "../stencilsets/bpmn2.0/bpmn2.0.json",
+    "namespace": "http://b3mn.org/stencilset/bpmn2.0#"
+}, "ssextensions": []}

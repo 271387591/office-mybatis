@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+    <process id="P_1414933519788" name="子流程" isExecutable="true">
+        <sequenceFlow id="T_18" sourceRef="T_16" targetRef="T_4"/>
+        <sequenceFlow id="T_17" sourceRef="SUP_5" targetRef="T_16"/>
+        <userTask id="T_16" name="主任务2" activiti:assignee="user"/>
+        <sequenceFlow id="T_11" sourceRef="T_3" targetRef="SUP_5"/>
+        <sequenceFlow id="T_10" sourceRef="T_2" targetRef="T_3"/>
+        <subProcess id="SUP_5" name="subProcess">
+            <startEvent id="T_6" name="子开始" activiti:initiator="starter"/>
+            <userTask id="T_7" name="子任务1" activiti:candidateUsers="dep"/>
+            <userTask id="T_8" name="子任务2" activiti:candidateUsers="hr"/>
+            <endEvent id="T_9" name="子结束"/>
+            <sequenceFlow id="T_12" sourceRef="T_6" targetRef="T_7"/>
+            <sequenceFlow id="T_13" sourceRef="T_7" targetRef="T_8"/>
+            <sequenceFlow id="T_14" sourceRef="T_8" targetRef="T_9"/>
+        </subProcess>
+        <endEvent id="T_4" name="主结束">
+            <extensionElements>
+                <activiti:executionListener event="end" delegateExpression="${endEventEndService}"/>
+            </extensionElements>
+        </endEvent>
+        <userTask id="T_3" name="主任务1"/>
+        <startEvent id="T_2" name="主开始" activiti:initiator="starter"/>
+    </process>
+    <bpmndi:BPMNDiagram id="BPMNDiagram_P_1414933519788">
+        <bpmndi:BPMNPlane bpmnElement="P_1414933519788" id="BPMNPlane_P_1414933519788">
+            <bpmndi:BPMNShape bpmnElement="T_6" id="BPMNShape_T_6">
+                <omgdc:Bounds height="30.0" width="30.0" x="250.0" y="35.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="T_9" id="BPMNShape_T_9">
+                <omgdc:Bounds height="30.0" width="30.0" x="630.0" y="35.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="T_8" id="BPMNShape_T_8">
+                <omgdc:Bounds height="60.0" width="100.0" x="480.0" y="20.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="T_7" id="BPMNShape_T_7">
+                <omgdc:Bounds height="60.0" width="100.0" x="330.0" y="20.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="SUP_5" id="BPMNShape_SUP_5" isExpanded="true">
+                <omgdc:Bounds height="100.0" width="450.0" x="230.0" y="0.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="T_4" id="BPMNShape_T_4">
+                <omgdc:Bounds height="30.0" width="30.0" x="880.0" y="35.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="T_3" id="BPMNShape_T_3">
+                <omgdc:Bounds height="60.0" width="100.0" x="80.0" y="20.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="T_16" id="BPMNShape_T_16">
+                <omgdc:Bounds height="60.0" width="100.0" x="730.0" y="20.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="T_2" id="BPMNShape_T_2">
+                <omgdc:Bounds height="30.0" width="30.0" x="0.0" y="35.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="T_13" id="BPMNEdge_T_13">
+                <omgdi:waypoint x="430.0" y="50.0"/>
+                <omgdi:waypoint x="442.0" y="50.0"/>
+                <omgdi:waypoint x="442.0" y="50.00000000000001"/>
+                <omgdi:waypoint x="480.0" y="50.00000000000001"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="T_12" id="BPMNEdge_T_12">
+                <omgdi:waypoint x="280.0" y="50.0"/>
+                <omgdi:waypoint x="292.0" y="50.0"/>
+                <omgdi:waypoint x="292.0" y="50.00000000000001"/>
+                <omgdi:waypoint x="330.0" y="50.00000000000001"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="T_14" id="BPMNEdge_T_14">
+                <omgdi:waypoint x="580.0" y="50.0"/>
+                <omgdi:waypoint x="592.0" y="50.0"/>
+                <omgdi:waypoint x="592.0" y="50.0"/>
+                <omgdi:waypoint x="630.0" y="50.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="T_17" id="BPMNEdge_T_17">
+                <omgdi:waypoint x="680.0" y="50.0"/>
+                <omgdi:waypoint x="692.0" y="50.0"/>
+                <omgdi:waypoint x="692.0" y="50.00000000000001"/>
+                <omgdi:waypoint x="730.0" y="50.00000000000001"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="T_18" id="BPMNEdge_T_18">
+                <omgdi:waypoint x="830.0" y="50.0"/>
+                <omgdi:waypoint x="880.0" y="50.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="T_11" id="BPMNEdge_T_11">
+                <omgdi:waypoint x="180.0" y="50.0"/>
+                <omgdi:waypoint x="192.0" y="50.0"/>
+                <omgdi:waypoint x="192.0" y="50.00000000000003"/>
+                <omgdi:waypoint x="230.0" y="50.00000000000003"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="T_10" id="BPMNEdge_T_10">
+                <omgdi:waypoint x="30.0" y="50.0"/>
+                <omgdi:waypoint x="42.0" y="50.0"/>
+                <omgdi:waypoint x="42.0" y="50.00000000000001"/>
+                <omgdi:waypoint x="80.0" y="50.00000000000001"/>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</definitions>

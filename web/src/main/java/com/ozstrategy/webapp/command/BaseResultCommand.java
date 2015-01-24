@@ -23,7 +23,7 @@ public class BaseResultCommand {
    protected String message;
 
   /** Result success. */
-   protected boolean success = true;
+   protected Boolean success = Boolean.TRUE;
 
   //~ Constructors -----------------------------------------------------------------------------------------------------
 
@@ -53,7 +53,7 @@ public class BaseResultCommand {
    * @param  message  DOCUMENT ME!
    * @param  success  DOCUMENT ME!
    */
-  public BaseResultCommand(String message, boolean success) {
+  public BaseResultCommand(String message, Boolean success) {
     this.message = message;
 
     this.success = success;
@@ -136,17 +136,6 @@ public class BaseResultCommand {
   //~ ------------------------------------------------------------------------------------------------------------------
 
   /**
-   * Get result success flag.
-   *
-   * @return  result success flag
-   */
-  public boolean isSuccess() {
-    return success;
-  }
-
-  //~ ------------------------------------------------------------------------------------------------------------------
-
-  /**
    * DOCUMENT ME!
    *
    * @param  data  DOCUMENT ME!
@@ -177,14 +166,11 @@ public class BaseResultCommand {
     this.message = message;
   }
 
-  //~ ------------------------------------------------------------------------------------------------------------------
+    public Boolean getSuccess() {
+        return success;
+    }
 
-  /**
-   * DOCUMENT ME!
-   *
-   * @param  success  DOCUMENT ME!
-   */
-  public void setSuccess(boolean success) {
-    this.success = success;
-  }
+    public void setSuccess(Boolean success) {
+        this.success = success;
+    }
 } // end class BaseResultCommand

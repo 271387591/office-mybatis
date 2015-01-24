@@ -1,6 +1,7 @@
 package com.ozstrategy.webapp.security;
 
-import com.ozstrategy.dao.userrole.UserDao;
+import com.ozstrategy.service.userrole.UserManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
@@ -17,7 +18,8 @@ import java.io.IOException;
  * To change this template use File | Settings | File Templates.
  */
 public class WebAuthenticationSuccessLoggerHandler implements AuthenticationSuccessHandler {
-  private UserDao userDao;
+    @Autowired
+  private UserManager userManager;
 //  @Override
   public void onAuthenticationSuccess(HttpServletRequest request,
                                       HttpServletResponse response, Authentication authentication)
@@ -38,7 +40,7 @@ public class WebAuthenticationSuccessLoggerHandler implements AuthenticationSucc
 //      response.getWriter().print(result);
   }
 
-  public void setUserDao(UserDao userDao) {
-    this.userDao = userDao;
-  }
+//  public void setUserDao(UserDao userDao) {
+//    this.userDao = userDao;
+//  }
 }
