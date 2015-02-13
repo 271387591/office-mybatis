@@ -22,4 +22,4 @@ public interface UserManager extends UserDetailsService {
     void saveOrUpdate(User user)throws Exception;
     List<SystemView> listSystemView();
     SystemView getSystemViewById(Long id);
-} // end interface UserManager
+} 
